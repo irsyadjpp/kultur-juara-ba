@@ -25,7 +25,7 @@ export function HeroSection() {
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-background via-black/80 to-black/60" />
       <div className="relative z-10 container mx-auto px-4 text-center">
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black font-headline uppercase tracking-tighter mb-4 animate-fade-in-down bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-white">
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black font-headline uppercase tracking-tighter mb-4 animate-fade-in-down bg-clip-text text-transparent bg-gradient-to-r from-primary via-red-400 to-white">
           Bandung Community Championship 2026
         </h1>
         <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-12 font-body animate-fade-in-up">
