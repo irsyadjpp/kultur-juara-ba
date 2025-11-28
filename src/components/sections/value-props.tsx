@@ -29,7 +29,7 @@ const valueProps = [
   {
     icon: <PartyPopper className="w-8 h-8 text-primary" />,
     title: "WBD Celebration",
-    description: "Rayakan World Basketball Day pada 5 Juli 2026 dengan acara puncak yang meriah dan tak terlupakan.",
+    description: "Rayakan World Badminton Day pada 5 Juli 2026 dengan acara puncak yang meriah dan tak terlupakan.",
     imageId: "value-prop-celebration"
   },
 ];
