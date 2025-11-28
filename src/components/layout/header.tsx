@@ -9,10 +9,10 @@ import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/s
 const NavLink = ({ href, children, onClick, isExternal = false }: { href: string; children: React.ReactNode; onClick?: () => void; isExternal?: boolean }) => {
   const commonProps = {
     onClick: onClick,
-    className: "font-medium text-foreground/80 hover:text-primary transition-all duration-300",
+    className: "font-medium text-foreground/80 hover:text-primary transition-all duration-300 px-4 py-2 rounded-full hover:bg-secondary",
   };
 
-  const linkContent = <span className="text-2xl md:text-base">{children}</span>;
+  const linkContent = <span className="text-2xl md:text-sm">{children}</span>;
 
   if (isExternal) {
     return (
@@ -41,6 +41,12 @@ export function Header() {
     elem?.scrollIntoView({ behavior: 'smooth' });
     setIsOpen(false);
   };
+  
+  const closeSheetAndScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    handleScroll(e);
+    setIsOpen(false);
+  };
+
 
   const navItems = (closeSheet: () => void) => (
     <>
@@ -48,29 +54,31 @@ export function Header() {
         <NavLink href="/" onClick={closeSheet}>Home</NavLink>
       </SheetClose>
       <SheetClose asChild>
-        <NavLink href="https://ayo.co.id/" isExternal>Jadwal</NavLink>
+        <NavLink href="https://ayo.co.id/" isExternal onClick={closeSheet}>Jadwal</NavLink>
       </SheetClose>
       <SheetClose asChild>
-         <a href="#contact" onClick={(e) => { handleScroll(e); closeSheet(); }} className="font-medium text-foreground/80 hover:text-primary transition-all duration-300 text-2xl md:text-base">Kontak</a>
+         <a href="#contact" onClick={closeSheetAndScroll} className="font-medium text-foreground/80 hover:text-primary transition-all duration-300 px-4 py-2 rounded-full hover:bg-secondary text-2xl md:text-sm">Kontak</a>
       </SheetClose>
     </>
   );
   
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
-      <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <Dribbble className="h-7 w-7 text-primary animate-pulse" />
-          <span className="font-bold font-headline text-xl tracking-tighter">BCC 2026</span>
-        </Link>
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/90 backdrop-blur-lg">
+      <div className="container flex h-16 items-center">
+        <div className="flex-1 flex justify-start">
+            <Link href="/" className="flex items-center gap-2">
+            <Dribbble className="h-7 w-7 text-primary animate-pulse" />
+            <span className="font-bold font-headline text-xl tracking-tighter">BCC 2026</span>
+            </Link>
+        </div>
 
-        <nav className="hidden md:flex items-center gap-8">
-           <NavLink href="/" onClick={() => {}}>Home</NavLink>
-           <NavLink href="https://ayo.co.id/" isExternal>Jadwal</NavLink>
-           <a href="#contact" onClick={(e) => { handleScroll(e); }} className="font-medium text-foreground/80 hover:text-primary transition-all duration-300 text-base">Kontak</a>
+        <nav className="hidden md:flex flex-1 justify-center items-center gap-2">
+           <NavLink href="/" onClick={() => setIsOpen(false)}>Home</NavLink>
+           <NavLink href="https://ayo.co.id/" isExternal onClick={() => setIsOpen(false)}>Jadwal</NavLink>
+           <a href="#contact" onClick={handleScroll} className="font-medium text-foreground/80 hover:text-primary transition-all duration-300 px-4 py-2 rounded-full hover:bg-secondary text-sm">Kontak</a>
         </nav>
 
-        <div className="md:hidden">
+        <div className="flex-1 flex justify-end md:hidden">
            <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
