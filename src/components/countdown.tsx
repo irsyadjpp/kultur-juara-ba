@@ -40,20 +40,20 @@ export function Countdown({ targetDate }: CountdownProps) {
   }, [targetDate]);
 
   return (
-    <div className="flex justify-center items-center gap-2 md:gap-4">
+    <div className="flex items-end gap-2 md:gap-3">
         <div className="flex flex-col items-center">
-            <span className="text-4xl md:text-5xl font-bold font-headline">{String(timeLeft.days).padStart(2, '0')}</span>
-            <span className="text-xs text-muted-foreground">Hari</span>
+            <span className="text-4xl md:text-5xl font-bold font-headline leading-none">{String(timeLeft.days).padStart(2, '0')}</span>
+            <span className="text-xs text-primary-foreground/80">Hari</span>
         </div>
-         <span className="text-4xl md:text-5xl font-bold font-headline -mt-4">:</span>
+         <span className="text-3xl md:text-4xl font-bold font-headline -mb-1">:</span>
         <div className="flex flex-col items-center">
-            <span className="text-4xl md:text-5xl font-bold font-headline">{String(timeLeft.hours).padStart(2, '0')}</span>
-            <span className="text-xs text-muted-foreground">Jam</span>
+            <span className="text-4xl md:text-5xl font-bold font-headline leading-none">{String(timeLeft.hours).padStart(2, '0')}</span>
+            <span className="text-xs text-primary-foreground/80">Jam</span>
         </div>
-        <span className="text-4xl md:text-5xl font-bold font-headline -mt-4">:</span>
+        <span className="text-3xl md:text-4xl font-bold font-headline -mb-1">:</span>
         <div className="flex flex-col items-center">
-            <span className="text-4xl md:text-5xl font-bold font-headline">{String(timeLeft.minutes).padStart(2, '0')}</span>
-            <span className="text-xs text-muted-foreground">Menit</span>
+            <span className="text-4xl md:text-5xl font-bold font-headline leading-none">{String(timeLeft.minutes).padStart(2, '0')}</span>
+            <span className="text-xs text-primary-foreground/80">Menit</span>
         </div>
     </div>
   );
