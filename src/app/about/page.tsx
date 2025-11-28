@@ -37,7 +37,7 @@ export default function AboutPage() {
             <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
               {valueProps.map((prop, index) => (
                 <Card key={prop.title} 
-                      className="text-left bg-secondary/30 border-l-4 border-primary flex items-center p-6">
+                      className="text-left bg-card border-l-4 border-primary flex items-center p-6">
                   <div className="pr-6">
                     {prop.icon}
                   </div>

@@ -9,22 +9,25 @@ import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/s
 const NavLink = ({ href, children, onClick, isExternal = false }: { href: string; children: React.ReactNode; onClick?: () => void; isExternal?: boolean }) => {
   const commonProps = {
     onClick: onClick,
-    className: "font-medium text-foreground/80 hover:text-primary transition-all duration-300 px-3 py-2 rounded-md text-sm",
+    className: "font-medium text-foreground/60 hover:text-primary relative after:content-[''] after:absolute after:left-0 after:bottom-[-2px] after:w-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300 hover:after:w-full",
   };
 
-  const linkContent = <span className="text-2xl md:text-sm">{children}</span>;
+  const linkContent = <span className="text-sm">{children}</span>;
+  const mobileLinkContent = <span className="text-2xl md:text-sm">{children}</span>;
 
   if (isExternal) {
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" {...commonProps}>
-        {linkContent}
+        <span className="md:hidden">{mobileLinkContent}</span>
+        <span className="hidden md:inline">{linkContent}</span>
       </a>
     );
   }
 
   return (
     <Link href={href} {...commonProps}>
-      {linkContent}
+       <span className="md:hidden">{mobileLinkContent}</span>
+       <span className="hidden md:inline">{linkContent}</span>
     </Link>
   );
 };
@@ -55,7 +58,7 @@ export function Header() {
       <SheetClose asChild><NavLink href="/about" onClick={closeSheet}>Tentang BCC</NavLink></SheetClose>
       <SheetClose asChild><NavLink href="/technical-handbook.pdf" isExternal onClick={closeSheet}>Regulasi</NavLink></SheetClose>
       <SheetClose asChild><NavLink href="/partners" onClick={closeSheet}>Mitra Kami</NavLink></SheetClose>
-      <SheetClose asChild><a href="#contact" onClick={closeSheetAndScroll} className="font-medium text-foreground/80 hover:text-primary transition-all duration-300 px-3 py-2 rounded-md hover:bg-secondary text-2xl md:text-sm">Kontak</a></SheetClose>
+      <SheetClose asChild><a href="#contact" onClick={closeSheetAndScroll} className="font-medium text-foreground/60 hover:text-primary transition-all duration-300 py-2 rounded-md hover:bg-secondary text-2xl md:text-sm">Kontak</a></SheetClose>
     </>
   );
   
@@ -68,12 +71,12 @@ export function Header() {
             </Link>
         </div>
 
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden md:flex items-center gap-6">
            <NavLink href="/">Beranda</NavLink>
            <NavLink href="/about">Tentang BCC</NavLink>
            <NavLink href="/technical-handbook.pdf" isExternal>Regulasi</NavLink>
            <NavLink href="/partners">Mitra Kami</NavLink>
-           <a href="#contact" onClick={handleScroll} className="font-medium text-foreground/80 hover:text-primary transition-all duration-300 px-3 py-2 rounded-md text-sm">Kontak</a>
+           <a href="#contact" onClick={handleScroll} className="font-medium text-foreground/60 hover:text-primary relative after:content-[''] after:absolute after:left-0 after:bottom-[-2px] after:w-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300 hover:after:w-full text-sm">Kontak</a>
         </nav>
 
         <div className="ml-auto flex items-center gap-2">

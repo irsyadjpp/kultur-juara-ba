@@ -32,7 +32,7 @@ export function ValuePropositionSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {valueProps.map((prop, index) => (
             <Card key={prop.title} 
-                  className="text-center bg-secondary/50 hover:bg-secondary border-2 border-transparent hover:border-primary transition-all duration-300 transform hover:-translate-y-2 group"
+                  className="text-center bg-card hover:bg-secondary border-2 border-transparent hover:border-primary transition-all duration-300 transform hover:-translate-y-2 group"
                   style={{ animationDelay: `${index * 150}ms`, animation: `fade-in-up 0.5s ease-out forwards` }}>
               <CardHeader className="items-center">
                 <div className="p-4 bg-primary/10 rounded-full mb-4 transition-transform duration-300 group-hover:scale-110">
