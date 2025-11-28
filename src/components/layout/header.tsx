@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Dribbble, Menu, BookText, Info, Users, Calendar, Handshake, Mail } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 
@@ -64,7 +64,6 @@ export function Header() {
       <div className="container flex h-16 items-center">
         <div className="mr-auto flex items-center">
             <Link href="/" className="flex items-center gap-2">
-            <Dribbble className="h-7 w-7 text-primary" />
             <span className="font-bold font-headline text-xl tracking-tighter">BCC 2026</span>
             </Link>
         </div>
