@@ -24,60 +24,64 @@ export function Header() {
   const navItems = () => (
     <>
       <SheetClose asChild><NavLink href="/" onClick={closeSheet}>Beranda</NavLink></SheetClose>
-      <SheetClose asChild><NavLink href="/about" onClick={closeSheet}>Tentang</NavLink></SheetClose>
-      <SheetClose asChild><NavLink href="/partners" onClick={closeSheet}>Mitra</NavLink></SheetClose>
+      <SheetClose asChild><NavLink href="/#schedule" onClick={closeSheet}>Jadwal</NavLink></SheetClose>
+      <SheetClose asChild><NavLink href="/#levels" onClick={closeSheet}>Syarat Level</NavLink></SheetClose>
+      <SheetClose asChild><NavLink href="/#registration" onClick={closeSheet}>Cara Daftar</NavLink></SheetClose>
+      <SheetClose asChild><NavLink href="/#venue" onClick={closeSheet}>Lokasi</NavLink></SheetClose>
       <SheetClose asChild><NavLink href="/contact" onClick={closeSheet}>Kontak</NavLink></SheetClose>
     </>
   );
   
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background">
-      <div className="relative flex h-16 items-center px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative flex h-16 items-center justify-between">
+          <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2">
                 <Image src="/images/logo.png" alt="BCC 2026 Logo" width={28} height={28} />
                 <span className="font-semibold font-headline text-xl tracking-tighter whitespace-nowrap">BCC 2026</span>
             </Link>
-        </div>
+          </div>
 
-        <div className="container mx-auto flex h-16 items-center justify-center">
-            <nav className="hidden md:flex items-center gap-6">
-                <NavLink href="/">Beranda</NavLink>
-                <NavLink href="/about">Tentang</NavLink>
-                <NavLink href="/partners">Mitra</NavLink>
-                <NavLink href="/contact">Kontak</NavLink>
-            </nav>
-        </div>
+          <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-6">
+              <NavLink href="/">Beranda</NavLink>
+              <NavLink href="/#schedule">Jadwal</NavLink>
+              <NavLink href="/#levels">Syarat Level</NavLink>
+              <NavLink href="/#registration">Cara Daftar</NavLink>
+              <NavLink href="/#venue">Lokasi</NavLink>
+              <NavLink href="/contact">Kontak</NavLink>
+          </nav>
 
-        <div className="flex items-center gap-2">
-           <div className="hidden md:flex">
-             <Button asChild>
-              <Link href="/contact">
-                Hubungi Kami
-              </Link>
-            </Button>
-           </div>
-          <div className="flex items-center md:hidden">
-            <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Menu className="h-6 w-6"/>
-                  <span className="sr-only">Open Menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="bg-background w-[280px]">
-                <div className="flex flex-col items-start justify-center h-full space-y-6 p-6">
-                  {navItems()}
-                   <div className="flex flex-col gap-4 w-full pt-4 border-t border-border">
-                     <Button asChild className="w-full">
-                        <Link href="/contact" onClick={closeSheet}>
-                          Hubungi Kami
-                        </Link>
-                      </Button>
-                   </div>
-                </div>
-              </SheetContent>
-            </Sheet>
+          <div className="flex items-center gap-2">
+            <div className="hidden md:flex">
+              <Button asChild>
+                <Link href="/contact">
+                  Hubungi Kami
+                </Link>
+              </Button>
+            </div>
+            <div className="flex items-center md:hidden">
+              <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Menu className="h-6 w-6"/>
+                    <span className="sr-only">Open Menu</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="bg-background w-[280px]">
+                  <div className="flex flex-col items-start justify-center h-full space-y-6 p-6">
+                    {navItems()}
+                    <div className="flex flex-col gap-4 w-full pt-4 border-t border-border">
+                      <Button asChild className="w-full">
+                          <Link href="/contact" onClick={closeSheet}>
+                            Hubungi Kami
+                          </Link>
+                        </Button>
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </div>
       </div>
