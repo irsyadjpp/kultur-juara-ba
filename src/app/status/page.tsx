@@ -1,6 +1,8 @@
+
 'use client';
 
-import { useActionState, useFormStatus } from "react-dom"; 
+import { useActionState } from "react"; 
+import { useFormStatus } from "react-dom";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Input } from "@/components/ui/input";
