@@ -1,10 +1,11 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns';
 
 type CountdownProps = {
-  targetDate: string;
+  targetDate: string; // Expected in "YYYY-MM-DD" format
 };
 
 export function Countdown({ targetDate }: CountdownProps) {
@@ -17,13 +18,17 @@ export function Countdown({ targetDate }: CountdownProps) {
 
   useEffect(() => {
     const calculateTimeLeft = () => {
-      const target = new Date(targetDate);
+      // Create a date object for the target date, explicitly setting time to 00:00:00 in WIB (UTC+7)
+      const targetInWIB = new Date(`${targetDate}T00:00:00+07:00`);
+
+      // Get the current time
       const now = new Date();
       
-      const days = differenceInDays(target, now);
-      const hours = differenceInHours(target, now) % 24;
-      const minutes = differenceInMinutes(target, now) % 60;
-      const seconds = differenceInSeconds(target, now) % 60;
+      // Calculate the difference. date-fns handles the timezone difference correctly.
+      const days = differenceInDays(targetInWIB, now);
+      const hours = differenceInHours(targetInWIB, now) % 24;
+      const minutes = differenceInMinutes(targetInWIB, now) % 60;
+      const seconds = differenceInSeconds(targetInWIB, now) % 60;
 
       setTimeLeft({
         days: Math.max(0, days),
