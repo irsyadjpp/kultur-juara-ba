@@ -3,10 +3,16 @@ import { z } from "zod";
 // Kategori yang tersedia
 export const CATEGORIES = ["Beregu PUTRA", "Beregu PUTRI", "Beregu CAMPURAN"] as const;
 
-// Schema untuk satu pemain
+// Schema untuk satu pemain (UPDATE: Tambah No HP & Tgl Lahir)
 export const playerSchema = z.object({
   fullName: z.string().min(2, "Nama lengkap wajib diisi"),
   nik: z.string().length(16, "NIK harus 16 digit angka").regex(/^\d+$/, "NIK hanya boleh angka"),
+  
+  // --- FIELD BARU ---
+  phone: z.string().min(10, "No HP minimal 10 digit").regex(/^\d+$/, "Hanya angka"),
+  dob: z.string().refine((date) => new Date(date).toString() !== 'Invalid Date', { message: "Tanggal lahir wajib diisi" }),
+  // ------------------
+
   motherName: z.string().min(2, "Nama ibu kandung wajib diisi"),
   ayoId: z.string().min(1, "Username Ayo wajib diisi"),
   level: z.enum(["Beginner", "Intermediate", "Advance"], {
@@ -14,31 +20,24 @@ export const playerSchema = z.object({
   }),
   videoUrl: z.string().url("URL tidak valid").includes("youtube", { message: "Wajib link YouTube" }),
   
-  // UPDATE: Validasi Kategori (Gender Rule)
   participation: z.array(z.enum(CATEGORIES))
     .min(1, "Pilih minimal 1 kategori")
     .refine((cats) => {
       const hasMale = cats.includes("Beregu PUTRA");
       const hasFemale = cats.includes("Beregu PUTRI");
-      // Tidak boleh ada Putra DAN Putri sekaligus
       return !(hasMale && hasFemale);
-    }, "Tidak boleh merangkap Beregu Putra dan Putri sekaligus. Pilih salah satu + Campuran."),
+    }, "Tidak boleh merangkap Beregu Putra dan Putri sekaligus."),
 });
 
 // Schema utama
 export const registrationFormSchema = z.object({
-  // Identitas Komunitas
   communityName: z.string().min(2, "Nama Komunitas wajib diisi"),
   managerName: z.string().min(2, "Nama manajer wajib diisi"),
   managerWhatsapp: z.string().min(10, "Nomor WhatsApp tidak valid"),
   managerEmail: z.string().email("Email tidak valid"),
   basecamp: z.string().min(2, "Basecamp wajib diisi"),
   instagram: z.string().optional(),
-
-  // Data Pemain
   players: z.array(playerSchema),
-
-  // Bukti Transfer
   transferProof: z.any()
     .refine((files) => files?.length == 1, "Bukti transfer wajib diupload")
     .refine((files) => files?.[0]?.size <= 5000000, `Maksimal 5MB.`)
@@ -46,15 +45,13 @@ export const registrationFormSchema = z.object({
       (files) => ['image/jpeg', 'image/png', 'application/pdf'].includes(files?.[0]?.type),
       "Format .jpg, .png, atau .pdf"
     ),
-
-  // Pernyataan
   agreementValidData: z.literal(true, { errorMap: () => ({ message: "Persetujuan diperlukan" }) }),
   agreementWaiver: z.literal(true, { errorMap: () => ({ message: "Persetujuan diperlukan" }) }),
   agreementTpf: z.literal(true, { errorMap: () => ({ message: "Persetujuan diperlukan" }) }),
   agreementRules: z.literal(true, { errorMap: () => ({ message: "Persetujuan diperlukan" }) }),
 })
 .superRefine((data, ctx) => {
-  // VALIDASI KUOTA TIM (Tetap dipertahankan agar tim yang didaftarkan valid secara jumlah)
+  // VALIDASI KUOTA TIM (UPDATE: Limit Dinamis)
   const counts: Record<string, number> = {
     "Beregu PUTRA": 0,
     "Beregu PUTRI": 0,
@@ -68,6 +65,9 @@ export const registrationFormSchema = z.object({
   });
 
   Object.entries(counts).forEach(([cat, count]) => {
+    // Tentukan batas maksimal berdasarkan kategori
+    const maxLimit = cat === "Beregu PUTRI" ? 18 : 14;
+    
     if (count > 0) {
       if (count < 10) {
         ctx.addIssue({
@@ -76,10 +76,10 @@ export const registrationFormSchema = z.object({
           path: ["players"]
         });
       }
-      if (count > 14) {
+      if (count > maxLimit) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: `${cat}: Kelebihan pemain! (Ada ${count}, Maksimal 14)`,
+          message: `${cat}: Kelebihan pemain! (Ada ${count}, Maksimal ${maxLimit})`,
           path: ["players"]
         });
       }
