@@ -40,22 +40,22 @@ export function Countdown({ targetDate }: CountdownProps) {
   }, [targetDate]);
 
   return (
-    <div className="flex items-end gap-2 md:gap-3">
+    <div className="flex items-baseline gap-2 md:gap-3">
         <div className="flex flex-col items-center">
             <span className="text-4xl md:text-5xl font-bold font-headline leading-none">{String(timeLeft.days).padStart(2, '0')}</span>
             <span className="text-xs text-primary-foreground/80">Hari</span>
         </div>
-         <span className="text-3xl md:text-4xl font-bold font-headline -mb-1">:</span>
+         <span className="text-3xl md:text-4xl font-bold font-headline">:</span>
         <div className="flex flex-col items-center">
             <span className="text-4xl md:text-5xl font-bold font-headline leading-none">{String(timeLeft.hours).padStart(2, '0')}</span>
             <span className="text-xs text-primary-foreground/80">Jam</span>
         </div>
-        <span className="text-3xl md:text-4xl font-bold font-headline -mb-1">:</span>
+        <span className="text-3xl md:text-4xl font-bold font-headline">:</span>
         <div className="flex flex-col items-center">
             <span className="text-4xl md:text-5xl font-bold font-headline leading-none">{String(timeLeft.minutes).padStart(2, '0')}</span>
             <span className="text-xs text-primary-foreground/80">Menit</span>
         </div>
-        <span className="text-3xl md:text-4xl font-bold font-headline -mb-1">:</span>
+        <span className="text-3xl md:text-4xl font-bold font-headline">:</span>
         <div className="flex flex-col items-center">
             <span className="text-4xl md:text-5xl font-bold font-headline leading-none">{String(timeLeft.seconds).padStart(2, '0')}</span>
             <span className="text-xs text-primary-foreground/80">Detik</span>
