@@ -6,28 +6,10 @@ import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 
-const NavLink = ({ href, children, onClick, isExternal = false }: { href: string; children: React.ReactNode; onClick?: () => void; isExternal?: boolean }) => {
-  const commonProps = {
-    onClick: onClick,
-    className: "font-medium text-foreground/80 hover:text-primary transition-colors",
-  };
-
-  const linkContent = <span className="text-sm">{children}</span>;
-  const mobileLinkContent = <span className="text-2xl md:text-sm">{children}</span>;
-
-  if (isExternal) {
-    return (
-      <a href={href} target="_blank" rel="noopener noreferrer" {...commonProps}>
-        <span className="md:hidden">{mobileLinkContent}</span>
-        <span className="hidden md:inline">{linkContent}</span>
-      </a>
-    );
-  }
-
+const NavLink = ({ href, children, onClick }: { href: string; children: React.ReactNode; onClick?: () => void; }) => {
   return (
-    <Link href={href} {...commonProps}>
-       <span className="md:hidden">{mobileLinkContent}</span>
-       <span className="hidden md:inline">{linkContent}</span>
+    <Link href={href} onClick={onClick} className="font-medium text-foreground/80 hover:text-primary transition-colors">
+      <span className="text-2xl md:text-sm">{children}</span>
     </Link>
   );
 };
@@ -55,9 +37,6 @@ export function Header() {
   const navItems = () => (
     <>
       <SheetClose asChild><NavLink href="/" onClick={closeSheet}>Beranda</NavLink></SheetClose>
-      <SheetClose asChild><NavLink href="/about" onClick={closeSheet}>Tentang</NavLink></SheetClose>
-      <SheetClose asChild><NavLink href="/technical-handbook.pdf" isExternal onClick={closeSheet}>Regulasi</NavLink></SheetClose>
-      <SheetClose asChild><NavLink href="/partners" onClick={closeSheet}>Mitra</NavLink></SheetClose>
       <SheetClose asChild><a href="#contact" onClick={closeSheetAndScroll} className="font-medium text-foreground/80 hover:text-primary transition-colors text-2xl md:text-sm">Kontak</a></SheetClose>
     </>
   );
@@ -73,22 +52,14 @@ export function Header() {
 
         <nav className="hidden md:flex items-center gap-6">
            <NavLink href="/">Beranda</NavLink>
-           <NavLink href="/about">Tentang</NavLink>
-           <NavLink href="/technical-handbook.pdf" isExternal>Regulasi</NavLink>
-           <NavLink href="/partners">Mitra</NavLink>
            <a href="#contact" onClick={handleScroll} className="font-medium text-foreground/80 hover:text-primary transition-colors text-sm">Kontak</a>
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          <Button asChild variant="ghost" className="hidden md:flex">
-             <Link href="https://ayo.co.id/" target="_blank" rel="noopener noreferrer">
-              Bagan & Jadwal
-            </Link>
-          </Button>
            <Button asChild>
-            <Link href="https://ayo.co.id/register" target="_blank" rel="noopener noreferrer">
-              Daftar
-            </Link>
+            <a href="#contact" onClick={handleScroll}>
+              Hubungi Kami
+            </a>
           </Button>
           <div className="flex items-center md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -103,14 +74,9 @@ export function Header() {
                   {navItems()}
                    <div className="flex flex-col gap-4 w-full pt-4 border-t border-border">
                      <Button asChild className="w-full">
-                        <Link href="https://ayo.co.id/register" target="_blank" rel="noopener noreferrer">
-                          Daftar
-                        </Link>
-                      </Button>
-                      <Button asChild variant="outline" className="w-full">
-                         <Link href="https://ayo.co.id/" target="_blank" rel="noopener noreferrer">
-                          Bagan & Jadwal
-                        </Link>
+                        <a href="#contact" onClick={closeSheetAndScroll}>
+                          Hubungi Kami
+                        </a>
                       </Button>
                    </div>
                 </div>
