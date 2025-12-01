@@ -6,6 +6,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Trophy, ThumbsUp, Loader2 } from 'lucide-react';
 import { submitVote } from '@/app/checkin/actions';
 
+const teams = [
+  { name: 'Tim Elang', category: 'Ganda Putra' },
+  { name: 'Tim Rajawali', category: 'Ganda Putra' },
+  { name: 'SGS PLN', category: 'Ganda Putri' },
+  { name: 'Mutiara C', category: 'Ganda Putri' },
+  { name: 'PB Djarum', category: 'Ganda Campuran' },
+  { name: 'Jaya Raya', category: 'Ganda Campuran' },
+  { name: 'Exist BC', category: 'Tunggal Putra' },
+  { name: 'Sarwendah BC', category: 'Tunggal Putra' },
+  { name: 'Taufik H. A.', category: 'Tunggal Putri' },
+  { name: 'Victory B.', category: 'Tunggal Putri' },
+];
+
 export function VoteWidget({ visitorId }: { visitorId: string }) {
   const [hasVoted, setHasVoted] = useState(false);
   const [isVoting, setIsVoting] = useState(false);
@@ -36,33 +49,22 @@ export function VoteWidget({ visitorId }: { visitorId: string }) {
         </CardTitle>
       </CardHeader>
       <CardContent className="grid grid-cols-2 gap-3">
-        <Button 
-          onClick={() => handleVote("Tim Elang")} 
-          disabled={isVoting}
-          variant="outline" 
-          className="h-auto py-3 flex flex-col gap-1 hover:border-primary hover:bg-primary/5 transition-all"
-        >
-          {isVoting ? <Loader2 className="w-4 h-4 animate-spin" /> : (
-            <>
-              <span className="font-bold text-sm">Tim Elang</span>
-              <span className="text-[10px] text-muted-foreground font-normal">Ganda Putra</span>
-            </>
-          )}
-        </Button>
-
-        <Button 
-          onClick={() => handleVote("Tim Rajawali")} 
-          disabled={isVoting}
-          variant="outline" 
-          className="h-auto py-3 flex flex-col gap-1 hover:border-primary hover:bg-primary/5 transition-all"
-        >
-          {isVoting ? <Loader2 className="w-4 h-4 animate-spin" /> : (
-            <>
-              <span className="font-bold text-sm">Tim Rajawali</span>
-              <span className="text-[10px] text-muted-foreground font-normal">Ganda Putra</span>
-            </>
-          )}
-        </Button>
+        {teams.map((team) => (
+          <Button 
+            key={team.name}
+            onClick={() => handleVote(team.name)} 
+            disabled={isVoting}
+            variant="outline" 
+            className="h-auto py-3 flex flex-col gap-1 hover:border-primary hover:bg-primary/5 transition-all"
+          >
+            {isVoting ? <Loader2 className="w-4 h-4 animate-spin" /> : (
+              <>
+                <span className="font-bold text-sm">{team.name}</span>
+                <span className="text-[10px] text-muted-foreground font-normal">{team.category}</span>
+              </>
+            )}
+          </Button>
+        ))}
       </CardContent>
     </Card>
   );
