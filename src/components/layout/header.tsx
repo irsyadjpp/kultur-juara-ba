@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
@@ -46,19 +47,7 @@ export function Header() {
       <div className="container flex h-16 items-center">
         <div className="mr-8 flex items-center">
             <Link href="/" className="flex items-center gap-2">
-            <svg
-              className="w-7 h-7 text-primary"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" />
-              <path d="M2 12l10 5 10-5" />
-            </svg>
+            <Image src="/images/logo.png" alt="BCC 2026 Logo" width={28} height={28} />
             <span className="font-extrabold font-headline text-xl tracking-tighter">BCC 2026</span>
             </Link>
         </div>
