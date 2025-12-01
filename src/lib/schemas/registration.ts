@@ -13,13 +13,21 @@ export const playerSchema = z.object({
     required_error: "Pilih level",
   }),
   videoUrl: z.string().url("URL tidak valid").includes("youtube", { message: "Wajib link YouTube" }),
-  // UPDATE: Pemain bisa memilih lebih dari 1 kategori
-  participation: z.array(z.enum(CATEGORIES)).min(1, "Pilih minimal 1 kategori untuk pemain ini"),
+  
+  // UPDATE: Validasi Kategori (Gender Rule)
+  participation: z.array(z.enum(CATEGORIES))
+    .min(1, "Pilih minimal 1 kategori")
+    .refine((cats) => {
+      const hasMale = cats.includes("Beregu PUTRA");
+      const hasFemale = cats.includes("Beregu PUTRI");
+      // Tidak boleh ada Putra DAN Putri sekaligus
+      return !(hasMale && hasFemale);
+    }, "Tidak boleh merangkap Beregu Putra dan Putri sekaligus. Pilih salah satu + Campuran."),
 });
 
 // Schema utama
 export const registrationFormSchema = z.object({
-  // Identitas Komunitas (Bukan lagi per tim, tapi per komunitas)
+  // Identitas Komunitas
   communityName: z.string().min(2, "Nama Komunitas wajib diisi"),
   managerName: z.string().min(2, "Nama manajer wajib diisi"),
   managerWhatsapp: z.string().min(10, "Nomor WhatsApp tidak valid"),
@@ -27,7 +35,7 @@ export const registrationFormSchema = z.object({
   basecamp: z.string().min(2, "Basecamp wajib diisi"),
   instagram: z.string().optional(),
 
-  // Data Pemain (Master List)
+  // Data Pemain
   players: z.array(playerSchema),
 
   // Bukti Transfer
@@ -46,9 +54,7 @@ export const registrationFormSchema = z.object({
   agreementRules: z.literal(true, { errorMap: () => ({ message: "Persetujuan diperlukan" }) }),
 })
 .superRefine((data, ctx) => {
-  // VALIDASI LINTAS FIELD: Cek kuota per kategori
-  
-  // 1. Hitung jumlah pemain per kategori
+  // VALIDASI KUOTA TIM (Tetap dipertahankan agar tim yang didaftarkan valid secara jumlah)
   const counts: Record<string, number> = {
     "Beregu PUTRA": 0,
     "Beregu PUTRI": 0,
@@ -61,15 +67,13 @@ export const registrationFormSchema = z.object({
     });
   });
 
-  // 2. Cek aturan minimal 10 & maksimal 14
-  // Kita hanya validasi kategori yang diikuti (jumlah > 0)
   Object.entries(counts).forEach(([cat, count]) => {
-    if (count > 0) { // Jika ada yang daftar kategori ini
+    if (count > 0) {
       if (count < 10) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: `${cat}: Kurang pemain! (Baru ${count}, Minimal 10)`,
-          path: ["players"] // Error akan muncul di bagian players
+          path: ["players"]
         });
       }
       if (count > 14) {
@@ -82,9 +86,7 @@ export const registrationFormSchema = z.object({
     }
   });
 
-  // 3. Pastikan minimal ada 1 kategori yang valid (total pemain >= 10)
-  const totalParticipation = data.players.reduce((sum, player) => sum + player.participation.length, 0);
-
+  const totalParticipation = data.players.reduce((sum, p) => sum + p.participation.length, 0);
   if (totalParticipation === 0 && data.players.length > 0) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,

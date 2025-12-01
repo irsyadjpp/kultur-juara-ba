@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Trash2, Info, Users, AlertCircle, CheckCircle2, Instagram, Receipt } from "lucide-react";
+import { Loader2, Plus, Trash2, Info, Users, AlertCircle, CheckCircle2, Instagram, Receipt, Wallet } from "lucide-react";
 import { useState, useEffect } from "react";
 import confetti from 'canvas-confetti';
 import Link from "next/link";
@@ -24,7 +24,6 @@ export default function RegistrationPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [submittedData, setSubmittedData] = useState<RegistrationFormValues | null>(null);
 
-  // Inisialisasi Form
   const form = useForm<RegistrationFormValues>({
     resolver: zodResolver(registrationFormSchema),
     defaultValues: {
@@ -44,29 +43,37 @@ export default function RegistrationPage() {
     control: form.control,
   });
 
-  // --- LOGIC MENGHITUNG TOTAL & KUOTA REAL-TIME ---
+  // --- LOGIC BARU: HITUNG BIAYA PER SLOT ---
   const watchedPlayers = form.watch("players");
   
-  const stats: Record<string, number> = {
+  const stats: {
+    "Beregu PUTRA": number;
+    "Beregu PUTRI": number;
+    "Beregu CAMPURAN": number;
+    totalSlots: number;
+  } = {
     "Beregu PUTRA": 0,
     "Beregu PUTRI": 0,
     "Beregu CAMPURAN": 0,
+    totalSlots: 0
   };
 
   watchedPlayers?.forEach(p => {
-    p.participation?.forEach((cat: any) => {
-      if (stats[cat as keyof typeof stats] !== undefined) {
-        stats[cat as keyof typeof stats]++;
-      }
-    });
+    if (p.participation && p.participation.length > 0) {
+        p.participation.forEach((cat: any) => {
+            if (stats[cat as keyof typeof stats] !== undefined) {
+                stats[cat as keyof typeof stats]++;
+                stats.totalSlots++; // Hitung total slot terpakai
+            }
+        });
+    }
   });
-  
-  const activeCategoriesCount = Object.values(stats).filter(count => count > 0).length;
-  const potentialBill = activeCategoriesCount * 1000000; 
 
+  // Biaya: Rp 100.000 per slot (per atlit per kategori)
+  const COST_PER_SLOT = 100000;
+  const potentialBill = stats.totalSlots * COST_PER_SLOT;
   // --- END LOGIC ---
 
-  // Efek Confetti
   useEffect(() => {
     if (isSuccess) {
       confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
@@ -76,7 +83,6 @@ export default function RegistrationPage() {
   async function onSubmit(data: RegistrationFormValues) {
     setIsSubmitting(true);
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsSubmitting(false);
     setSubmittedData(data);
     setIsSuccess(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -97,20 +103,20 @@ export default function RegistrationPage() {
                     </p>
                 </div>
                 <div className="bg-white border rounded-lg p-4 text-left grid grid-cols-1 gap-2">
-                    <div className="flex justify-between border-b pb-2">
-                        <span className="text-muted-foreground">Total Tim Didaftarkan:</span>
-                        <span className="font-bold">{activeCategoriesCount} Tim</span>
+                     <div className="flex justify-between border-b pb-2">
+                        <span className="text-muted-foreground">Total Slot Terdaftar:</span>
+                        <span className="font-bold">{stats.totalSlots} Slot</span>
                     </div>
-                     <div className="flex justify-between pt-2">
-                        <span className="text-muted-foreground">Total Pemain:</span>
-                        <span className="font-bold">{submittedData?.players.length} Orang</span>
+                     <div className="flex justify-between pt-2 text-lg text-primary">
+                        <span className="font-bold">Total Biaya:</span>
+                        <span className="font-black">Rp {potentialBill.toLocaleString('id-ID')}</span>
                     </div>
                 </div>
                 <Button onClick={() => window.location.reload()} variant="outline">Daftar Lagi</Button>
              </CardContent>
           </Card>
         </main>
-        <Footer />
+        <Footer/>
       </div>
     );
   }
@@ -121,10 +127,11 @@ export default function RegistrationPage() {
       <main className="flex-grow py-12 px-4 md:px-8 bg-secondary/10 relative">
         <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
           
+          {/* KOLOM KIRI: FORM */}
           <div className="lg:col-span-2 space-y-8">
              <div className="space-y-2">
                 <h1 className="text-3xl font-black font-headline text-primary">REGISTRASI KOMUNITAS</h1>
-                <p className="text-muted-foreground">Satu formulir untuk semua tim Anda.</p>
+                <p className="text-muted-foreground">Biaya pendaftaran: <strong>Rp 100.000</strong> / atlet / kategori.</p>
              </div>
 
              <Form {...form}>
@@ -132,20 +139,12 @@ export default function RegistrationPage() {
                 
                 <Card>
                   <CardHeader className="bg-primary/5 border-b pb-4">
-                    <CardTitle className="text-lg text-primary font-bold">1. Identitas Komunitas & Manajer</CardTitle>
+                    <CardTitle className="text-lg text-primary font-bold">1. Identitas Komunitas</CardTitle>
                   </CardHeader>
                   <CardContent className="p-6 space-y-4">
-                    <FormField
-                      control={form.control}
-                      name="communityName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Nama Komunitas / PB</FormLabel>
-                          <FormControl><Input placeholder="PB Juara Bandung" {...field} /></FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <FormField control={form.control} name="communityName" render={({ field }) => (
+                        <FormItem><FormLabel>Nama Komunitas</FormLabel><FormControl><Input placeholder="PB Juara Bandung" {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormField control={form.control} name="managerName" render={({ field }) => (
                             <FormItem><FormLabel>Nama Manajer</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
@@ -154,11 +153,11 @@ export default function RegistrationPage() {
                             <FormItem><FormLabel>WhatsApp</FormLabel><FormControl><Input type="tel" {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
                     </div>
-                    <FormField control={form.control} name="managerEmail" render={({ field }) => (
+                     <FormField control={form.control} name="managerEmail" render={({ field }) => (
                         <FormItem><FormLabel>Email</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                      <FormField control={form.control} name="basecamp" render={({ field }) => (
-                        <FormItem><FormLabel>Basecamp Latihan</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel>Basecamp</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                   </CardContent>
                 </Card>
@@ -169,32 +168,32 @@ export default function RegistrationPage() {
                         <CardTitle className="text-lg text-primary font-bold">2. Data Pemain</CardTitle>
                         <Badge variant="secondary">{fields.length} Pemain</Badge>
                     </div>
-                    <CardDescription>Masukkan semua pemain, lalu centang kategori yang diikuti.</CardDescription>
+                    <CardDescription>Centang kategori yang diikuti. Sistem akan menghitung biaya otomatis.</CardDescription>
                   </CardHeader>
                   <CardContent className="p-6 space-y-6">
                     
                     {fields.map((field, index) => (
-                      <div key={field.id} className="p-4 border rounded-lg bg-card relative group">
+                      <div key={field.id} className="p-5 border rounded-xl bg-card relative shadow-sm hover:border-primary/30 transition-colors">
                         <div className="absolute top-4 right-4">
                             <Button type="button" variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive" onClick={() => remove(index)}>
                                 <Trash2 className="w-4 h-4" />
                             </Button>
                         </div>
                         
-                        <h4 className="font-bold mb-4 text-sm text-muted-foreground">Pemain #{index + 1}</h4>
+                        <div className="flex items-center gap-2 mb-4">
+                            <div className="bg-primary/10 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-primary">{index + 1}</div>
+                            <h4 className="font-bold text-sm text-foreground">Identitas Pemain</h4>
+                        </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                              <FormField control={form.control} name={`players.${index}.fullName`} render={({ field }) => (
                                 <FormItem><FormLabel>Nama Lengkap</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                              )} />
                              <FormField control={form.control} name={`players.${index}.nik`} render={({ field }) => (
-                                <FormItem><FormLabel>NIK</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                                <FormItem><FormLabel>NIK (KTP)</FormLabel><FormControl><Input {...field} maxLength={16} /></FormControl><FormMessage /></FormItem>
                              )} />
-                              <FormField control={form.control} name={`players.${index}.motherName`} render={({ field }) => (
-                                <FormItem><FormLabel>Nama Ibu Kandung</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                             )} />
-                             <FormField control={form.control} name={`players.${index}.ayoId`} render={({ field }) => (
-                                <FormItem><FormLabel>Akun Ayo Indonesia</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                              <FormField control={form.control} name={`players.${index}.ayoId`} render={({ field }) => (
+                                <FormItem><FormLabel>Akun Ayo Indonesia</FormLabel><FormControl><Input placeholder="@username" {...field} /></FormControl><FormMessage /></FormItem>
                              )} />
                              <FormField control={form.control} name={`players.${index}.level`} render={({ field }) => (
                                 <FormItem>
@@ -211,54 +210,67 @@ export default function RegistrationPage() {
                                 </FormItem>
                              )} />
                         </div>
-                        
-                        <FormField control={form.control} name={`players.${index}.videoUrl`} render={({ field }) => (
-                            <FormItem className="mb-4"><FormLabel>Link Video (YouTube)</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <FormField control={form.control} name={`players.${index}.motherName`} render={({ field }) => (
+                                <FormItem><FormLabel>Nama Ibu Kandung (BPJS)</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name={`players.${index}.videoUrl`} render={({ field }) => (
+                                <FormItem><FormLabel>Link Video (YouTube)</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                        </div>
 
+                        {/* MULTI-CATEGORY CHECKBOX DENGAN LOGIKA KHUSUS */}
                         <FormField
                             control={form.control}
                             name={`players.${index}.participation`}
-                            render={() => (
-                                <FormItem>
-                                    <div className="mb-2 font-medium text-sm">Ikut Kategori:</div>
+                            render={({ field }) => {
+                                const selected = field.value || [];
+                                const isMaleSelected = selected.includes("Beregu PUTRA");
+                                const isFemaleSelected = selected.includes("Beregu PUTRI");
+
+                                return (
+                                <FormItem className="bg-secondary/30 p-3 rounded-lg mt-2">
+                                    <div className="mb-3 font-semibold text-sm flex items-center gap-2">
+                                        <Wallet className="w-4 h-4 text-primary" />
+                                        Pilih Kategori (Rp 100.000/kategori):
+                                    </div>
                                     <div className="flex flex-wrap gap-4">
-                                        {CATEGORIES.map((cat) => (
-                                            <FormField
+                                        {CATEGORIES.map((cat) => {
+                                            // LOGIKA DISABLE: 
+                                            // Jika sudah pilih Putra, maka Putri disable.
+                                            // Jika sudah pilih Putri, maka Putra disable.
+                                            let isDisabled = false;
+                                            if (cat === "Beregu PUTRA" && isFemaleSelected) isDisabled = true;
+                                            if (cat === "Beregu PUTRI" && isMaleSelected) isDisabled = true;
+
+                                            return (
+                                            <FormItem
                                                 key={cat}
-                                                control={form.control}
-                                                name={`players.${index}.participation`}
-                                                render={({ field }) => {
-                                                    return (
-                                                        <FormItem
-                                                            key={cat}
-                                                            className="flex flex-row items-start space-x-2 space-y-0"
-                                                        >
-                                                            <FormControl>
-                                                                <Checkbox
-                                                                    checked={field.value?.includes(cat)}
-                                                                    onCheckedChange={(checked) => {
-                                                                        const newValue = checked
-                                                                            ? [...(field.value || []), cat]
-                                                                            : (field.value || []).filter(
-                                                                                (value) => value !== cat
-                                                                            );
-                                                                        field.onChange(newValue);
-                                                                    }}
-                                                                />
-                                                            </FormControl>
-                                                            <FormLabel className="text-sm font-normal cursor-pointer">
-                                                                {cat.replace('Beregu ', '')}
-                                                            </FormLabel>
-                                                        </FormItem>
-                                                    )
-                                                }}
-                                            />
-                                        ))}
+                                                className={`flex flex-row items-start space-x-2 space-y-0 ${isDisabled ? 'opacity-50' : ''}`}
+                                            >
+                                                <FormControl>
+                                                    <Checkbox
+                                                        checked={selected.includes(cat)}
+                                                        disabled={isDisabled}
+                                                        onCheckedChange={(checked) => {
+                                                            const newValue = checked
+                                                                ? [...(field.value || []), cat]
+                                                                : (field.value || []).filter(
+                                                                    (value) => value !== cat
+                                                                );
+                                                            field.onChange(newValue);
+                                                        }}
+                                                    />
+                                                </FormControl>
+                                                <FormLabel className="text-sm font-normal cursor-pointer">
+                                                    {cat.replace('Beregu ', '')}
+                                                </FormLabel>
+                                            </FormItem>
+                                        )})}
                                     </div>
                                     <FormMessage />
                                 </FormItem>
-                            )}
+                            )}}
                         />
                       </div>
                     ))}
@@ -266,60 +278,60 @@ export default function RegistrationPage() {
                     <Button
                       type="button"
                       variant="outline"
-                      className="w-full py-6 border-dashed"
+                      className="w-full py-6 border-dashed border-2 hover:border-primary hover:text-primary"
                       onClick={() => append({ fullName: "", nik: "", motherName: "", ayoId: "", level: undefined as any, videoUrl: "", participation: [] })}
                     >
                       <Plus className="w-4 h-4 mr-2" /> Tambah Pemain
                     </Button>
                     
                     {form.formState.errors.players?.root && (
-                         <div className="p-3 bg-destructive/10 text-destructive text-sm rounded-md font-medium flex items-center gap-2">
+                         <div className="p-3 bg-destructive/10 text-destructive text-sm rounded-md font-medium flex items-center gap-2 border border-destructive/20">
                             <AlertCircle className="w-4 h-4" />
                             {form.formState.errors.players.root.message}
                          </div>
                     )}
-                     {form.formState.errors.players && !form.formState.errors.players.root && (
-                         <div className="p-3 bg-destructive/10 text-destructive text-sm rounded-md font-medium flex items-center gap-2">
-                            <AlertCircle className="w-4 h-4" />
-                            Pastikan semua data pemain terisi dengan benar.
-                         </div>
-                    )}
-
 
                   </CardContent>
                 </Card>
 
                  <Card>
-                    <CardHeader className="bg-primary/5 border-b pb-4"><CardTitle className="text-lg text-primary font-bold">3. Pembayaran & Legal</CardTitle></CardHeader>
+                    <CardHeader className="bg-primary/5 border-b pb-4"><CardTitle className="text-lg text-primary font-bold">3. Pembayaran</CardTitle></CardHeader>
                     <CardContent className="p-6 space-y-4">
+                        <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-md mb-4">
+                            <p className="text-sm text-blue-800">
+                                Total Tagihan Anda: <strong>Rp {potentialBill.toLocaleString('id-ID')}</strong>
+                                <br/>(Untuk {stats.totalSlots} Slot Pendaftaran)
+                            </p>
+                        </div>
                         <FormField control={form.control} name="transferProof" render={({ field: { value, onChange, ...fieldProps } }) => (
                             <FormItem>
-                                <FormLabel>Upload Bukti Transfer (Estimasi: Rp {potentialBill.toLocaleString('id-ID')})</FormLabel>
+                                <FormLabel>Upload Bukti Transfer</FormLabel>
                                 <FormControl><Input {...fieldProps} type="file" accept="image/*,application/pdf" onChange={(e) => onChange(e.target.files)} /></FormControl>
                                 <FormMessage />
                             </FormItem>
                         )} />
-                         <FormField control={form.control} name="agreementValidData" render={({ field }) => (
-                            <FormItem className="flex gap-2 items-center space-y-0"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><FormLabel className="font-normal text-sm">Saya menyatakan data benar.</FormLabel></FormItem>
-                        )} />
-                         <FormField control={form.control} name="agreementWaiver" render={({ field }) => (
-                            <FormItem className="flex gap-2 items-center space-y-0"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><FormLabel className="font-normal text-sm">Setuju Waiver of Liability.</FormLabel></FormItem>
-                        )} />
-                         <FormField control={form.control} name="agreementTpf" render={({ field }) => (
-                            <FormItem className="flex gap-2 items-center space-y-0"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><FormLabel className="font-normal text-sm">Setuju Keputusan TPF.</FormLabel></FormItem>
-                        )} />
-                         <FormField control={form.control} name="agreementRules" render={({ field }) => (
-                            <FormItem className="flex gap-2 items-center space-y-0"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><FormLabel className="font-normal text-sm">Paham Aturan Main.</FormLabel></FormItem>
-                        )} />
-                        {(form.formState.errors.agreementValidData || form.formState.errors.agreementWaiver || form.formState.errors.agreementTpf || form.formState.errors.agreementRules) && (
-                            <p className="text-sm font-medium text-destructive">Anda harus menyetujui semua pernyataan legal.</p>
-                        )}
+                        
+                        <div className="space-y-2 pt-4 border-t">
+                           {[
+                                { id: "agreementValidData", label: "Data Valid & Benar" },
+                                { id: "agreementWaiver", label: "Setuju Waiver Liability (Asuransi)" },
+                                { id: "agreementTpf", label: "Terima Keputusan Mutlak TPF" },
+                                { id: "agreementRules", label: "Paham Peraturan BCC 2026" }
+                           ].map((item) => (
+                               <FormField key={item.id} control={form.control} name={item.id as any} render={({ field }) => (
+                                   <FormItem className="flex gap-2 items-center space-y-0"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><FormLabel className="font-normal text-sm">{item.label}</FormLabel></FormItem>
+                               )} />
+                           ))}
+                           {(form.formState.errors.agreementValidData || form.formState.errors.agreementWaiver || form.formState.errors.agreementTpf || form.formState.errors.agreementRules) && (
+                                <p className="text-sm font-medium text-destructive">Anda harus menyetujui semua pernyataan legal.</p>
+                           )}
+                        </div>
                     </CardContent>
                  </Card>
 
-                 <div className="block lg:hidden">
-                    <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                        {isSubmitting ? "Mengirim..." : "KIRIM PENDAFTARAN"}
+                 <div className="block lg:hidden sticky bottom-4 z-50">
+                    <Button type="submit" size="lg" className="w-full shadow-xl border-2 border-white" disabled={isSubmitting}>
+                        {isSubmitting ? "Mengirim..." : `BAYAR Rp ${potentialBill.toLocaleString('id-ID')}`}
                     </Button>
                  </div>
 
@@ -327,17 +339,18 @@ export default function RegistrationPage() {
              </Form>
           </div>
 
+          {/* KOLOM KANAN: SUMMARY STICKY */}
           <div className="hidden lg:block lg:col-span-1">
              <div className="sticky top-24 space-y-6">
                 <Card className="border-2 border-primary/20 bg-primary/5 shadow-lg">
                     <CardHeader className="pb-2">
                         <CardTitle className="flex items-center gap-2">
                             <Users className="w-5 h-5 text-primary" />
-                            Status Tim
+                            Status Kuota Tim
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        {Object.entries(stats).map(([key, val]) => (
+                        {Object.entries(stats).filter(([k]) => k !== 'totalSlots').map(([key, val]) => (
                             <div key={key} className="space-y-1">
                                 <div className="flex justify-between text-sm font-medium">
                                     <span>{key.replace('Beregu ', '')}</span>
@@ -352,20 +365,23 @@ export default function RegistrationPage() {
                                     />
                                 </div>
                                 <p className="text-xs text-muted-foreground">
-                                    {val === 0 ? 'Tidak ikut' : val < 10 ? `Kurang ${10 - val} pemain` : val > 14 ? 'Kelebihan pemain' : 'Kuota Terpenuhi'}
+                                    {val === 0 ? 'Belum ada pemain' : val < 10 ? `Kurang ${10 - val} lagi` : val > 14 ? 'Kelebihan pemain' : 'Kuota Terpenuhi'}
                                 </p>
                             </div>
                         ))}
                     </CardContent>
                     <CardFooter className="flex-col items-start pt-4 border-t">
-                        <div className="w-full flex justify-between items-center mb-4">
+                        <div className="w-full flex justify-between items-center mb-1">
                             <div className="flex items-center gap-2 text-muted-foreground">
                                 <Receipt className="w-4 h-4" />
-                                <span className="text-sm">Estimasi Total</span>
+                                <span className="text-sm">Total Tagihan</span>
                             </div>
                             <span className="text-xl font-black text-primary">
                                 Rp {potentialBill.toLocaleString('id-ID')}
                             </span>
+                        </div>
+                        <div className="w-full text-xs text-muted-foreground mb-4 text-right">
+                            ({stats.totalSlots} Slot x Rp 100rb)
                         </div>
                         <Button 
                             onClick={form.handleSubmit(onSubmit)} 
@@ -377,11 +393,6 @@ export default function RegistrationPage() {
                         </Button>
                     </CardFooter>
                 </Card>
-
-                <div className="bg-blue-50 p-4 rounded-lg text-xs text-blue-800 border border-blue-100">
-                    <p className="font-bold mb-1 flex items-center gap-1"><Info className="w-3 h-3"/> Info:</p>
-                    Satu pemain boleh dicentang di lebih dari satu kategori (misal: Putra & Campuran) dan tetap dihitung sebagai satu data entri, namun berkontribusi ke kuota kedua tim.
-                </div>
              </div>
           </div>
 
