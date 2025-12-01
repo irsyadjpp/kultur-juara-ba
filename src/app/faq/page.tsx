@@ -6,55 +6,113 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { HelpCircle, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { CourtLines } from '@/components/ui/court-lines';
 
 export default function FAQPage() {
   const faqs = [
     {
-      category: "Pendaftaran & Verifikasi",
+      category: "Verifikasi Level & Integritas (TPF)",
       items: [
         {
-          q: "Apa syarat utama pendaftaran tim?",
-          a: "Setiap tim wajib mendaftarkan pemain sesuai slot kategori. Seluruh pemain WAJIB memiliki akun Ayo Indonesia dan melampirkan link video pertandingan (YouTube) untuk verifikasi level."
+          q: "Bagaimana jika TPF menaikkan level pemain saya (Upgrade), tapi slot di level atas tim kami sudah penuh?",
+          a: "Panitia memberikan Masa Toleransi 3 Hari setelah hasil verifikasi keluar. Anda diperbolehkan untuk: Merombak susunan pemain tim atau mengganti pemain yang di-upgrade dengan pemain baru (New Entry) yang levelnya sesuai. Lewat dari 3 hari, susunan pemain akan dikunci (Locked)."
         },
         {
-          q: "Bagaimana kriteria video verifikasi yang benar?",
-          a: "Video harus menampilkan 1 game penuh (skor 30 atau 21), tanpa potongan (uncut), dan diambil dari sudut pandang belakang lapangan (wide) agar terlihat jelas rotasi dan teknik pemain."
+          q: "Apa batasan antara 'Underperform' di video dengan 'Jago' di lapangan?",
+          a: "Parameter kami bukan skor, melainkan Biomekanik (Gerak Tubuh). Jika di video pemain memiliki grip kaku dan langkah berat, namun di lapangan tiba-tiba menunjukkan finger power dan backhand smash tajam, itu dikategorikan sebagai Manipulasi. Wasit berhak mendiskualifikasi pemain tersebut."
         },
         {
-          q: "Apa itu kebijakan Anti-Sandbagging?",
-          a: "Ini adalah aturan tegas BCC 2026. Jika saat bertanding ditemukan pemain yang level aslinya jauh diatas level yang didaftarkan (manipulasi), wasit berhak mendiskualifikasi tim tersebut tanpa pengembalian uang."
+          q: "Bagaimana TPF memastikan tidak ada Joki (Pemain Cabutan)?",
+          a: "Saat registrasi ulang di hari-H, pemain wajib menunjukkan KTP Asli. Wajah akan dicocokkan dengan video verifikasi. Jika berbeda, satu tim akan langsung di-blacklist."
+        },
+        {
+          q: "Pemain saya latihan keras sehingga kemampuannya meningkat pesat. Apakah akan didiskualifikasi?",
+          a: "Tidak, selama teknik dasar di video awal memang asli dan bukan akting. Kemajuan latihan dihargai, namun manipulasi video akan ditindak tegas."
         }
       ]
     },
     {
-      category: "Sistem Pertandingan",
+      category: "Sistem Pertandingan & Waktu",
       items: [
         {
-          q: "Bagaimana format skor yang digunakan?",
-          a: "Fase Grup menggunakan sistem 'One Game Final' 1x30 poin (pindah tempat di 15). Fase Gugur menggunakan sistem 'Best of Three' 3x15 poin."
+          q: "Apa definisi 'NO INTERVAL' di poin 8 (Fase Gugur)?",
+          a: "Dilarang istirahat/duduk di bench. Pemain boleh minum cepat di sisi lapangan saat bola mati, tapi tidak boleh menerima instruksi pelatih yang memakan waktu (Coaching)."
         },
         {
-          q: "Apakah pemain boleh bermain rangkap?",
-          a: "Secara umum TIDAK BOLEH. Setiap pemain hanya boleh bermain 1x dalam satu pertemuan antar tim (Tie). Pengecualian KHUSUS Beregu Putri, diperbolehkan 1 pemain merangkap di partai ke-5 (3-on-3)."
+          q: "Apakah benar tidak ada jus/setting di Fase Grup (Sistem 30 Poin)?",
+          a: "Benar. Kami menggunakan sistem SUDDEN DEATH. Jika skor imbang 29-29, pemain yang mencapai poin ke-30 lebih dulu adalah pemenangnya."
         },
         {
-          q: "Apa aturan khusus untuk kategori Beginner?",
-          a: "Pemain Beginner dilarang keras melakukan teknik Backhand Overhead Clear (pukulan lambung jauh dari posisi backhand). Jika bisa melakukan ini, otomatis dianggap level Intermediate/Advance."
+          q: "Bagaimana jika Tim saya sudah menang 3-0 di Fase Grup? Bolehkah partai sisa tidak dimainkan?",
+          a: "Di Fase Grup, seluruh 5 partai WAJIB dimainkan. Jika bermain tidak serius (main sabun), itu akan merugikan Selisih Poin tim Anda sendiri di klasemen akhir."
+        },
+        {
+          q: "Apa sanksi jika pemain terlambat masuk lapangan karena macet?",
+          a: "Aturan Walkover (WO) berlaku mutlak. Risiko perjalanan adalah tanggung jawab peserta. Kami sangat menyarankan penggunaan Transportasi Online (Grab/Gojek)."
         }
       ]
     },
     {
-      category: "Lain-lain",
+      category: "Teknis Permainan (Rules of Play)",
       items: [
         {
-          q: "Kapan hadiah uang tunai diberikan?",
-          a: "Hadiah akan ditransfer melalui rekening Bank BJB. Pemenang diharapkan menyiapkan rekening Bank BJB (bisa buka rekening di lokasi saat event)."
+          q: "Bolehkah Pelatih berteriak memberi instruksi saat reli berjalan?",
+          a: "DILARANG KERAS. Instruksi hanya boleh diberikan saat bola mati. Pelatih yang mengganggu konsentrasi lawan akan diberi peringatan atau diusir dari Field of Play."
         },
         {
-          q: "Bagaimana jika ingin mengajukan protes?",
-          a: "Protes hanya boleh diajukan oleh Manajer Tim dengan menyertakan uang jaminan Rp 500.000 (Tunai). Jika protes diterima, uang kembali. Jika ditolak, uang hangus."
+          q: "Bagaimana jika senar raket putus saat reli sedang berlangsung?",
+          a: "Permainan LANJUT TERUS sampai bola mati. Pemain boleh berlari mengambil raket cadangan, namun reli tidak boleh berhenti. Jika raket terlepas dan masuk ke area lawan, dinyatakan Fault."
+        },
+        {
+          q: "Bagaimana aturan cedera, khususnya kram?",
+          a: "Tidak ada Medical Timeout khusus untuk kram. Petugas medis akan memberikan Pain Killer Spray. Jika pemain tidak bisa melanjutkan, wasit akan menyatakan Retired (Kalah)."
+        },
+        {
+          q: "Untuk kategori 3-on-3 Putri, bagaimana aturan servisnya?",
+          a: "Servis dilakukan bergantian sesuai rotasi poin. Penerima servis (Receiver) hanya pemain yang berdiri di kotak servis yang sesuai. Dua rekan lainnya tidak boleh memotong servis."
+        }
+      ]
+    },
+    {
+      category: "Administrasi & Logistik",
+      items: [
+        {
+          q: "Apakah Panitia menyediakan konsumsi/makan siang?",
+          a: "TIDAK. Biaya pendaftaran tidak termasuk makan siang. Peserta dapat membeli makanan di area Bazaar/Kantin GOR dengan pembayaran via QRIS BJB."
+        },
+        {
+          q: "Apakah shuttlecock dijatah atau bebas?",
+          a: "Fase Grup mendapat jatah 3 shuttlecock per partai. Fase Gugur menyesuaikan kebutuhan wasit. Shuttlecock tambahan dapat dibeli di meja panitia via QRIS."
+        },
+        {
+          q: "Bagaimana jika pemain tidak bisa install Aplikasi Ayo Indonesia?",
+          a: "Satu HP boleh digunakan untuk login beberapa akun secara bergantian. Panitia menyediakan Tim Helpdesk dan Wi-Fi Station di meja registrasi untuk membantu."
+        },
+        {
+          q: "Apakah hadiah uang tunai bisa diminta cash?",
+          a: "TIDAK BISA. Sesuai kerjasama sponsor, pencairan hadiah hanya melalui transfer ke rekening Bank BJB. Booth Bank BJB akan tersedia di lokasi."
+        },
+        {
+          q: "Apakah hadiah uang tunai sudah bersih dari pajak?",
+          a: "Nominal hadiah belum dipotong Pajak PPh 21 (5% untuk pemilik NPWP, 6% untuk non-NPWP) sesuai peraturan perundang-undangan yang berlaku."
+        }
+      ]
+    },
+    {
+      category: "Etika & Kostum",
+      items: [
+        {
+          q: "Apakah pasangan ganda wajib memakai jersey yang sama?",
+          a: "Sangat disarankan demi estetika. Namun jika tidak, minimal TIDAK BOLEH memakai jersey dengan nama/logo tim lawan yang dapat membingungkan wasit."
+        },
+        {
+          q: "Bolehkan memakai sepatu lari (Running Shoes)?",
+          a: "DILARANG. Pemain wajib menggunakan sepatu khusus badminton/indoor (Non-marking Sole) untuk mencegah cedera dan menjaga kualitas karpet. Wasit berhak melarang pemain masuk jika sepatu tidak sesuai."
+        },
+        {
+          q: "Bagaimana jika terjadi keributan fisik antar pemain?",
+          a: "Panitia menerapkan kebijakan ZERO TOLERANCE. Siapapun yang memulai kontak fisik akan dikenakan KARTU HITAM (Diskualifikasi) dan timnya di-blacklist permanen dari turnamen BCC selanjutnya."
         }
       ]
     }
