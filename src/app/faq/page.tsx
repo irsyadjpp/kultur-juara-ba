@@ -75,7 +75,7 @@ export default function FAQPage() {
       items: [
         {
           q: "Apakah Panitia menyediakan konsumsi/makan siang?",
-          a: "TIDAK. Biaya pendaftaran tidak termasuk makan siang. Peserta dapat membeli makanan di area Bazaar/Kantin GOR dengan pembayaran via QRIS BJB."
+          a: "TIDAK. Biaya pendaftaran tidak termasuk makan siang. Peserta dapat membeli makanan di area Bazaar/Kantin GOR dengan pembayaran via QRIS."
         },
         {
           q: "Apakah shuttlecock dijatah atau bebas?",
@@ -87,11 +87,11 @@ export default function FAQPage() {
         },
         {
           q: "Apakah hadiah uang tunai bisa diminta cash?",
-          a: "TIDAK BISA. Sesuai kerjasama sponsor, pencairan hadiah hanya melalui transfer ke rekening Bank BJB. Booth Bank BJB akan tersedia di lokasi."
+          a: "TIDAK BISA. Pencairan hadiah hanya dilakukan melalui transfer ke rekening Bank BJB. Pemenang yang belum memiliki rekening diharapkan untuk segera mempersiapkannya."
         },
         {
           q: "Apakah hadiah uang tunai sudah bersih dari pajak?",
-          a: "Nominal hadiah belum dipotong Pajak PPh 21 (5% untuk pemilik NPWP, 6% untuk non-NPWP) sesuai peraturan perundang-undangan yang berlaku."
+          a: "Ya, nominal hadiah yang diterima pemenang adalah nominal bersih. Pajak hadiah ditanggung sepenuhnya oleh panitia penyelenggara."
         }
       ]
     },

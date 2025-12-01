@@ -110,7 +110,7 @@ export function PrizesSection() {
         <div className="text-center mt-12">
           <div className="inline-block p-4 bg-secondary/30 rounded-xl max-w-2xl mx-auto border border-border/50">
             <p className="text-sm text-muted-foreground">
-              <span className="font-bold text-primary">*Catatan Penting:</span> Hadiah uang tunai akan ditransfer sepenuhnya melalui rekening resmi <strong>Bank BJB</strong>.
+              <span className="font-bold text-primary">*Catatan Penting:</span> Hadiah uang tunai akan ditransfer sepenuhnya melalui rekening <strong>Bank BJB</strong>.
             </p>
           </div>
         </div>
