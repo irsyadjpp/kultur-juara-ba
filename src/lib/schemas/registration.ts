@@ -1,49 +1,97 @@
 import { z } from "zod";
 
+// Kategori yang tersedia
+export const CATEGORIES = ["Beregu PUTRA", "Beregu PUTRI", "Beregu CAMPURAN"] as const;
+
 // Schema untuk satu pemain
 export const playerSchema = z.object({
   fullName: z.string().min(2, "Nama lengkap wajib diisi"),
   nik: z.string().length(16, "NIK harus 16 digit angka").regex(/^\d+$/, "NIK hanya boleh angka"),
-  motherName: z.string().min(2, "Nama ibu kandung wajib diisi (untuk BPJS)"),
-  ayoId: z.string().min(1, "Username Ayo Indonesia wajib diisi"),
+  motherName: z.string().min(2, "Nama ibu kandung wajib diisi"),
+  ayoId: z.string().min(1, "Username Ayo wajib diisi"),
   level: z.enum(["Beginner", "Intermediate", "Advance"], {
-    required_error: "Pilih level pemain",
+    required_error: "Pilih level",
   }),
-  videoUrl: z.string().url("Link harus berupa URL valid").includes("youtube", { message: "Wajib link YouTube" }),
+  videoUrl: z.string().url("URL tidak valid").includes("youtube", { message: "Wajib link YouTube" }),
+  // UPDATE: Pemain bisa memilih lebih dari 1 kategori
+  participation: z.array(z.enum(CATEGORIES)).min(1, "Pilih minimal 1 kategori untuk pemain ini"),
 });
 
-// Schema utama formulir
+// Schema utama
 export const registrationFormSchema = z.object({
-  // Bagian 1: Identitas Tim
-  teamName: z.string().min(2, "Nama tim wajib diisi"),
-  category: z.enum(["Beregu PUTRA", "Beregu PUTRI", "Beregu CAMPURAN"], {
-    required_error: "Pilih kategori pertandingan",
-  }),
+  // Identitas Komunitas (Bukan lagi per tim, tapi per komunitas)
+  communityName: z.string().min(2, "Nama Komunitas wajib diisi"),
   managerName: z.string().min(2, "Nama manajer wajib diisi"),
-  managerWhatsapp: z.string().min(10, "Nomor WhatsApp tidak valid").regex(/^\d+$/, "Hanya angka"),
+  managerWhatsapp: z.string().min(10, "Nomor WhatsApp tidak valid"),
   managerEmail: z.string().email("Email tidak valid"),
-  basecamp: z.string().min(2, "Domisili/Basecamp wajib diisi"),
+  basecamp: z.string().min(2, "Basecamp wajib diisi"),
   instagram: z.string().optional(),
 
-  // Bagian 2: Data Pemain (Minimal 10, Maksimal 14)
-  players: z.array(playerSchema)
-    .min(10, "Wajib mendaftarkan minimal 10 pemain")
-    .max(14, "Maksimal 14 pemain"),
+  // Data Pemain (Master List)
+  players: z.array(playerSchema),
 
-  // Bagian 3: Pembayaran
+  // Bukti Transfer
   transferProof: z.any()
     .refine((files) => files?.length == 1, "Bukti transfer wajib diupload")
-    .refine((files) => files?.[0]?.size <= 5000000, `Ukuran file maksimal 5MB.`)
+    .refine((files) => files?.[0]?.size <= 5000000, `Maksimal 5MB.`)
     .refine(
       (files) => ['image/jpeg', 'image/png', 'application/pdf'].includes(files?.[0]?.type),
-      "Format file harus .jpg, .png, atau .pdf"
+      "Format .jpg, .png, atau .pdf"
     ),
 
-  // Bagian 4: Pernyataan Legal
-  agreementValidData: z.literal(true, { errorMap: () => ({ message: "Anda harus menyetujui pernyataan ini" }) }),
-  agreementWaiver: z.literal(true, { errorMap: () => ({ message: "Anda harus menyetujui pernyataan ini" }) }),
-  agreementTpf: z.literal(true, { errorMap: () => ({ message: "Anda harus menyetujui pernyataan ini" }) }),
-  agreementRules: z.literal(true, { errorMap: () => ({ message: "Anda harus menyetujui pernyataan ini" }) }),
+  // Pernyataan
+  agreementValidData: z.literal(true, { errorMap: () => ({ message: "Persetujuan diperlukan" }) }),
+  agreementWaiver: z.literal(true, { errorMap: () => ({ message: "Persetujuan diperlukan" }) }),
+  agreementTpf: z.literal(true, { errorMap: () => ({ message: "Persetujuan diperlukan" }) }),
+  agreementRules: z.literal(true, { errorMap: () => ({ message: "Persetujuan diperlukan" }) }),
+})
+.superRefine((data, ctx) => {
+  // VALIDASI LINTAS FIELD: Cek kuota per kategori
+  
+  // 1. Hitung jumlah pemain per kategori
+  const counts: Record<string, number> = {
+    "Beregu PUTRA": 0,
+    "Beregu PUTRI": 0,
+    "Beregu CAMPURAN": 0
+  };
+
+  data.players.forEach(p => {
+    p.participation.forEach(cat => {
+      if (counts[cat] !== undefined) counts[cat]++;
+    });
+  });
+
+  // 2. Cek aturan minimal 10 & maksimal 14
+  // Kita hanya validasi kategori yang diikuti (jumlah > 0)
+  Object.entries(counts).forEach(([cat, count]) => {
+    if (count > 0) { // Jika ada yang daftar kategori ini
+      if (count < 10) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `${cat}: Kurang pemain! (Baru ${count}, Minimal 10)`,
+          path: ["players"] // Error akan muncul di bagian players
+        });
+      }
+      if (count > 14) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `${cat}: Kelebihan pemain! (Ada ${count}, Maksimal 14)`,
+          path: ["players"]
+        });
+      }
+    }
+  });
+
+  // 3. Pastikan minimal ada 1 kategori yang valid (total pemain >= 10)
+  const totalParticipation = data.players.reduce((sum, player) => sum + player.participation.length, 0);
+
+  if (totalParticipation === 0 && data.players.length > 0) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Belum ada pemain yang didaftarkan ke kategori manapun.",
+      path: ["players"]
+    });
+  }
 });
 
 export type RegistrationFormValues = z.infer<typeof registrationFormSchema>;
