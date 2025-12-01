@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, Trophy, BarChart3, LogOut, Lock } from 'lucide-react';
+import { LayoutDashboard, Users, Trophy, BarChart3, LogOut, Lock, ClipboardCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
@@ -70,6 +70,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: "Data Pengunjung", href: "/admin/visitors", icon: Users },
     { name: "Undian Doorprize", href: "/admin/raffle", icon: Trophy },
     { name: "Laporan Sponsor", href: "/admin/analytics", icon: BarChart3 },
+    { name: "Verifikasi TPF", href: "/admin/tpf", icon: ClipboardCheck },
   ];
 
   return (
