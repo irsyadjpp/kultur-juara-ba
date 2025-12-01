@@ -68,6 +68,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const menus = [
     { name: "Overview", href: "/admin", icon: LayoutDashboard },
     { name: "Manajemen Tim", href: "/admin/teams", icon: Users },
+    { name: "Input Skor (Live)", href: "/admin/matches", icon: Trophy },
     { name: "Data Pengunjung", href: "/admin/visitors", icon: Users },
     { name: "Undian Doorprize", href: "/admin/raffle", icon: Trophy },
     { name: "Laporan Sponsor", href: "/admin/analytics", icon: BarChart3 },
