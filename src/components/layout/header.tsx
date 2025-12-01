@@ -25,6 +25,7 @@ export function Header() {
     <>
       <SheetClose asChild><NavLink href="/" onClick={closeSheet}>Beranda</NavLink></SheetClose>
       <SheetClose asChild><NavLink href="/faq" onClick={closeSheet}>FAQ</NavLink></SheetClose>
+      <SheetClose asChild><NavLink href="/status" onClick={closeSheet}>Cek Status</NavLink></SheetClose>
       <SheetClose asChild><NavLink href="/contact" onClick={closeSheet}>Kontak</NavLink></SheetClose>
     </>
   );
@@ -43,6 +44,7 @@ export function Header() {
           <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-6">
               <NavLink href="/">Beranda</NavLink>
               <NavLink href="/faq">FAQ</NavLink>
+              <NavLink href="/status">Cek Status</NavLink>
               <NavLink href="/contact">Kontak</NavLink>
           </nav>
 
