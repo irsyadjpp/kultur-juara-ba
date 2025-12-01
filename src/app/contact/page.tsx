@@ -10,7 +10,13 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from "@/hooks/use-toast"
 import { Loader2 } from 'lucide-react';
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 export default function ContactPage() {
   const { toast } = useToast()
@@ -52,6 +58,21 @@ export default function ContactPage() {
                         <div className="space-y-2">
                             <Label htmlFor="email">Alamat Email</Label>
                             <Input id="email" name="email" type="email" placeholder="john.doe@example.com" required />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="category">Kategori Pertanyaan</Label>
+                            <Select name="category" required>
+                                <SelectTrigger id="category">
+                                    <SelectValue placeholder="Pilih kategori pertanyaan..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="pendaftaran">Pendaftaran & Jadwal</SelectItem>
+                                    <SelectItem value="sponsorship">Sponsorship & Kerjasama</SelectItem>
+                                    <SelectItem value="media">Media & Peliputan</SelectItem>
+                                    <SelectItem value="teknis">Kendala Teknis</SelectItem>
+                                    <SelectItem value="lainnya">Lainnya</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="message">Pesan Anda</Label>
