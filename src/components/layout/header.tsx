@@ -55,7 +55,9 @@ export function Header() {
            <a href="#contact" onClick={handleScroll} className="font-medium text-foreground/80 hover:text-primary transition-colors text-sm">Kontak</a>
         </nav>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="flex-1" />
+
+        <div className="flex items-center gap-2">
            <Button asChild>
             <a href="#contact" onClick={handleScroll}>
               Hubungi Kami
