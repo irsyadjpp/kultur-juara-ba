@@ -15,6 +15,8 @@ export default function Home() {
       <main className="flex-grow">
         <HeroSection />
         <ValuePropositionSection />
+        {/* The id="schedule" div is missing a component, but the id is kept for navigation */}
+        <div id="schedule"></div>
         <LevelingGuideSection />
         <RegistrationInfoSection />
         <LocationSection />
