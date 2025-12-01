@@ -12,7 +12,7 @@ import { LocationSection } from '@/components/sections/location';
 
 // Section Kompetisi & Bisnis
 import { CategoriesSection } from '@/components/sections/categories';
-import { ValuePropositionSection } from '@/components/sections/value-props'; // Menggunakan ini sebagai ganti PrizesSection
+import { PrizesSection } from '@/components/sections/prizes';
 import { SponsorsSection } from '@/components/sections/sponsors';
 import { MobilitySection } from '@/components/sections/mobility';
 
@@ -31,7 +31,7 @@ export default function Home() {
         </div>
 
         {/* 3. Hadiah: Motivasi utama peserta */}
-        <ValuePropositionSection />
+        <PrizesSection />
 
         {/* 4. Kategori: Siapa saja yang bisa ikut? */}
         <CategoriesSection />
