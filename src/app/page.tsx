@@ -7,6 +7,7 @@ import { CategoriesSection } from '@/components/sections/categories';
 import { LevelingGuideSection } from '@/components/sections/leveling-guide';
 import { RegistrationInfoSection } from '@/components/sections/registration-info';
 import { LocationSection } from '@/components/sections/location';
+import { TimelineSection } from '@/components/sections/timeline';
 
 export default function Home() {
   return (
@@ -15,11 +16,18 @@ export default function Home() {
       <main className="flex-grow">
         <HeroSection />
         <ValuePropositionSection />
-        {/* The id="schedule" div is missing a component, but the id is kept for navigation */}
-        <div id="schedule"></div>
-        <LevelingGuideSection />
-        <RegistrationInfoSection />
-        <LocationSection />
+        <div id="schedule">
+            <TimelineSection />
+        </div>
+        <div id="levels">
+            <LevelingGuideSection />
+        </div>
+        <div id="registration">
+            <RegistrationInfoSection />
+        </div>
+        <div id="venue">
+            <LocationSection />
+        </div>
         <CategoriesSection />
         <SponsorsSection />
       </main>
