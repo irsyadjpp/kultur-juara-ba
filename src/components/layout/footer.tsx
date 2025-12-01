@@ -1,5 +1,6 @@
-import { Mail, Phone, BookOpen } from 'lucide-react';
+import { Mail, Phone, BookOpen, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { Button } from '../ui/button';
 
 export function Footer() {
   return (
@@ -7,21 +8,15 @@ export function Footer() {
       <div className="container mx-auto px-4 py-8 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
           <div>
-            <h3 className="font-headline text-lg font-bold mb-4 text-primary">Kontak Kami</h3>
-            <ul className="space-y-2 text-muted-foreground">
-              <li className="flex items-center justify-center md:justify-start">
-                <Mail className="w-4 h-4 mr-2 text-primary/70" />
-                <a href="mailto:info@managementbcc.com" className="hover:text-primary transition-colors">
-                  info@managementbcc.com
-                </a>
-              </li>
-              <li className="flex items-center justify-center md:justify-start">
-                <Phone className="w-4 h-4 mr-2 text-primary/70" />
-                <a href="tel:+6285693738869" className="hover:text-primary transition-colors">
-                  +62 856-9373-8869 (WhatsApp)
-                </a>
-              </li>
-            </ul>
+            <h3 className="font-headline text-lg font-bold mb-4 text-primary">Kontak</h3>
+            <p className="text-muted-foreground mb-4">
+              Punya pertanyaan? Jangan ragu untuk menghubungi kami.
+            </p>
+             <Button asChild>
+                <Link href="/contact">
+                  Hubungi Kami <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
           </div>
           <div>
             <h3 className="font-headline text-lg font-bold mb-4 text-primary">Informasi</h3>
@@ -30,6 +25,18 @@ export function Footer() {
                 <BookOpen className="w-4 h-4 mr-2 text-primary/70" />
                 <a href="/technical-handbook.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
                   Buku Panduan Teknis
+                </a>
+              </li>
+                 <li className="flex items-center justify-center md:justify-start">
+                <Mail className="w-4 h-4 mr-2 text-primary/70" />
+                <a href="mailto:info@managementbcc.com" className="hover:text-primary transition-colors">
+                  info@managementbcc.com
+                </a>
+              </li>
+              <li className="flex items-center justify-center md:justify-start">
+                <Phone className="w-4 h-4 mr-2 text-primary/70" />
+                <a href="tel:+6285693738869" className="hover:text-primary transition-colors">
+                  +62 856-9373-8869 (WA)
                 </a>
               </li>
             </ul>

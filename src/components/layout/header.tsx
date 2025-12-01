@@ -18,27 +18,15 @@ const NavLink = ({ href, children, onClick }: { href: string; children: React.Re
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  
-  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    e.preventDefault();
-    const href = e.currentTarget.href;
-    const targetId = href.replace(/.*#/, "");
-    const elem = document.getElementById(targetId);
-    elem?.scrollIntoView({ behavior: 'smooth' });
-    setIsOpen(false);
-  };
-  
-  const closeSheetAndScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    handleScroll(e);
-    setIsOpen(false);
-  };
 
   const closeSheet = () => setIsOpen(false);
 
   const navItems = () => (
     <>
       <SheetClose asChild><NavLink href="/" onClick={closeSheet}>Beranda</NavLink></SheetClose>
-      <SheetClose asChild><a href="#contact" onClick={closeSheetAndScroll} className="font-medium text-foreground/80 hover:text-primary transition-colors text-2xl md:text-sm">Kontak</a></SheetClose>
+      <SheetClose asChild><NavLink href="/about" onClick={closeSheet}>Tentang</NavLink></SheetClose>
+      <SheetClose asChild><NavLink href="/partners" onClick={closeSheet}>Mitra</NavLink></SheetClose>
+      <SheetClose asChild><NavLink href="/contact" onClick={closeSheet}>Kontak</NavLink></SheetClose>
     </>
   );
   
@@ -55,16 +43,18 @@ export function Header() {
         <div className="container mx-auto flex h-16 items-center justify-center">
             <nav className="hidden md:flex items-center gap-6">
                 <NavLink href="/">Beranda</NavLink>
-                <a href="#contact" onClick={handleScroll} className="font-medium text-foreground/80 hover:text-primary transition-colors text-sm">Kontak</a>
+                <NavLink href="/about">Tentang</NavLink>
+                <NavLink href="/partners">Mitra</NavLink>
+                <NavLink href="/contact">Kontak</NavLink>
             </nav>
         </div>
 
         <div className="flex items-center gap-2">
            <div className="hidden md:flex">
              <Button asChild>
-              <a href="#contact" onClick={handleScroll}>
+              <Link href="/contact">
                 Hubungi Kami
-              </a>
+              </Link>
             </Button>
            </div>
           <div className="flex items-center md:hidden">
@@ -80,9 +70,9 @@ export function Header() {
                   {navItems()}
                    <div className="flex flex-col gap-4 w-full pt-4 border-t border-border">
                      <Button asChild className="w-full">
-                        <a href="#contact" onClick={closeSheetAndScroll}>
+                        <Link href="/contact" onClick={closeSheet}>
                           Hubungi Kami
-                        </a>
+                        </Link>
                       </Button>
                    </div>
                 </div>

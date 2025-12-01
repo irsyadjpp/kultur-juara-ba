@@ -5,14 +5,6 @@ import { ArrowRight } from "lucide-react";
 import Link from 'next/link';
 
 export function SponsorsSection() {
-    
-    const handleScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-        e.preventDefault();
-        const href = e.currentTarget.href;
-        const targetId = href.replace(/.*#/, "");
-        const elem = document.getElementById(targetId);
-        elem?.scrollIntoView({ behavior: 'smooth' });
-    };
 
     return (
         <section id="calling-for-sponsors" className="py-16 md:py-24 bg-secondary">
@@ -25,10 +17,10 @@ export function SponsorsSection() {
                 </p>
                 <div className="mt-10">
                      <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-base py-7 px-10 rounded-lg transition-transform transform hover:scale-105 group shadow-lg shadow-primary/20">
-                        <a href="#contact" onClick={handleScroll}>
+                        <Link href="/contact">
                           PELAJARI PELUANG SPONSORSHIP
                           <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                        </a>
+                        </Link>
                       </Button>
                 </div>
             </div>

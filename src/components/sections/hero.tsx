@@ -9,14 +9,6 @@ import { Countdown } from '@/components/countdown';
 
 export function HeroSection() {
   
-  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    e.preventDefault();
-    const href = e.currentTarget.href;
-    const targetId = href.replace(/.*#/, "");
-    const elem = document.getElementById(targetId);
-    elem?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
     <section className="relative bg-background text-foreground">
       <div className="relative h-[70vh] md:h-[75vh] flex items-center justify-start text-white">
@@ -42,10 +34,10 @@ export function HeroSection() {
             </p>
             <div className="animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-base py-6 px-8 rounded-lg transition-transform transform hover:scale-105 group shadow-lg shadow-primary/20">
-                <a href="#contact" onClick={handleScroll}>
+                <Link href="/contact">
                   HUBUNGI KAMI
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </a>
+                </Link>
               </Button>
             </div>
           </div>
