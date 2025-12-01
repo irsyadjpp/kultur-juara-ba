@@ -20,29 +20,29 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative bg-white text-foreground">
-      <div className="relative h-[70vh] md:h-[75vh] flex items-center justify-start">
+    <section className="relative bg-background text-foreground">
+      <div className="relative h-[70vh] md:h-[75vh] flex items-center justify-start text-white">
         {heroImage && (
           <Image
             src={heroImage.imageUrl}
             alt={heroImage.description}
             fill
             priority
-            className="object-cover opacity-10"
+            className="object-cover"
             data-ai-hint={heroImage.imageHint}
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-r from-white via-white to-transparent" />
+        <div className="absolute inset-0 bg-black/50" />
         
         <div className="relative z-10 container mx-auto px-4 text-left">
           <div className="max-w-xl">
              <p className="text-lg md:text-xl text-primary font-bold mb-4 font-body animate-fade-in-up">
               BANDUNG COMMUNITY CHAMPIONSHIP 2026
             </p>
-            <h1 className="text-4xl md:text-[64px] leading-tight font-bold font-headline uppercase tracking-tighter mb-4 text-foreground animate-fade-in-down">
+            <h1 className="text-4xl md:text-[64px] leading-tight font-bold font-headline uppercase tracking-tighter mb-4 animate-fade-in-down">
               Integritas, Solidaritas, dan Kejayaan
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mb-8 font-body animate-fade-in-up">
+            <p className="text-lg md:text-xl text-gray-200 max-w-3xl mb-8 font-body animate-fade-in-up">
               Turnamen bulutangkis antar komunitas terbesar di Bandung akan segera hadir.
             </p>
             <div className="animate-fade-in-up" style={{ animationDelay: '0.5s' }}>

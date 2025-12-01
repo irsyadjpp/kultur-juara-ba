@@ -11,8 +11,8 @@ export function Footer() {
             <ul className="space-y-2 text-muted-foreground">
               <li className="flex items-center justify-center md:justify-start">
                 <Mail className="w-4 h-4 mr-2 text-primary/70" />
-                <a href="mailto:sekretariat@bccbandung.com" className="hover:text-primary transition-colors">
-                  sekretariat@bccbandung.com
+                <a href="mailto:info@managementbcc.com" className="hover:text-primary transition-colors">
+                  info@managementbcc.com
                 </a>
               </li>
               <li className="flex items-center justify-center md:justify-start">
