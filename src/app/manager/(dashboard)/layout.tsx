@@ -7,10 +7,10 @@ import { Button } from '@/components/ui/button';
 export default async function ManagerLayout({ children }: { children: React.ReactNode }) {
   const session = await getManagerSession();
 
-  // PROTEKSI ROUTE
-  if (!session || !session.isLoggedIn) {
-    redirect('/manager/login');
-  }
+  // PROTEKSI ROUTE (Dinonaktifkan sementara)
+  // if (!session || !session.isLoggedIn) {
+  //   redirect('/manager/login');
+  // }
 
   // DEFINISI MENU BARU
   const menus = [
@@ -27,7 +27,7 @@ export default async function ManagerLayout({ children }: { children: React.Reac
       <aside className="w-64 bg-white border-r hidden md:flex flex-col fixed h-full">
         <div className="p-6 border-b">
           <h2 className="font-black text-xl text-primary">BCC Manager</h2>
-          <p className="text-xs text-muted-foreground mt-1">Hi, {session.name}</p>
+          <p className="text-xs text-muted-foreground mt-1">Hi, {session?.name || 'Manager'}</p>
         </div>
         <nav className="flex-1 p-4 space-y-1">
           {menus.map((menu) => (
