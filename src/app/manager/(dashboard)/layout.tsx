@@ -1,27 +1,29 @@
 import { redirect } from 'next/navigation';
 import { getManagerSession, logoutManager } from '../actions';
 import Link from 'next/link';
-import { LayoutDashboard, Users, LogOut, Settings, FileText } from 'lucide-react';
+import { LayoutDashboard, Users, LogOut, Settings, CheckCircle, Download } from 'lucide-react'; // Update Icons
 import { Button } from '@/components/ui/button';
 
 export default async function ManagerLayout({ children }: { children: React.ReactNode }) {
   const session = await getManagerSession();
 
-  // PROTEKSI ROUTE: Jika tidak ada session, tendang ke login
+  // PROTEKSI ROUTE
   if (!session || !session.isLoggedIn) {
     redirect('/manager/login');
   }
 
+  // DEFINISI MENU BARU
   const menus = [
-    { name: "Dashboard", href: "/manager/dashboard", icon: LayoutDashboard },
-    { name: "Registrasi Tim", href: "/manager/register-team", icon: FileText },
-    { name: "Data Pemain", href: "/manager/players", icon: Users },
+    { name: "Dashboard Tim", href: "/manager/dashboard", icon: LayoutDashboard },
+    { name: "Kelola Roster", href: "/manager/register-team", icon: Users },
+    { name: "Status & Verifikasi", href: "/manager/status", icon: CheckCircle }, // BARU
+    { name: "Dokumen & Unduh", href: "/manager/downloads", icon: Download },     // BARU
     { name: "Pengaturan Akun", href: "/manager/settings", icon: Settings },
   ];
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar Sederhana */}
+      {/* Sidebar */}
       <aside className="w-64 bg-white border-r hidden md:flex flex-col fixed h-full">
         <div className="p-6 border-b">
           <h2 className="font-black text-xl text-primary">BCC Manager</h2>
@@ -50,7 +52,7 @@ export default async function ManagerLayout({ children }: { children: React.Reac
 
       {/* Main Content */}
       <div className="flex-1 md:ml-64">
-        {/* Mobile Header */}
+        {/* Mobile Header (Sederhana) */}
         <header className="md:hidden h-16 bg-white border-b flex items-center justify-between px-4 sticky top-0 z-10">
            <span className="font-bold">BCC Manager Area</span>
            <form action={logoutManager}>
