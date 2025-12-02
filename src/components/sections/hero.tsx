@@ -64,7 +64,7 @@ export function HeroSection() {
             
             <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold text-lg h-14 px-8 rounded-lg shadow-[0_0_20px_rgba(210,35,42,0.4)] hover:shadow-[0_0_30px_rgba(210,35,42,0.6)] transition-all transform hover:-translate-y-1">
-                <Link href="/contact">
+                <Link href="/manager/login">
                   DAFTAR SEKARANG
                   <ArrowRight className="ml-2 h-6 w-6" />
                 </Link>
