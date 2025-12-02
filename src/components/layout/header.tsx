@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, Shield } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 
@@ -26,7 +26,6 @@ export function Header() {
       <SheetClose asChild><NavLink href="/" onClick={closeSheet}>Beranda</NavLink></SheetClose>
       <SheetClose asChild><NavLink href="/about" onClick={closeSheet}>Tentang</NavLink></SheetClose>
       <SheetClose asChild><NavLink href="/faq" onClick={closeSheet}>FAQ</NavLink></SheetClose>
-      <SheetClose asChild><NavLink href="/status" onClick={closeSheet}>Cek Status</NavLink></SheetClose>
       <SheetClose asChild><NavLink href="/contact" onClick={closeSheet}>Kontak</NavLink></SheetClose>
     </>
   );
@@ -46,18 +45,11 @@ export function Header() {
               <NavLink href="/">Beranda</NavLink>
               <NavLink href="/about">Tentang</NavLink>
               <NavLink href="/faq">FAQ</NavLink>
-              <NavLink href="/status">Cek Status</NavLink>
               <NavLink href="/contact">Kontak</NavLink>
           </nav>
 
           <div className="flex items-center gap-2">
             <div className="hidden md:flex items-center gap-2">
-              <Button asChild variant="ghost">
-                <Link href="/admin">
-                  <Shield className="w-4 h-4 mr-2" />
-                  Admin
-                </Link>
-              </Button>
               <Button asChild>
                 <Link href="/manager/login">
                   Manager Area
@@ -79,11 +71,6 @@ export function Header() {
                       <Button asChild className="w-full">
                           <Link href="/manager/login" onClick={closeSheet}>
                             Manager Area
-                          </Link>
-                      </Button>
-                       <Button asChild variant="outline" className="w-full">
-                          <Link href="/admin" onClick={closeSheet}>
-                            Admin Login
                           </Link>
                       </Button>
                     </div>

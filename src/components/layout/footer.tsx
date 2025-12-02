@@ -1,4 +1,4 @@
-import { Mail, Phone, BookOpen, ArrowRight, HelpCircle } from 'lucide-react';
+import { Mail, Phone, BookOpen, ArrowRight, HelpCircle, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 
@@ -12,11 +12,18 @@ export function Footer() {
             <p className="text-muted-foreground mb-4">
               Punya pertanyaan? Jangan ragu untuk menghubungi kami.
             </p>
-             <Button asChild>
-                <Link href="/contact">
-                  Hubungi Kami <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+             <div className="flex flex-col sm:flex-row gap-2 justify-center md:justify-start">
+                 <Button asChild>
+                    <Link href="/contact">
+                      Hubungi Kami <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline">
+                    <Link href="/admin">
+                      <Shield className="mr-2 h-4 w-4" /> Admin Login
+                    </Link>
+                  </Button>
+             </div>
           </div>
           <div>
             <h3 className="font-headline text-lg font-bold mb-4 text-primary">Informasi</h3>
