@@ -14,8 +14,9 @@ interface WaiverDialogProps {
 }
 
 export function WaiverDialog({ open, onOpenChange, onAccept }: WaiverDialogProps) {
+    // State yang mengontrol apakah user sudah mencapai bawah
     const [scrolledToBottom, setScrolledToBottom] = useState(false);
-    const [dateString, setDateString] = useState('');
+    const [dateString, setDateString] = useState(''); 
 
     useEffect(() => {
         const date = new Date();
@@ -24,13 +25,16 @@ export function WaiverDialog({ open, onOpenChange, onAccept }: WaiverDialogProps
         setDateString(formattedDate);
     }, []);
 
+    // --- LOGIKA UTAMA SCROLL CHECK ---
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
         const target = e.currentTarget;
+        // Cek jika jarak scroll dari bawah kurang dari 10px
         const isBottom = target.scrollHeight - target.scrollTop <= target.clientHeight + 10;
         if (isBottom && !scrolledToBottom) {
-            setScrolledToBottom(true);
+            setScrolledToBottom(true); // Set TRUE setelah mencapai bawah
         }
     };
+    // ---------------------------------
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -45,8 +49,11 @@ export function WaiverDialog({ open, onOpenChange, onAccept }: WaiverDialogProps
                     </DialogDescription>
                 </DialogHeader>
 
-                {/* --- Konten Legal Waiver --- */}
-                <ScrollArea className="flex-1 pr-6 py-4 border rounded-lg bg-gray-50 font-serif text-sm" onScrollCapture={handleScroll}>
+                {/* --- Konten Legal Waiver (DENGAN onScrollCapture) --- */}
+                <ScrollArea 
+                    className="flex-1 pr-6 py-4 border rounded-lg bg-gray-50 font-serif text-sm" 
+                    onScrollCapture={handleScroll}
+                >
                     <div className="space-y-4 text-justify p-4">
                         <h4 className="font-bold text-center mb-4 uppercase text-lg">SURAT PERNYATAAN PEMBEBASAN TUNTUTAN</h4>
                         
@@ -83,16 +90,18 @@ export function WaiverDialog({ open, onOpenChange, onAccept }: WaiverDialogProps
                         <p className='text-sm text-right'>
                             Bandung, <strong className='font-bold'>{dateString}</strong>
                         </p>
-
                     </div>
                 </ScrollArea>
                 {/* --- END Konten Legal Waiver --- */}
 
                 <DialogFooter className="pt-4 border-t">
                     <div className="flex justify-between items-center w-full">
-                        <p className='text-sm text-red-600 flex items-center gap-2'>
+                        {/* Status Notifikasi Scroll */}
+                        <p className={`text-sm flex items-center gap-2 ${scrolledToBottom ? 'text-green-600' : 'text-red-600'}`}>
                            {scrolledToBottom ? <CheckCircle2 className='w-5 h-5 text-green-600'/> : 'Scroll ke bawah untuk mengaktifkan tombol.'}
                         </p>
+                        
+                        {/* TOMBOL PERSETUJUAN DENGAN DISABLED LOCK */}
                         <Button 
                             onClick={onAccept} 
                             disabled={!scrolledToBottom}
