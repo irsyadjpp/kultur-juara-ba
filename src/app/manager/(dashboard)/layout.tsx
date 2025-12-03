@@ -25,6 +25,7 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
   const menus = [
     { name: "Dashboard", href: "/manager/dashboard", icon: LayoutDashboard },
     { name: "Registrasi Tim", href: "/manager/register-team", icon: Users },
+    { name: "Susunan Pemain (Line-Up)", href: "/manager/lineup", icon: Users },
     { name: "Status & Verifikasi", href: "/manager/status", icon: CheckCircle },
     { name: "Ajukan Protes", href: "/manager/protest/submit", icon: AlertCircle },
     { name: "Dokumen & Unduh", href: "/manager/downloads", icon: Download },
