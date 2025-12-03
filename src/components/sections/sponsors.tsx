@@ -42,7 +42,7 @@ export function SponsorsSection() {
                 <div className="mt-10">
                      <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-base py-7 px-10 rounded-lg transition-transform transform hover:scale-105 group shadow-lg shadow-primary/20">
                         <Link href="/partners">
-                          PELAJARI PELUANG SPONSORSHIP
+                          Lihat Peluang Sponsorship
                           <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                         </Link>
                       </Button>
