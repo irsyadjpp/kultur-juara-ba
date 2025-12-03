@@ -7,9 +7,9 @@ import { CreditCard, FileWarning, ShoppingCart, QrCode } from "lucide-react";
 
 // Mock Data Tagihan
 const mockInvoices = [
-  { id: "INV001", date: "2026-06-14 10:30", description: "Pembelian 2 Shuttlecock (Lapangan 1)", amount: 50000, type: "shuttlecock" },
+  { id: "INV001", date: "2026-06-14 10:30", description: "Penggunaan 2 Shuttlecock (Lapangan 1)", amount: 50000, type: "shuttlecock" },
   { id: "INV002", date: "2026-06-14 11:15", description: "Kartu Kuning - Pemain Budi (MD-INT-1)", amount: 50000, type: "penalty" },
-  { id: "INV003", date: "2026-06-15 09:45", description: "Pembelian 1 Shuttlecock (Lapangan 3)", amount: 25000, type: "shuttlecock" },
+  { id: "INV003", date: "2026-06-15 09:45", description: "Penggunaan 1 Shuttlecock (Lapangan 3)", amount: 25000, type: "shuttlecock" },
   { id: "INV004", date: "2026-06-15 13:00", description: "Denda Keterlambatan Tim", amount: 100000, type: "penalty" },
 ];
 
