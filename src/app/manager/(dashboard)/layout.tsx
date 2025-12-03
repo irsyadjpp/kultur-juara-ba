@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -5,7 +6,7 @@ import { redirect, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { 
   LayoutDashboard, Users, LogOut, Settings, CheckCircle, 
-  Download, Menu, Home, FileText, AlertCircle, Swords
+  Download, Menu, Home, FileText, AlertCircle, Swords, CreditCard
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { logoutManager } from '../actions';
@@ -42,17 +43,13 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
         items: [
             { name: "Susunan Pemain", href: "/manager/lineup", icon: Swords },
             { name: "Ajukan Protes", href: "/manager/protest/submit", icon: AlertCircle },
+            { name: "Tagihan & Denda", href: "/manager/billing", icon: CreditCard },
         ]
     },
     {
-        title: "DOKUMEN",
+        title: "AKUN & BANTUAN",
         items: [
             { name: "Dokumen & Unduh", href: "/manager/downloads", icon: Download },
-        ]
-    },
-    {
-        title: "AKUN",
-        items: [
             { name: "Pengaturan Akun", href: "/manager/settings", icon: Settings },
         ]
     }
