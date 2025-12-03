@@ -18,9 +18,8 @@ import { useToast } from "@/hooks/use-toast";
 type MatchMode = 'GROUP' | 'KNOCKOUT';
 type MatchStatus = 'PRE_MATCH' | 'IN_PROGRESS' | 'FINISHED';
 
-export default function MatchControlPage({ params }: { params: { id: string } }) {
+export default function MatchControlPage({ params: { id: matchId } }: { params: { id: string } }) {
   const { toast } = useToast();
-  const matchId = params.id;
 
   // --- MOCK DATA ---
   const matchData = {
