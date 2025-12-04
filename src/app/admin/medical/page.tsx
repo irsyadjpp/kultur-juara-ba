@@ -139,16 +139,16 @@ export default function MedicalDashboard() {
 
       {/* STATS CARDS */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card className="bg-red-50 border-red-200">
+          <Card className="bg-red-50 border-red-200 dark:bg-red-500/10 dark:border-red-500/20">
               <CardContent className="p-4 flex items-center gap-4">
-                  <div className="p-3 bg-red-100 rounded-full text-red-600"><Activity className="w-6 h-6"/></div>
-                  <div><div className="text-2xl font-bold">{totalCases}</div><div className="text-xs text-red-800">Total Kasus</div></div>
+                  <div className="p-3 bg-red-100 dark:bg-red-500/20 rounded-full text-red-600 dark:text-red-400"><Activity className="w-6 h-6"/></div>
+                  <div><div className="text-2xl font-bold">{totalCases}</div><div className="text-xs text-red-800 dark:text-red-300">Total Kasus</div></div>
               </CardContent>
           </Card>
-           <Card className="bg-white border-gray-200">
+           <Card>
               <CardContent className="p-4 flex items-center gap-4">
-                  <div className="p-3 bg-gray-100 rounded-full text-gray-600"><Ambulance className="w-6 h-6"/></div>
-                  <div><div className="text-2xl font-bold">{referredCases}</div><div className="text-xs text-gray-600">Rujuk RS</div></div>
+                  <div className="p-3 bg-gray-100 dark:bg-gray-500/20 rounded-full text-gray-600 dark:text-gray-400"><Ambulance className="w-6 h-6"/></div>
+                  <div><div className="text-2xl font-bold">{referredCases}</div><div className="text-xs text-gray-600 dark:text-gray-400">Rujuk RS</div></div>
               </CardContent>
           </Card>
       </div>
