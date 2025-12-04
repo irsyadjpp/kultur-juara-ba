@@ -77,7 +77,7 @@ const getMenusByRole = (role: string) => {
     // --- OPERATIONS ---
     { header: "Operasional" },
     { name: "Gate Check-in", href: "/admin/gate", icon: QrCode, roles: ['GATE', 'OPS_LEAD', 'IT_ADMIN'] },
-    { name: "Log Medis", href: "/admin/medical", icon: Stethoscope, roles: ['MEDIC', 'OPS_LEAD'] },
+    { name: "Log Medis", href: "/admin/medical", icon: Stethoscope, roles: ['MEDIC', 'OPS_LEAD', 'DIRECTOR'] },
     { name: "Logistik Kok", href: "/admin/logistics", icon: Archive, roles: ['LOGISTICS', 'OPS_LEAD', 'MATCH_COORD'] },
     { name: "Undian Doorprize", href: "/admin/raffle", icon: Gift, roles: ['OPS_LEAD', 'DIRECTOR', 'SHOW_DIR', 'MEDIA'] },
     { name: "Pengajuan Reimbursement", href: "/admin/reimbursement/submit", icon: Wallet, roles: ['ALL'] },
