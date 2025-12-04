@@ -64,7 +64,7 @@ export default function HonorariumPage() {
   // --- LOGIKA PEMBAGIAN KEUNTUNGAN (REVISI) ---
   const SHARE = {
     inisiator: 0.40,
-    pemilikWadah: 0.05,
+    komunitas: 0.05,
     panitia: 0.50,
     nonPanitia: 0.05,
   };
@@ -88,7 +88,7 @@ export default function HonorariumPage() {
 
   // 4. Alokasi Global
   const honorInisiator = totalProfit * SHARE.inisiator;
-  const honorPemilikWadah = totalProfit * SHARE.pemilikWadah;
+  const honorKomunitas = totalProfit * SHARE.komunitas;
   const budgetPanitia = totalProfit * SHARE.panitia;
   const budgetNP = totalProfit * SHARE.nonPanitia;
 
@@ -137,7 +137,7 @@ export default function HonorariumPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
             <h2 className="text-3xl font-bold font-headline text-primary">Skema Profit Sharing</h2>
-            <p className="text-muted-foreground">Distribusi keuntungan untuk Inisiator, Pemilik Wadah, Panitia & Kontributor.</p>
+            <p className="text-muted-foreground">Distribusi keuntungan untuk Inisiator, Komunitas, Panitia & Kontributor.</p>
         </div>
         
         {/* TOTAL PROFIT LABEL */}
@@ -161,8 +161,8 @@ export default function HonorariumPage() {
             <CardContent><div className="text-xl font-bold text-blue-900">Rp {honorInisiator.toLocaleString('id-ID')}</div></CardContent>
          </Card>
          <Card className="bg-purple-50 border-purple-200">
-            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-purple-700 font-bold">Pemilik Wadah (5%)</CardTitle></CardHeader>
-            <CardContent><div className="text-xl font-bold text-purple-900">Rp {honorPemilikWadah.toLocaleString('id-ID')}</div></CardContent>
+            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-purple-700 font-bold">Komunitas (Dayminton) (5%)</CardTitle></CardHeader>
+            <CardContent><div className="text-xl font-bold text-purple-900">Rp {honorKomunitas.toLocaleString('id-ID')}</div></CardContent>
          </Card>
          <Card className="bg-green-50 border-green-200">
             <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-green-700 font-bold">Panitia (50%)</CardTitle></CardHeader>
@@ -392,5 +392,3 @@ export default function HonorariumPage() {
     </div>
   );
 }
-
-    
