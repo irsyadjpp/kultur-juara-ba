@@ -34,9 +34,9 @@ export default function HonorariumPage() {
 
   // --- LOGIKA PEMBAGIAN KEUNTUNGAN (REVISI) ---
   const SHARE = {
-    inisiator: 0.45,
-    pemilikWadah: 0.15,
-    panitia: 0.35,
+    inisiator: 0.40,
+    pemilikWadah: 0.10,
+    panitia: 0.45,
     nonPanitia: 0.05,
   };
 
@@ -129,15 +129,15 @@ export default function HonorariumPage() {
       {/* RINGKASAN ALOKASI (PIE CHART SIMULATION) */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
          <Card className="bg-blue-50 border-blue-200">
-            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-blue-700 font-bold">Inisiator (45%)</CardTitle></CardHeader>
+            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-blue-700 font-bold">Inisiator (40%)</CardTitle></CardHeader>
             <CardContent><div className="text-xl font-bold text-blue-900">Rp {honorInisiator.toLocaleString('id-ID')}</div></CardContent>
          </Card>
          <Card className="bg-purple-50 border-purple-200">
-            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-purple-700 font-bold">Pemilik Wadah (15%)</CardTitle></CardHeader>
+            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-purple-700 font-bold">Pemilik Wadah (10%)</CardTitle></CardHeader>
             <CardContent><div className="text-xl font-bold text-purple-900">Rp {honorPemilikWadah.toLocaleString('id-ID')}</div></CardContent>
          </Card>
          <Card className="bg-green-50 border-green-200">
-            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-green-700 font-bold">Panitia (35%)</CardTitle></CardHeader>
+            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-green-700 font-bold">Panitia (45%)</CardTitle></CardHeader>
             <CardContent>
                 <div className="text-xl font-bold text-green-900">Rp {budgetPanitia.toLocaleString('id-ID')}</div>
                 <div className="text-xs text-green-700 mt-1">Rate: Rp {Math.round(nilaiPerPoinPanitia).toLocaleString()}/poin</div>
