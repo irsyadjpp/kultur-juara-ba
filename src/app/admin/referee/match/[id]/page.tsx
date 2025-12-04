@@ -303,28 +303,27 @@ export default function MatchControlPage() {
 
   // --- RENDER: MAIN SCOREBOARD ---
   return (
-    <div className="min-h-screen bg-black text-white p-2 md:p-4 flex flex-col font-sans">
-      {/* HEADER SAMA SEPERTI SEBELUMNYA */}
-      <div className="flex flex-col md:flex-row justify-between items-center mb-4 bg-zinc-900 p-3 rounded-lg gap-4 border border-zinc-800">
+    <div className="space-y-4">
+      {/* HEADER */}
+      <div className="flex flex-col md:flex-row justify-between items-center bg-card p-3 rounded-lg gap-4 border">
          <div className="text-left w-full md:w-auto">
              <div className="flex items-center gap-2 mb-1">
-                <Badge variant="outline" className="text-[10px] border-zinc-600 text-zinc-400">MATCH #{matchId}</Badge>
-                <Badge className="bg-blue-900 text-blue-200 text-[10px]">{mode === 'GROUP' ? 'PENYISIHAN' : 'KNOCKOUT'}</Badge>
+                <Badge variant="outline" className="text-[10px]">MATCH #{matchId}</Badge>
+                <Badge variant="secondary" className="text-[10px]">{mode === 'GROUP' ? 'PENYISIHAN' : 'KNOCKOUT'}</Badge>
              </div>
-             <div className="font-bold text-lg text-white">Partai ke-1 (Ganda Putra)</div>
+             <div className="font-bold text-lg text-foreground">Partai ke-1 (Ganda Putra)</div>
          </div>
          
-         {/* TIMER & SERVER INDICATOR */}
          <div className="flex items-center gap-2">
-            <div className="bg-yellow-900/30 border border-yellow-600/50 px-4 py-1 rounded flex flex-col items-center min-w-[100px]">
-                <span className="text-[8px] text-yellow-500 uppercase font-bold">SERVICE</span>
-                <span className="text-sm font-black text-white truncate max-w-[120px]">
+            <div className="bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-300 dark:border-yellow-600/50 px-4 py-1 rounded-md flex flex-col items-center min-w-[100px]">
+                <span className="text-[8px] text-yellow-600 dark:text-yellow-500 uppercase font-bold">SERVICE</span>
+                <span className="text-sm font-black text-foreground truncate max-w-[120px]">
                     {server === 'A' ? matchData.teamA : matchData.teamB}
                 </span>
             </div>
-            <div className="bg-zinc-950 px-3 py-1 rounded border border-zinc-800 text-center cursor-pointer" onClick={() => setIsTimerRunning(!isTimerRunning)}>
-                <div className="text-[8px] text-zinc-500 uppercase">TIME</div>
-                <div className={`font-mono font-bold text-xl leading-none ${isTimerRunning ? 'text-green-400' : 'text-red-400'}`}>
+            <div className="bg-card px-3 py-1 rounded-md border text-center cursor-pointer" onClick={() => setIsTimerRunning(!isTimerRunning)}>
+                <div className="text-[8px] text-muted-foreground uppercase">TIME</div>
+                <div className={`font-mono font-bold text-xl leading-none ${isTimerRunning ? 'text-green-500' : 'text-red-500'}`}>
                     {formatTime(time)}
                 </div>
             </div>
@@ -332,7 +331,7 @@ export default function MatchControlPage() {
       </div>
 
       {/* SCOREBOARD AREA */}
-      <div className="flex-grow grid grid-cols-2 gap-2">
+      <div className="flex-grow grid grid-cols-2 gap-4">
         {/* TIM A */}
         <TeamPanel 
             teamName={matchData.teamA} 
@@ -343,7 +342,7 @@ export default function MatchControlPage() {
             pos={posA}
             onPointAdd={() => handlePoint('A', 'ADD')}
             onPointMin={() => handlePoint('A', 'MIN')}
-            side="LEFT" // Logika visual: A di Kiri
+            side="LEFT"
             scoreEven={scoreA % 2 === 0}
             mode={mode}
             disabled={status === 'FINISHED'}
@@ -367,53 +366,52 @@ export default function MatchControlPage() {
       </div>
 
       {/* FOOTER ACTIONS */}
-      <div className="mt-3 grid grid-cols-4 gap-2">
-         {/* TOMBOL SANKSI */}
+      <div className="mt-3 grid grid-cols-4 gap-4">
          <Dialog>
             <DialogTrigger asChild>
-                <Button variant="secondary" className="h-12 bg-zinc-800 border border-zinc-700 text-zinc-400 flex flex-col gap-0">
-                    <Gavel className="w-4 h-4 text-red-500" />
+                <Button variant="secondary" className="h-14 flex flex-col gap-0">
+                    <Gavel className="w-5 h-5 text-red-500" />
                     <span className="text-[9px] font-bold uppercase">Sanksi</span>
                 </Button>
             </DialogTrigger>
-            <DialogContent className="bg-zinc-900 border-zinc-800 text-white">
+            <DialogContent>
                 <DialogHeader><DialogTitle>Pilih Tim & Kartu</DialogTitle></DialogHeader>
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                        <p className="text-xs text-center text-zinc-400">TIM A</p>
+                        <p className="text-xs text-center text-muted-foreground">TIM A</p>
                         <Button onClick={() => handleCard('A', 'YELLOW')} className="w-full bg-yellow-500 text-black hover:bg-yellow-400">Kuning</Button>
                         <Button onClick={() => handleCard('A', 'RED')} className="w-full bg-red-600 hover:bg-red-500">Merah (+1 Lawan)</Button>
-                        <Button onClick={() => handleCard('A', 'BLACK')} className="w-full bg-black border border-zinc-600">Hitam (WO)</Button>
+                        <Button onClick={() => handleCard('A', 'BLACK')} className="w-full bg-black text-white border">Hitam (WO)</Button>
                     </div>
                     <div className="space-y-2">
-                        <p className="text-xs text-center text-zinc-400">TIM B</p>
+                        <p className="text-xs text-center text-muted-foreground">TIM B</p>
                         <Button onClick={() => handleCard('B', 'YELLOW')} className="w-full bg-yellow-500 text-black hover:bg-yellow-400">Kuning</Button>
                         <Button onClick={() => handleCard('B', 'RED')} className="w-full bg-red-600 hover:bg-red-500">Merah (+1 Lawan)</Button>
-                        <Button onClick={() => handleCard('B', 'BLACK')} className="w-full bg-black border border-zinc-600">Hitam (WO)</Button>
+                        <Button onClick={() => handleCard('B', 'BLACK')} className="w-full bg-black text-white border">Hitam (WO)</Button>
                     </div>
                 </div>
             </DialogContent>
          </Dialog>
 
-         <Button variant="secondary" className="h-12 bg-zinc-800 border border-zinc-700 text-zinc-400 flex flex-col gap-0" onClick={() => setServer(server === 'A' ? 'B' : 'A')}>
-            <ArrowLeftRight className="w-4 h-4" />
+         <Button variant="secondary" className="h-14 flex flex-col gap-0" onClick={() => setServer(server === 'A' ? 'B' : 'A')}>
+            <ArrowLeftRight className="w-5 h-5" />
             <span className="text-[9px] font-bold uppercase">Service Over</span>
          </Button>
 
-         <div className="h-12 bg-zinc-950 border border-zinc-800 rounded flex flex-col items-center justify-center">
-             <span className="text-[8px] text-zinc-500 uppercase">SHUTTLE</span>
+         <div className="h-14 bg-card border rounded-md flex flex-col items-center justify-center">
+             <span className="text-[8px] text-muted-foreground uppercase">SHUTTLE</span>
              <div className="flex items-center gap-2">
                  <span className="font-mono font-bold text-lg">{shuttles}</span>
-                 <button onClick={() => setShuttles(s=>s+1)} className="text-green-500 text-xs bg-zinc-900 px-1 rounded">+</button>
+                 <button onClick={() => setShuttles(s=>s+1)} className="text-green-500 text-xs bg-secondary px-1 rounded">+</button>
              </div>
          </div>
 
          {status === 'FINISHED' ? (
-             <Button className="h-12 bg-green-600 hover:bg-green-500" onClick={() => window.location.href='/admin/referee'}>
+             <Button className="h-14 bg-green-600 hover:bg-green-500" onClick={() => window.location.href='/admin/referee'}>
                  <MonitorPlay className="w-4 h-4 mr-1" /> SELESAI
              </Button>
          ) : (
-             <div className="h-12 flex items-center justify-center bg-black border border-zinc-800 rounded">
+             <div className="h-14 flex items-center justify-center bg-card border rounded-md">
                  <span className="text-green-500 font-bold text-xs animate-pulse">● LIVE</span>
              </div>
          )}
@@ -426,35 +424,30 @@ export default function MatchControlPage() {
 function TeamPanel({ teamName, players, score, setScore, isServing, pos, onPointAdd, onPointMin, side, scoreEven, mode, disabled }: any) {
     const playerNames = players.split(" / ");
     
-    // Logika Posisi: 
-    // Jika skor GENAP (scoreEven=true), server di KANAN.
-    // Jika skor GANJIL (scoreEven=false), server di KIRI.
-    
     return (
-        <div className={`relative rounded-xl p-2 flex flex-col justify-between border-2 transition-all duration-300 ${isServing ? 'border-yellow-500 bg-zinc-900' : 'border-transparent bg-zinc-950 opacity-80'}`}>
+        <Card className={`relative p-4 flex flex-col justify-between border-2 transition-all duration-300 ${isServing ? 'border-yellow-500 bg-yellow-500/5' : 'border-border'}`}>
             {isServing && (
-                <div className="absolute top-0 right-0 bg-yellow-500 text-black px-2 py-0.5 text-[10px] font-black rounded-bl-lg">
+                <div className="absolute top-0 right-0 bg-yellow-500 text-black px-2 py-0.5 text-[10px] font-black rounded-bl-lg rounded-tr-md">
                     SERVICE
                 </div>
             )}
             
             <div className="mt-2 text-center">
-                <h2 className="text-lg md:text-2xl font-black text-white truncate leading-none mb-1">{teamName}</h2>
-                {mode === 'KNOCKOUT' && <div className="text-yellow-500 font-bold text-xl">SET {setScore}</div>}
+                <h2 className="text-lg md:text-2xl font-black text-foreground truncate leading-none mb-1">{teamName}</h2>
+                {mode === 'KNOCKOUT' && <div className="text-yellow-600 font-bold text-xl">SET {setScore}</div>}
             </div>
 
             <div className="flex-grow flex flex-col items-center justify-center py-2">
-                <div className="text-[90px] md:text-[160px] leading-none font-black font-mono text-white select-none">
+                <div className="text-[90px] md:text-[160px] leading-none font-black font-mono text-foreground select-none">
                     {score}
                 </div>
 
-                {/* POSISI PEMAIN */}
                 <div className="grid grid-cols-2 gap-1 w-full mt-2">
-                    <div className={`p-1 text-center rounded border ${!scoreEven ? 'border-yellow-600 bg-yellow-900/20 text-yellow-500' : 'border-zinc-800 text-zinc-600'}`}>
+                    <div className={`p-1 text-center rounded-md border ${!scoreEven ? 'border-yellow-600 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-500' : 'border-zinc-200 dark:border-zinc-800 text-muted-foreground'}`}>
                         <div className="text-[8px] uppercase">KIRI (Ganjil)</div>
                         <div className="text-xs font-bold truncate">{playerNames[pos[1]]}</div>
                     </div>
-                    <div className={`p-1 text-center rounded border ${scoreEven ? 'border-yellow-600 bg-yellow-900/20 text-yellow-500' : 'border-zinc-800 text-zinc-600'}`}>
+                    <div className={`p-1 text-center rounded-md border ${scoreEven ? 'border-yellow-600 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-500' : 'border-zinc-200 dark:border-zinc-800 text-muted-foreground'}`}>
                         <div className="text-[8px] uppercase">KANAN (Genap)</div>
                         <div className="text-xs font-bold truncate">{playerNames[pos[0]]}</div>
                     </div>
@@ -462,17 +455,13 @@ function TeamPanel({ teamName, players, score, setScore, isServing, pos, onPoint
             </div>
 
             <div className="grid grid-cols-2 gap-2 mt-2">
-                 <Button className="h-14 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700" onClick={onPointMin} disabled={disabled}>
-                    <Minus className="w-6 h-6 text-zinc-500" />
+                 <Button className="h-16" variant="outline" onClick={onPointMin} disabled={disabled}>
+                    <Minus className="w-8 h-8" />
                  </Button>
-                 <Button className="h-14 bg-blue-600 hover:bg-blue-500 text-white" onClick={onPointAdd} disabled={disabled}>
-                    <Plus className="w-8 h-8" />
+                 <Button className="h-16" onClick={onPointAdd} disabled={disabled}>
+                    <Plus className="w-10 h-10" />
                  </Button>
             </div>
-        </div>
+        </Card>
     )
 }
-
-    
-
-    
