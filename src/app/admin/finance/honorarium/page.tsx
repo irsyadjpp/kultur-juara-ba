@@ -144,7 +144,7 @@ export default function HonorariumPage() {
             </CardContent>
          </Card>
          <Card className="bg-orange-50 border-orange-200">
-            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-orange-700 font-bold">Non-Panitia (5%)</CardTitle></CardHeader>
+            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-orange-700 font-bold">Kontributor (5%)</CardTitle></CardHeader>
             <CardContent>
                 <div className="text-xl font-bold text-orange-900">Rp {budgetNP.toLocaleString('id-ID')}</div>
                 <div className="text-xs text-orange-700 mt-1">Rate: Rp {Math.round(nilaiPerPoinNP).toLocaleString()}/poin</div>
@@ -152,11 +152,11 @@ export default function HonorariumPage() {
          </Card>
       </div>
 
-      {/* TABS UNTUK PANITIA & NON-PANITIA */}
+      {/* TABS UNTUK PANITIA & KONTRIBUTOR */}
       <Tabs defaultValue="panitia" className="w-full">
         <TabsList>
             <TabsTrigger value="panitia">Panitia (P1-P16)</TabsTrigger>
-            <TabsTrigger value="non_panitia">Non-Panitia (NP1-NP4)</TabsTrigger>
+            <TabsTrigger value="kontributor">Kontributor (NP1-NP4)</TabsTrigger>
         </TabsList>
         
         {/* TAB PANITIA */}
@@ -199,8 +199,8 @@ export default function HonorariumPage() {
             </Card>
         </TabsContent>
 
-        {/* TAB NON-PANITIA */}
-        <TabsContent value="non_panitia">
+        {/* TAB KONTRIBUTOR */}
+        <TabsContent value="kontributor">
              <Card>
                 <CardHeader>
                     <CardTitle>Distribusi Honor Kontributor</CardTitle>
