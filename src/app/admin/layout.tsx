@@ -12,13 +12,9 @@ import {
   Store, Video, QrCode, Archive, ShieldAlert, DollarSign, ArrowRightCircle, Megaphone, Calculator, ChevronDown, Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import Image from 'next/image';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import { Separator } from '@/components/ui/separator';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useToast } from '@/hooks/use-toast';
 import { logoutAdmin } from './actions';
 
@@ -60,7 +56,7 @@ const getMenusByRole = (role: string) => {
       roles: ['MATCH_COORD', 'REFEREE', 'IT_ADMIN', 'DIRECTOR', 'OPS_LEAD', 'TPF', 'MLO'],
       subItems: [
         { name: "Match Control Center", href: "/admin/matches", roles: ['MATCH_COORD', 'REFEREE', 'IT_ADMIN', 'DIRECTOR', 'OPS_LEAD'] },
-        { name: "Berita Acara Hasil", href: "/admin/matches/result-sheet", icon: FileText, roles: ['REFEREE', 'MATCH_COORD'] },
+        { name: "Berita Acara Hasil", href: "/admin/matches/result-sheet", roles: ['REFEREE', 'MATCH_COORD'] },
         { name: "Verifikasi TPF", href: "/admin/tpf", roles: ['TPF', 'MATCH_COORD', 'DIRECTOR'] },
         { name: "Call Room (Antrean)", href: "/admin/mlo/dashboard", roles: ['MLO', 'MATCH_COORD'] },
         { name: "Verifikasi Line-Up", href: "/admin/mlo/lineups", roles: ['MLO', 'MATCH_COORD'] },
@@ -77,7 +73,6 @@ const getMenusByRole = (role: string) => {
       subItems: [
         { name: "Gate Check-in", href: "/admin/gate", roles: ['GATE', 'OPS_LEAD', 'IT_ADMIN'] },
         { name: "Log Medis", href: "/admin/medical", roles: ['MEDIC', 'OPS_LEAD', 'DIRECTOR'] },
-        // { name: "Logistik Kok", href: "/admin/logistics", roles: ['LOGISTICS', 'OPS_LEAD', 'MATCH_COORD'] },
         { name: "Undian Doorprize", href: "/admin/raffle", roles: ['OPS_LEAD', 'DIRECTOR', 'SHOW_DIR', 'MEDIA'] },
         { name: "Pengajuan Reimbursement", href: "/admin/reimbursement/submit", roles: ['ALL'] },
       ]
@@ -143,13 +138,12 @@ const NavLink = ({ href, children, onClick, isActive }: NavLinkProps) => {
       href={href}
       onClick={onClick}
       className={cn(
-        'group relative flex items-center gap-3 rounded-md text-sm transition-colors px-3 py-2.5',
+        'flex items-center gap-3 rounded-md text-sm transition-colors px-3 py-2.5',
         isActive 
           ? 'bg-primary/10 text-primary font-bold' 
           : 'text-muted-foreground hover:bg-secondary/50 hover:text-foreground font-medium'
       )}
     >
-      <div className={cn('absolute left-0 h-6 w-1 rounded-r-full bg-primary transition-transform duration-300', isActive ? 'scale-y-100' : 'scale-y-0 group-hover:scale-y-50')} />
       {children}
     </Link>
   );
@@ -186,7 +180,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     sessionStorage.removeItem('admin_session');
     setIsAuthenticated(false);
     toast({ title: "Logout Berhasil" });
-    // Redirect akan ditangani oleh server action
   };
   
   if (loading) {
@@ -198,74 +191,54 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   if (!isAuthenticated) {
-    // Jika tidak terotentikasi dan bukan di halaman login, layout ini tidak akan dirender karena sudah di-redirect.
-    // Jika di halaman login, biarkan halaman login dirender apa adanya.
     if (pathname === '/admin/login') {
         return <div className="dark">{children}</div>;
     }
-    return null; // Atau tampilkan loading/halaman kosong sementara redirect
+    return null;
   }
   
   const currentMenus = getMenusByRole(session.role);
 
   const renderNavLinks = (isSheet: boolean = false) => currentMenus.map((menu: any, idx: number) => {
+    
+    const navContent = (item: any, isSubItem: boolean = false) => {
+      let isActive = false;
+      if (item.href === '/admin/matches') {
+          isActive = pathname === item.href;
+      } else {
+          isActive = pathname.startsWith(item.href);
+      }
+
+      const NavContentComponent = () => (
+        <NavLink href={item.href!} isActive={isActive}>
+            {item.icon && <item.icon className="w-5 h-5" />}
+            <span>{item.name}</span>
+        </NavLink>
+      );
+      
+      const itemKey = item.href || item.name;
+
+      if (isSheet) {
+          return <SheetClose key={itemKey} asChild><NavContentComponent /></SheetClose>;
+      }
+      return <NavContentComponent key={itemKey} />;
+    };
+    
     if (menu.subItems) {
-      const isParentActive = menu.subItems.some((sub: any) => pathname.startsWith(sub.href));
       return (
-        <Collapsible key={idx} defaultOpen={isParentActive}>
-          <CollapsibleTrigger className="flex justify-between items-center w-full group rounded-md hover:bg-secondary/50">
-              <div className={cn(
-                'flex items-center gap-3 px-3 py-2.5 text-sm font-bold font-headline',
-                isParentActive ? 'text-primary' : 'text-foreground/80'
-              )}>
-                <menu.icon className="w-5 h-5" />
-                <span>{menu.name}</span>
-              </div>
-              <ChevronDown className={cn(
-                  'w-4 h-4 mr-2 text-muted-foreground transition-transform group-data-[state=open]:rotate-180',
-                  isParentActive && 'text-primary'
-              )} />
-          </CollapsibleTrigger>
-          <CollapsibleContent className="pl-6 mt-1">
-             <div className="pl-5 border-l-2 border-border/50 space-y-1">
-                {menu.subItems.map((subItem: any) => {
-                  let isActive = false;
-                  if (subItem.href === '/admin/matches') {
-                      // Hanya aktif jika path sama persis
-                      isActive = pathname === subItem.href;
-                  } else {
-                      // Perilaku default untuk menu lain
-                      isActive = pathname.startsWith(subItem.href);
-                  }
-                  
-                  const NavContent = () => (
-                    <NavLink href={subItem.href!} isActive={isActive}>
-                      <span>{subItem.name}</span>
-                    </NavLink>
-                  );
-                  const itemKey = subItem.href || subItem.name;
-                  if (isSheet) {
-                    return <SheetClose key={itemKey} asChild><NavContent /></SheetClose>;
-                  }
-                  return <NavContent key={itemKey} />;
-                })}
-             </div>
-          </CollapsibleContent>
-        </Collapsible>
+        <div key={idx} className="space-y-1">
+          <p className="px-4 pt-4 pb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+            <menu.icon className="w-4 h-4" />
+            {menu.name}
+          </p>
+          <div className="flex flex-col gap-1">
+            {menu.subItems.map((subItem: any) => navContent(subItem, true))}
+          </div>
+        </div>
       );
     }
-
-    const isActive = pathname === menu.href || (menu.href === '/admin' && pathname === '/admin/dashboard');
-    const NavContent = () => (
-      <NavLink href={menu.href!} isActive={isActive}>
-        {menu.icon && <menu.icon className="w-5 h-5" />}
-        <span className="font-bold">{menu.name}</span>
-      </NavLink>
-    );
-    if (isSheet) {
-        return <SheetClose key={menu.href} asChild><NavContent /></SheetClose>;
-    }
-    return <NavContent key={menu.href} />;
+    
+    return navContent(menu);
   });
 
 
@@ -279,7 +252,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             BCC ADMIN
           </h1>
         </div>
-        <nav className="flex-1 py-4 px-3 overflow-y-auto no-scrollbar space-y-1">
+        <nav className="flex-1 py-2 px-3 overflow-y-auto no-scrollbar space-y-2">
           {renderNavLinks()}
         </nav>
         <div className="p-4 border-t border-border">
@@ -345,5 +318,3 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </div>
   );
 }
-
-    
