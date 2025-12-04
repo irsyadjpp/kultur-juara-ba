@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, type ReactNode } from 'react';
@@ -228,14 +229,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <CollapsibleContent className="pl-6 mt-1">
              <div className="pl-5 border-l-2 border-border/50 space-y-1">
                 {menu.subItems.map((subItem: any) => {
-                  const isActive = pathname.startsWith(subItem.href) && (subItem.href !== '/admin' || pathname === '/admin');
+                  const isActive = pathname === subItem.href || (subItem.href === '/admin/matches' && pathname.startsWith('/admin/matches/'));
                   const NavContent = () => (
                     <NavLink href={subItem.href!} isActive={isActive}>
                       <span>{subItem.name}</span>
                     </NavLink>
                   );
                   if (isSheet) {
-                    return <SheetClose asChild key={subItem.href}><NavContent /></SheetClose>;
+                    return <SheetClose key={subItem.href} asChild><NavContent /></SheetClose>;
                   }
                   return <NavContent key={subItem.href} />;
                 })}
@@ -245,7 +246,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       );
     }
 
-    const isActive = menu.href ? pathname.startsWith(menu.href) && (menu.href !== '/admin' || pathname === '/admin') : false;
+    const isActive = pathname === menu.href;
     const NavContent = () => (
       <NavLink href={menu.href!} isActive={isActive}>
         {menu.icon && <menu.icon className="w-5 h-5" />}
@@ -253,7 +254,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </NavLink>
     );
     if (isSheet) {
-        return <SheetClose asChild key={menu.href}><NavContent /></SheetClose>;
+        return <SheetClose key={menu.href} asChild><NavContent /></SheetClose>;
     }
     return <NavContent key={menu.href} />;
   });
