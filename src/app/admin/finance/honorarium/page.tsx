@@ -14,6 +14,7 @@ import { Edit3, Coins, Save, BookOpen } from "lucide-react";
 import { getStaffEvaluations, saveEvaluation, type StaffEvaluation } from "./actions";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const parameterDetails = [
     { id: "P1", title: "P1 — Kehadiran & Kedisiplinan", description: "Mengukur seberapa konsisten hadir, tepat waktu, dan mengikuti agenda kerja.", scores: [ "1: Sering absen / sering terlambat.", "2: Hadir tapi cukup sering terlambat.", "3: Kehadiran cukup baik, kadang terlambat.", "4: Jarang absen, disiplin.", "5: Sangat disiplin, selalu hadir dan tepat waktu." ] },
@@ -156,26 +157,26 @@ export default function HonorariumPage() {
 
       {/* RINGKASAN ALOKASI (PIE CHART SIMULATION) */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-         <Card className="bg-blue-50 border-blue-200">
-            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-blue-700 font-bold">Inisiator (40%)</CardTitle></CardHeader>
-            <CardContent><div className="text-xl font-bold text-blue-900">Rp {honorInisiator.toLocaleString('id-ID')}</div></CardContent>
+         <Card className="bg-blue-50 border-blue-200 dark:bg-blue-500/10 dark:border-blue-500/20">
+            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-blue-700 dark:text-blue-400 font-bold">Inisiator (40%)</CardTitle></CardHeader>
+            <CardContent><div className="text-xl font-bold text-blue-900 dark:text-blue-300">Rp {honorInisiator.toLocaleString('id-ID')}</div></CardContent>
          </Card>
-         <Card className="bg-purple-50 border-purple-200">
-            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-purple-700 font-bold">Komunitas (Dayminton) (5%)</CardTitle></CardHeader>
-            <CardContent><div className="text-xl font-bold text-purple-900">Rp {honorKomunitas.toLocaleString('id-ID')}</div></CardContent>
+         <Card className="bg-purple-50 border-purple-200 dark:bg-purple-500/10 dark:border-purple-500/20">
+            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-purple-700 dark:text-purple-400 font-bold">Komunitas (Dayminton) (5%)</CardTitle></CardHeader>
+            <CardContent><div className="text-xl font-bold text-purple-900 dark:text-purple-300">Rp {honorKomunitas.toLocaleString('id-ID')}</div></CardContent>
          </Card>
-         <Card className="bg-green-50 border-green-200">
-            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-green-700 font-bold">Panitia (50%)</CardTitle></CardHeader>
+         <Card className="bg-green-50 border-green-200 dark:bg-green-500/10 dark:border-green-500/20">
+            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-green-700 dark:text-green-400 font-bold">Panitia (50%)</CardTitle></CardHeader>
             <CardContent>
-                <div className="text-xl font-bold text-green-900">Rp {budgetPanitia.toLocaleString('id-ID')}</div>
-                <div className="text-xs text-green-700 mt-1">Rate: Rp {Math.round(nilaiPerPoinPanitia).toLocaleString()}/poin</div>
+                <div className="text-xl font-bold text-green-900 dark:text-green-300">Rp {budgetPanitia.toLocaleString('id-ID')}</div>
+                <div className="text-xs text-green-700 dark:text-green-500 mt-1">Rate: Rp {Math.round(nilaiPerPoinPanitia).toLocaleString()}/poin</div>
             </CardContent>
          </Card>
-         <Card className="bg-orange-50 border-orange-200">
-            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-orange-700 font-bold">Kontributor (5%)</CardTitle></CardHeader>
+         <Card className="bg-orange-50 border-orange-200 dark:bg-orange-500/10 dark:border-orange-500/20">
+            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-orange-700 dark:text-orange-400 font-bold">Kontributor (5%)</CardTitle></CardHeader>
             <CardContent>
-                <div className="text-xl font-bold text-orange-900">Rp {budgetNP.toLocaleString('id-ID')}</div>
-                <div className="text-xs text-orange-700 mt-1">Rate: Rp {Math.round(nilaiPerPoinNP).toLocaleString()}/poin</div>
+                <div className="text-xl font-bold text-orange-900 dark:text-orange-300">Rp {budgetNP.toLocaleString('id-ID')}</div>
+                <div className="text-xs text-orange-700 dark:text-orange-500 mt-1">Rate: Rp {Math.round(nilaiPerPoinNP).toLocaleString()}/poin</div>
             </CardContent>
          </Card>
       </div>
@@ -211,7 +212,7 @@ export default function HonorariumPage() {
                                     <TableCell className="font-medium">{staff.name}</TableCell>
                                     <TableCell><Badge variant="outline">{staff.jabatan}</Badge></TableCell>
                                     <TableCell className="text-center font-mono text-lg font-bold">{staff.rawScore}</TableCell>
-                                    <TableCell className="text-right font-bold text-green-700">
+                                    <TableCell className="text-right font-bold text-green-600 dark:text-green-400">
                                         Rp {Math.round(staff.rawScore * nilaiPerPoinPanitia).toLocaleString('id-ID')}
                                     </TableCell>
                                     <TableCell>
@@ -251,7 +252,7 @@ export default function HonorariumPage() {
                                     <TableCell className="font-medium">{staff.name}</TableCell>
                                     <TableCell><Badge variant="secondary">{staff.jabatan}</Badge></TableCell>
                                     <TableCell className="text-center font-mono text-lg font-bold">{staff.rawScore}</TableCell>
-                                    <TableCell className="text-right font-bold text-orange-700">
+                                    <TableCell className="text-right font-bold text-orange-600 dark:text-orange-400">
                                         Rp {Math.round(staff.rawScore * nilaiPerPoinNP).toLocaleString('id-ID')}
                                     </TableCell>
                                     <TableCell>
@@ -276,39 +277,19 @@ export default function HonorariumPage() {
                     <BookOpen className="w-4 h-4 text-primary" /> Lihat Panduan Penilaian
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-4xl max-h-[90vh]">
-                <DialogHeader>
+            <DialogContent className="max-w-4xl h-[90vh] flex flex-col bg-background">
+                <DialogHeader className="flex-shrink-0">
                     <DialogTitle>Panduan Parameter Penilaian (P1-P16)</DialogTitle>
                     <DialogDescription>Gunakan pedoman ini untuk memberikan penilaian yang objektif.</DialogDescription>
                 </DialogHeader>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4 overflow-y-auto">
-                    <div>
-                        <Accordion type="single" collapsible className="w-full">
-                            {parameterDetails.map((param) => (
-                                <AccordionItem value={param.id} key={param.id}>
-                                    <AccordionTrigger className="font-bold text-left hover:no-underline">{param.title}</AccordionTrigger>
-                                    <AccordionContent className="space-y-2">
-                                        <p className="text-muted-foreground italic mb-3">{param.description}</p>
-                                        <ul className="space-y-1 text-sm">
-                                            {param.scores.map((score, i) => (
-                                                <li key={i} className="flex gap-2">
-                                                    <span className="font-semibold">{score.charAt(0)}:</span> 
-                                                    <span className="text-muted-foreground">{score.slice(2)}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </AccordionContent>
-                                </AccordionItem>
-                            ))}
-                        </Accordion>
-                    </div>
-                    <div>
-                        <div className="sticky top-0 bg-background/95 backdrop-blur-sm p-1 rounded-lg">
+                <ScrollArea className="flex-grow">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 pr-6">
+                        <div className="space-y-4">
                             <h4 className="font-bold mb-2">Makna Umum Skor 1-5</h4>
-                            <Table>
+                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead className="w-[100px]">Skor</TableHead>
+                                        <TableHead className="w-[80px]">Skor</TableHead>
                                         <TableHead>Makna Ringkas</TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -322,8 +303,29 @@ export default function HonorariumPage() {
                                 </TableBody>
                             </Table>
                         </div>
+                        <div className="space-y-4">
+                             <h4 className="font-bold mb-2">Detail Parameter Penilaian</h4>
+                            <Accordion type="single" collapsible className="w-full">
+                                {parameterDetails.map((param) => (
+                                    <AccordionItem value={param.id} key={param.id}>
+                                        <AccordionTrigger className="font-bold text-left hover:no-underline">{param.title}</AccordionTrigger>
+                                        <AccordionContent className="space-y-2">
+                                            <p className="text-muted-foreground italic mb-3">{param.description}</p>
+                                            <ul className="space-y-1 text-sm">
+                                                {param.scores.map((score, i) => (
+                                                    <li key={i} className="flex gap-2">
+                                                        <span className="font-semibold">{score.charAt(0)}:</span> 
+                                                        <span className="text-muted-foreground">{score.slice(2)}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                ))}
+                            </Accordion>
+                        </div>
                     </div>
-                </div>
+                </ScrollArea>
             </DialogContent>
         </Dialog>
       </div>
@@ -331,7 +333,7 @@ export default function HonorariumPage() {
 
       {/* MODAL PENILAIAN DINAMIS */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-background">
             <DialogHeader>
                 <DialogTitle>Evaluasi: {selectedStaff?.name}</DialogTitle>
                 <DialogDescription>Isi nilai 1-5 untuk setiap parameter.</DialogDescription>
@@ -341,14 +343,14 @@ export default function HonorariumPage() {
                 {selectedStaff?.type === 'PANITIA' ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Parameter Panitia P1-P16 */}
-                        <div className="border p-4 rounded-lg bg-slate-50">
+                        <div className="border p-4 rounded-lg bg-slate-50 dark:bg-card">
                             <h4 className="font-bold text-primary mb-4">1. STRUKTUR</h4>
                             <ScoreInput id="p1" label="Risiko Jabatan" />
                             <ScoreInput id="p2" label="Keahlian Khusus" />
                             <ScoreInput id="p3" label="Durasi Kontrak" />
                             <ScoreInput id="p4" label="Posisi Hirarki" />
                         </div>
-                        <div className="border p-4 rounded-lg bg-slate-50">
+                        <div className="border p-4 rounded-lg bg-slate-50 dark:bg-card">
                             <h4 className="font-bold text-primary mb-4">2. KINERJA</h4>
                             <ScoreInput id="p5" label="Eksekusi" />
                             <ScoreInput id="p6" label="Inisiatif" />
@@ -356,13 +358,13 @@ export default function HonorariumPage() {
                             <ScoreInput id="p8" label="Respon" />
                             <ScoreInput id="p9" label="Beban Fisik" />
                         </div>
-                        <div className="border p-4 rounded-lg bg-slate-50">
+                        <div className="border p-4 rounded-lg bg-slate-50 dark:bg-card">
                             <h4 className="font-bold text-primary mb-4">3. DAMPAK</h4>
                             <ScoreInput id="p10" label="Kompleksitas" />
                             <ScoreInput id="p11" label="Interdependency" />
                             <ScoreInput id="p12" label="Criticality" />
                         </div>
-                        <div className="border p-4 rounded-lg bg-slate-50">
+                        <div className="border p-4 rounded-lg bg-slate-50 dark:bg-card">
                             <h4 className="font-bold text-primary mb-4">4. PROFESIONAL</h4>
                             <ScoreInput id="p13" label="Dokumentasi" />
                             <ScoreInput id="p14" label="Komunikasi" />
@@ -371,9 +373,9 @@ export default function HonorariumPage() {
                         </div>
                     </div>
                 ) : (
-                    <div className="border p-4 rounded-lg bg-orange-50">
+                    <div className="border p-4 rounded-lg bg-orange-50 dark:bg-card">
                         {/* Parameter Non-Panitia NP1-NP4 */}
-                        <h4 className="font-bold text-orange-700 mb-4">PARAMETER KONTRIBUTOR (NP)</h4>
+                        <h4 className="font-bold text-orange-700 dark:text-orange-400 mb-4">PARAMETER KONTRIBUTOR (NP)</h4>
                         <ScoreInput id="np1" label="Kontribusi Strategis" />
                         <ScoreInput id="np2" label="Dampak Jaringan" />
                         <ScoreInput id="np3" label="Komitmen Waktu" />
@@ -392,3 +394,4 @@ export default function HonorariumPage() {
     </div>
   );
 }
+
