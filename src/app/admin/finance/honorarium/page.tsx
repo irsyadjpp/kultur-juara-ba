@@ -5,13 +5,41 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { Edit3, Coins, Save } from "lucide-react";
+import { Edit3, Coins, Save, BookOpen } from "lucide-react";
 import { getStaffEvaluations, saveEvaluation, type StaffEvaluation } from "./actions";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+const parameterDetails = [
+    { id: "P1", title: "P1 — Kehadiran & Kedisiplinan", description: "Mengukur seberapa konsisten hadir, tepat waktu, dan mengikuti agenda kerja.", scores: [ "1: Sering absen / sering terlambat.", "2: Hadir tapi cukup sering terlambat.", "3: Kehadiran cukup baik, kadang terlambat.", "4: Jarang absen, disiplin.", "5: Sangat disiplin, selalu hadir dan tepat waktu." ] },
+    { id: "P2", title: "P2 — Komitmen terhadap Tugas", description: "Mengukur keseriusan menjalankan tugas hingga selesai.", scores: [ "1: Banyak tugas tidak selesai.", "2: Sering terlambat menyelesaikan tugas.", "3: Tugas selesai meski kadang lewat deadline.", "4: Hampir semua tugas selesai tepat waktu.", "5: Sangat berkomitmen, selalu selesai sebelum deadline." ] },
+    { id: "P3", title: "P3 — Kualitas Output", description: "Seberapa baik hasil kerja yang diberikan.", scores: [ "1: Output sering bermasalah.", "2: Output cukup banyak revisi.", "3: Standar, ada revisi kecil.", "4: Kualitas baik dan konsisten.", "5: Output sangat baik, presisi, profesional." ] },
+    { id: "P4", title: "P4 — Inisiatif & Proaktivitas", description: "Kemampuan bergerak tanpa harus selalu disuruh.", scores: [ "1: Pasif.", "2: Kadang inisiatif, tapi jarang.", "3: Cukup proaktif.", "4: Sering memberi ide dan bertindak.", "5: Sangat proaktif dan jadi motor penggerak." ] },
+    { id: "P5", title: "P5 — Problem Solving", description: "Menyelesaikan masalah secara mandiri dan efektif.", scores: [ "1: Tidak mampu menyelesaikan masalah.", "2: Sering bingung dan butuh arahan.", "3: Cukup bisa menyelesaikan masalah.", "4: Mandiri menyelesaikan masalah.", "5: Sangat solutif, strategis, efektif." ] },
+    { id: "P6", title: "P6 — Kerja Sama Tim", description: "Seberapa baik berkolaborasi dengan tim lain.", scores: [ "1: Menyulitkan / sering konflik.", "2: Kadang tidak kooperatif.", "3: Cukup kooperatif.", "4: Baik dalam kolaborasi.", "5: Sangat kooperatif & memberi energi positif." ] },
+    { id: "P7", title: "P7 — Komunikasi", description: "Kemampuan berkomunikasi, melaporkan progres, dan merespons chat.", scores: [ "1: Tidak komunikatif.", "2: Respons lambat.", "3: Komunikatif cukup.", "4: Komunikatif dan responsif.", "5: Sangat komunikatif, koordinatif, dan jelas." ] },
+    { id: "P8", title: "P8 — Manajemen Waktu", description: "Kemampuan mengelola waktu saat event dan persiapan.", scores: [ "1: Sangat buruk.", "2: Cukup buruk.", "3: Standar.", "4: Baik.", "5: Sangat baik." ] },
+    { id: "P9", title: "P9 — Tanggung Jawab & Reliabilitas", description: "Seberapa dapat diandalkan dan bertanggung jawab.", scores: [ "1: Tidak dapat diandalkan.", "2: Sering lalai.", "3: Cukup bertanggung jawab.", "4: Dapat diandalkan.", "5: Sangat andal & dipercaya." ] },
+    { id: "P10", title: "P10 — Adaptasi & Fleksibilitas", description: "Kemampuan beradaptasi dengan perubahan mendadak.", scores: [ "1: Sulit beradaptasi.", "2: Kurang fleksibel.", "3: Cukup fleksibel.", "4: Cepat beradaptasi.", "5: Sangat fleksibel & adaptif." ] },
+    { id: "P11", title: "P11 — Kontribusi Ide & Perencanaan", description: "Apakah berkontribusi dalam brainstorming dan rancangan event.", scores: [ "1: Tidak memberi ide.", "2: Sesekali memberi ide.", "3: Memberi ide standar.", "4: Sering memberi ide membantu.", "5: Ide strategis, visioner, berdampak." ] },
+    { id: "P12", title: "P12 — Eksekusi Lapangan", description: "Kinerja saat hari-H event.", scores: [ "1: Buruk, tidak menjalankan.", "2: Banyak kesalahan.", "3: Cukup baik.", "4: Baik dan sesuai SOP.", "5: Sangat baik, eksekutor utama." ] },
+    { id: "P13", title: "P13 — Beban Kerja Real", description: "Seberapa berat tugas yang diambil.", scores: [ "1: Beban sangat kecil.", "2: Beban kecil.", "3: Beban sedang.", "4: Beban besar.", "5: Beban sangat besar / penanggung jawab utama." ] },
+    { id: "P14", title: "P14 — Keahlian Teknis (Role-based)", description: "Kemampuan teknis sesuai jabatan (operator, scoring, MD, kamera, sosial media, dll).", scores: [ "1: Tidak menguasai.", "2: Sedikit menguasai.", "3: Cukup bisa.", "4: Ahli.", "5: Sangat ahli / level profesional." ] },
+    { id: "P15", title: "P15 — Sikap & Etika Kerja", description: "Manner, etika, dan attitude secara keseluruhan.", scores: [ "1: Sikap buruk.", "2: Kurang baik.", "3: Sikap cukup.", "4: Etika baik.", "5: Sangat profesional & positif." ] },
+    { id: "P16", title: "P16 — Peran Strategis / Dampak", description: "Berapa besar peran terhadap keberlangsungan event.", scores: [ "1: Dampak sangat kecil.", "2: Dampak kecil.", "3: Dampak sedang.", "4: Dampak signifikan.", "5: Dampak kritikal / event akan kacau tanpa orang ini." ] }
+];
+
+const generalScores = [
+    { score: 1, meaning: "Sangat buruk / minim kontribusi" },
+    { score: 2, meaning: "Kurang / di bawah harapan" },
+    { score: 3, meaning: "Cukup / memenuhi standar" },
+    { score: 4, meaning: "Baik / di atas standar" },
+    { score: 5, meaning: "Sangat baik / luar biasa" },
+]
 
 export default function HonorariumPage() {
   const { toast } = useToast();
@@ -49,7 +77,6 @@ export default function HonorariumPage() {
   const totalPoinNP = listNonPanitia.reduce((acc, curr) => acc + curr.rawScore, 0);
 
   // 3. Hitung Nilai Per Poin
-  // Prevent division by zero
   const nilaiPerPoinPanitia = totalPoinPanitia > 0 
     ? (totalProfit * SHARE.panitia) / totalPoinPanitia 
     : 0;
@@ -239,12 +266,64 @@ export default function HonorariumPage() {
             </Card>
         </TabsContent>
       </Tabs>
+      
+      {/* PANDUAN PENILAIAN */}
+      <Card>
+        <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-primary" />
+                Panduan Parameter Penilaian (P1-P16)
+            </CardTitle>
+            <CardDescription>Gunakan pedoman ini untuk memberikan penilaian yang objektif.</CardDescription>
+        </CardHeader>
+        <CardContent>
+            <Accordion type="single" collapsible className="w-full">
+                {parameterDetails.map((param) => (
+                    <AccordionItem value={param.id} key={param.id}>
+                        <AccordionTrigger className="font-bold text-left hover:no-underline">{param.title}</AccordionTrigger>
+                        <AccordionContent className="space-y-2">
+                            <p className="text-muted-foreground italic mb-3">{param.description}</p>
+                            <ul className="space-y-1 text-sm">
+                                {param.scores.map((score, i) => (
+                                    <li key={i} className="flex gap-2">
+                                        <span className="font-semibold">{score.charAt(0)}:</span> 
+                                        <span className="text-muted-foreground">{score.slice(2)}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </AccordionContent>
+                    </AccordionItem>
+                ))}
+            </Accordion>
+            <div className="mt-6">
+                <h4 className="font-bold mb-2">Makna Umum Skor 1-5</h4>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="w-[100px]">Skor</TableHead>
+                            <TableHead>Makna Ringkas</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {generalScores.map(s => (
+                            <TableRow key={s.score}>
+                                <TableCell className="font-bold text-lg">{s.score}</TableCell>
+                                <TableCell>{s.meaning}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </div>
+        </CardContent>
+      </Card>
+
 
       {/* MODAL PENILAIAN DINAMIS */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
                 <DialogTitle>Evaluasi: {selectedStaff?.name}</DialogTitle>
+                <DialogDescription>Isi nilai 1-5 untuk setiap parameter.</DialogDescription>
             </DialogHeader>
             
             <div className="py-4">
