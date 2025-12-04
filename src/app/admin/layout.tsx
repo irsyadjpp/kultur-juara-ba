@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, type ReactNode } from 'react';
@@ -8,7 +9,8 @@ import {
   LayoutDashboard, Users, Trophy, BarChart3, LogOut, Lock, 
   ClipboardCheck, ArrowRight, Menu, Home, Settings, AlertOctagon,
   FileCheck, Shield, Mic, Ticket, Award, Wallet,
-  ClipboardList, Activity, Gavel, Gift, Stethoscope, Receipt, CheckCircle, FileText
+  ClipboardList, Activity, Gavel, Gift, Stethoscope, Receipt, CheckCircle, FileText,
+  Store, Video, QrCode, Archive, ShieldAlert
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,53 +20,84 @@ import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/s
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 
-const ADMIN_PIN = "2026"; 
+const ADMIN_CODES: Record<string, { name: string; role: string }> = {
+  // --- STEERING COMMITTEE ---
+  "001": { name: "Irsyad Jamal (Director)", role: "DIRECTOR" },
+  "111": { name: "Rizki/Annisa (Sekretaris)", role: "SECRETARY" },
+  "222": { name: "Selvi Yulia (Bendahara)", role: "FINANCE" },
+
+  // --- MATCH CONTROL ---
+  "333": { name: "Agung (Koord. Pertandingan)", role: "MATCH_COORD" },
+  "334": { name: "Sarah (MLO)", role: "MLO" },
+  "335": { name: "Tim TPF", role: "TPF" },
+  "336": { name: "Referee Utama", role: "REFEREE" },
+  
+  // --- BUSINESS ---
+  "444": { name: "Risca/Laras (Komersial)", role: "BUSINESS" },
+  "445": { name: "Hera (Tenant)", role: "TENANT_RELATIONS" },
+
+  // --- SHOW & MEDIA ---
+  "555": { name: "Rizki K. (Show Dir)", role: "MEDIA" },
+  
+  // --- OPERATIONS ---
+  "666": { name: "Kevin/Terri (Ops)", role: "OPERATIONS" },
+  "667": { name: "Sidiq (Security/Gate)", role: "GATE" },
+  "668": { name: "Nanda (Medis)", role: "MEDIC" },
+  
+  // --- IT ---
+  "777": { name: "Kevin (IT)", role: "IT_ADMIN" } // Full Access System
+};
 
 // --- DEFINISI MENU ---
 const getMenusByRole = (role: string) => {
-  
-  // MENU PANITIA (Back Office)
-  const adminMenus = [
+  const allMenus = [
+    // --- CORE ---
     { header: "Utama" },
-    { name: "Dashboard", href: "/admin", icon: LayoutDashboard, roles: ['DIRECTOR', 'FINANCE', 'BUSINESS', 'SECRETARY', 'OPERATIONS'] },
-    
-    { header: "Keuangan & Legal" },
-    { name: "Verifikasi Pembayaran", href: "/admin/teams", icon: Receipt, roles: ['DIRECTOR', 'FINANCE'] },
-    { name: "Jurnal & Reimburse", href: "/admin/finance/reimbursement-approval", icon: Wallet, roles: ['DIRECTOR', 'FINANCE'] },
-    
-    { header: "Peserta & Data" },
-    { name: "Verifikasi TPF (Audit)", href: "/admin/tpf", icon: CheckCircle, roles: ['DIRECTOR', 'TPF'] },
-    { name: "Data Pengunjung", href: "/admin/visitors", icon: Users, roles: ['DIRECTOR', 'BUSINESS'] },
-    { name: "Laporan Komersial", href: "/admin/analytics", icon: BarChart3, roles: ['DIRECTOR', 'BUSINESS'] },
-    
+    { name: "Dashboard", href: "/admin", icon: LayoutDashboard, roles: ['ALL'] },
+
+    // --- FINANCE ---
+    { header: "Keuangan" },
+    { name: "Verifikasi Pendaftaran", href: "/admin/teams", icon: Receipt, roles: ['FINANCE', 'DIRECTOR'] },
+    { name: "Reimbursement & Jurnal", href: "/admin/finance/reimbursement-approval", icon: Wallet, roles: ['FINANCE', 'DIRECTOR'] },
+    { name: "Manajemen Tenant", href: "/admin/tenants", icon: Store, roles: ['FINANCE', 'TENANT_RELATIONS', 'BUSINESS'] },
+
+    // --- MATCH CONTROL ---
+    { header: "Pertandingan" },
+    { name: "Jadwal & Lapangan", href: "/admin/matches", icon: Activity, roles: ['MATCH_COORD', 'REFEREE', 'IT_ADMIN'] },
+    { name: "Verifikasi TPF", href: "/admin/tpf", icon: CheckCircle, roles: ['TPF', 'MATCH_COORD', 'DIRECTOR'] },
+    { name: "Cek Line-Up (MLO)", href: "/admin/lineups", icon: ClipboardList, roles: ['MLO', 'MATCH_COORD'] },
+    { name: "Keputusan Protes", href: "/admin/protests", icon: Gavel, roles: ['REFEREE', 'MATCH_COORD'] },
+
+    // --- OPERATIONS ---
     { header: "Operasional" },
-    { name: "Generator Sertifikat", href: "/admin/secretary/cert-gen", icon: FileText, roles: ['DIRECTOR', 'SECRETARY'] },
-    { name: "Undian Doorprize", href: "/admin/raffle", icon: Gift, roles: ['DIRECTOR', 'OPERATIONS'] },
-    // { name: "Medical Log", href: "/admin/medical", icon: Stethoscope, roles: ['DIRECTOR', 'OPERATIONS'] },
+    { name: "Gate Check-in", href: "/admin/gate", icon: QrCode, roles: ['GATE', 'OPERATIONS', 'IT_ADMIN'] },
+    { name: "Log Medis", href: "/admin/medical", icon: Stethoscope, roles: ['MEDIC', 'OPERATIONS'] },
+    { name: "Logistik Kok", href: "/admin/logistics", icon: Archive, roles: ['OPERATIONS', 'MATCH_COORD'] },
+    { name: "Undian Doorprize", href: "/admin/raffle", icon: Gift, roles: ['OPERATIONS', 'DIRECTOR', 'MEDIA'] },
+
+    // --- COMMERCIAL & MEDIA ---
+    { header: "Bisnis & Media" },
+    { name: "Data Pengunjung", href: "/admin/visitors", icon: Users, roles: ['BUSINESS', 'DIRECTOR'] },
+    { name: "Laporan Sponsor", href: "/admin/analytics", icon: BarChart3, roles: ['BUSINESS', 'DIRECTOR'] },
+    { name: "Manajemen Media", href: "/admin/media", icon: Video, roles: ['MEDIA'] },
+
+    // --- SECRETARY ---
+    { header: "Sekretariat" },
+    { name: "Dokumen Legal", href: "/admin/secretary/archive", icon: ShieldAlert, roles: ['SECRETARY', 'DIRECTOR'] },
+    { name: "Generator Sertifikat", href: "/admin/secretary/cert-gen", icon: FileText, roles: ['SECRETARY', 'DIRECTOR'] },
+    
+    // --- SYSTEM ---
+    { header: "System" },
+    { name: "Pengaturan Global", href: "/admin/settings", icon: Settings, roles: ['DIRECTOR', 'IT_ADMIN'] },
   ];
 
-  // MENU WASIT & MATCH CONTROL (Field)
-  const technicalMenus = [
-    { header: "Match Control" },
-    { name: "Jadwal Lapangan", href: "/admin/referee", icon: ClipboardList, roles: ['MATCH_CONTROL', 'REFEREE', 'MLO'] },
-    { name: "Input Skor (Wasit)", href: "/admin/matches", icon: Activity, roles: ['MATCH_CONTROL', 'REFEREE', 'MLO'] },
-    { name: "Keputusan Protes", href: "/admin/protests", icon: Gavel, roles: ['MATCH_CONTROL', 'REFEREE'] },
-    // { name: "Cek Line-Up", href: "/admin/lineups", icon: Users, roles: ['MATCH_CONTROL', 'MLO'] },
-  ];
-
-  // Gabungkan menu berdasarkan Role Group
-  // Jika role adalah perangkat pertandingan, tampilkan menu teknis saja
-  if (['MATCH_CONTROL', 'REFEREE', 'MLO'].includes(role)) {
-    return technicalMenus.filter(m => m.roles?.includes(role) || m.header);
-  }
-  
-  // Jika role panitia, tampilkan menu admin
-  if (['DIRECTOR', 'FINANCE', 'BUSINESS', 'SECRETARY', 'OPERATIONS', 'TPF'].includes(role)) {
-    return adminMenus.filter(m => m.roles?.includes(role) || m.header);
-  }
-
-  // Fallback untuk role 'ADMIN' atau 'SUPERUSER' (tampilkan semua)
-  return [...adminMenus, ...technicalMenus];
+  return allMenus.filter(m => {
+    if (m.header) return true;
+    if (!m.roles) return false;
+    if (m.roles.includes('ALL')) return true;
+    if (role === 'IT_ADMIN') return true;
+    return m.roles.includes(role);
+  });
 };
 
 
@@ -101,7 +134,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [pin, setPin] = useState("");
   const pathname = usePathname();
   
-  // MOCK SESSION
   const [session, setSession] = useState({ isLoggedIn: false, role: 'DIRECTOR', name: 'Admin Super' });
 
   useEffect(() => {
@@ -113,10 +145,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
   }, []);
 
-  const handleLogin = (e: React.FormEvent, role: string) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pin === ADMIN_PIN) {
-        const newSession = { isLoggedIn: true, role, name: `${role.charAt(0).toUpperCase() + role.slice(1).toLowerCase()} User` };
+    const user = ADMIN_CODES[pin];
+    if (user) {
+        const newSession = { isLoggedIn: true, role: user.role, name: user.name };
         setSession(newSession);
         setIsAuthenticated(true);
         sessionStorage.setItem('admin_session', JSON.stringify(newSession));
@@ -128,6 +161,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const handleLogout = () => {
     setIsAuthenticated(false);
+    setPin('');
     sessionStorage.removeItem('admin_session');
   };
 
@@ -166,24 +200,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600/10 blur-[100px] pointer-events-none" />
            <div className="w-full max-w-md space-y-8 relative z-10">
               <div className="text-center lg:text-left">
-                  <h2 className="text-3xl font-black font-headline mb-2">Simulasi Login Role</h2>
-                  <p className="text-zinc-400">Masukkan PIN Admin (2026) lalu pilih role.</p>
+                  <h2 className="text-3xl font-black font-headline mb-2">Admin Portal Login</h2>
+                  <p className="text-zinc-400">Masukkan PIN unik sesuai divisi Anda.</p>
               </div>
               <div className="space-y-4">
-                  <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+                  <form onSubmit={handleLogin} className="space-y-4">
                       <div className="space-y-2">
-                          <Label className="text-xs font-bold uppercase text-zinc-500 tracking-wider">PIN Admin</Label>
+                          <Label className="text-xs font-bold uppercase text-zinc-500 tracking-wider">PIN Panitia</Label>
                           <div className="relative">
                               <Lock className="absolute left-3 top-3 h-5 w-5 text-zinc-500" />
                               <Input name="pin" type="password" placeholder="••••" className="pl-10 bg-zinc-900 border-zinc-800 text-white h-12 rounded-lg focus:ring-primary focus:border-primary transition-all placeholder:text-zinc-600 text-center tracking-[0.5em]" value={pin} onChange={(e) => setPin(e.target.value)} required />
                           </div>
                       </div>
-                      <div className="grid grid-cols-2 gap-2">
-                          <Button onClick={(e) => handleLogin(e, 'DIRECTOR')} className="w-full h-12 bg-primary text-white font-bold rounded-lg transition-all hover:bg-primary/90">Director</Button>
-                          <Button onClick={(e) => handleLogin(e, 'FINANCE')} variant="secondary">Finance</Button>
-                          <Button onClick={(e) => handleLogin(e, 'REFEREE')} variant="secondary">Referee</Button>
-                          <Button onClick={(e) => handleLogin(e, 'TPF')} variant="secondary">TPF</Button>
-                      </div>
+                      <Button type="submit" className="w-full h-12 bg-primary text-white font-bold rounded-lg transition-all hover:bg-primary/90">Login</Button>
                   </form>
               </div>
               <p className="text-center text-sm text-zinc-500 pt-6">Akses terbatas hanya untuk panitia dan wasit.</p>
@@ -196,13 +225,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const currentMenus = getMenusByRole(session.role);
 
   const renderNavLinks = (isSheet: boolean = false) => currentMenus.map((menu, idx) => {
+      // Logic to not render a header if no items in its group are visible
       if (menu.header) {
-          return !isSheet && (
-              <div key={idx} className="px-4 pt-4 pb-2 text-xs font-semibold text-muted-foreground tracking-wider">
-                  {menu.header}
-              </div>
-          );
+        const nextItem = currentMenus[idx + 1];
+        if (!nextItem || nextItem.header) return null; // Don't render if it's the last item or followed by another header
+        
+        return !isSheet && (
+          <div key={idx} className="px-4 pt-4 pb-2 text-xs font-semibold text-muted-foreground tracking-wider">
+            {menu.header}
+          </div>
+        );
       }
+
       const isActive = menu.href ? pathname.startsWith(menu.href) && (menu.href !== '/admin' || pathname === '/admin') : false;
       return (
         <NavLink key={menu.href} href={menu.href!} isActive={isActive} isSheet={isSheet}>
@@ -249,8 +283,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         <h1 className="font-headline font-black text-2xl text-primary">BCC ADMIN</h1>
                       </div>
                       <nav className="p-4 space-y-1">
-                          {currentMenus.map((menu) => {
-                            if(menu.header) return null;
+                          {currentMenus.map((menu, idx) => {
+                            if(menu.header) {
+                               const nextItem = currentMenus[idx + 1];
+                               if (!nextItem || nextItem.header) return null;
+                               return <Separator key={idx} className="my-2" />;
+                            }
                             const isActive = pathname.startsWith(menu.href!) && (menu.href !== '/admin' || pathname === '/admin');
                             return (
                               <SheetClose key={menu.href} asChild>
@@ -286,7 +324,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         <span className="font-bold text-primary">{session.role.charAt(0)}</span>
                     </div>
                     <div className="text-sm hidden sm:block">
-                        <p className="font-bold">{session.name}</p>
+                        <p className="font-bold">{session.name.split('(')[0].trim()}</p>
                         <p className="text-xs text-muted-foreground">{session.role}</p>
                     </div>
                 </div>
@@ -300,5 +338,3 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </div>
   );
 }
-
-    
