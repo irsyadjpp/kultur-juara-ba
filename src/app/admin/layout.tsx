@@ -202,12 +202,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const renderNavLinks = (isSheet: boolean = false) => currentMenus.map((menu: any, idx: number) => {
     
     const navContent = (item: any, isSubItem: boolean = false) => {
-      let isActive = false;
-      if (item.href === '/admin/matches') {
-          isActive = pathname === item.href;
-      } else {
-          isActive = pathname.startsWith(item.href);
-      }
+        let isActive = false;
+        if (item.href === '/admin' || item.href === '/admin/matches') {
+            isActive = pathname === item.href;
+        } else {
+            isActive = pathname.startsWith(item.href);
+        }
 
       const NavContentComponent = () => (
         <NavLink href={item.href!} isActive={isActive}>
@@ -238,7 +238,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       );
     }
     
-    return navContent(menu);
+    return navContent(menu, false);
   });
 
 
@@ -318,3 +318,5 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </div>
   );
 }
+
+    
