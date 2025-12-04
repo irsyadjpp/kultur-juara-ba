@@ -10,7 +10,7 @@ import {
   ClipboardCheck, ArrowRight, Menu, Home, Settings, AlertOctagon,
   FileCheck, Shield, Mic, Ticket, Award, Wallet,
   ClipboardList, Activity, Gavel, Gift, Stethoscope, Receipt, CheckCircle, FileText,
-  Store, Video, QrCode, Archive, ShieldAlert, DollarSign, ArrowRightCircle
+  Store, Video, QrCode, Archive, ShieldAlert, DollarSign, ArrowRightCircle, Megaphone
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -67,9 +67,10 @@ const getMenusByRole = (role: string) => {
 
     // --- MATCH CONTROL ---
     { header: "Pertandingan" },
-    { name: "Jadwal & Lapangan", href: "/admin/matches", icon: Activity, roles: ['MATCH_COORD', 'REFEREE', 'IT_ADMIN', 'DIRECTOR', 'OPS_LEAD'] },
+    { name: "Match Control Center", href: "/admin/matches", icon: Activity, roles: ['MATCH_COORD', 'REFEREE', 'IT_ADMIN', 'DIRECTOR', 'OPS_LEAD'] },
     { name: "Verifikasi TPF", href: "/admin/tpf", icon: CheckCircle, roles: ['TPF', 'MATCH_COORD', 'DIRECTOR'] },
-    { name: "Cek Line-Up (MLO)", href: "/admin/lineups", icon: ClipboardList, roles: ['MLO', 'MATCH_COORD'] },
+    { name: "Call Room (Antrean)", href: "/admin/mlo/dashboard", icon: Megaphone, roles: ['MLO', 'MATCH_COORD'] },
+    { name: "Verifikasi Line-Up", href: "/admin/mlo/lineups", icon: ClipboardCheck, roles: ['MLO', 'MATCH_COORD'] },
     { name: "Keputusan Protes", href: "/admin/protests", icon: Gavel, roles: ['REFEREE', 'MATCH_COORD', 'DIRECTOR'] },
     { name: "Papan Skor Wasit", href: "/admin/referee", icon: Gavel, roles: ['REFEREE', 'MATCH_COORD', 'IT_ADMIN'] },
 
@@ -360,7 +361,3 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </div>
   );
 }
-
-    
-
-    
