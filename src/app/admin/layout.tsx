@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, type ReactNode } from 'react';
@@ -119,7 +120,6 @@ const getMenusByRole = (role: string) => {
       icon: FileText,
       roles: ['SECRETARY', 'DIRECTOR', 'SHOW_DIR'],
       subItems: [
-        { name: "Generator SK", href: "/admin/director/sk-generator", roles: ['DIRECTOR', 'SECRETARY'] },
         { name: "Generator Sertifikat", href: "/admin/secretary/cert-gen", roles: ['SECRETARY', 'DIRECTOR', 'SHOW_DIR'] },
       ]
     },
