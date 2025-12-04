@@ -8,7 +8,7 @@ import {
   LayoutDashboard, Users, Trophy, BarChart3, LogOut, Lock, 
   ClipboardCheck, ArrowRight, Menu, Home, Settings, AlertOctagon,
   FileCheck, Shield, Mic, Ticket, Award, Wallet,
-  ClipboardList, Activity, Gavel, Gift, Stethoscope, Receipt, CheckCircle
+  ClipboardList, Activity, Gavel, Gift, Stethoscope, Receipt, CheckCircle, FileText
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -300,3 +300,5 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </div>
   );
 }
+
+    
