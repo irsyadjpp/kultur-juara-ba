@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { 
   LayoutDashboard, Users, Trophy, BarChart3, LogOut, Lock, 
   ClipboardCheck, ArrowRight, Menu, Home, Settings, AlertOctagon,
-  FileCheck, Shield, Mic, Ticket, Award
+  FileCheck, Shield, Mic, Ticket, Award, Wallet
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -171,6 +171,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: "Manajemen Protes", href: "/admin/protests", icon: AlertOctagon },
         { name: "Input Skor (MLO)", href: "/admin/matches", icon: Mic },
       ],
+    },
+    {
+        title: "KEUANGAN",
+        items: [
+            { name: "Ajukan Reimbursement", href: "/admin/reimbursement/submit", icon: Wallet },
+            { name: "Persetujuan (Finance)", href: "/admin/finance/reimbursement-approval", icon: ClipboardCheck },
+        ]
     },
     {
         title: "LAPORAN & AKTIVASI",
