@@ -1,199 +1,119 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Save, Trophy, Users, CheckCircle2, AlertCircle, Loader2, Sword, Shield, Swords } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { submitTieResult, type TieResult, type MatchParty } from "../actions";
+import { Trophy, Users, CheckCircle2, Printer, Loader2 } from "lucide-react";
+import { type TieResult, type MatchParty } from "../actions";
 
-// Struktur Partai Default
-const DEFAULT_MATCHES: MatchParty[] = [
-  { id: 1, category: "MD BEGINNER 1", playerA1: "", playerA2: "", playerB1: "", playerB2: "", score: "", winner: null },
-  { id: 2, category: "MD INTERMEDIATE 1", playerA1: "", playerA2: "", playerB1: "", playerB2: "", score: "", winner: null },
-  { id: 3, category: "MD ADVANCE / 3-ON-3", playerA1: "", playerA2: "", playerB1: "", playerB2: "", score: "", winner: null },
-  { id: 4, category: "MD INTERMEDIATE 2", playerA1: "", playerA2: "", playerB1: "", playerB2: "", score: "", winner: null },
-  { id: 5, category: "MD BEGINNER 2", playerA1: "", playerA2: "", playerB1: "", playerB2: "", score: "", winner: null },
-];
+// --- MOCK DATA (SIMULASI DATA YANG DITARIK DARI DATABASE) ---
+const MOCK_TIE_RESULT: TieResult = {
+  id: "TIE-1720684800",
+  date: "2026-06-14",
+  court: "1",
+  round: "Penyisihan Grup A",
+  teamA: "PB Djarum KW",
+  teamB: "PB Jaya Raya",
+  matches: [
+    { id: 1, category: "MD BEGINNER 1", playerA1: "Budi Santoso", playerA2: "Andi Saputra", playerB1: "Rian Ardianto", playerB2: "Fajar Alfian", score: "21-19, 21-18", winner: 'A' },
+    { id: 2, category: "MD INTERMEDIATE 1", playerA1: "Kevin Sanjaya KW", playerA2: "Marcus Gideon KW", playerB1: "Hendra Setiawan KW", playerB2: "M. Ahsan KW", score: "18-21, 22-20, 21-19", winner: 'A' },
+    { id: 3, category: "MD ADVANCE", playerA1: "Anthony Ginting KW", playerA2: "J. Christie KW", playerB1: "Viktor Axelsen KW", playerB2: "Lee Zii Jia KW", score: "15-21, 12-21", winner: 'B' },
+    { id: 4, category: "MD INTERMEDIATE 2", playerA1: "Bagas Maulana KW", playerA2: "M. S. Fikri KW", playerB1: "Leo R. Carnando KW", playerB2: "Daniel Marthin KW", score: "21-17, 21-19", winner: 'A' },
+    { id: 5, category: "MD BEGINNER 2", playerA1: "Rahmat Hidayat KW", playerA2: "Yeremia Rambitan KW", playerB1: "Pramudya K. KW", playerB2: "Rehan Naufal KW", score: "19-21, 21-23", winner: 'B' },
+  ],
+  finalScoreA: 3,
+  finalScoreB: 2,
+  winnerTeam: "PB Djarum KW",
+  managerA_verified: true,
+  managerB_verified: true,
+  referee_verified: true,
+  status: 'FINAL'
+};
+// -------------------------------------------------------------
+
 
 export default function DigitalResultSheetPage() {
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
-
-  // State Data Utama
-  const [formData, setFormData] = useState<TieResult>({
-      id: `TIE-${Date.now()}`,
-      date: new Date().toISOString().split('T')[0],
-      court: "1",
-      round: "Penyisihan Grup",
-      teamA: "",
-      teamB: "",
-      matches: DEFAULT_MATCHES,
-      finalScoreA: 0,
-      finalScoreB: 0,
-      winnerTeam: "",
-      managerA_verified: false,
-      managerB_verified: false,
-      referee_verified: false,
-      status: 'DRAFT'
-  });
-
-  // --- LOGIC UPDATE SCORE ---
-  const updateMatch = (index: number, field: keyof MatchParty, value: any) => {
-      const updatedMatches = [...formData.matches];
-      updatedMatches[index] = { ...updatedMatches[index], [field]: value };
-      
-      let scoreA = 0;
-      let scoreB = 0;
-      updatedMatches.forEach(m => {
-          if (m.winner === 'A') scoreA++;
-          if (m.winner === 'B') scoreB++;
-      });
-
-      setFormData({
-          ...formData,
-          matches: updatedMatches,
-          finalScoreA: scoreA,
-          finalScoreB: scoreB,
-          winnerTeam: scoreA > scoreB ? formData.teamA : (scoreB > scoreA ? formData.teamB : "SERI")
-      });
-  };
-
-  const handleSubmit = async () => {
-      if (!formData.teamA || !formData.teamB) return toast({title: "Error", description: "Nama Tim wajib diisi", variant: "destructive"});
-      if (!formData.managerA_verified || !formData.managerB_verified) return toast({title: "Validasi Kurang", description: "Kedua Manajer Wajib Menyetujui Hasil (Centang Verifikasi)", variant: "destructive"});
-
-      setIsSubmitting(true);
-      const res = await submitTieResult(formData);
-      setIsSubmitting(false);
-
-      if (res.success) {
-          setIsCompleted(true);
-          toast({ title: "Berhasil", description: res.message, className: "bg-green-600 text-white" });
-      }
-  };
-
-  if (isCompleted) {
-      return (
-          <div className="flex items-center justify-center py-10">
-              <Card className="w-full max-w-lg text-center p-8 bg-card border-t-8 border-green-500 shadow-2xl animate-in fade-in zoom-in-95">
-                  <CheckCircle2 className="w-24 h-24 text-green-500 mx-auto mb-6" />
-                  <h1 className="text-3xl font-black text-foreground mb-2">HASIL TERSIMPAN</h1>
-                  <div className="text-5xl font-black font-headline mb-4">
-                      <span className="text-blue-500">{formData.teamA}</span> 
-                      <span className="text-muted-foreground mx-2">{formData.finalScoreA} - {formData.finalScoreB}</span> 
-                      <span className="text-red-500">{formData.teamB}</span>
-                  </div>
-                  <p className="text-muted-foreground mb-8 text-xl">Pemenang: <strong className="text-yellow-500">{formData.winnerTeam}</strong></p>
-                  <Button onClick={() => window.location.reload()} variant="outline" size="lg">Input Pertandingan Baru</Button>
-              </Card>
-          </div>
-      );
-  }
+  const [data] = useState<TieResult>(MOCK_TIE_RESULT);
 
   return (
     <div className="space-y-6">
+      
+      {/* HEADER & OPSI CETAK */}
+      <div className="flex justify-between items-center print:hidden">
+        <div>
+            <h1 className="text-3xl font-black font-headline text-primary">Berita Acara Hasil (Final)</h1>
+            <p className="text-muted-foreground">Ini adalah data final yang terkunci dan tidak dapat diubah.</p>
+        </div>
+        <Button onClick={() => window.print()} className="bg-blue-600 hover:bg-blue-700">
+          <Printer className="w-4 h-4 mr-2" />
+          Cetak atau Simpan PDF
+        </Button>
+      </div>
+
+      {/* TAMPILAN CETAK/LAPORAN */}
+      <div className="p-4 md:p-8 bg-card border rounded-lg print:p-0 print:border-none print:shadow-none">
+
+        {/* --- KOP SURAT (Print Only) --- */}
+        <div className="hidden print:block text-center mb-8 border-b-2 border-black pb-4">
+           <h1 className="text-xl font-bold uppercase">Berita Acara Hasil Pertandingan</h1>
+           <h2 className="text-lg font-semibold">Bandung Community Championship 2026</h2>
+           <p className="text-xs">GOR KONI Bandung, {new Date(data.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+        </div>
         
-        <Card>
-            <CardHeader>
-                <div className="flex justify-between items-center">
-                    <div>
-                        <CardTitle className="text-2xl font-black font-headline text-primary">DIGITAL RESULT SHEET</CardTitle>
-                        <CardDescription>Official Tie Result • BCC 2026</CardDescription>
-                    </div>
-                    <Badge variant="outline" className="text-lg px-4 py-2 bg-card border-border">
-                        COURT {formData.court}
-                    </Badge>
-                </div>
+        {/* --- KARTU IDENTITAS PERTANDINGAN --- */}
+        <Card className="mb-6 border-border">
+            <CardHeader className="bg-secondary/20">
+                <CardTitle>ID Pertandingan: #{data.id}</CardTitle>
+                <CardDescription>{data.round} • Lapangan {data.court} • {new Date(data.date).toLocaleDateString('id-ID', {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'})}</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-                <div className="grid grid-cols-5 gap-4 items-end">
-                    <div className="col-span-2 space-y-2">
-                        <Label className="flex items-center gap-2"><Shield className="text-blue-500"/> Tim A (Home)</Label>
-                        <Input 
-                            placeholder="Nama Tim A" 
-                            className="text-lg font-bold h-12 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-900/50 focus:border-blue-700" 
-                            value={formData.teamA}
-                            onChange={e => setFormData({...formData, teamA: e.target.value})}
-                        />
-                    </div>
-                    <div className="col-span-1 text-center pb-3">
-                        <Swords className="w-6 h-6 text-muted-foreground mx-auto"/>
-                    </div>
-                    <div className="col-span-2 space-y-2">
-                        <Label className="text-right block flex items-center gap-2 justify-end"><Shield className="text-red-500"/> Tim B (Away)</Label>
-                        <Input 
-                            placeholder="Nama Tim B" 
-                            className="text-lg font-bold h-12 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-900/50 focus:border-red-700 text-right"
-                            value={formData.teamB}
-                            onChange={e => setFormData({...formData, teamB: e.target.value})}
-                        />
-                    </div>
+            <CardContent className="p-6 grid grid-cols-3 items-center text-center">
+                <div className="space-y-1">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wider">Tim A</p>
+                    <p className="text-xl font-bold font-headline text-blue-600">{data.teamA}</p>
                 </div>
-                
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border">
-                    <div className="space-y-2">
-                        <Label>Babak</Label>
-                        <Select value={formData.round} onValueChange={val => setFormData({...formData, round: val})}>
-                            <SelectTrigger><SelectValue/></SelectTrigger>
-                            <SelectContent><SelectItem value="Penyisihan Grup">Penyisihan Grup</SelectItem><SelectItem value="Gugur">Gugur</SelectItem></SelectContent>
-                        </Select>
-                    </div>
-                     <div className="space-y-2">
-                        <Label>Tanggal</Label>
-                        <Input type="date" value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})}/>
-                    </div>
+                <div className="font-mono text-2xl md:text-4xl font-black text-muted-foreground">VS</div>
+                <div className="space-y-1">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wider">Tim B</p>
+                    <p className="text-xl font-bold font-headline text-red-600">{data.teamB}</p>
                 </div>
             </CardContent>
         </Card>
 
-        <Card>
-            <CardHeader><CardTitle className="text-foreground">Input Hasil Pertandingan</CardTitle></CardHeader>
+        {/* --- DAFTAR PARTAI --- */}
+        <Card className="mb-6">
+            <CardHeader><CardTitle>Rincian Hasil Partai</CardTitle></CardHeader>
             <CardContent>
-                <Accordion type="single" collapsible className="w-full space-y-3" defaultValue="item-0">
-                    {formData.matches.map((match, idx) => (
-                        <AccordionItem key={match.id} value={`item-${idx}`} className="border-border rounded-xl overflow-hidden bg-card/30">
-                            <AccordionTrigger className="hover:no-underline px-4 py-3 bg-secondary/50 data-[state=open]:bg-secondary">
-                                <div className="flex justify-between w-full items-center">
+                <Accordion type="multiple" defaultValue={['item-0','item-1','item-2','item-3','item-4']} className="w-full">
+                    {data.matches.map((match, idx) => (
+                        <AccordionItem key={match.id} value={`item-${idx}`}>
+                            <AccordionTrigger className="hover:no-underline bg-secondary/20 px-4 rounded-md mb-2">
+                                <div className="flex justify-between w-full items-center pr-4">
                                     <span className="font-bold text-sm text-primary">PARTAI {idx + 1}: {match.category}</span>
-                                    {match.winner ? (
-                                        <Badge className={match.winner === 'A' ? 'bg-blue-600' : 'bg-red-600'}>
-                                            WIN: TIM {match.winner}
-                                        </Badge>
-                                    ) : <Badge variant="outline" className="border-border text-muted-foreground">Pending</Badge>}
+                                    <Badge className={match.winner === 'A' ? 'bg-blue-600' : 'bg-red-600'}>
+                                        WIN: TIM {match.winner}
+                                    </Badge>
                                 </div>
                             </AccordionTrigger>
-                            <AccordionContent className="p-4">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                    <div className="space-y-2 p-3 bg-blue-900/10 dark:bg-blue-900/20 rounded-lg border border-blue-800/20">
-                                        <Label className="text-blue-700 dark:text-blue-300 font-semibold">Pemain Tim A</Label>
-                                        <Input placeholder="Pemain 1" value={match.playerA1} onChange={e => updateMatch(idx, 'playerA1', e.target.value)} className="bg-background border-border"/>
-                                        <Input placeholder="Pemain 2" value={match.playerA2} onChange={e => updateMatch(idx, 'playerA2', e.target.value)} className="bg-background border-border"/>
-                                        <Button variant={match.winner === 'A' ? "default" : "outline"} className={`w-full mt-2 ${match.winner === 'A' ? 'bg-blue-600 hover:bg-blue-700' : 'border-blue-700/50 text-blue-600 dark:text-blue-300'}`} onClick={() => updateMatch(idx, 'winner', 'A')}>
-                                            {match.winner === 'A' && <CheckCircle2 className="w-4 h-4 mr-2"/>}Pemenang: Tim A
-                                        </Button>
+                            <AccordionContent className="px-4 py-4 border rounded-lg -mt-2">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {/* Kolom Tim A */}
+                                    <div className="text-sm">
+                                        <p className="font-bold mb-2 text-blue-700">Pemain Tim A:</p>
+                                        <p className="text-muted-foreground">{match.playerA1} / {match.playerA2}</p>
                                     </div>
-
-                                    <div className="space-y-2 p-3 bg-red-900/10 dark:bg-red-900/20 rounded-lg border border-red-800/20">
-                                        <Label className="text-red-700 dark:text-red-300 font-semibold">Pemain Tim B</Label>
-                                        <Input placeholder="Pemain 1" value={match.playerB1} onChange={e => updateMatch(idx, 'playerB1', e.target.value)} className="bg-background border-border"/>
-                                        <Input placeholder="Pemain 2" value={match.playerB2} onChange={e => updateMatch(idx, 'playerB2', e.target.value)} className="bg-background border-border"/>
-                                        <Button variant={match.winner === 'B' ? "destructive" : "outline"} className={`w-full mt-2 ${match.winner === 'B' ? 'bg-red-600 hover:bg-red-700' : 'border-red-700/50 text-red-600 dark:text-red-300'}`} onClick={() => updateMatch(idx, 'winner', 'B')}>
-                                             {match.winner === 'B' && <CheckCircle2 className="w-4 h-4 mr-2"/>}Pemenang: Tim B
-                                        </Button>
+                                    {/* Kolom Tim B */}
+                                    <div className="text-sm">
+                                        <p className="font-bold mb-2 text-red-700">Pemain Tim B:</p>
+                                        <p className="text-muted-foreground">{match.playerB1} / {match.playerB2}</p>
                                     </div>
                                 </div>
-                                <div className="space-y-2 pt-4 border-t border-border">
-                                    <Label>Skor Detail (Contoh: 21-19, 18-21, 21-15)</Label>
-                                    <Input className="font-mono text-center text-lg h-12 bg-background border-border" value={match.score} onChange={e => updateMatch(idx, 'score', e.target.value)} />
+                                <div className="mt-4 pt-4 border-t text-center">
+                                    <p className="text-xs text-muted-foreground">Skor</p>
+                                    <p className="font-mono text-lg font-semibold">{match.score}</p>
                                 </div>
                             </AccordionContent>
                         </AccordionItem>
@@ -202,61 +122,46 @@ export default function DigitalResultSheetPage() {
             </CardContent>
         </Card>
 
-        <Card className="bg-card border-border shadow-md">
-            <CardHeader>
-                <CardTitle className="text-yellow-500 flex items-center gap-2"><Trophy className="w-5 h-5"/> Hasil Akhir Pertandingan</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-                <div className="text-center bg-secondary p-6 rounded-xl border border-border">
-                    <p className="text-sm text-muted-foreground uppercase tracking-widest mb-2">TIE SCORE</p>
-                    <div className="text-7xl font-black font-mono flex justify-center items-center gap-6">
-                        <span className="text-blue-500">{formData.finalScoreA}</span>
-                        <span className="text-muted-foreground">-</span>
-                        <span className="text-red-500">{formData.finalScoreB}</span>
+        {/* --- HASIL AKHIR & VERIFIKASI --- */}
+        <Card className="bg-zinc-900 text-white border-none shadow-xl print:bg-white print:text-black print:border print:shadow-none">
+            <CardContent className="p-6 md:p-8 space-y-6">
+                <div className="text-center">
+                    <p className="text-sm text-zinc-400 print:text-gray-500 uppercase tracking-widest mb-2">Hasil Akhir (Tie Score)</p>
+                    <div className="text-6xl font-black font-mono flex justify-center items-center gap-4">
+                        <span className="text-blue-400 print:text-blue-600">{data.finalScoreA}</span>
+                        <span className="text-zinc-600 print:text-gray-400">-</span>
+                        <span className="text-red-400 print:text-red-600">{data.finalScoreB}</span>
                     </div>
-                    <p className="mt-4 text-xl font-bold text-yellow-500">
-                        PEMENANG: {formData.winnerTeam || "Belum ditentukan..."}
-                    </p>
+                     <div className="mt-4 flex items-center justify-center gap-2 text-yellow-400 print:text-yellow-600 text-xl font-bold">
+                        <Trophy className="w-6 h-6" />
+                        Pemenang: {data.winnerTeam}
+                    </div>
                 </div>
 
-                <div className="space-y-3">
-                    <h4 className="font-bold flex items-center gap-2 text-sm uppercase tracking-wider text-muted-foreground">
-                        <Users className="w-4 h-4" /> VERIFIKASI MANAJER
+                <div className="pt-6 border-t border-white/10 print:border-gray-300">
+                    <h4 className="font-bold text-sm text-center uppercase tracking-wider mb-4 text-zinc-400 print:text-gray-500">
+                        Verifikasi Digital
                     </h4>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${formData.managerA_verified ? 'bg-green-500/10 border-green-500' : 'bg-secondary/50 border-border hover:border-border/50'}`}
-                             onClick={() => setFormData({...formData, managerA_verified: !formData.managerA_verified})}
-                        >
-                            <div className="flex items-center gap-3">
-                                <Checkbox checked={formData.managerA_verified} className="border-border data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500 size-5" />
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        {[
+                          { label: "Manajer Tim A", verified: data.managerA_verified },
+                          { label: "Manajer Tim B", verified: data.managerB_verified },
+                          { label: "Referee/Match Control", verified: data.referee_verified },
+                        ].map(v => (
+                            <div key={v.label} className="flex items-center gap-3 p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-green-300 print:bg-gray-100 print:text-green-700 print:border-gray-200">
+                                <CheckCircle2 className="w-5 h-5 shrink-0" />
                                 <div>
-                                    <div className="font-bold">Manajer Tim A Setuju</div>
-                                    <div className="text-xs text-muted-foreground">Hasil pertandingan valid.</div>
+                                    <p className="text-sm font-bold">{v.label}</p>
+                                    <p className="text-xs text-green-400 print:text-green-600">Telah Diverifikasi</p>
                                 </div>
                             </div>
-                        </div>
-
-                        <div className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${formData.managerB_verified ? 'bg-green-500/10 border-green-500' : 'bg-secondary/50 border-border hover:border-border/50'}`}
-                             onClick={() => setFormData({...formData, managerB_verified: !formData.managerB_verified})}
-                        >
-                            <div className="flex items-center gap-3">
-                                <Checkbox checked={formData.managerB_verified} className="border-border data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500 size-5" />
-                                <div>
-                                    <div className="font-bold">Manajer Tim B Setuju</div>
-                                    <div className="text-xs text-muted-foreground">Hasil pertandingan valid.</div>
-                                </div>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </CardContent>
-            <CardFooter className="bg-secondary/20 p-4 border-t border-border">
-                 <Button size="lg" className="font-bold text-lg h-14 bg-green-600 hover:bg-green-700 text-white w-full" onClick={handleSubmit} disabled={isSubmitting}>
-                    {isSubmitting ? <><Loader2 className="w-6 h-6 mr-2 animate-spin"/> MENYIMPAN...</> : <><Save className="w-6 h-6 mr-2"/> SAHKAN & KUNCI HASIL</>}
-                </Button>
-            </CardFooter>
         </Card>
+
       </div>
+    </div>
   );
 }
