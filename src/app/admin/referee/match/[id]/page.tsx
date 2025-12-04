@@ -20,6 +20,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 type MatchMode = 'GROUP' | 'KNOCKOUT';
 type MatchStatus = 'PRE_MATCH' | 'IN_PROGRESS' | 'FINISHED';
+type TeamSide = 'LEFT' | 'RIGHT';
 
 export default function MatchControlPage() {
   const { toast } = useToast();
@@ -52,6 +53,9 @@ export default function MatchControlPage() {
   const [posA, setPosA] = useState([0, 1]); 
   const [posB, setPosB] = useState([0, 1]);
 
+  // --- STATE BARU: Posisi Tim di Layar ---
+  const [teamSides, setTeamSides] = useState<{ teamA: TeamSide, teamB: TeamSide }>({ teamA: 'LEFT', teamB: 'RIGHT' });
+
   // --- COIN TOSS STATE ---
   const [tossWinner, setTossWinner] = useState<'A' | 'B'>('A');
   const [tossChoice, setTossChoice] = useState<'SERVE' | 'RECEIVE' | 'SIDE'>('SERVE');
@@ -78,6 +82,13 @@ export default function MatchControlPage() {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const switchSides = () => {
+    setTeamSides(prev => ({
+      teamA: prev.teamA === 'LEFT' ? 'RIGHT' : 'LEFT',
+      teamB: prev.teamB === 'LEFT' ? 'RIGHT' : 'LEFT',
+    }));
+  };
+
   // --- LOGIC 1: COIN TOSS (BWF STYLE) ---
   const handleStartMatch = () => {
     // Terapkan hasil Toss
@@ -86,10 +97,9 @@ export default function MatchControlPage() {
     } else if (tossChoice === 'RECEIVE') {
         setServer(tossWinner === 'A' ? 'B' : 'A');
     } else {
-        // Jika pilih SIDE (Lapangan), server ditentukan acak atau manual nanti. 
-        // Untuk simplifikasi sistem, kita defaultkan pemenang tos jadi server jika pilih side, atau tambah logic.
+        switchSides();
         setServer(tossWinner); 
-        toast({ title: "Pindah Tempat", description: `Tim ${tossWinner === 'A' ? 'A' : 'B'} memilih sisi lapangan.` });
+        toast({ title: "Pindah Tempat", description: `Tim ${tossWinner === 'A' ? matchData.teamA : matchData.teamB} memilih sisi lapangan.` });
     }
     
     setStatus('IN_PROGRESS');
@@ -103,12 +113,11 @@ export default function MatchControlPage() {
     
     if (mode === 'GROUP') {
         // ATURAN PENYISIHAN (1 x 30 Poin)
-        // Pindah tempat saat salah satu mencapai 15
         if ((newA === 15 && newB < 15) || (newB === 15 && newA < 15)) {
              msg = "INTERVAL: PINDAH TEMPAT (SKOR 15)";
              setIsTimerRunning(false);
+             switchSides(); // Trigger pindah sisi
         }
-        // Sudden Death di 29-29 (Max 30)
         if (newA === 29 && newB === 29) msg = "SUDDEN DEATH: Poin Selanjutnya Menang!";
         else if (newA >= 30 || newB >= 30) return handleGameWin(newA > newB ? 'A' : 'B');
     } 
@@ -117,11 +126,11 @@ export default function MatchControlPage() {
         const maxScore = 20;
         const winPoint = 15;
         
-        // Interval Rubber Game (Set 3) di Poin 8
         if (gameSet === 3) {
              if ((newA === 8 && newB < 8) || (newB === 8 && newA < 8)) {
                  msg = "INTERVAL RUBBER: PINDAH TEMPAT (SKOR 8)";
                  setIsTimerRunning(false);
+                 switchSides(); // Trigger pindah sisi
              }
         }
 
@@ -155,13 +164,12 @@ export default function MatchControlPage() {
       
       toast({title: `Set ${gameSet} Dimenangkan Tim ${winner}`, description: "Skor akan direset untuk set berikutnya."})
 
-      // Reset untuk set berikutnya
       setTimeout(() => {
         if (confirm(`Set ${gameSet} Selesai. Pemenang: Tim ${winner}. Lanjut Set Berikutnya?`)) {
             setGameSet(g => g + 1);
             setScoreA(0); setScoreB(0); 
-            // setTime(0); // Optional: reset timer per set
             setIsTimerRunning(true);
+            switchSides(); // Pindah sisi di awal set baru
         }
       }, 500);
 
@@ -169,7 +177,6 @@ export default function MatchControlPage() {
   };
 
   const handleGameWin = (winner: 'A' | 'B') => {
-      // Khusus Group Stage (1 Game langsung selesai)
       setSetA(winner === 'A' ? 1 : 0);
       setSetB(winner === 'B' ? 1 : 0);
       return handleMatchEnd(winner);
@@ -187,7 +194,6 @@ export default function MatchControlPage() {
       const teamName = team === 'A' ? matchData.teamA : matchData.teamB;
       const currentScore = `${scoreA}-${scoreB}`;
       
-      // Catat Log
       setCards(prev => [...prev, { team: teamName, type, score: currentScore }]);
       
       if (type === 'YELLOW') {
@@ -195,7 +201,6 @@ export default function MatchControlPage() {
       } 
       else if (type === 'RED') {
           toast({ title: "FAULT (Kartu Merah)", description: `Poin untuk lawan.`, className: "bg-red-600 text-white" });
-          // Kartu Merah = Poin buat lawan
           handlePoint(team === 'A' ? 'B' : 'A', 'ADD'); 
       } 
       else if (type === 'BLACK') {
@@ -207,14 +212,12 @@ export default function MatchControlPage() {
       }
   };
 
-  // --- LOGIC POINT (Sama seperti sebelumnya dengan tambahan validasi) ---
   const handlePoint = (team: 'A' | 'B', type: 'ADD' | 'MIN') => {
     if (status !== 'IN_PROGRESS') return;
 
     if (type === 'ADD') {
         setHistory([...history, { scoreA, scoreB, server, posA: [...posA], posB: [...posB] }]);
         
-        // Rotasi Pemain
         if (team === server) {
              if (team === 'A') setPosA(prev => [prev[1], prev[0]]);
              else setPosB(prev => [prev[1], prev[0]]);
@@ -232,7 +235,6 @@ export default function MatchControlPage() {
         }
 
     } else {
-        // UNDO
         if (history.length > 0) {
             const last = history[history.length - 1];
             setScoreA(last.scoreA); setScoreB(last.scoreB); 
@@ -242,10 +244,9 @@ export default function MatchControlPage() {
     }
   };
 
-  // --- RENDER: COIN TOSS SCREEN ---
   if (status === 'PRE_MATCH') {
       return (
-          <div className="flex items-center justify-center p-4">
+          <div className="flex items-center justify-center min-h-full p-4">
               <Card className="max-w-md w-full">
                 <CardHeader className="text-center border-b pb-4">
                     <Coins className="w-12 h-12 text-yellow-500 mx-auto mb-2" />
@@ -301,17 +302,49 @@ export default function MatchControlPage() {
       );
   }
 
-  // --- RENDER: MAIN SCOREBOARD ---
+  const teamAPanel = (
+    <TeamPanel 
+        teamName={matchData.teamA} 
+        players={matchData.playersA} 
+        score={scoreA} 
+        setScore={setA}
+        isServing={server === 'A'}
+        pos={posA}
+        onPointAdd={() => handlePoint('A', 'ADD')}
+        onPointMin={() => handlePoint('A', 'MIN')}
+        side="LEFT"
+        scoreEven={scoreA % 2 === 0}
+        mode={mode}
+        disabled={status === 'FINISHED'}
+    />
+  );
+  
+  const teamBPanel = (
+     <TeamPanel 
+        teamName={matchData.teamB} 
+        players={matchData.playersB} 
+        score={scoreB} 
+        setScore={setB}
+        isServing={server === 'B'}
+        pos={posB}
+        onPointAdd={() => handlePoint('B', 'ADD')}
+        onPointMin={() => handlePoint('B', 'MIN')}
+        side="RIGHT"
+        scoreEven={scoreB % 2 === 0}
+        mode={mode}
+        disabled={status === 'FINISHED'}
+    />
+  );
+
   return (
     <div className="space-y-4">
-      {/* HEADER */}
       <div className="flex flex-col md:flex-row justify-between items-center bg-card p-3 rounded-lg gap-4 border">
          <div className="text-left w-full md:w-auto">
              <div className="flex items-center gap-2 mb-1">
                 <Badge variant="outline" className="text-[10px]">MATCH #{matchId}</Badge>
                 <Badge variant="secondary" className="text-[10px]">{mode === 'GROUP' ? 'PENYISIHAN' : 'KNOCKOUT'}</Badge>
              </div>
-             <div className="font-bold text-lg text-foreground">Partai ke-1 (Ganda Putra)</div>
+             <div className="font-bold text-lg text-foreground">{matchData.category}</div>
          </div>
          
          <div className="flex items-center gap-2">
@@ -330,42 +363,11 @@ export default function MatchControlPage() {
          </div>
       </div>
 
-      {/* SCOREBOARD AREA */}
       <div className="flex-grow grid grid-cols-2 gap-4">
-        {/* TIM A */}
-        <TeamPanel 
-            teamName={matchData.teamA} 
-            players={matchData.playersA} 
-            score={scoreA} 
-            setScore={setA}
-            isServing={server === 'A'}
-            pos={posA}
-            onPointAdd={() => handlePoint('A', 'ADD')}
-            onPointMin={() => handlePoint('A', 'MIN')}
-            side="LEFT"
-            scoreEven={scoreA % 2 === 0}
-            mode={mode}
-            disabled={status === 'FINISHED'}
-        />
-
-        {/* TIM B */}
-        <TeamPanel 
-            teamName={matchData.teamB} 
-            players={matchData.playersB} 
-            score={scoreB} 
-            setScore={setB}
-            isServing={server === 'B'}
-            pos={posB}
-            onPointAdd={() => handlePoint('B', 'ADD')}
-            onPointMin={() => handlePoint('B', 'MIN')}
-            side="RIGHT"
-            scoreEven={scoreB % 2 === 0}
-            mode={mode}
-            disabled={status === 'FINISHED'}
-        />
+        {teamSides.teamA === 'LEFT' ? teamAPanel : teamBPanel}
+        {teamSides.teamB === 'RIGHT' ? teamBPanel : teamAPanel}
       </div>
 
-      {/* FOOTER ACTIONS */}
       <div className="mt-3 grid grid-cols-4 gap-4">
          <Dialog>
             <DialogTrigger asChild>
@@ -420,7 +422,6 @@ export default function MatchControlPage() {
   );
 }
 
-// --- SUB-COMPONENT UNTUK PANEL TIM ---
 function TeamPanel({ teamName, players, score, setScore, isServing, pos, onPointAdd, onPointMin, side, scoreEven, mode, disabled }: any) {
     const playerNames = players.split(" / ");
     
