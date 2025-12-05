@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const VOLUNTEER_DIVISIONS = [
   "MATCH CONTROL: Input skor digital, asisten wasit. (Cocok untuk yang teliti & paham badminton).",
-  "DIGITAL GATE & SECURITY: Cek aplikasi, tiket, keamanan. (Cocok untuk yang tegas & berani).",
+  "GATE KEEPER: Cek aplikasi, tiket, keamanan. (Cocok untuk yang tegas & berani).",
   "MEDIS & FISIO: P3K lapangan, bantu terapis. (Wajib background kesehatan/PMI).",
   "MEDIA & KREATIF: Foto, video reels, liputan story. (Wajib punya skill konten).",
   "LOGISTIK & RUNNER: Mobilitas tinggi, angkat barang, gerak cepat. (Cocok untuk yang fisik kuat).",
