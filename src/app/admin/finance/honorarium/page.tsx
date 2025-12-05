@@ -64,9 +64,10 @@ export default function HonorariumPage() {
 
   // --- LOGIKA PEMBAGIAN KEUNTUNGAN (REVISI) ---
   const SHARE = {
-    inisiator: 0.40,
-    komunitas: 0.05,
+    inisiatorActive: 0.30,
+    inisiatorPassive: 0.10,
     panitia: 0.50,
+    komunitas: 0.05,
     nonPanitia: 0.05,
   };
 
@@ -88,7 +89,8 @@ export default function HonorariumPage() {
     : 0;
 
   // 4. Alokasi Global
-  const honorInisiator = totalProfit * SHARE.inisiator;
+  const honorInisiatorActive = totalProfit * SHARE.inisiatorActive;
+  const honorInisiatorPassive = totalProfit * SHARE.inisiatorPassive;
   const honorKomunitas = totalProfit * SHARE.komunitas;
   const budgetPanitia = totalProfit * SHARE.panitia;
   const budgetNP = totalProfit * SHARE.nonPanitia;
@@ -132,6 +134,20 @@ export default function HonorariumPage() {
         />
     </div>
   );
+  
+  const AllocationCard = ({ title, amount, color, description, subDescription }: { title:string, amount:number, color:string, description?:string, subDescription?:string}) => (
+    <Card className={`bg-${color}-50 border-${color}-200 dark:bg-${color}-500/10 dark:border-${color}-500/20`}>
+        <CardHeader className="pb-2">
+            <CardTitle className={`text-xs uppercase text-${color}-700 dark:text-${color}-400 font-bold`}>{title}</CardTitle>
+            {description && <CardDescription className="text-xs">{description}</CardDescription>}
+        </CardHeader>
+        <CardContent>
+            <div className={`text-xl font-bold text-${color}-900 dark:text-${color}-300`}>Rp {amount.toLocaleString('id-ID')}</div>
+            {subDescription && <div className={`text-xs text-${color}-700 dark:text-${color}-500 mt-1`}>{subDescription}</div>}
+        </CardContent>
+    </Card>
+  );
+
 
   return (
     <div className="space-y-6">
@@ -156,29 +172,12 @@ export default function HonorariumPage() {
       </div>
 
       {/* RINGKASAN ALOKASI (PIE CHART SIMULATION) */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-         <Card className="bg-blue-50 border-blue-200 dark:bg-blue-500/10 dark:border-blue-500/20">
-            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-blue-700 dark:text-blue-400 font-bold">Inisiator (40%)</CardTitle></CardHeader>
-            <CardContent><div className="text-xl font-bold text-blue-900 dark:text-blue-300">Rp {honorInisiator.toLocaleString('id-ID')}</div></CardContent>
-         </Card>
-         <Card className="bg-purple-50 border-purple-200 dark:bg-purple-500/10 dark:border-purple-500/20">
-            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-purple-700 dark:text-purple-400 font-bold">Komunitas (Dayminton) (5%)</CardTitle></CardHeader>
-            <CardContent><div className="text-xl font-bold text-purple-900 dark:text-purple-300">Rp {honorKomunitas.toLocaleString('id-ID')}</div></CardContent>
-         </Card>
-         <Card className="bg-green-50 border-green-200 dark:bg-green-500/10 dark:border-green-500/20">
-            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-green-700 dark:text-green-400 font-bold">Panitia (50%)</CardTitle></CardHeader>
-            <CardContent>
-                <div className="text-xl font-bold text-green-900 dark:text-green-300">Rp {budgetPanitia.toLocaleString('id-ID')}</div>
-                <div className="text-xs text-green-700 dark:text-green-500 mt-1">Rate: Rp {Math.round(nilaiPerPoinPanitia).toLocaleString()}/poin</div>
-            </CardContent>
-         </Card>
-         <Card className="bg-orange-50 border-orange-200 dark:bg-orange-500/10 dark:border-orange-500/20">
-            <CardHeader className="pb-2"><CardTitle className="text-xs uppercase text-orange-700 dark:text-orange-400 font-bold">Kontributor (5%)</CardTitle></CardHeader>
-            <CardContent>
-                <div className="text-xl font-bold text-orange-900 dark:text-orange-300">Rp {budgetNP.toLocaleString('id-ID')}</div>
-                <div className="text-xs text-orange-700 dark:text-orange-500 mt-1">Rate: Rp {Math.round(nilaiPerPoinNP).toLocaleString()}/poin</div>
-            </CardContent>
-         </Card>
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+         <AllocationCard title="Inisiator Aktif (30%)" description="(75% dari porsi 40%)" amount={honorInisiatorActive} color="blue"/>
+         <AllocationCard title="Inisiator Pasif (10%)" description="(25% dari porsi 40%)" amount={honorInisiatorPassive} color="cyan"/>
+         <AllocationCard title="Panitia (50%)" description="Dibagi sesuai poin kinerja" amount={budgetPanitia} color="green" subDescription={`Rate: Rp ${Math.round(nilaiPerPoinPanitia).toLocaleString()}/poin`}/>
+         <AllocationCard title="Komunitas (5%)" description="Kas Komunitas Dayminton" amount={honorKomunitas} color="purple"/>
+         <AllocationCard title="Kontributor (5%)" description="Apresiasi Eksternal" amount={budgetNP} color="orange" subDescription={`Rate: Rp ${Math.round(nilaiPerPoinNP).toLocaleString()}/poin`}/>
       </div>
 
       {/* TABS UNTUK PANITIA & KONTRIBUTOR */}
@@ -393,5 +392,5 @@ export default function HonorariumPage() {
 
     </div>
   );
-}
 
+    
