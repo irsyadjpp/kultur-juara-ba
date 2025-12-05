@@ -36,7 +36,7 @@ export default function AdminLoginPage() {
       // Logic to store session client-side (example)
       sessionStorage.setItem('admin_session', JSON.stringify({ isLoggedIn: true, name: 'Admin via PIN', role: 'STAFF' })); // Simplified session
       toast({ title: "Login Berhasil", description: "Mengalihkan ke dashboard...", className: "bg-green-600 text-white" });
-      router.push('/admin');
+      router.push('/admin/dashboard'); // Change this line
       router.refresh();
     }
     if (state.message && !state.success) {
@@ -51,7 +51,7 @@ export default function AdminLoginPage() {
         // Logic to store session client-side
         sessionStorage.setItem('admin_session', JSON.stringify({ isLoggedIn: true, name: 'Irsyad Jamal', role: 'DIRECTOR' })); // Simplified
         toast({ title: "Google Login Berhasil", description: "Selamat datang, Director.", className: "bg-green-600 text-white" });
-        router.push('/admin');
+        router.push('/admin/dashboard'); // Change this line
         router.refresh();
     } else {
         setIsGoogleLoading(false);

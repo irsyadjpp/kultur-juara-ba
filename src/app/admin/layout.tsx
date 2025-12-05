@@ -229,7 +229,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   
   if (loading) {
     return (
-        <div className="dark min-h-screen w-full flex items-center justify-center bg-background">
+        <div className="min-h-screen w-full flex items-center justify-center bg-background">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
     );
@@ -237,7 +237,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (!isAuthenticated) {
     if (pathname === '/admin/login') {
-        return <div className="dark">{children}</div>;
+        return <div className="min-h-screen">{children}</div>;
     }
     return null;
   }
@@ -259,16 +259,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         return isSheet ? <SheetClose asChild>{NavComponent}</SheetClose> : NavComponent;
     }
     
-    return (
-        <NavItem key={menu.href} href={menu.href} icon={menu.icon}>
-            {menu.name}
-        </NavItem>
+    const navItem = (
+      <NavItem key={menu.href} href={menu.href} icon={menu.icon}>
+        {menu.name}
+      </NavItem>
     );
+
+    return isSheet ? <SheetClose asChild>{navItem}</SheetClose> : navItem;
   });
 
 
   return (
-    <div className="dark flex min-h-screen bg-background text-foreground">
+    <div className="flex min-h-screen bg-background text-foreground">
       {/* Sidebar */}
       <aside className="w-72 bg-card border-r border-border hidden md:flex flex-col fixed h-full">
         <div className="p-6 border-b border-border flex items-center gap-3">

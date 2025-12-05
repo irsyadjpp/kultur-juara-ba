@@ -93,7 +93,7 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
 
 
   return (
-    <div className="dark flex min-h-screen bg-background text-foreground">
+    <div className="flex min-h-screen bg-background text-foreground">
       {/* Sidebar */}
       <aside className="w-64 bg-card border-r border-border hidden md:flex flex-col fixed h-full">
         <div className="p-6 border-b border-border flex items-center gap-3">
