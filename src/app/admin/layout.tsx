@@ -272,8 +272,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="flex min-h-screen bg-background text-foreground">
       {/* Sidebar */}
-      <aside className="w-72 bg-card border-r border-border hidden md:flex flex-col fixed h-full">
-        <div className="p-6 border-b border-border flex items-center gap-3">
+      <aside className="w-72 bg-card hidden md:flex flex-col fixed h-full">
+        <div className="p-6 flex items-center gap-3">
           <Image src="/images/logo.png" alt="Logo" width={32} height={32} />
           <h1 className="font-headline font-black text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary to-fuchsia-500">
             BCC ADMIN
@@ -282,7 +282,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <nav className="flex-1 py-4 px-4 overflow-y-auto no-scrollbar space-y-2">
           {renderNavLinks()}
         </nav>
-        <div className="p-4 border-t border-border">
+        <div className="p-4 border-t">
           <form action={handleLogout}>
             <Button variant="outline" className="w-full">
                 <LogOut className="w-4 h-4 mr-2" /> Logout
@@ -293,7 +293,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col md:ml-72">
-        <header className="h-16 border-b border-border bg-card/50 backdrop-blur-sm flex items-center justify-between px-6 sticky top-0 z-10 md:justify-end">
+        <header className="h-16 bg-card/50 backdrop-blur-sm flex items-center justify-between px-6 sticky top-0 z-10 md:justify-end">
              <div className="md:hidden">
               <Sheet>
                   <SheetTrigger asChild>
@@ -302,13 +302,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                       </Button>
                   </SheetTrigger>
                   <SheetContent side="left" className="p-0 w-72 bg-card overflow-y-auto no-scrollbar">
-                      <div className="p-6 border-b border-border">
+                      <div className="p-6">
                         <h1 className="font-headline font-black text-xl text-primary">BCC ADMIN</h1>
                       </div>
                       <nav className="p-4 space-y-2">
                         {renderNavLinks(true)}
                       </nav>
-                      <div className="p-4 border-t border-border absolute bottom-0 w-full">
+                      <div className="p-4 border-t absolute bottom-0 w-full">
                         <form action={handleLogout}>
                             <Button variant="outline" className="w-full">
                                 <LogOut className="w-4 h-4 mr-2" /> Logout

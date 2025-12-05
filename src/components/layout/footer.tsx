@@ -68,7 +68,7 @@ export function Footer() {
             </p>
           </div>
         </div>
-        <div className="border-t border-border mt-8 pt-6 text-center text-sm text-muted-foreground">
+        <div className="mt-8 pt-6 text-center text-sm text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} Bandung Community Championship. All Rights Reserved.</p>
           <p className="mt-2">Diselenggarakan oleh Komunitas Dayminton</p>
         </div>
