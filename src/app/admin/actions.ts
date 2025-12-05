@@ -90,7 +90,7 @@ export async function loginAdminGoogle() {
 
 export async function logoutAdmin() {
   cookies().delete('bcc_admin_session');
-  redirect('/admin/login');
+  redirect('/');
 }
 
 export async function getAdminSession() {

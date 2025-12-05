@@ -77,7 +77,7 @@ export async function registerManager(prevState: any, formData: FormData) {
 export async function logoutManager() {
   const cookieStore = cookies();
   cookieStore.delete('bcc_manager_session');
-  redirect('/manager/login');
+  redirect('/');
 }
 
 // Helper untuk mengambil session di Server Component
