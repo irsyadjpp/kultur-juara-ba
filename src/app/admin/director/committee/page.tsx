@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { getCommitteeRoster, type CommitteeMember as RosterMember } from '../roster/actions';
 
 
 export default function CommitteeManagementPage() {
@@ -24,27 +25,22 @@ export default function CommitteeManagementPage() {
   const [divisions, setDivisions] = useState<CommitteeDivision[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  // MOCK MASTER ROSTER - Nanti ini akan di-fetch dari actions
-  const masterRoster = [
-      { id: "irsyad_j", name: "Irsyad Jamal Pratama Putra" },
-      { id: "rizki_k", name: "Rizki Karami" },
-      { id: "annisa_s", name: "Annisa Syafira" },
-      { id: "selvi_y", name: "Selvi Yulia" },
-      // ...tambahkan semua panitia lain di sini
-  ];
+  const [masterRoster, setMasterRoster] = useState<RosterMember[]>([]);
 
   useEffect(() => {
-    loadData();
+    async function loadInitialData() {
+        setIsLoading(true);
+        const [structure, roster] = await Promise.all([
+            getCommitteeStructure(),
+            getCommitteeRoster()
+        ]);
+        setDivisions(structure);
+        setMasterRoster(roster);
+        setIsLoading(false);
+    }
+    loadInitialData();
   }, []);
 
-  const loadData = async () => {
-    setIsLoading(true);
-    const data = await getCommitteeStructure();
-    setDivisions(data);
-    setIsLoading(false);
-  };
-  
   const resetData = () => {
       setDivisions(JSON.parse(JSON.stringify(INITIAL_COMMITTEE_STRUCTURE)));
       toast({
@@ -54,32 +50,22 @@ export default function CommitteeManagementPage() {
   }
 
   // Update nama personil
-  const handleMemberChange = (divIndex: number, memberIndex: number, field: 'name' | 'position' | 'id', value: string) => {
+  const handleMemberChange = (divIndex: number, memberIndex: number, value: string) => {
     const newDivisions = [...divisions];
     
-    // Jika field yang diubah adalah 'name', update juga ID nya dari master roster
-    let memberData = { ...newDivisions[divIndex].members[memberIndex], [field]: value };
-    if (field === 'name') {
-        const selectedPerson = masterRoster.find(p => p.name === value);
-        memberData.id = selectedPerson?.id;
+    // Jika value adalah placeholder, kosongkan nama dan id
+    if (value === "--kosongkan--") {
+        newDivisions[divIndex].members[memberIndex].name = "";
+        newDivisions[divIndex].members[memberIndex].id = undefined;
+    } else {
+        const selectedPerson = masterRoster.find(p => p.id === value);
+        if (selectedPerson) {
+            newDivisions[divIndex].members[memberIndex].name = selectedPerson.name;
+            newDivisions[divIndex].members[memberIndex].id = selectedPerson.id;
+        }
     }
     
-    newDivisions[divIndex].members[memberIndex] = memberData;
     setDivisions(newDivisions);
-  };
-
-  const addMember = (divIndex: number) => {
-    const newDivisions = [...divisions];
-    newDivisions[divIndex].members.push({ position: "Posisi Baru", name: "" });
-    setDivisions(newDivisions);
-  };
-
-  const removeMember = (divIndex: number, memberIndex: number) => {
-    if (confirm("Yakin ingin menghapus posisi ini dari struktur?")) {
-        const newDivisions = [...divisions];
-        newDivisions[divIndex].members.splice(memberIndex, 1);
-        setDivisions(newDivisions);
-    }
   };
 
   const handleSave = async () => {
@@ -134,16 +120,16 @@ export default function CommitteeManagementPage() {
                             <div className="col-span-6 space-y-1">
                                 <Label className="text-xs text-muted-foreground">Nama Personil</Label>
                                 <Select 
-                                    value={member.name} 
-                                    onValueChange={(value) => handleMemberChange(divIdx, memIdx, 'name', value)}
+                                    value={member.id} 
+                                    onValueChange={(value) => handleMemberChange(divIdx, memIdx, value)}
                                 >
                                     <SelectTrigger className="h-8">
                                         <SelectValue placeholder="Pilih Personil..." />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="">-- Kosongkan --</SelectItem>
+                                        <SelectItem value="--kosongkan--">-- Kosongkan --</SelectItem>
                                         {masterRoster.map(person => (
-                                            <SelectItem key={person.id} value={person.name}>{person.name}</SelectItem>
+                                            <SelectItem key={person.id} value={person.id!}>{person.name}</SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
