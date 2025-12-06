@@ -26,17 +26,21 @@ import { IntegrityPactModal } from '@/components/admin/integrity-pact-modal';
 const getMenusByRole = (role: string) => {
   const allMenus = [
     // --- CORE ---
-    { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard, roles: ['ALL'] },
-    { name: "Profil Saya", href: "/admin/profile", icon: UserRound, roles: ['ALL'] },
-    { name: "Workspace", href: "/admin/workspace", icon: Kanban, roles: ['ALL'] },
-    { name: "RKA & Planning", href: "/admin/planning", icon: ClipboardList, roles: ['ALL'] },
+    { 
+      title: "UTAMA",
+      items: [
+        { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard, roles: ['ALL'] },
+        { name: "Profil Saya", href: "/admin/profile", icon: UserRound, roles: ['ALL'] },
+        { name: "Workspace", href: "/admin/workspace", icon: Kanban, roles: ['ALL'] },
+        { name: "RKA & Planning", href: "/admin/planning", icon: ClipboardList, roles: ['ALL'] },
+      ]
+    },
 
     // --- DIRECTOR ---
     { 
-      name: "Director's Office", 
-      icon: ShieldCheck,
+      title: "DIRECTOR'S OFFICE",
       roles: ['DIRECTOR'],
-      subItems: [
+      items: [
         { name: "Master Roster Panitia", href: "/admin/director/roster", icon: UserPlus, roles: ['DIRECTOR'] },
         { name: "Struktur & Penugasan", href: "/admin/director/committee", icon: UserCog, roles: ['DIRECTOR'] },
         { name: "Penugasan Digital", href: "/admin/director/assignments", icon: FileBadge, roles: ['DIRECTOR'] },
@@ -45,10 +49,9 @@ const getMenusByRole = (role: string) => {
 
     // --- FINANCE ---
     { 
-      name: "Keuangan", 
-      icon: DollarSign, 
+      title: "KEUANGAN", 
       roles: ['FINANCE', 'DIRECTOR', 'BUSINESS_LEAD', 'TENANT_RELATIONS', 'BUSINESS'],
-      subItems: [
+      items: [
         { name: "Dashboard Keuangan", href: "/admin/finance", icon: LayoutDashboard, roles: ['FINANCE', 'DIRECTOR'] },
         { name: "Verifikasi Pendaftaran", href: "/admin/teams", icon: Users, roles: ['FINANCE', 'DIRECTOR', 'BUSINESS_LEAD'] },
         { name: "Approval Reimbursement", href: "/admin/finance/reimbursement-approval", icon: CheckCircle, roles: ['FINANCE', 'DIRECTOR'] },
@@ -60,10 +63,9 @@ const getMenusByRole = (role: string) => {
 
     // --- MATCH CONTROL ---
     { 
-      name: "Pertandingan", 
-      icon: Activity, 
+      title: "PERTANDINGAN", 
       roles: ['MATCH_COORD', 'REFEREE', 'IT_ADMIN', 'DIRECTOR', 'OPS_LEAD', 'TPF', 'MLO'],
-      subItems: [
+      items: [
         { name: "Match Control Desk", href: "/admin/match-control/assignment", icon: LayoutDashboard, roles: ['MATCH_COORD', 'DIRECTOR'] },
         { name: "Berita Acara Hasil", href: "/admin/matches/result-sheet", icon: FileText, roles: ['REFEREE', 'MATCH_COORD'] },
         { name: "Verifikasi TPF", href: "/admin/tpf", icon: ShieldCheck, roles: ['TPF', 'MATCH_COORD', 'DIRECTOR'] },
@@ -77,10 +79,9 @@ const getMenusByRole = (role: string) => {
 
     // --- OPERATIONS ---
     { 
-      name: "Operasional", 
-      icon: Users,
+      title: "OPERASIONAL", 
       roles: ['GATE', 'OPS_LEAD', 'IT_ADMIN', 'MEDIC', 'LOGISTICS', 'DIRECTOR', 'SHOW_DIR', 'MEDIA', 'ALL'],
-      subItems: [
+      items: [
         { name: "Gate Check-in", href: "/admin/gate", icon: QrCode, roles: ['GATE', 'OPS_LEAD', 'IT_ADMIN'] },
         { name: "Log Medis", href: "/admin/medical", icon: Stethoscope, roles: ['MEDIC', 'OPS_LEAD', 'DIRECTOR'] },
         { name: "Undian Doorprize", href: "/admin/raffle", icon: Gift, roles: ['OPS_LEAD', 'DIRECTOR', 'SHOW_DIR', 'MEDIA'] },
@@ -90,10 +91,9 @@ const getMenusByRole = (role: string) => {
 
     // --- COMMERCIAL & MEDIA ---
     { 
-      name: "Bisnis & Media", 
-      icon: BarChart3,
+      title: "BISNIS & MEDIA", 
       roles: ['BUSINESS_LEAD', 'BUSINESS', 'DIRECTOR', 'SHOW_DIR', 'MEDIA'],
-      subItems: [
+      items: [
         { name: "Data Pengunjung", href: "/admin/visitors", icon: Users, roles: ['BUSINESS_LEAD', 'BUSINESS', 'DIRECTOR'] },
         { name: "Laporan Sponsor", href: "/admin/analytics", icon: BarChart3, roles: ['BUSINESS_LEAD', 'BUSINESS', 'DIRECTOR'] },
         { name: "Manajemen Media", href: "/admin/media", icon: Video, roles: ['SHOW_DIR', 'MEDIA', 'DIRECTOR'] },
@@ -102,101 +102,46 @@ const getMenusByRole = (role: string) => {
 
     // --- SECRETARY ---
      { 
-      name: "Sekretariat", 
-      icon: FileText,
+      title: "SEKRETARIAT", 
       roles: ['SECRETARY', 'DIRECTOR', 'SHOW_DIR'],
-      subItems: [
+      items: [
         { name: "Generator Sertifikat", href: "/admin/secretary/cert-gen", icon: Award, roles: ['SECRETARY', 'DIRECTOR', 'SHOW_DIR'] },
       ]
     },
     
     // --- SYSTEM ---
-    { name: "Pengaturan Global", href: "/admin/settings", icon: Settings, roles: ['DIRECTOR', 'IT_ADMIN'] },
+    { 
+        title: "PENGATURAN",
+        items: [
+            { name: "Pengaturan Global", href: "/admin/settings", icon: Settings, roles: ['DIRECTOR', 'IT_ADMIN'] },
+        ]
+    }
   ];
 
-  const filterMenu = (menuItems: any[]) => {
-    return menuItems.map(item => {
-      if (item.subItems) {
-        const visibleSubItems = item.subItems.filter((sub:any) => 
-          sub.roles.includes(role) || role === 'IT_ADMIN' || role === 'DIRECTOR' || sub.roles.includes('ALL')
-        );
-        if (visibleSubItems.length > 0) {
-          return { ...item, subItems: visibleSubItems };
+  const canAccessRole = (itemRoles: string[]) => {
+      return itemRoles.includes(role) || role === 'IT_ADMIN' || role === 'DIRECTOR' || itemRoles.includes('ALL');
+  }
+
+  const filterMenu = (menuGroups: any[]) => {
+    return menuGroups
+      .map(group => {
+        // Filter item di dalam grup
+        const visibleItems = group.items.filter((item: any) => canAccessRole(item.roles));
+        
+        // Jika setelah difilter ada item yang tersisa, tampilkan grup beserta itemnya
+        if (visibleItems.length > 0) {
+          // Hanya tampilkan grup jika rolenya diizinkan ATAU jika ada item di dalamnya yg bisa diakses
+          const canAccessGroup = group.roles ? canAccessRole(group.roles) : true;
+          if(canAccessGroup) {
+            return { ...group, items: visibleItems };
+          }
         }
         return null;
-      }
-      
-      const canAccess = item.roles.includes(role) || role === 'IT_ADMIN' || role === 'DIRECTOR' || item.roles.includes('ALL');
-      return canAccess ? item : null;
-    }).filter(Boolean);
+      })
+      .filter(Boolean); // Hapus grup yang null (tidak punya item visible)
   };
   
   return filterMenu(allMenus);
-};
-
-interface NavItemProps {
-  href: string;
-  children: ReactNode;
-  icon: React.ElementType;
-}
-
-const NavItem = ({ href, children, icon: Icon }: NavItemProps) => {
-  const pathname = usePathname();
-  const isActive = pathname === href;
-
-  return (
-    <Link
-      href={href}
-      className={cn(
-        'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
-        isActive
-          ? 'bg-primary text-primary-foreground'
-          : 'text-muted-foreground hover:bg-secondary/80 hover:text-foreground'
-      )}
-    >
-      <Icon className="w-4 h-4" />
-      {children}
-    </Link>
-  );
-};
-
-interface NavGroupProps {
-    title: string;
-    icon: React.ElementType;
-    subItems: any[];
-    isInitiallyOpen: boolean;
-}
-
-const NavGroup = ({ title, icon: Icon, subItems, isInitiallyOpen }: NavGroupProps) => {
-    const pathname = usePathname();
-    return (
-        <Collapsible defaultOpen={isInitiallyOpen}>
-            <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-semibold text-foreground hover:bg-secondary [&[data-state=open]>svg]:rotate-180">
-                 <div className="flex items-center gap-3">
-                    <Icon className="w-4 h-4" />
-                    {title}
-                 </div>
-                <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-1 py-1 pl-5">
-                {subItems.map((item) => (
-                    <Link 
-                      key={item.href} 
-                      href={item.href}
-                      className={cn(
-                          'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
-                          pathname.startsWith(item.href)
-                            ? 'bg-secondary text-foreground'
-                            : 'text-muted-foreground hover:bg-secondary/80 hover:text-foreground'
-                      )}
-                    >
-                        <item.icon className="w-4 h-4" />
-                        {item.name}
-                    </Link>
-                ))}
-            </CollapsibleContent>
-        </Collapsible>
-    );
 };
 
 
@@ -259,29 +204,32 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   
   const currentMenus = getMenusByRole(session.role);
 
-  const renderNavLinks = (isSheet: boolean = false) => currentMenus.map((menu: any, idx: number) => {
-    if (menu.subItems) {
-        const isGroupActive = menu.subItems.some((sub:any) => pathname.startsWith(sub.href));
-        const NavComponent = (
-            <NavGroup 
-                key={menu.name}
-                title={menu.name}
-                icon={menu.icon}
-                subItems={menu.subItems}
-                isInitiallyOpen={isGroupActive}
-            />
-        );
-        return isSheet ? <SheetClose asChild>{NavComponent}</SheetClose> : NavComponent;
-    }
-    
-    const navItem = (
-      <NavItem key={menu.href} href={menu.href} icon={menu.icon}>
-        {menu.name}
-      </NavItem>
-    );
-
-    return isSheet ? <SheetClose asChild>{navItem}</SheetClose> : navItem;
-  });
+  const renderNavLinks = (isSheet: boolean = false) => currentMenus.map((group: any, groupIndex: number) => (
+    <div key={groupIndex} className="space-y-1">
+        <p className="px-4 pt-4 pb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+            {group.title}
+        </p>
+        {group.items.map((menu: any) => {
+            const isActive = pathname.startsWith(menu.href);
+            const NavLinkComponent = (
+                 <Link 
+                    key={menu.href} 
+                    href={menu.href}
+                    className={cn(
+                      'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group',
+                      isActive 
+                        ? 'bg-primary/10 text-primary font-bold' 
+                        : 'text-muted-foreground hover:bg-secondary/50 hover:text-foreground font-medium'
+                    )}
+                  >
+                    <menu.icon className="w-5 h-5" />
+                    <span>{menu.name}</span>
+                </Link>
+            );
+            return isSheet ? <SheetClose asChild>{NavLinkComponent}</SheetClose> : NavLinkComponent;
+        })}
+    </div>
+  ));
 
 
   return (
@@ -300,10 +248,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             BCC ADMIN
           </h1>
         </div>
-        <nav className="flex-1 py-4 px-4 overflow-y-auto no-scrollbar space-y-2">
+        <nav className="flex-1 py-4 px-2 overflow-y-auto no-scrollbar space-y-2">
           {renderNavLinks()}
         </nav>
-        <div className="p-4">
+        <div className="p-4 border-t">
           <form action={handleLogout}>
             <Button variant="outline" className="w-full">
                 <LogOut className="w-4 h-4 mr-2" /> Logout
@@ -365,3 +313,5 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </>
   );
 }
+
+    
