@@ -11,7 +11,7 @@ import {
   ClipboardCheck, ArrowRight, Menu, Home, Settings, AlertOctagon,
   FileText, ShieldCheck, Mic, Ticket, Award, Wallet,
   ClipboardList, Activity, Gavel, Gift, Stethoscope, Receipt, CheckCircle,
-  Store, Video, QrCode, Archive, FileBadge, DollarSign, ArrowRightCircle, Megaphone, Calculator, ChevronDown, Loader2, UserCog, UserPlus, UserRound, Kanban
+  Store, Video, QrCode, Archive, FileBadge, DollarSign, ArrowRightCircle, Megaphone, Calculator, ChevronDown, Loader2, UserCog, UserPlus, UserRound, Kanban, Package, Utensils
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
@@ -80,10 +80,12 @@ const getMenusByRole = (role: string) => {
     // --- OPERATIONS ---
     { 
       title: "OPERASIONAL", 
-      roles: ['GATE', 'OPS_LEAD', 'IT_ADMIN', 'MEDIC', 'LOGISTICS', 'DIRECTOR', 'SHOW_DIR', 'MEDIA', 'ALL'],
+      roles: ['GATE', 'OPS_LEAD', 'IT_ADMIN', 'MEDIC', 'LOGISTICS', 'DIRECTOR', 'SHOW_DIR', 'MEDIA', 'ALL', 'SECRETARY'],
       items: [
         { name: "Gate Check-in", href: "/admin/gate", icon: QrCode, roles: ['GATE', 'OPS_LEAD', 'IT_ADMIN'] },
         { name: "Log Medis", href: "/admin/medical", icon: Stethoscope, roles: ['MEDIC', 'OPS_LEAD', 'DIRECTOR'] },
+        { name: "Kontrol Shuttlecock", href: "/admin/logistics/shuttlecock", icon: Package, roles: ['LOGISTICS', 'MATCH_COORD', 'OPS_LEAD', 'DIRECTOR'] },
+        { name: "Absensi & Konsumsi", href: "/admin/hr/meals", icon: Utensils, roles: ['LOGISTICS', 'SECRETARY', 'OPS_LEAD', 'DIRECTOR'] },
         { name: "Undian Doorprize", href: "/admin/raffle", icon: Gift, roles: ['OPS_LEAD', 'DIRECTOR', 'SHOW_DIR', 'MEDIA'] },
         { name: "Pengajuan Reimbursement", href: "/admin/reimbursement/submit", icon: ArrowRightCircle, roles: ['ALL'] },
       ]
