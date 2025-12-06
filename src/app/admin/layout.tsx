@@ -9,7 +9,7 @@ import {
   ClipboardCheck, ArrowRight, Menu, Home, Settings, AlertOctagon,
   FileText, ShieldCheck, Mic, Ticket, Award, Wallet,
   ClipboardList, Activity, Gavel, Gift, Stethoscope, Receipt, CheckCircle,
-  Store, Video, QrCode, Archive, FileBadge, DollarSign, ArrowRightCircle, Megaphone, Calculator, ChevronDown, Loader2, UserCog, UserPlus, UserRound, Kanban, Package, Utensils, Clock
+  Store, Video, QrCode, Archive, FileBadge, DollarSign, ArrowRightCircle, Megaphone, Calculator, ChevronDown, Loader2, UserCog, UserPlus, UserRound, Kanban, Package, Utensils, Clock, CalendarClock, Settings2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
@@ -65,6 +65,7 @@ const getMenusByRole = (role: string) => {
       roles: ['MATCH_COORD', 'REFEREE', 'IT_ADMIN', 'DIRECTOR', 'OPS_LEAD', 'TPF', 'MLO'],
       items: [
         { name: "Match Control Desk", href: "/admin/match-control/assignment", icon: LayoutDashboard, roles: ['MATCH_COORD', 'DIRECTOR'] },
+        { name: "Editor Jadwal", href: "/admin/match-control/schedule-editor", icon: CalendarClock, roles: ['MATCH_COORD'] },
         { name: "Berita Acara Hasil", href: "/admin/matches/result-sheet", icon: FileText, roles: ['REFEREE', 'MATCH_COORD'] },
         { name: "Verifikasi TPF", href: "/admin/tpf", icon: ShieldCheck, roles: ['TPF', 'MATCH_COORD', 'DIRECTOR'] },
         { name: "Call Room (Antrean)", href: "/admin/mlo/dashboard", icon: Megaphone, roles: ['MLO', 'MATCH_COORD'] },
@@ -123,8 +124,10 @@ const getMenusByRole = (role: string) => {
     // --- Master Data & Settings ---
     { 
       title: "Master Data & Settings",
-      roles: ['DIRECTOR', 'IT_ADMIN', 'BUSINESS', 'MEDIA'],
+      roles: ['DIRECTOR', 'IT_ADMIN', 'BUSINESS', 'MEDIA', 'SECRETARY', 'MATCH_COORD'],
       items: [
+        { name: "Master Tim/Pemain", href: "/admin/master/teams", icon: Users, roles: ['SECRETARY', 'MATCH_COORD'] },
+        { name: "Master Kategori", href: "/admin/master/categories", icon: Settings2, roles: ['DIRECTOR', 'IT_ADMIN'] },
         { name: "Manajemen User", href: "/admin/settings/users", icon: Users, roles: ['DIRECTOR', 'IT_ADMIN'] },
         { name: "Partner & Sponsor", href: "/admin/business/partners", icon: Store, roles: ['DIRECTOR', 'BUSINESS'] },
         { name: "CMS Berita", href: "/admin/media/news", icon: FileText, roles: ['MEDIA', 'IT_ADMIN', 'DIRECTOR'] },
@@ -328,5 +331,3 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </>
   );
 }
-
-    
