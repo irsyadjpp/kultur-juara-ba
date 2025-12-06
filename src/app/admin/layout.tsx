@@ -111,12 +111,16 @@ const getMenusByRole = (role: string) => {
       ]
     },
     
-    // --- SYSTEM ---
+    // --- Master Data & Settings ---
     { 
-        title: "PENGATURAN",
-        items: [
-            { name: "Pengaturan Global", href: "/admin/settings", icon: Settings, roles: ['DIRECTOR', 'IT_ADMIN'] },
-        ]
+      title: "Master Data & Settings",
+      roles: ['DIRECTOR', 'IT_ADMIN', 'BUSINESS', 'MEDIA'],
+      items: [
+        { name: "Manajemen User", href: "/admin/settings/users", icon: Users, roles: ['DIRECTOR', 'IT_ADMIN'] },
+        { name: "Partner & Sponsor", href: "/admin/business/partners", icon: Store, roles: ['DIRECTOR', 'BUSINESS'] },
+        { name: "CMS Berita", href: "/admin/media/news", icon: FileText, roles: ['MEDIA', 'IT_ADMIN', 'DIRECTOR'] },
+        { name: "Pengaturan Global", href: "/admin/settings", icon: Settings, roles: ['DIRECTOR', 'IT_ADMIN'] },
+      ]
     }
   ];
 
