@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState, useEffect, type ReactNode } from 'react';
@@ -10,7 +8,7 @@ import {
   ClipboardCheck, ArrowRight, Menu, Home, Settings, AlertOctagon,
   FileText, Shield, Mic, Ticket, Award, Wallet,
   ClipboardList, Activity, Gavel, Gift, Stethoscope, Receipt, CheckCircle,
-  Store, Video, QrCode, Archive, ShieldCheck, DollarSign, ArrowRightCircle, Megaphone, Calculator, ChevronDown, Loader2, UserCog, UserPlus
+  Store, Video, QrCode, Archive, ShieldCheck, DollarSign, ArrowRightCircle, Megaphone, Calculator, ChevronDown, Loader2, UserCog, UserPlus, FileBadge
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
@@ -34,6 +32,7 @@ const getMenusByRole = (role: string) => {
       subItems: [
         { name: "Master Roster Panitia", href: "/admin/director/roster", icon: UserPlus, roles: ['DIRECTOR'] },
         { name: "Struktur & Penugasan", href: "/admin/director/committee", icon: UserCog, roles: ['DIRECTOR'] },
+        { name: "Penugasan Digital", href: "/admin/director/assignments", icon: FileBadge, roles: ['DIRECTOR'] },
       ]
     },
 
