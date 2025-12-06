@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState, useEffect, type ReactNode } from 'react';
@@ -11,7 +9,7 @@ import {
   ClipboardCheck, ArrowRight, Menu, Home, Settings, AlertOctagon,
   FileText, ShieldCheck, Mic, Ticket, Award, Wallet,
   ClipboardList, Activity, Gavel, Gift, Stethoscope, Receipt, CheckCircle,
-  Store, Video, QrCode, Archive, FileBadge, DollarSign, ArrowRightCircle, Megaphone, Calculator, ChevronDown, Loader2, UserCog, UserPlus, UserRound, Kanban, Package, Utensils
+  Store, Video, QrCode, Archive, FileBadge, DollarSign, ArrowRightCircle, Megaphone, Calculator, ChevronDown, Loader2, UserCog, UserPlus, UserRound, Kanban, Package, Utensils, Clock
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
@@ -85,9 +83,20 @@ const getMenusByRole = (role: string) => {
         { name: "Gate Check-in", href: "/admin/gate", icon: QrCode, roles: ['GATE', 'OPS_LEAD', 'IT_ADMIN'] },
         { name: "Log Medis", href: "/admin/medical", icon: Stethoscope, roles: ['MEDIC', 'OPS_LEAD', 'DIRECTOR'] },
         { name: "Kontrol Shuttlecock", href: "/admin/logistics/shuttlecock", icon: Package, roles: ['LOGISTICS', 'MATCH_COORD', 'OPS_LEAD', 'DIRECTOR'] },
+        { name: "Inventaris Umum", href: "/admin/logistics/inventory", icon: Archive, roles: ['LOGISTICS', 'OPS_LEAD', 'DIRECTOR'] },
+        { name: "Database Volunteer", href: "/admin/hr/volunteers", icon: Users, roles: ['OPS_LEAD', 'SECRETARY', 'DIRECTOR'] },
         { name: "Absensi & Konsumsi", href: "/admin/hr/meals", icon: Utensils, roles: ['LOGISTICS', 'SECRETARY', 'OPS_LEAD', 'DIRECTOR'] },
         { name: "Undian Doorprize", href: "/admin/raffle", icon: Gift, roles: ['OPS_LEAD', 'DIRECTOR', 'SHOW_DIR', 'MEDIA'] },
         { name: "Pengajuan Reimbursement", href: "/admin/reimbursement/submit", icon: ArrowRightCircle, roles: ['ALL'] },
+      ]
+    },
+    
+    // --- EVENT ---
+    {
+      title: "ACARA & PENUTUPAN",
+      roles: ['SHOW_DIR', 'MEDIA', 'DIRECTOR'],
+      items: [
+         { name: "Master Rundown", href: "/admin/event/rundown", icon: Clock, roles: ['SHOW_DIR', 'MEDIA', 'DIRECTOR'] },
       ]
     },
 
