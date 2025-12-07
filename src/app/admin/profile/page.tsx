@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useRef } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useState, useRef, useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -51,7 +51,7 @@ function SubmitButton() {
 
 export default function ProfilePage() {
   const { toast } = useToast();
-  const [state, formAction] = useFormState(updateProfile, { success: false, message: '' });
+  const [state, formAction] = useActionState(updateProfile, { success: false, message: '' });
   
   // State untuk Preview Image
   const [avatarPreview, setAvatarPreview] = useState<string | null>(MOCK_USER.avatar);
@@ -337,3 +337,5 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+    
