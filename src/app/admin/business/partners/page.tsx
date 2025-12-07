@@ -78,6 +78,10 @@ export default function PartnerManagementPage() {
                                 <Input placeholder="Cth: Platinum / Booth A1" value={newPartner.package} onChange={e => setNewPartner({...newPartner, package: e.target.value})} />
                             </div>
                         </div>
+                         <div className="space-y-2">
+                            <Label>Logo Perusahaan</Label>
+                            <Input type="file" />
+                        </div>
                     </div>
                     <DialogFooter>
                         <Button onClick={handleSave}>Simpan Mitra</Button>
