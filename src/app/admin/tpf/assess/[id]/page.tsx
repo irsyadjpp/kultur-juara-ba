@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -11,8 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
-  ArrowLeft, Calculator, Zap, Shield, BrainCircuit, 
-  Info, CheckCircle2, XCircle, PlayCircle, BookOpen, AlertTriangle, Loader2
+  ArrowLeft, Zap, Shield, BrainCircuit, 
+  Info, CheckCircle2, XCircle, BookOpen, AlertTriangle, Loader2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getPlayerById, submitVerificationResult, type PlayerVerification } from "../../actions";
@@ -29,10 +30,10 @@ const BONUS_POINTS = {
 export default function AssessmentPage() {
   const router = useRouter();
   const params = useParams();
+  const id = params.id as string;
   const { toast } = useToast();
   const [player, setPlayer] = useState<PlayerVerification | null>(null);
   const [loading, setLoading] = useState(true);
-  const id = params.id as string;
 
   // UI State
   const [activeTab, setActiveTab] = useState("visual");
@@ -115,47 +116,58 @@ export default function AssessmentPage() {
   };
 
   const isFormDisabled = finalCalc.level === 'REJECTED';
-  
+
   if (loading) return <div className="flex h-full items-center justify-center bg-background"><Loader2 className="w-8 h-8 animate-spin"/></div>;
   if (!player) return <div className="flex h-full items-center justify-center text-red-500">Player Not Found</div>;
 
   return (
     <div className="space-y-4">
-        {/* --- HEADER --- */}
-        <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-                <Button variant="outline" size="icon" onClick={() => router.back()} className="h-8 w-8">
-                    <ArrowLeft className="w-4 h-4" />
-                </Button>
-                <div>
-                     <h1 className="text-xl font-black font-headline text-foreground">
-                        {player.name}
-                    </h1>
-                    <p className="text-sm text-muted-foreground -mt-1">{player.team} | <span className="font-semibold text-primary">{player.category} (Klaim)</span></p>
-                </div>
-            </div>
-            <div className={`flex items-center gap-4 px-4 py-1.5 rounded-md shadow-sm border ${finalCalc.color}`}>
-                <div className="flex gap-2 text-xs font-bold opacity-90">
-                    <span>A: {finalCalc.scoreA * 2}</span>
-                    <span>+</span>
-                    <span>B: {finalCalc.scoreB}</span>
-                    <span>=</span>
-                    <span className="text-lg">{finalCalc.total}</span>
-                </div>
-                <div className="h-4 w-[1px] bg-white/40"></div>
-                <div className="font-black text-sm uppercase">{finalCalc.level}</div>
-            </div>
+      {/* --- HEADER --- */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Button variant="outline" size="icon" onClick={() => router.back()} className="h-8 w-8">
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+          <div>
+            <h1 className="text-xl font-black font-headline text-foreground">
+              {player.name}
+            </h1>
+            <p className="text-sm text-muted-foreground -mt-1">{player.team} | <span className="font-semibold text-primary">{player.category} (Klaim)</span></p>
+          </div>
         </div>
+        <div className={`flex items-center gap-4 px-4 py-1.5 rounded-md shadow-sm border ${finalCalc.color}`}>
+          <div className="flex gap-2 text-xs font-bold opacity-90">
+            <span>A: {finalCalc.scoreA * 2}</span>
+            <span>+</span>
+            <span>B: {finalCalc.scoreB}</span>
+            <span>=</span>
+            <span className="text-lg">{finalCalc.total}</span>
+          </div>
+          <div className="h-4 w-[1px] bg-white/40"></div>
+          <div className="font-black text-sm uppercase">{finalCalc.level}</div>
+        </div>
+      </div>
 
-        {/* --- MAIN LAYOUT (SPLIT SCREEN) --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* KIRI: VIDEO PLAYER & STATUS */}
-            <div className="space-y-4">
-                <div className="shrink-0 bg-black w-full relative group sticky top-[76px] z-10 rounded-lg overflow-hidden border shadow-lg">
-                    <iframe src={player.videoUrl} className="w-full aspect-video" allowFullScreen />
-                </div>
-                <div className="flex justify-center">
-                    <div className="inline-flex bg-card p-1 rounded-lg border shadow-sm">
+      {/* --- MAIN LAYOUT: VERTICAL STACK --- */}
+      
+      {/* 1. VIDEO PLAYER (STICKY TOP) */}
+      <div className="shrink-0 bg-black w-full relative group sticky top-[76px] z-10 rounded-lg overflow-hidden border shadow-lg">
+        <iframe src={player.videoUrl} className="w-full aspect-video" allowFullScreen />
+      </div>
+
+      {/* 2. SCROLLABLE FORM AREA (BOTTOM) */}
+      <div className="bg-card border rounded-lg p-1 mt-4">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
+          <TabsList className="grid w-full grid-cols-3 mx-auto max-w-lg">
+            <TabsTrigger value="visual">Audit Visual</TabsTrigger>
+            <TabsTrigger value="bonus">Skill Bonus</TabsTrigger>
+            <TabsTrigger value="guide"><BookOpen className="w-4 h-4 mr-2"/>Panduan</TabsTrigger>
+          </TabsList>
+
+          <div className="p-6">
+            <TabsContent value="visual" className="mt-0 space-y-6">
+                <div className="flex justify-center mb-6">
+                    <div className="inline-flex bg-background p-1 rounded-lg border shadow-sm">
                         <button onClick={() => setManualStatus('VALID')} className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${manualStatus === 'VALID' ? 'bg-primary text-white' : 'text-muted-foreground hover:bg-secondary'}`}>
                             Video VALID
                         </button>
@@ -164,101 +176,88 @@ export default function AssessmentPage() {
                         </button>
                     </div>
                 </div>
-            </div>
-
-            {/* KANAN: FORM AREA (TABS) */}
-            <div className="bg-card border rounded-lg p-1">
-                <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-                    <TabsList className="grid w-full grid-cols-3 mx-auto max-w-md">
-                        <TabsTrigger value="visual">Audit Visual</TabsTrigger>
-                        <TabsTrigger value="bonus">Skill Bonus</TabsTrigger>
-                        <TabsTrigger value="guide"><BookOpen className="w-4 h-4 mr-2"/>Panduan</TabsTrigger>
-                    </TabsList>
-
-                    <ScrollArea className="flex-1 p-6">
-                        <TabsContent value="visual" className="mt-0 space-y-6">
-                            <div className="grid grid-cols-1 gap-6">
-                                <ScoreSlider disabled={isFormDisabled} label="1. Biomekanik (Grip)" desc="Pegangan raket kaku (Panci) vs Luwes (Salaman)?" val={scores.grip} setVal={(v) => setScores({...scores, grip: v})} />
-                                <ScoreSlider disabled={isFormDisabled} label="2. Footwork" desc="Lari berat vs Langkah geser/jinjit?" val={scores.footwork} setVal={(v) => setScores({...scores, footwork: v})} />
-                                <ScoreSlider disabled={isFormDisabled} label="3. Backhand" desc="Panik vs Clear sampai belakang?" val={scores.backhand} setVal={(v) => setScores({...scores, backhand: v})} />
-                                <ScoreSlider disabled={isFormDisabled} label="4. Attack Power" desc="Smash melambung vs Menukik tajam?" val={scores.attack} setVal={(v) => setScores({...scores, attack: v})} />
-                                <ScoreSlider disabled={isFormDisabled} label="5. Defense" desc="Buang muka vs Tembok tenang?" val={scores.defense} setVal={(v) => setScores({...scores, defense: v})} />
-                                <ScoreSlider disabled={isFormDisabled} label="6. Game IQ" desc="Tabrakan vs Saling mengisi rotasi?" val={scores.gameIq} setVal={(v) => setScores({...scores, gameIq: v})} />
-                                <ScoreSlider disabled={isFormDisabled} label="7. Fisik" desc="Ngos-ngosan vs Stabil Explosif?" val={scores.physique} setVal={(v) => setScores({...scores, physique: v})} />
-                            </div>
-                        </TabsContent>
-                        <TabsContent value="bonus" className="mt-0 space-y-6">
-                             <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded text-sm text-yellow-300 flex gap-2"><AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" /><span>Centang <strong>hanya jika</strong> teknik terlihat jelas & sukses minimal 1x.</span></div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <SkillGroup disabled={isFormDisabled} title="A. Serangan" icon={<Zap className="w-4 h-4 text-red-400"/>} items={[ {id: 'jumpingSmash', l: 'Jumping Smash'}, {id: 'stickSmash', l: 'Stick Smash'}, {id: 'backhandSmash', l: 'Backhand Smash (+4)'}, {id: 'netKill', l: 'Net Kill'}, {id: 'flickServe', l: 'Flick Serve'} ]} state={skills} setState={setSkills} />
-                                <SkillGroup disabled={isFormDisabled} title="B. Kontrol" icon={<Shield className="w-4 h-4 text-blue-400"/>} items={[ {id: 'spinningNet', l: 'Spinning Net'}, {id: 'crossNet', l: 'Cross Net'}, {id: 'backhandDrop', l: 'Backhand Drop'}, {id: 'backhandClear', l: 'Backhand Clear'}, {id: 'crossDefense', l: 'Cross Defense'} ]} state={skills} setState={setSkills} />
-                                <SkillGroup disabled={isFormDisabled} title="C. IQ & Refleks" icon={<BrainCircuit className="w-4 h-4 text-purple-400"/>} items={[ {id: 'splitStep', l: 'Split Step (+4)'}, {id: 'divingDefense', l: 'Diving Defense'}, {id: 'deception', l: 'Deception / Hold (+4)'}, {id: 'intercept', l: 'Intercept'}, {id: 'judgement', l: 'Watch Line'} ]} state={skills} setState={setSkills} />
-                            </div>
-                        </TabsContent>
-                         <TabsContent value="guide" className="mt-0 space-y-6">
-                            <div className="space-y-6 text-foreground">
-                               <RubricItem title="PANDUAN VISUAL RUBRIK" data={RUBRIC_GUIDELINES} />
-                               <MethodItem title="PETUNJUK TEKNIS PENILAIAN" data={ASSESSMENT_METHODS} />
-                               <ComparisonTable title="TABEL PEMBANDING (CHEAT SHEET)" data={COMPARISON_TABLE} />
-                               <RedFlagItem title="RED FLAG: TANDA SANDBAGGING" data={RED_FLAGS} />
-                            </div>
-                        </TabsContent>
-                    </ScrollArea>
-                     <div className="p-4 border-t space-y-3">
-                        <Textarea placeholder={manualStatus === 'INVALID' ? "WAJIB ISI ALASAN..." : "Catatan tambahan (Opsional)..."} value={notes} onChange={e => setNotes(e.target.value)} className="h-16 text-sm" />
-                        <Button size="lg" className={`w-full text-lg font-bold h-12 shadow-lg transition-all ${isFormDisabled ? 'bg-destructive' : 'bg-primary'}`} onClick={handleSubmit}>
-                            {isFormDisabled ? <><XCircle className="w-6 h-6 mr-2" /> TOLAK (INVALID)</> : <><CheckCircle2 className="w-6 h-6 mr-2" /> TETAPKAN: {finalCalc.level}</>}
-                        </Button>
-                    </div>
-                </Tabs>
-            </div>
-        </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <ScoreSlider disabled={isFormDisabled} label="1. Biomekanik (Grip)" desc="Pegangan raket kaku (Panci) vs Luwes (Salaman)?" val={scores.grip} setVal={(v) => setScores({...scores, grip: v})} />
+                  <ScoreSlider disabled={isFormDisabled} label="2. Footwork" desc="Lari berat vs Langkah geser/jinjit?" val={scores.footwork} setVal={(v) => setScores({...scores, footwork: v})} />
+                  <ScoreSlider disabled={isFormDisabled} label="3. Backhand" desc="Panik vs Clear sampai belakang?" val={scores.backhand} setVal={(v) => setScores({...scores, backhand: v})} />
+                  <ScoreSlider disabled={isFormDisabled} label="4. Attack Power" desc="Smash melambung vs Menukik tajam?" val={scores.attack} setVal={(v) => setScores({...scores, attack: v})} />
+                  <ScoreSlider disabled={isFormDisabled} label="5. Defense" desc="Buang muka vs Tembok tenang?" val={scores.defense} setVal={(v) => setScores({...scores, defense: v})} />
+                  <ScoreSlider disabled={isFormDisabled} label="6. Game IQ" desc="Tabrakan vs Saling mengisi rotasi?" val={scores.gameIq} setVal={(v) => setScores({...scores, gameIq: v})} />
+                  <ScoreSlider disabled={isFormDisabled} label="7. Fisik" desc="Ngos-ngosan vs Stabil Explosif?" val={scores.physique} setVal={(v) => setScores({...scores, physique: v})} />
+                </div>
+            </TabsContent>
+            <TabsContent value="bonus" className="mt-0 space-y-6">
+                <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded text-sm text-yellow-300 flex gap-2"><AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" /><span>Centang <strong>hanya jika</strong> teknik terlihat jelas & sukses minimal 1x.</span></div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <SkillGroup disabled={isFormDisabled} title="A. Serangan" icon={<Zap className="w-4 h-4 text-red-400"/>} items={[ {id: 'jumpingSmash', l: 'Jumping Smash'}, {id: 'stickSmash', l: 'Stick Smash'}, {id: 'backhandSmash', l: 'Backhand Smash (+4)'}, {id: 'netKill', l: 'Net Kill'}, {id: 'flickServe', l: 'Flick Serve'} ]} state={skills} setState={setSkills} />
+                <SkillGroup disabled={isFormDisabled} title="B. Kontrol" icon={<Shield className="w-4 h-4 text-blue-400"/>} items={[ {id: 'spinningNet', l: 'Spinning Net'}, {id: 'crossNet', l: 'Cross Net'}, {id: 'backhandDrop', l: 'Backhand Drop'}, {id: 'backhandClear', l: 'Backhand Clear'}, {id: 'crossDefense', l: 'Cross Defense'} ]} state={skills} setState={setSkills} />
+                <SkillGroup disabled={isFormDisabled} title="C. IQ & Refleks" icon={<BrainCircuit className="w-4 h-4 text-purple-400"/>} items={[ {id: 'splitStep', l: 'Split Step (+4)'}, {id: 'divingDefense', l: 'Diving Defense'}, {id: 'deception', l: 'Deception / Hold (+4)'}, {id: 'intercept', l: 'Intercept'}, {id: 'judgement', l: 'Watch Line'} ]} state={skills} setState={setSkills} />
+              </div>
+            </TabsContent>
+            <TabsContent value="guide" className="mt-0 space-y-6 text-foreground">
+              <div className="space-y-6">
+                 <RubricItem title="PANDUAN VISUAL RUBRIK" data={RUBRIC_GUIDELINES} />
+                 <MethodItem title="PETUNJUK TEKNIS PENILAIAN" data={ASSESSMENT_METHODS} />
+                 <ComparisonTable title="TABEL PEMBANDING (CHEAT SHEET)" data={COMPARISON_TABLE} />
+                 <RedFlagItem title="RED FLAG: TANDA SANDBAGGING" data={RED_FLAGS} />
+              </div>
+            </TabsContent>
+          </div>
+          
+          <div className="p-4 border-t space-y-3">
+            <Textarea placeholder={manualStatus === 'INVALID' ? "WAJIB ISI ALASAN..." : "Catatan tambahan (Opsional)..."} value={notes} onChange={e => setNotes(e.target.value)} className="h-16 text-sm bg-background" />
+            <Button size="lg" className={`w-full text-lg font-bold h-12 shadow-lg transition-all ${isFormDisabled ? 'bg-destructive' : 'bg-primary'}`} onClick={handleSubmit}>
+              {isFormDisabled ? <><XCircle className="w-6 h-6 mr-2" /> TOLAK (INVALID)</> : <><CheckCircle2 className="w-6 h-6 mr-2" /> TETAPKAN: {finalCalc.level}</>}
+            </Button>
+          </div>
+        </Tabs>
+      </div>
     </div>
   );
 }
 
 // SUB COMPONENTS
 function ScoreSlider({ label, desc, val, setVal, disabled }: any) {
-    return (
-        <div className={`p-4 rounded-lg border space-y-3 transition-all ${disabled ? 'opacity-40 pointer-events-none' : 'hover:bg-secondary/20'}`}>
-            <div className="flex justify-between items-center">
-                <Label className="text-base font-bold text-foreground">{label}</Label>
-                <Badge variant="outline" className="text-lg font-mono w-10 h-10 flex items-center justify-center bg-background text-foreground rounded-lg">
-                    {val}
-                </Badge>
-            </div>
-            <p className="text-sm text-muted-foreground h-5">{desc}</p>
-            <Slider value={[val]} min={1} max={5} step={1} onValueChange={(v) => setVal(v[0])} className="py-2" disabled={disabled} />
-        </div>
-    )
+  return (
+    <div className={`p-4 rounded-lg border space-y-3 transition-all ${disabled ? 'opacity-40 pointer-events-none' : 'hover:bg-secondary/20'} bg-card`}>
+      <div className="flex justify-between items-center">
+        <Label className="text-base font-bold text-foreground">{label}</Label>
+        <Badge variant="outline" className="text-lg font-mono w-10 h-10 flex items-center justify-center bg-background text-foreground rounded-lg">
+          {val}
+        </Badge>
+      </div>
+      <p className="text-sm text-muted-foreground h-5">{desc}</p>
+      <Slider value={[val]} min={1} max={5} step={1} onValueChange={(v) => setVal(v[0])} className="py-2" disabled={disabled} />
+    </div>
+  )
 }
 
 function SkillGroup({ title, icon, items, state, setState, disabled }: any) {
-    return (
-        <div className={`p-4 rounded-lg border ${disabled ? 'opacity-40 pointer-events-none' : ''}`}>
-            <h4 className="font-bold text-base mb-3 flex items-center gap-2 text-foreground border-b pb-2">
-                {icon} {title}
-            </h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {items.map((i: any) => (
-                    <div key={i.id} 
-                        className={`flex items-center space-x-2 p-2 rounded-md border transition-all cursor-pointer ${state[i.id] ? 'bg-primary/10 border-primary/30' : `bg-secondary/20 border-transparent ${!disabled && 'hover:bg-secondary/50'}`}`}
-                        onClick={() => !disabled && setState({...state, [i.id]: !state[i.id]})}
-                    >
-                        <Checkbox 
-                            id={i.id} 
-                            checked={state[i.id] || false}
-                            onCheckedChange={(c) => !disabled && setState({...state, [i.id]: !!c})} 
-                            disabled={disabled}
-                        />
-                        <label className={`text-sm font-semibold select-none leading-tight ${!disabled && 'cursor-pointer'}`}>
-                            {i.l}
-                        </label>
-                    </div>
-                ))}
-            </div>
-        </div>
-    )
+  return (
+    <div className={`p-4 rounded-lg border ${disabled ? 'opacity-40 pointer-events-none' : ''} bg-card`}>
+      <h4 className="font-bold text-base mb-3 flex items-center gap-2 text-foreground border-b pb-2">
+        {icon} {title}
+      </h4>
+      <div className="grid grid-cols-1 gap-3">
+        {items.map((i: any) => (
+          <div key={i.id} 
+            className={`flex items-center space-x-2 p-2 rounded-md border transition-all cursor-pointer ${state[i.id] ? 'bg-primary/10 border-primary/30' : `bg-secondary/20 border-transparent ${!disabled && 'hover:bg-secondary/50'}`}`}
+            onClick={() => !disabled && setState({...state, [i.id]: !state[i.id]})}
+          >
+            <Checkbox 
+              id={i.id} 
+              checked={state[i.id] || false}
+              onCheckedChange={(c) => !disabled && setState({...state, [i.id]: !!c})} 
+              disabled={disabled}
+            />
+            <label className={`text-sm font-semibold select-none leading-tight ${!disabled && 'cursor-pointer'}`}>
+              {i.l}
+            </label>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
 
 const SectionWrapper = ({ title, children }: { title: string, children: React.ReactNode }) => (
@@ -272,7 +271,7 @@ const RubricItem = ({ title, data }: { title: string, data: any[] }) => (
   <SectionWrapper title={title}>
     <div className="space-y-4">
       {data.map((item, index) => (
-        <div key={index} className="p-4 bg-secondary/20 rounded-lg border">
+        <div key={index} className="p-4 bg-card rounded-lg border">
           <p className="font-semibold text-foreground mb-2">{item.title}</p>
           <ul className="space-y-1 text-xs text-muted-foreground">
             {item.scores.map((score: any, i: number) => (
@@ -292,7 +291,7 @@ const MethodItem = ({ title, data }: { title: string, data: any[] }) => (
         <h4 className="font-semibold text-base text-accent-foreground mb-2">{section.title}</h4>
         <div className="space-y-3">
           {section.points.map((point: any, i: number) => (
-            <div key={i} className="p-3 bg-secondary/20 rounded-lg text-sm">
+            <div key={i} className="p-3 bg-card rounded-lg text-sm border">
               <p className="font-bold text-foreground">{point.subtitle}</p>
               <p className="text-xs text-muted-foreground">{point.desc}</p>
             </div>
@@ -337,3 +336,5 @@ const RedFlagItem = ({ title, data }: { title: string, data: string[] }) => (
     </ul>
   </SectionWrapper>
 );
+
+    
