@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -8,15 +7,18 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { 
-  Kanban, FolderOpen, Bell, CheckCircle2, 
-  Clock, AlertCircle, Download, Upload, Star, PlusCircle, Loader2, Megaphone 
+  Kanban, FolderOpen, Bell, Clock, AlertCircle, CheckCircle2,
+  Download, Upload, Star, PlusCircle, Loader2, Megaphone, GripVertical 
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getWorkspaceData, updateTaskStatus, uploadResource, createTask, createAnnouncement, type Task } from "./actions";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+
+// --- IMPORT DRAG & DROP ---
+import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd';
 
 // Helper sederhana untuk mendapatkan sesi
 const getSession = () => {
@@ -28,6 +30,13 @@ const getSession = () => {
     return null;
   }
 }
+
+// Definisi Kolom Kanban
+const KANBAN_COLUMNS: Record<string, { label: string; color: string; icon: React.ElementType; iconColor: string; }> = {
+  TODO: { label: 'TO DO', color: 'bg-zinc-100 dark:bg-zinc-900', icon: Clock, iconColor: 'text-zinc-500' },
+  IN_PROGRESS: { label: 'IN PROGRESS', color: 'bg-blue-50 dark:bg-blue-950/30', icon: AlertCircle, iconColor: 'text-blue-500' },
+  DONE: { label: 'DONE', color: 'bg-green-50 dark:bg-green-950/30', icon: CheckCircle2, iconColor: 'text-green-600' }
+};
 
 export default function WorkspacePage() {
   const { toast } = useToast();
@@ -60,12 +69,6 @@ export default function WorkspacePage() {
   const loadData = async () => {
     const res = await getWorkspaceData();
     setData(res);
-  };
-
-  const handleStatusClick = async (task: Task) => {
-      const nextStatus = task.status === 'TODO' ? 'IN_PROGRESS' : task.status === 'IN_PROGRESS' ? 'DONE' : 'TODO';
-      await updateTaskStatus(task.id, nextStatus);
-      loadData();
   };
 
   const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -112,13 +115,48 @@ export default function WorkspacePage() {
         loadData();
     }
   };
+  
+    // --- LOGIC DRAG AND DROP ---
+  const onDragEnd = async (result: DropResult) => {
+    const { destination, source, draggableId } = result;
+
+    // 1. Jika didrop di luar area atau di tempat yang sama
+    if (!destination) return;
+    if (destination.droppableId === source.droppableId && destination.index === source.index) return;
+
+    // 2. Update Optimistik di Client Side
+    const newStatus = destination.droppableId as Task['status'];
+    
+    // Copy array task
+    const newTasks = Array.from(data.tasks);
+    const taskIndex = newTasks.findIndex((t:any) => t.id === draggableId);
+    
+    if (taskIndex !== -1) {
+        // Update status task lokal
+        // @ts-ignore
+        newTasks[taskIndex].status = newStatus;
+        setData({ ...data, tasks: newTasks });
+
+        // 3. Panggil Server Action
+        await updateTaskStatus(draggableId, newStatus);
+        toast({ title: "Status Updated", description: `Task dipindah ke ${newStatus.replace('_', ' ')}` });
+    }
+  };
+
 
   const isDirector = session?.role === 'DIRECTOR';
 
+  // Helper untuk filter task sebelum dirender
+  const getTasksByStatus = (status: string) => {
+    return data.tasks.filter((t: Task) => 
+      t.status === status && (filterDiv === 'ALL' || t.division === filterDiv)
+    );
+  };
+
   return (
     <>
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
+      <div className="space-y-6 h-full flex flex-col">
+        <div className="flex justify-between items-center shrink-0">
           <div>
               <h2 className="text-3xl font-bold font-headline text-primary">Workspace Panitia</h2>
               <p className="text-muted-foreground">Pusat kolaborasi, tugas, dan arsip dokumen.</p>
@@ -132,7 +170,7 @@ export default function WorkspacePage() {
 
         {/* 1. PENGUMUMAN (NOTICE BOARD) */}
         {data.announcements.length > 0 && (
-            <div className="bg-yellow-500/10 border-l-4 border-yellow-500 p-4 rounded-r-lg shadow-sm mb-6">
+            <div className="bg-yellow-500/10 border-l-4 border-yellow-500 p-4 rounded-r-lg shadow-sm shrink-0">
                 <div className="flex items-start gap-3">
                     <Bell className="w-5 h-5 text-yellow-600 mt-1 animate-bounce" />
                     <div>
@@ -144,71 +182,106 @@ export default function WorkspacePage() {
             </div>
         )}
 
-        <Tabs defaultValue="tasks" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
-              <TabsTrigger value="tasks">
-                  <Kanban className="w-4 h-4 mr-2" /> Task Tracker
-              </TabsTrigger>
-              <TabsTrigger value="files">
-                  <FolderOpen className="w-4 h-4 mr-2" /> File Repository
-              </TabsTrigger>
-              <TabsTrigger value="performance">
-                  <Star className="w-4 h-4 mr-2" /> Rapor Kinerja
-              </TabsTrigger>
+        <Tabs defaultValue="tasks" className="w-full flex-grow flex flex-col">
+          <TabsList className="grid w-full grid-cols-3 mb-6 shrink-0">
+              <TabsTrigger value="tasks"><Kanban className="w-4 h-4 mr-2" /> Task Board (Trello)</TabsTrigger>
+              <TabsTrigger value="files"><FolderOpen className="w-4 h-4 mr-2" /> File Repository</TabsTrigger>
+              <TabsTrigger value="performance"><Star className="w-4 h-4 mr-2" /> Rapor Kinerja</TabsTrigger>
           </TabsList>
 
-          {/* --- TAB 1: TASK TRACKER (PENGGANTI EXCEL) --- */}
-          <TabsContent value="tasks" className="space-y-4">
-              <div className="flex justify-between items-center mb-4">
-                  <div className="flex gap-2">
+          {/* --- TAB 1: KANBAN BOARD (TRELLO STYLE) --- */}
+          <TabsContent value="tasks" className="flex-grow flex flex-col space-y-4">
+              {/* Filter Bar */}
+              <div className="flex justify-between items-center shrink-0">
+                  <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
                       {['ALL', 'MEDIA', 'MATCH', 'BUSINESS', 'OPS', 'IT', 'LEGAL', 'INTI'].map(div => (
                           <Badge 
                               key={div} 
                               variant={filterDiv === div ? 'default' : 'outline'}
-                              className="cursor-pointer"
+                              className="cursor-pointer whitespace-nowrap hover:bg-primary/20"
                               onClick={() => setFilterDiv(div)}
                           >
                               {div}
                           </Badge>
                       ))}
                   </div>
-                   <Button size="sm" onClick={() => setIsTaskModalOpen(true)}>
+                   <Button size="sm" onClick={() => setIsTaskModalOpen(true)} className="shrink-0">
                       <PlusCircle className="w-4 h-4 mr-2"/> Tambah Tugas
                    </Button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {/* KOLOM TODO */}
-                  <div className="bg-muted/30 p-4 rounded-lg min-h-[300px]">
-                      <h3 className="font-bold text-muted-foreground mb-4 flex items-center gap-2"><Clock className="w-4 h-4"/> TO DO</h3>
-                      <div className="space-y-3">
-                          {data.tasks.filter((t: Task) => t.status === 'TODO' && (filterDiv === 'ALL' || t.division === filterDiv)).map((t: Task) => (
-                              <TaskCard key={t.id} task={t} onNext={() => handleStatusClick(t)} />
-                          ))}
-                      </div>
+              {/* KANBAN AREA */}
+              <DragDropContext onDragEnd={onDragEnd}>
+                  <div className="flex gap-4 h-full overflow-x-auto pb-4 items-start">
+                      {Object.entries(KANBAN_COLUMNS).map(([statusKey, config]) => (
+                          <div key={statusKey} className={`flex-shrink-0 w-80 rounded-xl flex flex-col max-h-full ${config.color} border border-transparent`}>
+                              {/* Column Header */}
+                              <div className="p-4 flex items-center justify-between shrink-0">
+                                  <h3 className="font-bold text-sm flex items-center gap-2 text-foreground/80">
+                                      <config.icon className={`w-4 h-4 ${config.iconColor}`} /> 
+                                      {config.label}
+                                  </h3>
+                                  <Badge variant="secondary" className="bg-background/50">{getTasksByStatus(statusKey).length}</Badge>
+                              </div>
+
+                              {/* Droppable Area */}
+                              <Droppable droppableId={statusKey}>
+                                  {(provided, snapshot) => (
+                                      <div
+                                          {...provided.droppableProps}
+                                          ref={provided.innerRef}
+                                          className={`flex-grow p-3 space-y-3 overflow-y-auto min-h-[150px] transition-colors rounded-b-xl ${snapshot.isDraggingOver ? 'bg-primary/5' : ''}`}
+                                      >
+                                          {getTasksByStatus(statusKey).map((task: Task, index: number) => (
+                                              <Draggable key={task.id} draggableId={task.id} index={index}>
+                                                  {(provided, snapshot) => (
+                                                      <div
+                                                          ref={provided.innerRef}
+                                                          {...provided.draggableProps}
+                                                          {...provided.dragHandleProps}
+                                                          className={`group relative bg-card p-3 rounded-lg border shadow-sm hover:shadow-md transition-all ${snapshot.isDragging ? 'rotate-2 scale-105 shadow-xl ring-2 ring-primary z-50' : ''}`}
+                                                          style={provided.draggableProps.style}
+                                                      >
+                                                          {/* Drag Handle Icon (Muncul saat hover) */}
+                                                          <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-muted-foreground cursor-grab active:cursor-grabbing">
+                                                              <GripVertical className="w-4 h-4" />
+                                                          </div>
+
+                                                          {/* Card Content */}
+                                                          <div className="flex justify-between items-start mb-2 pr-6">
+                                                              <Badge variant="outline" className={`text-[10px] font-bold ${getPriorityColor(task.priority)}`}>
+                                                                  {task.division}
+                                                              </Badge>
+                                                          </div>
+                                                          <h4 className="font-bold text-sm mb-2 text-foreground leading-snug">{task.title}</h4>
+                                                          
+                                                          <div className="flex justify-between items-center pt-2 border-t border-border/50">
+                                                              <div className={`flex items-center gap-1 text-xs ${getDeadlineColor(task.deadline)}`}>
+                                                                  <Clock className="w-3 h-3"/> 
+                                                                  <span>{formatDate(task.deadline)}</span>
+                                                              </div>
+                                                              <div className="flex items-center gap-2">
+                                                                  {/* Avatar Placeholder */}
+                                                                  <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[10px] font-bold border border-primary/20" title={`PIC: ${task.pic}`}>
+                                                                      {task.pic.charAt(0)}
+                                                                  </div>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                  )}
+                                              </Draggable>
+                                          ))}
+                                          {provided.placeholder}
+                                      </div>
+                                  )}
+                              </Droppable>
+                          </div>
+                      ))}
                   </div>
-                  {/* KOLOM IN PROGRESS */}
-                  <div className="bg-blue-500/5 p-4 rounded-lg min-h-[300px]">
-                      <h3 className="font-bold text-blue-500 mb-4 flex items-center gap-2"><AlertCircle className="w-4 h-4"/> IN PROGRESS</h3>
-                      <div className="space-y-3">
-                         {data.tasks.filter((t: Task) => t.status === 'IN_PROGRESS' && (filterDiv === 'ALL' || t.division === filterDiv)).map((t: Task) => (
-                              <TaskCard key={t.id} task={t} onNext={() => handleStatusClick(t)} />
-                          ))}
-                      </div>
-                  </div>
-                  {/* KOLOM DONE */}
-                  <div className="bg-green-500/5 p-4 rounded-lg min-h-[300px]">
-                      <h3 className="font-bold text-green-600 mb-4 flex items-center gap-2"><CheckCircle2 className="w-4 h-4"/> DONE</h3>
-                      <div className="space-y-3">
-                          {data.tasks.filter((t: Task) => t.status === 'DONE' && (filterDiv === 'ALL' || t.division === filterDiv)).map((t: Task) => (
-                              <TaskCard key={t.id} task={t} onNext={() => {}} />
-                          ))}
-                      </div>
-                  </div>
-              </div>
+              </DragDropContext>
           </TabsContent>
 
-          {/* --- TAB 2: FILE REPOSITORY (PENGGANTI DRIVE) --- */}
+          {/* --- TAB 2: FILE REPOSITORY --- */}
           <TabsContent value="files">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <Card className="md:col-span-2">
@@ -236,10 +309,10 @@ export default function WorkspacePage() {
                       <CardHeader><CardTitle>Upload Dokumen</CardTitle></CardHeader>
                       <CardContent>
                           <form onSubmit={handleUpload} className="space-y-4">
-                              <div className="border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center text-center">
+                              <div className="border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center text-center hover:bg-accent/50 transition-colors">
                                   <Upload className="w-8 h-8 text-muted-foreground mb-2" />
                                   <p className="text-xs text-muted-foreground mb-4">Drag file atau klik untuk upload</p>
-                                  <Input type="file" name="file" required className="w-full text-xs" />
+                                  <Input type="file" name="file" required className="w-full text-xs cursor-pointer" />
                               </div>
                               <Button type="submit" className="w-full">Upload ke Arsip</Button>
                           </form>
@@ -248,7 +321,7 @@ export default function WorkspacePage() {
               </div>
           </TabsContent>
 
-          {/* --- TAB 3: RAPOR KINERJA (LINK KE SKEMA HONOR) --- */}
+          {/* --- TAB 3: RAPOR KINERJA --- */}
           <TabsContent value="performance">
               <Card className="bg-gradient-to-r from-purple-900/10 to-background border-purple-800">
                   <CardContent className="p-8 text-center space-y-4">
@@ -294,6 +367,8 @@ export default function WorkspacePage() {
                                     <SelectItem value="BUSINESS">BUSINESS</SelectItem>
                                     <SelectItem value="OPS">OPS</SelectItem>
                                     <SelectItem value="MATCH">MATCH</SelectItem>
+                                    <SelectItem value="IT">IT</SelectItem>
+                                    <SelectItem value="LEGAL">LEGAL</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -360,26 +435,32 @@ export default function WorkspacePage() {
   );
 }
 
-// Sub-component untuk Kartu Tugas
-function TaskCard({ task, onNext }: { task: Task, onNext: () => void }) {
-    const priorityColor = {
-        HIGH: "border-red-500",
-        MEDIUM: "border-yellow-500",
-        LOW: "border-transparent"
-    };
+// --- HELPER FUNCTIONS FOR STYLING ---
 
-    return (
-        <div className={`bg-card p-3 rounded-lg border-l-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer ${priorityColor[task.priority]}`} onClick={onNext}>
-            <div className="flex justify-between items-start mb-2">
-                <Badge variant="outline" className="text-[10px]">{task.division}</Badge>
-            </div>
-            <h4 className="font-bold text-sm mb-1">{task.title}</h4>
-            <div className="flex justify-between items-center text-xs text-muted-foreground mt-3">
-                <span className="flex items-center gap-1"><Clock className="w-3 h-3"/> {task.deadline}</span>
-                <span className="font-bold">{task.pic}</span>
-            </div>
-        </div>
-    )
+function getPriorityColor(priority: string) {
+    switch (priority) {
+        case 'HIGH': return 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/50 dark:text-red-300 dark:border-red-700';
+        case 'MEDIUM': return 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/50 dark:text-yellow-300 dark:border-yellow-700';
+        case 'LOW': return 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/50 dark:text-blue-300 dark:border-blue-700';
+        default: return 'bg-gray-100 text-gray-700 border-gray-200';
+    }
 }
 
-    
+function getDeadlineColor(deadline: string) {
+    if (!deadline) return 'text-muted-foreground';
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const dueDate = new Date(deadline);
+    const diffTime = dueDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+
+    if (diffDays < 0) return 'text-red-500 font-bold'; // Overdue
+    if (diffDays <= 2) return 'text-orange-500 font-medium'; // Near
+    return 'text-muted-foreground';
+}
+
+function formatDate(dateStr: string) {
+    if(!dateStr) return '-';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+}
