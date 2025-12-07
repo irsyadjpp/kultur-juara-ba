@@ -143,12 +143,12 @@ export default function AssessmentPage() {
           </div>
         </div>
         <div className={`flex items-center gap-4 px-4 py-1.5 rounded-lg shadow-sm border ${finalCalc.color}`}>
-          <div className="flex gap-2 text-xs font-bold opacity-90">
+          <div className="flex items-baseline gap-2 text-sm font-bold opacity-90">
             <span>A: {finalCalc.scoreA * 2}</span>
             <span>+</span>
             <span>B: {finalCalc.scoreB}</span>
             <span>=</span>
-            <span className="text-lg">{finalCalc.total}</span>
+            <span className="text-base">{finalCalc.total}</span>
           </div>
           <div className="h-4 w-[1px] bg-white/40"></div>
           <div className="font-black text-sm uppercase">{finalCalc.level}</div>
@@ -176,10 +176,10 @@ export default function AssessmentPage() {
                 <div className="flex justify-center mb-6">
                     <div className="inline-flex bg-background p-1 rounded-lg border shadow-sm">
                         <button onClick={() => setManualStatus('VALID')} className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${manualStatus === 'VALID' ? 'bg-primary text-white' : 'text-muted-foreground hover:bg-secondary'}`}>
-                            Video VALID
+                            VALID
                         </button>
                         <button onClick={() => setManualStatus('INVALID')} className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${manualStatus === 'INVALID' ? 'bg-destructive text-white' : 'text-muted-foreground hover:bg-secondary'}`}>
-                            Video INVALID
+                            INVALID
                         </button>
                     </div>
                 </div>
