@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -34,7 +35,7 @@ export default function AssessmentPage() {
   // UI State
   const [activeTab, setActiveTab] = useState("visual");
   const [showCheatSheet, setShowCheatSheet] = useState(false);
-  const [videoStatus, setVideoStatus] = useState<'VALID' | 'INVALID'>('VALID');
+  const [manualStatus, setManualStatus] = useState<'VALID' | 'INVALID'>('VALID');
 
   // Scoring State
   const [scores, setScores] = useState({
@@ -87,19 +88,19 @@ export default function AssessmentPage() {
         else tier = "Tier 1 (Prime)";
     }
 
-    if (videoStatus === 'INVALID') {
+    if (manualStatus === 'INVALID') {
         level = "REJECTED";
         tier = "Dibatalkan Manual (Invalid)";
         color = "bg-red-600 text-white border-red-800";
     }
 
     setFinalCalc({ scoreA: totalA, scoreB: totalB, total: finalScore, level, tier, color });
-  }, [scores, skills, videoStatus]);
+  }, [scores, skills, manualStatus]);
 
   const handleSubmit = async () => {
       if (!player) return;
-      if (videoStatus === 'INVALID' && !notes) {
-          return toast({ title: "Isi Catatan", description: "Jelaskan alasan video invalid.", variant: "destructive" });
+      if (manualStatus === 'INVALID' && !notes) {
+          return toast({ title: "Isi Catatan", description: "Jelaskan kenapa video dinyatakan invalid.", variant: "destructive" });
       }
       await submitVerificationResult(player.id, { 
           ...finalCalc, 
@@ -110,23 +111,22 @@ export default function AssessmentPage() {
       router.push('/admin/tpf');
   };
 
+  const isFormDisabled = finalCalc.level === 'REJECTED';
+
   if (loading) return <div className="flex h-full items-center justify-center bg-background"><Loader2 className="w-8 h-8 animate-spin"/></div>;
   if (!player) return <div className="flex h-full items-center justify-center text-red-500">Player Not Found</div>;
   
-  const isFormDisabled = videoStatus === 'INVALID';
-
   return (
     <div className="space-y-4">
-        {/* --- HEADER --- */}
-        <div className="bg-card border rounded-lg px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-                <Button variant="ghost" size="icon" onClick={() => router.back()} className="h-8 w-8">
-                    <ArrowLeft className="w-5 h-5" />
+                <Button variant="outline" size="icon" onClick={() => router.back()} className="h-8 w-8">
+                    <ArrowLeft className="w-4 h-4" />
                 </Button>
                 <div>
-                     <h2 className="text-xl font-bold font-headline text-foreground">
+                     <h1 className="text-xl font-bold font-headline text-foreground">
                         {player.name}
-                    </h2>
+                    </h1>
                     <p className="text-sm text-muted-foreground -mt-1">{player.team} | <span className="font-semibold text-primary">{player.category} (Klaim)</span></p>
                 </div>
             </div>
@@ -143,9 +143,7 @@ export default function AssessmentPage() {
             </div>
         </div>
 
-        {/* --- VIDEO PLAYER & FORM --- */}
         <div className="flex flex-col space-y-4">
-            {/* 1. VIDEO PLAYER (STICKY) */}
             <div className="sticky top-[76px] z-10">
                 <div className="shrink-0 bg-black w-full relative group rounded-lg overflow-hidden border shadow-lg" style={{ height: '45vh' }}>
                     <iframe src={player.videoUrl} className="w-full h-full" allowFullScreen />
@@ -173,20 +171,19 @@ export default function AssessmentPage() {
                 </div>
             </div>
 
-            {/* 2. SCROLLABLE FORM */}
             <div className="flex-1 overflow-auto bg-card border rounded-lg p-6 space-y-8">
                  <div className="flex justify-center mb-6">
-                    <div className="inline-flex bg-white p-1 rounded-lg border shadow-sm">
-                        <button onClick={() => setVideoStatus('VALID')} className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${videoStatus === 'VALID' ? 'bg-green-600 text-white' : 'text-slate-500 hover:text-slate-900'}`}>
+                    <div className="inline-flex bg-background p-1 rounded-lg border shadow-sm">
+                        <button onClick={() => setManualStatus('VALID')} className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${manualStatus === 'VALID' ? 'bg-green-600 text-white' : 'text-slate-500 hover:text-slate-900'}`}>
                             Video VALID
                         </button>
-                        <button onClick={() => setVideoStatus('INVALID')} className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${videoStatus === 'INVALID' ? 'bg-red-600 text-white' : 'text-slate-500 hover:text-red-600'}`}>
+                        <button onClick={() => setManualStatus('INVALID')} className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${manualStatus === 'INVALID' ? 'bg-red-600 text-white' : 'text-slate-500 hover:text-red-600'}`}>
                             Set INVALID
                         </button>
                     </div>
                 </div>
                 
-                <div className={`transition-opacity ${isFormDisabled ? 'opacity-30 pointer-events-none' : 'opacity-100'}`}>
+                <div className={`transition-opacity ${isFormDisabled ? 'opacity-40 pointer-events-none' : 'opacity-100'}`}>
                     <Tabs value={activeTab} onValueChange={setActiveTab}>
                         <div className="flex justify-between items-center">
                             <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
@@ -207,11 +204,11 @@ export default function AssessmentPage() {
                             </div>
                         </TabsContent>
                         <TabsContent value="bonus" className="mt-6 space-y-6">
-                            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-900 flex gap-2"><AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" /><span>Centang <strong>hanya jika</strong> teknik terlihat jelas & sukses minimal 1x.</span></div>
+                            <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded text-sm text-yellow-300 flex gap-2"><AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" /><span>Centang <strong>hanya jika</strong> teknik terlihat jelas & sukses minimal 1x.</span></div>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <SkillGroup disabled={isFormDisabled} title="A. Serangan" icon={<Zap className="w-4 h-4 text-red-600"/>} items={[ {id: 'jumpingSmash', l: 'Jumping Smash'}, {id: 'stickSmash', l: 'Stick Smash'}, {id: 'backhandSmash', l: 'Backhand Smash (+4)'}, {id: 'netKill', l: 'Net Kill'}, {id: 'flickServe', l: 'Flick Serve'} ]} state={skills} setState={setSkills} />
-                                <SkillGroup disabled={isFormDisabled} title="B. Kontrol" icon={<Shield className="w-4 h-4 text-blue-600"/>} items={[ {id: 'spinningNet', l: 'Spinning Net'}, {id: 'crossNet', l: 'Cross Net'}, {id: 'backhandDrop', l: 'Backhand Drop'}, {id: 'backhandClear', l: 'Backhand Clear'}, {id: 'crossDefense', l: 'Cross Defense'} ]} state={skills} setState={setSkills} />
-                                <SkillGroup disabled={isFormDisabled} title="C. IQ & Refleks" icon={<BrainCircuit className="w-4 h-4 text-purple-600"/>} items={[ {id: 'splitStep', l: 'Split Step (+4)'}, {id: 'divingDefense', l: 'Diving Defense'}, {id: 'deception', l: 'Deception / Hold (+4)'}, {id: 'intercept', l: 'Intercept'}, {id: 'judgement', l: 'Watch Line'} ]} state={skills} setState={setSkills} />
+                                <SkillGroup disabled={isFormDisabled} title="A. Serangan" icon={<Zap className="w-4 h-4 text-red-400"/>} items={[ {id: 'jumpingSmash', l: 'Jumping Smash'}, {id: 'stickSmash', l: 'Stick Smash'}, {id: 'backhandSmash', l: 'Backhand Smash (+4)'}, {id: 'netKill', l: 'Net Kill'}, {id: 'flickServe', l: 'Flick Serve'} ]} state={skills} setState={setSkills} />
+                                <SkillGroup disabled={isFormDisabled} title="B. Kontrol" icon={<Shield className="w-4 h-4 text-blue-400"/>} items={[ {id: 'spinningNet', l: 'Spinning Net'}, {id: 'crossNet', l: 'Cross Net'}, {id: 'backhandDrop', l: 'Backhand Drop'}, {id: 'backhandClear', l: 'Backhand Clear'}, {id: 'crossDefense', l: 'Cross Defense'} ]} state={skills} setState={setSkills} />
+                                <SkillGroup disabled={isFormDisabled} title="C. IQ & Refleks" icon={<BrainCircuit className="w-4 h-4 text-purple-400"/>} items={[ {id: 'splitStep', l: 'Split Step (+4)'}, {id: 'divingDefense', l: 'Diving Defense'}, {id: 'deception', l: 'Deception / Hold (+4)'}, {id: 'intercept', l: 'Intercept'}, {id: 'judgement', l: 'Watch Line'} ]} state={skills} setState={setSkills} />
                             </div>
                         </TabsContent>
                     </Tabs>
@@ -219,11 +216,11 @@ export default function AssessmentPage() {
 
                 <div className="pt-6 border-t space-y-4">
                     <div className="space-y-2">
-                        <Label className="text-slate-900 font-bold">Catatan Verifikator {videoStatus === 'INVALID' && <span className="text-red-600">*</span>}</Label>
-                        <Textarea placeholder={videoStatus === 'INVALID' ? "WAJIB ISI ALASAN..." : "Opsional. Contoh: 'Backhand smash di menit 02:15 sangat tajam.'"} value={notes} onChange={e => setNotes(e.target.value)} className="h-20 text-sm" />
+                        <Label className="text-foreground font-bold">Catatan Verifikator {manualStatus === 'INVALID' && <span className="text-red-500">*</span>}</Label>
+                        <Textarea placeholder={manualStatus === 'INVALID' ? "WAJIB ISI ALASAN..." : "Opsional. Contoh: 'Backhand smash di menit 02:15 sangat tajam.'"} value={notes} onChange={e => setNotes(e.target.value)} className="h-20 text-sm" />
                     </div>
-                    <Button size="lg" className={`w-full text-lg font-bold h-14 shadow-lg transition-all ${finalCalc.level === 'REJECTED' ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-primary hover:bg-primary/90'}`} onClick={handleSubmit}>
-                        {finalCalc.level === 'REJECTED' ? <><XCircle className="w-6 h-6 mr-2" /> TOLAK (INVALID)</> : <><CheckCircle2 className="w-6 h-6 mr-2" /> TETAPKAN: {finalCalc.level}</>}
+                    <Button size="lg" className={`w-full text-lg font-bold h-14 shadow-lg transition-all ${isFormDisabled ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-primary hover:bg-primary/90'}`} onClick={handleSubmit}>
+                        {isFormDisabled ? <><XCircle className="w-6 h-6 mr-2" /> TOLAK (INVALID)</> : <><CheckCircle2 className="w-6 h-6 mr-2" /> TETAPKAN: {finalCalc.level}</>}
                     </Button>
                 </div>
             </div>
@@ -232,20 +229,20 @@ export default function AssessmentPage() {
   );
 }
 
-// SUB COMPONENTS (FIXED CONTRAST)
+// SUB COMPONENTS
 function ScoreSlider({ label, desc, val, setVal, disabled }: any) {
     return (
-        <div className={`bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4 transition-all ${disabled ? 'opacity-50' : 'hover:shadow-md hover:border-slate-300'}`}>
+        <div className={`bg-card p-5 rounded-xl border space-y-4 transition-all ${disabled ? 'opacity-50' : 'hover:shadow-md hover:border-primary/30'}`}>
             <div className="flex justify-between items-center">
-                <Label className="text-base font-bold text-slate-900">{label}</Label>
-                <Badge variant="outline" className="text-lg font-mono w-12 h-12 flex items-center justify-center bg-slate-100 text-slate-900 border-slate-300 rounded-lg shadow-inner">
+                <Label className="text-base font-bold text-foreground">{label}</Label>
+                <Badge variant="outline" className="text-lg font-mono w-12 h-12 flex items-center justify-center bg-background text-foreground rounded-lg">
                     {val}
                 </Badge>
             </div>
-            <p className="text-sm text-slate-600 leading-relaxed font-medium">{desc}</p>
+            <p className="text-sm text-muted-foreground leading-relaxed font-medium h-10">{desc}</p>
             <Slider value={[val]} min={1} max={5} step={1} onValueChange={(v) => setVal(v[0])} className="py-2" disabled={disabled} />
-            <div className="flex justify-between text-xs font-bold text-slate-400 uppercase tracking-wider px-1">
-                <span>1. Buruk</span><span>3. Cukup</span><span>5. Sempurna</span>
+            <div className="flex justify-between text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">
+                <span>Buruk</span><span>Cukup</span><span>Sempurna</span>
             </div>
         </div>
     )
@@ -253,24 +250,24 @@ function ScoreSlider({ label, desc, val, setVal, disabled }: any) {
 
 function SkillGroup({ title, icon, items, state, setState, disabled }: any) {
     return (
-        <div className={`bg-white p-6 rounded-xl border border-slate-200 shadow-sm transition-all ${disabled ? 'opacity-50' : 'hover:shadow-md'}`}>
-            <h4 className="font-bold text-lg mb-4 flex items-center gap-3 text-slate-900 border-b border-slate-100 pb-3">
+        <div className={`bg-card p-6 rounded-xl border shadow-sm transition-all ${disabled ? 'opacity-50' : 'hover:shadow-md'}`}>
+            <h4 className="font-bold text-lg mb-4 flex items-center gap-3 text-foreground border-b pb-3">
                 {icon} {title}
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {items.map((i: any) => (
                     <div key={i.id} 
-                        className={`flex items-start space-x-3 p-3 rounded-lg border transition-all ${state[i.id] ? 'bg-primary/5 border-primary/30' : `bg-slate-50 border-transparent ${!disabled && 'hover:bg-slate-100 cursor-pointer'}`}`}
+                        className={`flex items-start space-x-3 p-3 rounded-lg border transition-all ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} ${state[i.id] ? 'bg-primary/5 border-primary/30' : `bg-background border-transparent ${!disabled && 'hover:bg-secondary'}`}`}
                         onClick={() => !disabled && setState({...state, [i.id]: !state[i.id]})}
                     >
                         <Checkbox 
                             id={i.id} 
                             checked={state[i.id] || false}
                             onCheckedChange={(c) => !disabled && setState({...state, [i.id]: !!c})} 
-                            className="mt-0.5 border-slate-400 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                            className="mt-0.5 border-muted-foreground data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                             disabled={disabled}
                         />
-                        <label className={`text-sm font-semibold select-none leading-tight text-slate-700 ${!disabled && 'cursor-pointer hover:text-slate-900'} transition-colors pt-0.5`}>
+                        <label className={`text-sm font-semibold select-none leading-tight text-foreground ${!disabled && 'cursor-pointer'}`}>
                             {i.l}
                         </label>
                     </div>
@@ -283,7 +280,7 @@ function SkillGroup({ title, icon, items, state, setState, disabled }: any) {
 function CheatItem({ title, bad, good }: any) {
     return (
         <div className="bg-zinc-800/80 p-3 rounded-lg border border-zinc-700 hover:bg-zinc-800 transition-colors">
-            <div className="font-bold text-blue-400 mb-1.5 text-xs uppercase tracking-wide">{title}</div>
+            <div className="font-bold text-blue-400 mb-1.5 text-xs uppercase tracking-wide">{title}</div >
             <div className="grid grid-cols-1 gap-1.5 text-[11px] text-zinc-300">
                 <div className="flex gap-2 items-start"><span className="text-red-500 font-bold shrink-0">❌</span> <span>{bad}</span></div>
                 <div className="flex gap-2 items-start"><span className="text-green-500 font-bold shrink-0">✅</span> <span>{good}</span></div>
@@ -291,3 +288,5 @@ function CheatItem({ title, bad, good }: any) {
         </div>
     )
 }
+
+    
