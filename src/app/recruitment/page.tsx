@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -145,8 +146,8 @@ export default function RecruitmentPage() {
                                 <User className="w-5 h-5 text-primary"/> Biodata Profesional
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-6 space-y-5">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <CardContent className="p-6 space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <FormField control={form.control} name="fullName" render={({ field }) => (
                                     <FormItem><FormLabel>Nama Lengkap (Sesuai KTP)</FormLabel><FormControl><Input {...field} className="rounded-md h-11" /></FormControl><FormMessage /></FormItem>
                                 )} />
@@ -154,7 +155,7 @@ export default function RecruitmentPage() {
                                     <FormItem><FormLabel>Nama Panggilan</FormLabel><FormControl><Input {...field} className="rounded-md h-11" /></FormControl><FormMessage /></FormItem>
                                 )} />
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                  <FormField control={form.control} name="dob" render={({ field }) => (
                                     <FormItem><FormLabel>Tanggal Lahir</FormLabel><FormControl><Input type="date" {...field} className="rounded-md h-11" /></FormControl><FormMessage /></FormItem>
                                 )} />
@@ -172,7 +173,7 @@ export default function RecruitmentPage() {
                                     </FormItem>
                                 )} />
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <FormField control={form.control} name="whatsapp" render={({ field }) => (
                                     <FormItem><FormLabel>WhatsApp</FormLabel><FormControl><Input type="tel" {...field} className="rounded-md h-11" /></FormControl><FormMessage /></FormItem>
                                 )} />
@@ -193,8 +194,8 @@ export default function RecruitmentPage() {
                                 <BrainCircuit className="w-5 h-5 text-primary"/> Kompetensi
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-6 space-y-5">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <CardContent className="p-6 space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <FormField control={form.control} name="education" render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Pendidikan Terakhir</FormLabel>
@@ -276,7 +277,7 @@ export default function RecruitmentPage() {
                         <CardHeader className="p-6 pb-2">
                              <CardTitle className="font-headline text-lg uppercase">Plotting Divisi</CardTitle>
                         </CardHeader>
-                        <CardContent className="p-6 space-y-5">
+                        <CardContent className="p-6 space-y-6">
                             <FormField control={form.control} name="division1" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-primary font-bold">Pilihan Utama</FormLabel>
@@ -323,7 +324,7 @@ export default function RecruitmentPage() {
                         <CardHeader className="p-6 pb-2 border-b border-white/10">
                             <CardTitle className="font-headline text-lg uppercase flex items-center gap-2"><Calendar className="w-5 h-5"/> Komitmen</CardTitle>
                         </CardHeader>
-                        <CardContent className="p-6 space-y-5">
+                        <CardContent className="p-6 space-y-6">
                              <FormField control={form.control} name="availability" render={() => (
                                 <FormItem>
                                     <FormLabel className="text-gray-300">Jadwal Bertugas (Wajib)</FormLabel>
