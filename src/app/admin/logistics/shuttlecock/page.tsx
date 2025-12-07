@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -7,9 +8,18 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Package, ArrowDown, ArrowUp, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 
 // MOCK DATA STOK
 const INITIAL_STOCK = 200; // Slop
+
+// 1. Ambil data pertandingan aktif (Mock dulu, nanti fetch dari DB Match Control)
+const ACTIVE_MATCHES = [
+  { id: "M05", court: "2", players: "Kevin/Marcus vs Hendra/Ahsan" },
+  { id: "M06", court: "1", players: "Ginting vs Jonatan" },
+];
+
 
 export default function ShuttlecockControlPage() {
   const { toast } = useToast();
@@ -20,6 +30,9 @@ export default function ShuttlecockControlPage() {
   const [req, setReq] = useState({ court: "", matchId: "", qty: 1, type: "OUT" });
 
   const handleTransaction = () => {
+      if(!req.matchId) {
+        return toast({ title: "Pilih Pertandingan!", variant: "destructive" });
+      }
       if (req.type === 'OUT' && currentStock < req.qty) {
           return toast({ title: "Stok Habis!", variant: "destructive" });
       }
@@ -53,8 +66,23 @@ export default function ShuttlecockControlPage() {
                <CardHeader><CardTitle>Distribusi Lapangan</CardTitle></CardHeader>
                <CardContent className="space-y-4">
                    <div className="grid grid-cols-2 gap-4">
-                       <Input placeholder="No. Court" value={req.court} onChange={e => setReq({...req, court: e.target.value})} />
-                       <Input placeholder="Match ID" value={req.matchId} onChange={e => setReq({...req, matchId: e.target.value})} />
+                        <Select 
+                            onValueChange={(val) => {
+                                const match = ACTIVE_MATCHES.find(m => m.id === val);
+                                setReq({ ...req, matchId: val, court: match?.court || "" })
+                            }}
+                        >
+                            <SelectTrigger className="col-span-2">
+                                <SelectValue placeholder="Pilih Pertandingan Aktif" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {ACTIVE_MATCHES.map(m => (
+                                <SelectItem key={m.id} value={m.id}>
+                                    {m.id} - Court {m.court} ({m.players})
+                                </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                    </div>
                    <div className="flex gap-2 items-center">
                        <Button variant="outline" onClick={() => setReq({...req, qty: Math.max(1, req.qty - 1)})}>-</Button>
