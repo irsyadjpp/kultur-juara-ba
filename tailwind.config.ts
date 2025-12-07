@@ -139,6 +139,39 @@ export default {
             '30%, 50%, 70%, 90%': { transform: 'scale(1.1) rotate(3deg)' },
             '40%, 60%, 80%': { transform: 'scale(1.1) rotate(-3deg)' },
             '100%': { transform: 'scale(1) rotate(0)' },
+        },
+        'rally-lob': {
+          '0%': { 
+            transform: 'translate(-10vw, 10vh) rotate(-45deg)', 
+            opacity: '0',
+            animationTimingFunction: 'ease-out'
+          },
+          '10%': { opacity: '1' },
+          '50%': { 
+            transform: 'translate(40vw, -15vh) rotate(45deg)', // Titik tertinggi (Apex)
+            animationTimingFunction: 'ease-in'
+          },
+          '100%': { 
+            transform: 'translate(90vw, 20vh) rotate(135deg)', 
+            opacity: '0' 
+          },
+        },
+        'rally-smash': {
+          '0%': { 
+            transform: 'translate(80vw, -20vh) rotate(-135deg)', 
+            opacity: '0',
+            animationTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' // Start cepat
+          },
+          '10%': { opacity: '1' },
+          '100%': { 
+            transform: 'translate(-20vw, 50vh) rotate(-45deg)', 
+            opacity: '0' 
+          },
+        },
+        'shake-impact': {
+          '0%, 100%': { transform: 'translate(0, 0)' },
+          '10%, 30%, 50%, 70%, 90%': { transform: 'translate(-2px, 1px)' },
+          '20%, 40%, 60%, 80%': { transform: 'translate(2px, -1px)' },
         }
       },
       animation: {
@@ -152,6 +185,9 @@ export default {
         'shuttle-fly': 'shuttle-fly 1.5s ease-out forwards',
         'fade-in': 'fade-in 0.3s ease-in-out',
         'hover-tada': 'hover-tada 1s ease-in-out',
+        'rally-lob': 'rally-lob 4s infinite', // Durasi servis 4 detik
+        'rally-smash': 'rally-smash 3s infinite', // Durasi smash 3 detik (lebih cepat visualnya)
+        'shake-impact': 'shake-impact 0.5s ease-in-out',
       },
     },
   },
