@@ -6,6 +6,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 export const metadata: Metadata = {
   title: 'Bandung Community Championship 2026',
   description: 'BANDUNG COMMUNITY CHAMPIONSHIP 2026: Integritas, Solidaritas, dan Sportivitas.',
+  manifest: "/manifest.json",
+  themeColor: "#9e1d24",
 };
 
 export default function RootLayout({

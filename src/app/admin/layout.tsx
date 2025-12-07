@@ -40,6 +40,7 @@ const getMenusByRole = (role: string) => {
       title: "DIRECTOR'S OFFICE",
       roles: ['DIRECTOR'],
       items: [
+        { name: "Live Monitor", href: "/admin/director/monitor", icon: Activity, roles: ['DIRECTOR'] },
         { name: "Master Roster Panitia", href: "/admin/director/roster", icon: UserPlus, roles: ['DIRECTOR'] },
         { name: "Struktur & Penugasan", href: "/admin/director/committee", icon: UserCog, roles: ['DIRECTOR'] },
         { name: "Penugasan Digital", href: "/admin/director/assignments", icon: FileBadge, roles: ['DIRECTOR'] },
