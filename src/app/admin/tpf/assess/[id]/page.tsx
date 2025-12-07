@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -114,27 +113,30 @@ export default function AssessmentPage() {
   if (loading) return <div className="flex h-full items-center justify-center bg-background"><Loader2 className="w-8 h-8 animate-spin"/></div>;
   if (!player) return <div className="flex h-full items-center justify-center text-red-500">Player Not Found</div>;
 
+  const isFormDisabled = finalCalc.level === 'REJECTED';
+
   return (
     <div className="space-y-4">
         {/* --- HEADER --- */}
         <div className="bg-card border rounded-lg px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
                 <Button variant="ghost" size="icon" onClick={() => router.back()} className="h-8 w-8">
-                    <ArrowLeft className="w-5 h-5 text-slate-700" />
+                    <ArrowLeft className="w-5 h-5" />
                 </Button>
                 <div>
-                    <h1 className="font-bold text-slate-900 leading-none">
-                        {player.name} <span className="text-slate-400 font-normal">|</span> <span className="text-primary text-sm">{player.category} (Klaim)</span>
-                    </h1>
+                     <h2 className="text-xl font-bold font-headline text-foreground">
+                        {player.name}
+                    </h2>
+                    <p className="text-sm text-muted-foreground -mt-1">{player.team} | <span className="font-semibold text-primary">{player.category} (Klaim)</span></p>
                 </div>
             </div>
-            <div className={`flex items-center gap-3 px-4 py-1.5 rounded-md shadow-sm border ${finalCalc.color}`}>
+            <div className={`flex items-center gap-4 px-4 py-1.5 rounded-md shadow-sm border ${finalCalc.color}`}>
                 <div className="flex gap-2 text-xs font-bold opacity-90">
                     <span>A: {finalCalc.scoreA * 2}</span>
                     <span>+</span>
                     <span>B: {finalCalc.scoreB}</span>
                     <span>=</span>
-                    <span className="text-base">{finalCalc.total}</span>
+                    <span className="text-lg">{finalCalc.total}</span>
                 </div>
                 <div className="h-4 w-[1px] bg-white/40"></div>
                 <div className="font-black text-sm uppercase">{finalCalc.level}</div>
@@ -172,7 +174,7 @@ export default function AssessmentPage() {
             </div>
 
             {/* 2. SCROLLABLE FORM */}
-            <div className="flex-1 overflow-auto bg-card border rounded-lg p-6 space-y-8">
+            <div className={`flex-1 overflow-auto bg-card border rounded-lg p-6 space-y-8 transition-opacity ${isFormDisabled ? 'opacity-40 pointer-events-none' : 'opacity-100'}`}>
                 <Tabs value={activeTab} onValueChange={setActiveTab}>
                     <div className="flex justify-between items-center">
                          <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
@@ -187,21 +189,21 @@ export default function AssessmentPage() {
 
                     <TabsContent value="visual" className="mt-6 space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <ScoreSlider label="1. Biomekanik (Grip)" desc="Pegangan raket kaku (Panci) vs Luwes (Salaman)?" val={scores.grip} setVal={(v) => setScores({...scores, grip: v})} />
-                            <ScoreSlider label="2. Footwork" desc="Lari berat vs Langkah geser/jinjit?" val={scores.footwork} setVal={(v) => setScores({...scores, footwork: v})} />
-                            <ScoreSlider label="3. Backhand" desc="Panik vs Clear sampai belakang?" val={scores.backhand} setVal={(v) => setScores({...scores, backhand: v})} />
-                            <ScoreSlider label="4. Attack Power" desc="Smash melambung vs Menukik tajam?" val={scores.attack} setVal={(v) => setScores({...scores, attack: v})} />
-                            <ScoreSlider label="5. Defense" desc="Buang muka vs Tembok tenang?" val={scores.defense} setVal={(v) => setScores({...scores, defense: v})} />
-                            <ScoreSlider label="6. Game IQ" desc="Tabrakan vs Saling mengisi rotasi?" val={scores.gameIq} setVal={(v) => setScores({...scores, gameIq: v})} />
-                            <ScoreSlider label="7. Fisik" desc="Ngos-ngosan vs Stabil Explosif?" val={scores.physique} setVal={(v) => setScores({...scores, physique: v})} />
+                            <ScoreSlider disabled={isFormDisabled} label="1. Biomekanik (Grip)" desc="Pegangan raket kaku (Panci) vs Luwes (Salaman)?" val={scores.grip} setVal={(v) => setScores({...scores, grip: v})} />
+                            <ScoreSlider disabled={isFormDisabled} label="2. Footwork" desc="Lari berat vs Langkah geser/jinjit?" val={scores.footwork} setVal={(v) => setScores({...scores, footwork: v})} />
+                            <ScoreSlider disabled={isFormDisabled} label="3. Backhand" desc="Panik vs Clear sampai belakang?" val={scores.backhand} setVal={(v) => setScores({...scores, backhand: v})} />
+                            <ScoreSlider disabled={isFormDisabled} label="4. Attack Power" desc="Smash melambung vs Menukik tajam?" val={scores.attack} setVal={(v) => setScores({...scores, attack: v})} />
+                            <ScoreSlider disabled={isFormDisabled} label="5. Defense" desc="Buang muka vs Tembok tenang?" val={scores.defense} setVal={(v) => setScores({...scores, defense: v})} />
+                            <ScoreSlider disabled={isFormDisabled} label="6. Game IQ" desc="Tabrakan vs Saling mengisi rotasi?" val={scores.gameIq} setVal={(v) => setScores({...scores, gameIq: v})} />
+                            <ScoreSlider disabled={isFormDisabled} label="7. Fisik" desc="Ngos-ngosan vs Stabil Explosif?" val={scores.physique} setVal={(v) => setScores({...scores, physique: v})} />
                         </div>
                     </TabsContent>
                     <TabsContent value="bonus" className="mt-6 space-y-6">
                         <div className="p-3 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-900 flex gap-2"><AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" /><span>Centang <strong>hanya jika</strong> teknik terlihat jelas & sukses minimal 1x.</span></div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <SkillGroup title="A. Serangan" icon={<Zap className="w-4 h-4 text-red-600"/>} items={[ {id: 'jumpingSmash', l: 'Jumping Smash'}, {id: 'stickSmash', l: 'Stick Smash'}, {id: 'backhandSmash', l: 'Backhand Smash (+4)'}, {id: 'netKill', l: 'Net Kill'}, {id: 'flickServe', l: 'Flick Serve'} ]} state={skills} setState={setSkills} />
-                            <SkillGroup title="B. Kontrol" icon={<Shield className="w-4 h-4 text-blue-600"/>} items={[ {id: 'spinningNet', l: 'Spinning Net'}, {id: 'crossNet', l: 'Cross Net'}, {id: 'backhandDrop', l: 'Backhand Drop'}, {id: 'backhandClear', l: 'Backhand Clear'}, {id: 'crossDefense', l: 'Cross Defense'} ]} state={skills} setState={setSkills} />
-                            <SkillGroup title="C. IQ & Refleks" icon={<BrainCircuit className="w-4 h-4 text-purple-600"/>} items={[ {id: 'splitStep', l: 'Split Step (+4)'}, {id: 'divingDefense', l: 'Diving Defense'}, {id: 'deception', l: 'Deception / Hold (+4)'}, {id: 'intercept', l: 'Intercept'}, {id: 'judgement', l: 'Watch Line'} ]} state={skills} setState={setSkills} />
+                            <SkillGroup disabled={isFormDisabled} title="A. Serangan" icon={<Zap className="w-4 h-4 text-red-600"/>} items={[ {id: 'jumpingSmash', l: 'Jumping Smash'}, {id: 'stickSmash', l: 'Stick Smash'}, {id: 'backhandSmash', l: 'Backhand Smash (+4)'}, {id: 'netKill', l: 'Net Kill'}, {id: 'flickServe', l: 'Flick Serve'} ]} state={skills} setState={setSkills} />
+                            <SkillGroup disabled={isFormDisabled} title="B. Kontrol" icon={<Shield className="w-4 h-4 text-blue-600"/>} items={[ {id: 'spinningNet', l: 'Spinning Net'}, {id: 'crossNet', l: 'Cross Net'}, {id: 'backhandDrop', l: 'Backhand Drop'}, {id: 'backhandClear', l: 'Backhand Clear'}, {id: 'crossDefense', l: 'Cross Defense'} ]} state={skills} setState={setSkills} />
+                            <SkillGroup disabled={isFormDisabled} title="C. IQ & Refleks" icon={<BrainCircuit className="w-4 h-4 text-purple-600"/>} items={[ {id: 'splitStep', l: 'Split Step (+4)'}, {id: 'divingDefense', l: 'Diving Defense'}, {id: 'deception', l: 'Deception / Hold (+4)'}, {id: 'intercept', l: 'Intercept'}, {id: 'judgement', l: 'Watch Line'} ]} state={skills} setState={setSkills} />
                         </div>
                     </TabsContent>
                 </Tabs>
@@ -223,9 +225,9 @@ export default function AssessmentPage() {
 }
 
 // SUB COMPONENTS (FIXED CONTRAST)
-function ScoreSlider({ label, desc, val, setVal }: any) {
+function ScoreSlider({ label, desc, val, setVal, disabled }: any) {
     return (
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4 transition-all hover:shadow-md hover:border-slate-300">
+        <div className={`bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4 transition-all ${disabled ? 'opacity-50' : 'hover:shadow-md hover:border-slate-300'}`}>
             <div className="flex justify-between items-center">
                 <Label className="text-base font-bold text-slate-900">{label}</Label>
                 <Badge variant="outline" className="text-lg font-mono w-12 h-12 flex items-center justify-center bg-slate-100 text-slate-900 border-slate-300 rounded-lg shadow-inner">
@@ -233,7 +235,7 @@ function ScoreSlider({ label, desc, val, setVal }: any) {
                 </Badge>
             </div>
             <p className="text-sm text-slate-600 leading-relaxed font-medium">{desc}</p>
-            <Slider value={[val]} min={1} max={5} step={1} onValueChange={(v) => setVal(v[0])} className="py-2" />
+            <Slider value={[val]} min={1} max={5} step={1} onValueChange={(v) => setVal(v[0])} className="py-2" disabled={disabled} />
             <div className="flex justify-between text-xs font-bold text-slate-400 uppercase tracking-wider px-1">
                 <span>1. Buruk</span><span>3. Cukup</span><span>5. Sempurna</span>
             </div>
@@ -241,25 +243,26 @@ function ScoreSlider({ label, desc, val, setVal }: any) {
     )
 }
 
-function SkillGroup({ title, icon, items, state, setState }: any) {
+function SkillGroup({ title, icon, items, state, setState, disabled }: any) {
     return (
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition-all hover:shadow-md">
-            <h4 className="font-bold text-base mb-4 flex items-center gap-3 text-slate-900 border-b border-slate-100 pb-3">
+        <div className={`bg-white p-6 rounded-xl border border-slate-200 shadow-sm transition-all ${disabled ? 'opacity-50' : 'hover:shadow-md'}`}>
+            <h4 className="font-bold text-lg mb-4 flex items-center gap-3 text-slate-900 border-b border-slate-100 pb-3">
                 {icon} {title}
             </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {items.map((i: any) => (
                     <div key={i.id} 
-                        className={`flex items-start space-x-3 p-3 rounded-lg border transition-all cursor-pointer ${state[i.id] ? 'bg-primary/5 border-primary/30' : 'bg-slate-50 border-transparent hover:bg-slate-100'}`}
-                        onClick={() => setState({...state, [i.id]: !state[i.id]})}
+                        className={`flex items-start space-x-3 p-3 rounded-lg border transition-all ${state[i.id] ? 'bg-primary/5 border-primary/30' : `bg-slate-50 border-transparent ${!disabled && 'hover:bg-slate-100 cursor-pointer'}`}`}
+                        onClick={() => !disabled && setState({...state, [i.id]: !state[i.id]})}
                     >
                         <Checkbox 
                             id={i.id} 
                             checked={state[i.id] || false}
-                            onCheckedChange={(c) => setState({...state, [i.id]: !!c})} 
+                            onCheckedChange={(c) => !disabled && setState({...state, [i.id]: !!c})} 
                             className="mt-0.5 border-slate-400 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                            disabled={disabled}
                         />
-                        <label className="text-sm font-semibold cursor-pointer select-none leading-tight text-slate-700 hover:text-slate-900 pt-0.5">
+                        <label className={`text-sm font-semibold select-none leading-tight text-slate-700 ${!disabled && 'cursor-pointer hover:text-slate-900'} transition-colors pt-0.5`}>
                             {i.l}
                         </label>
                     </div>
