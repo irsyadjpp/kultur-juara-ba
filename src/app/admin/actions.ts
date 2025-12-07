@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 
 // SIMULASI DATABASE USER
 // Di production, ini diganti database query (Prisma/Supabase)
-let MOCK_USERS_DB = [
+const MOCK_USERS_DB = [
   { 
     email: process.env.DIRECTOR_EMAIL || "director@bcc.com", 
     name: "Project Director", 
@@ -17,46 +17,23 @@ let MOCK_USERS_DB = [
 export async function loginAdminGoogle() {
   // 1. Simulasi data dari Google Auth
   const googleUser = {
-    email: "new.staff@gmail.com", // Ceritanya user baru login
-    name: "Budi Calon Panitia",
+    email: "new.staff@gmail.com",
+    name: "Panitia Baru",
     avatar: "https://github.com/shadcn.png"
   };
 
-  // 2. Cek apakah user ada di DB
-  let user = MOCK_USERS_DB.find(u => u.email === googleUser.email);
-
-  // 3. Jika TIDAK ADA, buat user baru dengan status UNASSIGNED
-  if (!user) {
-    const newUser = {
-      ...googleUser,
-      role: "UNASSIGNED",
-      isProfileCompleted: false, // Belum isi biodata
-    };
-    // MOCK: Simpan ke DB
-    // MOCK_USERS_DB.push(newUser); 
-    user = newUser;
-  }
-
-  // 4. Buat Session
+  // 2. Buat Session dengan role Director tanpa validasi
   const sessionData = JSON.stringify({
-    ...user,
+    ...googleUser,
+    role: "DIRECTOR", // Langsung assign role
+    isProfileCompleted: true, // Anggap profil sudah lengkap
+    isOnboarded: true, // Anggap sudah melewati pakta integritas
     isLoggedIn: true,
   });
 
   cookies().set('bcc_admin_session', sessionData, { httpOnly: true, path: '/' });
 
-  // 5. Redirect Logic
-  // Jika profil belum lengkap -> Halaman Onboarding
-  if (!user.isProfileCompleted) {
-    // Return flag khusus supaya UI client melakukan redirect
-    return { success: true, redirectUrl: '/admin/onboarding' };
-  }
-  
-  // Jika sudah lengkap tapi belum di-assign Director -> Halaman Waiting
-  if (user.role === 'UNASSIGNED') {
-    return { success: true, redirectUrl: '/admin/waiting-room' };
-  }
-
+  // 3. Langsung Redirect ke Dashboard
   return { success: true, redirectUrl: '/admin/dashboard' };
 }
 
