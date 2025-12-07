@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -26,7 +27,7 @@ export default function SubmitReimbursementPage() {
   
   // State Form Utama
   const [applicant, setApplicant] = useState({ name: "", division: "", phone: "", date: "" });
-  const [bank, setBank] = useState({ name: "", number: "", holder: "" });
+  const [bank, setBank] = useState({ name: "Bank BJB", number: "", holder: "" });
   
   // State Items
   const [items, setItems] = useState<ReimbursementItem[]>([]);
@@ -77,7 +78,7 @@ export default function SubmitReimbursementPage() {
     // Reset form
     setItems([]);
     setApplicant({ name: "", division: "", phone: "", date: "" });
-    setBank({ name: "", number: "", holder: "" });
+    setBank({ name: "Bank BJB", number: "", holder: "" });
   };
   
   const StepIndicator = ({ number, title }: { number: number, title: string }) => (
@@ -140,7 +141,7 @@ export default function SubmitReimbursementPage() {
                     <CardTitle className="text-base">Rekening Tujuan</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <div className="space-y-1.5"><Label>Nama Bank</Label><Input placeholder="Cth: BCA / Mandiri" value={bank.name} onChange={e => setBank({...bank, name: e.target.value})} /></div>
+                    <div className="space-y-1.5"><Label>Nama Bank</Label><Input value={bank.name} readOnly className="font-bold bg-secondary/50"/></div>
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5"><Label>No. Rekening</Label><Input type="number" value={bank.number} onChange={e => setBank({...bank, number: e.target.value})} /></div>
                         <div className="space-y-1.5"><Label>Atas Nama</Label><Input value={bank.holder} onChange={e => setBank({...bank, holder: e.target.value})} /></div>
