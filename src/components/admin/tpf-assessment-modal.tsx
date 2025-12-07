@@ -11,10 +11,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { 
-  Calculator, Eye, Zap, Shield, BrainCircuit, Activity 
+  Calculator, Eye, Zap, Shield, BrainCircuit, Activity, FileWarning, CheckCircle, XCircle 
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { submitVerificationResult, type PlayerVerification } from "@/app/admin/tpf/actions";
+import { RUBRIC_GUIDELINES } from '@/lib/tpf-data';
+import { ScrollArea } from '../ui/scroll-area';
 
 // Konstanta Poin Bonus [cite: 785-801]
 const BONUS_POINTS = {
@@ -41,6 +43,7 @@ export function TpfAssessmentModal({ isOpen, onClose, player }: { isOpen: boolea
   // State Hasil
   const [notes, setNotes] = useState("");
   const [finalCalc, setFinalCalc] = useState({ scoreA: 0, scoreB: 0, total: 0, level: "", tier: "" });
+  const [isVideoValid, setIsVideoValid] = useState<boolean | null>(null);
 
   // Kalkulasi Real-time [cite: 804-807]
   useEffect(() => {
@@ -62,7 +65,10 @@ export function TpfAssessmentModal({ isOpen, onClose, player }: { isOpen: boolea
     let level = "REJECTED";
     let tier = "OVER";
 
-    if (finalScore >= 14 && finalScore <= 36) {
+    if (finalScore <= 13) {
+      level = "REJECTED";
+      tier = "BELOW STANDARD";
+    } else if (finalScore >= 14 && finalScore <= 36) {
         level = "BEGINNER";
         if (finalScore <= 24) tier = "Tier 3 (Newbie)";
         else if (finalScore <= 30) tier = "Tier 2 (Rookie)";
@@ -77,18 +83,33 @@ export function TpfAssessmentModal({ isOpen, onClose, player }: { isOpen: boolea
         if (finalScore <= 70) tier = "Tier 3 (Master)";
         else if (finalScore <= 80) tier = "Tier 2 (Savage)";
         else tier = "Tier 1 (Prime)";
+    } else { // >= 90
+        level = "REJECTED";
+        tier = "OVER-QUALIFIED";
     }
 
     setFinalCalc({ scoreA: totalA, scoreB: totalB, total: finalScore, level, tier });
   }, [scores, skills]);
 
   const handleSubmit = async () => {
+      let finalStatus;
+      if(isVideoValid === false){
+          finalStatus = 'REJECTED';
+      } else if (finalCalc.level === player.category) {
+          finalStatus = 'APPROVED';
+      } else if (finalCalc.level === 'REJECTED') {
+          finalStatus = 'REJECTED';
+      } else {
+          finalStatus = 'UPGRADE_REQUIRED';
+      }
+
       await submitVerificationResult(player.id, { 
           ...finalCalc, 
-          status: finalCalc.level === 'REJECTED' ? 'REJECTED' : 'APPROVED',
+          status: finalStatus,
           notes 
       });
-      toast({ title: "Audit Selesai", description: `${player.name} -> ${finalCalc.level}` });
+
+      toast({ title: "Audit Selesai", description: `${player.name} -> ${finalStatus === 'UPGRADE_REQUIRED' ? `Naik ke ${finalCalc.level}` : finalStatus}` });
       onClose();
   };
 
@@ -111,40 +132,61 @@ export function TpfAssessmentModal({ isOpen, onClose, player }: { isOpen: boolea
         </div>
     </div>
   );
+  
+  const isFormDisabled = isVideoValid === false;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-            <DialogTitle>Audit Teknis: {player.name}</DialogTitle>
+      <DialogContent className="max-w-6xl h-[90vh] flex flex-col p-0">
+        <DialogHeader className="p-6 pb-2">
+            <DialogTitle>Audit Teknis: {player.name} ({player.team})</DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 min-h-0 px-6 pb-6">
             
-            {/* KOLOM KIRI: VIDEO PLAYER & INDIKATOR UTAMA */}
-            <div className="space-y-6">
-                <div className="aspect-video bg-black rounded-lg flex items-center justify-center text-white">
-                    <iframe src={player.videoUrl} className="w-full h-full rounded-lg" allowFullScreen />
+            {/* --- KOLOM KIRI: VIDEO --- */}
+            <div className="flex flex-col space-y-4">
+                <div className="aspect-video bg-black rounded-lg flex items-center justify-center text-white relative">
+                    <iframe src={player.videoUrl} className="w-full h-full rounded-lg" allowFullScreen title="Player Video" />
                 </div>
+                <div className="bg-secondary/30 p-4 rounded-lg border">
+                    <h4 className="font-bold mb-2">Validasi Video</h4>
+                    <p className="text-xs text-muted-foreground mb-3">Pastikan video tidak diedit (uncut), durasi cukup, dan subjek terlihat jelas.</p>
+                     <div className="grid grid-cols-2 gap-2">
+                        <Button 
+                            variant={isVideoValid === true ? "default" : "outline"}
+                            className={isVideoValid === true ? "bg-green-600 hover:bg-green-700" : ""}
+                            onClick={() => setIsVideoValid(true)}
+                        >
+                            <CheckCircle className="w-4 h-4 mr-2"/> Valid
+                        </Button>
+                        <Button 
+                            variant={isVideoValid === false ? "destructive" : "outline"}
+                            onClick={() => setIsVideoValid(false)}
+                        >
+                            <XCircle className="w-4 h-4 mr-2"/> Tidak Valid
+                        </Button>
+                     </div>
+                </div>
+            </div>
 
-                <Tabs value={tab} onValueChange={setTab} className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="main">1. Audit Visual (A)</TabsTrigger>
-                        <TabsTrigger value="bonus">2. Skill Bonus (B)</TabsTrigger>
-                    </TabsList>
-                    
-                    <TabsContent value="main" className="space-y-4 pt-4">
-                        <ScoreRow id="grip" label="1. Biomekanik (Grip)" desc="Cek: Panci vs Salaman vs V-Grip Luwes" />
-                        <ScoreRow id="footwork" label="2. Footwork" desc="Cek: Lari berat vs Langkah geser/jinjit" />
-                        <ScoreRow id="backhand" label="3. Backhand" desc="Cek: Panik/Tanggung vs Clear sampai belakang" />
-                        <ScoreRow id="attack" label="4. Attack Power" desc="Cek: Melambung vs Menukik Tajam" />
-                        <ScoreRow id="defense" label="5. Defense" desc="Cek: Buang muka vs Tembok/Counter Drive" />
-                        <ScoreRow id="gameIq" label="6. Game IQ (Rotasi)" desc="Cek: Tabrakan vs Saling Mengisi" />
-                        <ScoreRow id="physique" label="7. Fisik" desc="Cek: Ngos-ngosan vs Stabil Explosif" />
-                    </TabsContent>
+            {/* --- KOLOM KANAN: FORM PENILAIAN --- */}
+            <div className="flex flex-col space-y-4 min-h-0">
+              <Tabs value={tab} onValueChange={setTab} className="w-full flex flex-col flex-grow min-h-0" disabled={isFormDisabled}>
+                  <TabsList className="grid w-full grid-cols-2 shrink-0">
+                      <TabsTrigger value="main">1. Audit Visual (A)</TabsTrigger>
+                      <TabsTrigger value="bonus">2. Skill Bonus (B)</TabsTrigger>
+                  </TabsList>
+                  
+                  <ScrollArea className="flex-grow mt-4 pr-4">
+                      <TabsContent value="main" className="space-y-4 pt-0">
+                          {RUBRIC_GUIDELINES.map(item => (
+                              <ScoreRow key={item.id} id={item.id as keyof typeof scores} label={item.title} desc={item.scores[2].desc} />
+                          ))}
+                      </TabsContent>
 
-                    <TabsContent value="bonus" className="space-y-6 pt-4">
-                        <div className="space-y-2">
+                      <TabsContent value="bonus" className="space-y-6 pt-0">
+                          <div className="space-y-2">
                             <h4 className="font-bold flex items-center gap-2 text-red-600"><Zap className="w-4 h-4"/> Attack (+Point)</h4>
                             <div className="grid grid-cols-2 gap-2">
                                 {[
@@ -197,60 +239,59 @@ export function TpfAssessmentModal({ isOpen, onClose, player }: { isOpen: boolea
                                 ))}
                             </div>
                         </div>
-                    </TabsContent>
-                </Tabs>
-            </div>
-
-            {/* KOLOM KANAN: KALKULATOR & KEPUTUSAN */}
-            <div className="bg-slate-50 p-6 rounded-lg border flex flex-col h-full">
-                <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><Calculator className="w-5 h-5"/> Kalkulasi Skor</h3>
+                      </TabsContent>
+                  </ScrollArea>
+              </Tabs>
                 
-                <div className="space-y-4 flex-1">
-                    <div className="flex justify-between items-center p-3 bg-white border rounded">
-                        <span>Total Skor A (x2)</span>
-                        <span className="font-mono font-bold">{finalCalc.scoreA * 2}</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-white border rounded">
-                        <span>Total Bonus B (Max 20)</span>
-                        <span className="font-mono font-bold text-green-600">+{finalCalc.scoreB}</span>
-                    </div>
-                    
-                    <div className="border-t-2 border-black my-4"></div>
-                    
-                    <div className="flex justify-between items-end">
-                        <span className="font-black text-xl">SKOR AKHIR</span>
-                        <span className="font-black text-4xl text-primary">{finalCalc.total}</span>
-                    </div>
+              {/* --- KALKULATOR & KEPUTUSAN --- */}
+              <div className="bg-card p-4 rounded-lg border flex flex-col h-full mt-auto">
+                  <h3 className="font-bold text-base mb-2 flex items-center gap-2"><Calculator className="w-4 h-4"/> Kalkulasi & Keputusan</h3>
+                  
+                  <div className="space-y-2 flex-1">
+                      <div className="flex justify-between items-center p-2 bg-secondary border rounded text-xs">
+                          <span>Skor Indikator (A x 2)</span>
+                          <span className="font-mono font-bold">{finalCalc.scoreA} x 2 = {finalCalc.scoreA * 2}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-2 bg-secondary border rounded text-xs">
+                          <span>Bonus Skill (B)</span>
+                          <span className="font-mono font-bold text-green-600">+{finalCalc.scoreB}</span>
+                      </div>
+                      
+                      <div className="flex justify-between items-end pt-2">
+                          <span className="font-bold text-sm">SKOR AKHIR</span>
+                          <span className="font-black text-2xl text-primary">{finalCalc.total}</span>
+                      </div>
 
-                    {/* HASIL OTOMATIS */}
-                    <div className={`p-4 rounded-lg text-center mt-6 border-2 ${
-                        finalCalc.level === 'BEGINNER' ? 'bg-green-100 border-green-500 text-green-800' :
-                        finalCalc.level === 'INTERMEDIATE' ? 'bg-blue-100 border-blue-500 text-blue-800' :
-                        finalCalc.level === 'ADVANCE' ? 'bg-purple-100 border-purple-500 text-purple-800' :
-                        'bg-red-100 border-red-500 text-red-800'
-                    }`}>
-                        <div className="text-xs font-bold uppercase mb-1">REKOMENDASI SISTEM:</div>
-                        <div className="text-2xl font-black">{finalCalc.level}</div>
-                        <div className="text-sm font-medium">{finalCalc.tier}</div>
-                    </div>
+                      <div className={`p-2 rounded-lg text-center mt-2 border-2 text-xs ${
+                          finalCalc.level === 'BEGINNER' ? 'bg-green-100 border-green-500 text-green-800' :
+                          finalCalc.level === 'INTERMEDIATE' ? 'bg-blue-100 border-blue-500 text-blue-800' :
+                          finalCalc.level === 'ADVANCE' ? 'bg-purple-100 border-purple-500 text-purple-800' :
+                          'bg-red-100 border-red-500 text-red-800'
+                      }`}>
+                          <div className="font-bold uppercase">Rekomendasi: {finalCalc.level}</div>
+                          <div className="font-medium">{finalCalc.tier}</div>
+                      </div>
 
-                    <div className="space-y-2 mt-6">
-                        <Label>Catatan Khusus Verifikator</Label>
-                        <Textarea 
-                            placeholder="Contoh: 'Backhand smash di menit 02:15 sangat tajam, fix Advance.'" 
-                            value={notes}
-                            onChange={(e) => setNotes(e.target.value)}
-                            className="h-24"
-                        />
-                    </div>
-                </div>
+                      <div className="space-y-1 pt-2">
+                          <Label className="text-xs">Catatan / Alasan Keputusan</Label>
+                          <Textarea 
+                              placeholder="Contoh: 'Backhand smash di menit 02:15 sangat tajam, fix Advance.'" 
+                              value={notes}
+                              onChange={(e) => setNotes(e.target.value)}
+                              className="h-16 text-xs"
+                              disabled={isVideoValid === null}
+                          />
+                      </div>
+                  </div>
 
-                <div className="mt-6 pt-4 border-t">
-                    <Button size="lg" className="w-full font-bold" onClick={handleSubmit}>
-                        SIMPAN & TETAPKAN LEVEL
-                    </Button>
-                </div>
+                  <div className="mt-4 pt-4 border-t">
+                      <Button size="lg" className="w-full font-bold" onClick={handleSubmit} disabled={isVideoValid === null}>
+                          SIMPAN & TETAPKAN LEVEL
+                      </Button>
+                  </div>
+              </div>
             </div>
+
         </div>
       </DialogContent>
     </Dialog>
