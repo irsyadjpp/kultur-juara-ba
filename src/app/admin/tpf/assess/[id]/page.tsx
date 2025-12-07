@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   ArrowLeft, Calculator, Zap, Shield, BrainCircuit, 
-  Info, CheckCircle2, XCircle, PlayCircle, BookOpen, AlertTriangle, ChevronUp, Loader2
+  Info, CheckCircle2, XCircle, PlayCircle, BookOpen, AlertTriangle, Loader2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getPlayerById, submitVerificationResult, type PlayerVerification } from "../../actions";
@@ -36,7 +36,6 @@ export default function AssessmentPage() {
 
   // UI State
   const [activeTab, setActiveTab] = useState("visual");
-  const [showCheatSheet, setShowCheatSheet] = useState(false);
   const [manualStatus, setManualStatus] = useState<'VALID' | 'INVALID'>('VALID');
 
   // Scoring State
@@ -104,7 +103,7 @@ export default function AssessmentPage() {
   const handleSubmit = async () => {
       if (!player) return;
       if (manualStatus === 'INVALID' && !notes) {
-          return toast({ title: "Isi Catatan", description: "Jelaskan alasan video invalid.", variant: "destructive" });
+          return toast({ title: "Isi Catatan", description: "Jelaskan kenapa video dinyatakan invalid.", variant: "destructive" });
       }
       await submitVerificationResult(player.id, { 
           ...finalCalc, 
@@ -129,7 +128,7 @@ export default function AssessmentPage() {
                     <ArrowLeft className="w-4 h-4" />
                 </Button>
                 <div>
-                     <h1 className="text-xl font-bold font-headline text-foreground">
+                     <h1 className="text-xl font-black font-headline text-foreground">
                         {player.name}
                     </h1>
                     <p className="text-sm text-muted-foreground -mt-1">{player.team} | <span className="font-semibold text-primary">{player.category} (Klaim)</span></p>
@@ -148,66 +147,37 @@ export default function AssessmentPage() {
             </div>
         </div>
 
-        {/* --- MAIN LAYOUT --- */}
-        <div className="flex flex-col space-y-4">
-            {/* 1. VIDEO PLAYER (STICKY TOP) */}
-            <div className="shrink-0 bg-black w-full relative group sticky top-[76px] z-10 rounded-lg overflow-hidden border shadow-lg" style={{ height: '45vh' }}>
-                <iframe src={player.videoUrl} className="w-full h-full" allowFullScreen />
-                <div className="absolute top-2 right-2 flex gap-2">
-                    <Button 
-                        size="sm" 
-                        variant="secondary"
-                        className="bg-black/50 text-white hover:bg-black/80 backdrop-blur-md border border-white/10"
-                        onClick={() => setShowCheatSheet(!showCheatSheet)}
-                    >
-                        <BookOpen className="w-4 h-4 mr-2" />
-                        {showCheatSheet ? "Tutup Panduan" : "Panduan Rubrik"}
-                    </Button>
+        {/* --- MAIN LAYOUT (SPLIT SCREEN) --- */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* KIRI: VIDEO PLAYER & STATUS */}
+            <div className="space-y-4">
+                <div className="shrink-0 bg-black w-full relative group sticky top-[76px] z-10 rounded-lg overflow-hidden border shadow-lg">
+                    <iframe src={player.videoUrl} className="w-full aspect-video" allowFullScreen />
                 </div>
-                {showCheatSheet && (
-                    <div className="absolute inset-0 bg-black/90 z-20 p-6 overflow-y-auto animate-in fade-in slide-in-from-top-2">
-                        <div className="flex justify-between items-center mb-4">
-                            <h4 className="font-bold text-blue-400 flex items-center gap-2"><Info className="w-4 h-4"/> PANDUAN LENGKAP TPF</h4>
-                            <Button size="sm" variant="ghost" className="text-white hover:bg-white/20" onClick={() => setShowCheatSheet(false)}><ChevronUp className="w-4 h-4"/></Button>
-                        </div>
-                        <div className="space-y-6">
-                           <RubricItem title="PANDUAN VISUAL RUBRIK" data={RUBRIC_GUIDELINES} />
-                           <MethodItem title="PETUNJUK TEKNIS PENILAIAN" data={ASSESSMENT_METHODS} />
-                           <ComparisonTable title="TABEL PEMBANDING (CHEAT SHEET)" data={COMPARISON_TABLE} />
-                           <RedFlagItem title="RED FLAG: TANDA SANDBAGGING" data={RED_FLAGS} />
-                        </div>
+                <div className="flex justify-center">
+                    <div className="inline-flex bg-card p-1 rounded-lg border shadow-sm">
+                        <button onClick={() => setManualStatus('VALID')} className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${manualStatus === 'VALID' ? 'bg-primary text-white' : 'text-muted-foreground hover:bg-secondary'}`}>
+                            Video VALID
+                        </button>
+                        <button onClick={() => setManualStatus('INVALID')} className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${manualStatus === 'INVALID' ? 'bg-destructive text-white' : 'text-muted-foreground hover:bg-secondary'}`}>
+                            Video INVALID
+                        </button>
                     </div>
-                )}
+                </div>
             </div>
 
-            {/* 2. FORM AREA */}
-            <div className="flex-1 overflow-auto bg-card border rounded-lg p-6 space-y-8">
-                <div className={`transition-opacity ${isFormDisabled ? 'opacity-40 pointer-events-none' : 'opacity-100'}`}>
-                    <Tabs value={activeTab} onValueChange={setActiveTab}>
-                        <div className="flex justify-between items-center">
-                            <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
-                                <TabsTrigger value="visual">I. Audit Visual (1-5)</TabsTrigger>
-                                <TabsTrigger value="bonus">II. Skill Bonus</TabsTrigger>
-                            </TabsList>
-                            {/* Tombol Validasi Manual */}
-                            <div className="flex bg-white p-1 rounded-lg border shadow-sm">
-                                <button 
-                                    onClick={() => setManualStatus('VALID')}
-                                    className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${manualStatus === 'VALID' ? 'bg-green-600 text-white' : 'text-slate-500 hover:text-green-600'}`}
-                                >
-                                    VALID
-                                </button>
-                                <button 
-                                    onClick={() => setManualStatus('INVALID')}
-                                    className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${manualStatus === 'INVALID' ? 'bg-red-600 text-white' : 'text-slate-500 hover:text-red-600'}`}
-                                >
-                                    INVALID
-                                </button>
-                            </div>
-                        </div>
+            {/* KANAN: FORM AREA (TABS) */}
+            <div className="bg-card border rounded-lg p-1">
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
+                    <TabsList className="grid w-full grid-cols-3 mx-auto max-w-md">
+                        <TabsTrigger value="visual">Audit Visual</TabsTrigger>
+                        <TabsTrigger value="bonus">Skill Bonus</TabsTrigger>
+                        <TabsTrigger value="guide"><BookOpen className="w-4 h-4 mr-2"/>Panduan</TabsTrigger>
+                    </TabsList>
 
-                        <TabsContent value="visual" className="mt-6 space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <ScrollArea className="flex-1 p-6">
+                        <TabsContent value="visual" className="mt-0 space-y-6">
+                            <div className="grid grid-cols-1 gap-6">
                                 <ScoreSlider disabled={isFormDisabled} label="1. Biomekanik (Grip)" desc="Pegangan raket kaku (Panci) vs Luwes (Salaman)?" val={scores.grip} setVal={(v) => setScores({...scores, grip: v})} />
                                 <ScoreSlider disabled={isFormDisabled} label="2. Footwork" desc="Lari berat vs Langkah geser/jinjit?" val={scores.footwork} setVal={(v) => setScores({...scores, footwork: v})} />
                                 <ScoreSlider disabled={isFormDisabled} label="3. Backhand" desc="Panik vs Clear sampai belakang?" val={scores.backhand} setVal={(v) => setScores({...scores, backhand: v})} />
@@ -217,26 +187,30 @@ export default function AssessmentPage() {
                                 <ScoreSlider disabled={isFormDisabled} label="7. Fisik" desc="Ngos-ngosan vs Stabil Explosif?" val={scores.physique} setVal={(v) => setScores({...scores, physique: v})} />
                             </div>
                         </TabsContent>
-                        <TabsContent value="bonus" className="mt-6 space-y-6">
-                            <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded text-sm text-yellow-300 flex gap-2"><AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" /><span>Centang <strong>hanya jika</strong> teknik terlihat jelas & sukses minimal 1x.</span></div>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <TabsContent value="bonus" className="mt-0 space-y-6">
+                             <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded text-sm text-yellow-300 flex gap-2"><AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" /><span>Centang <strong>hanya jika</strong> teknik terlihat jelas & sukses minimal 1x.</span></div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <SkillGroup disabled={isFormDisabled} title="A. Serangan" icon={<Zap className="w-4 h-4 text-red-400"/>} items={[ {id: 'jumpingSmash', l: 'Jumping Smash'}, {id: 'stickSmash', l: 'Stick Smash'}, {id: 'backhandSmash', l: 'Backhand Smash (+4)'}, {id: 'netKill', l: 'Net Kill'}, {id: 'flickServe', l: 'Flick Serve'} ]} state={skills} setState={setSkills} />
                                 <SkillGroup disabled={isFormDisabled} title="B. Kontrol" icon={<Shield className="w-4 h-4 text-blue-400"/>} items={[ {id: 'spinningNet', l: 'Spinning Net'}, {id: 'crossNet', l: 'Cross Net'}, {id: 'backhandDrop', l: 'Backhand Drop'}, {id: 'backhandClear', l: 'Backhand Clear'}, {id: 'crossDefense', l: 'Cross Defense'} ]} state={skills} setState={setSkills} />
                                 <SkillGroup disabled={isFormDisabled} title="C. IQ & Refleks" icon={<BrainCircuit className="w-4 h-4 text-purple-400"/>} items={[ {id: 'splitStep', l: 'Split Step (+4)'}, {id: 'divingDefense', l: 'Diving Defense'}, {id: 'deception', l: 'Deception / Hold (+4)'}, {id: 'intercept', l: 'Intercept'}, {id: 'judgement', l: 'Watch Line'} ]} state={skills} setState={setSkills} />
                             </div>
                         </TabsContent>
-                    </Tabs>
-                </div>
-
-                <div className="pt-6 border-t space-y-4">
-                    <div className="space-y-2">
-                        <Label className="text-foreground font-bold">Catatan Verifikator {manualStatus === 'INVALID' && <span className="text-red-500">*</span>}</Label>
-                        <Textarea placeholder={manualStatus === 'INVALID' ? "WAJIB ISI ALASAN..." : "Opsional. Contoh: 'Backhand smash di menit 02:15 sangat tajam.'"} value={notes} onChange={e => setNotes(e.target.value)} className="h-20 text-sm" />
+                         <TabsContent value="guide" className="mt-0 space-y-6">
+                            <div className="space-y-6 text-foreground">
+                               <RubricItem title="PANDUAN VISUAL RUBRIK" data={RUBRIC_GUIDELINES} />
+                               <MethodItem title="PETUNJUK TEKNIS PENILAIAN" data={ASSESSMENT_METHODS} />
+                               <ComparisonTable title="TABEL PEMBANDING (CHEAT SHEET)" data={COMPARISON_TABLE} />
+                               <RedFlagItem title="RED FLAG: TANDA SANDBAGGING" data={RED_FLAGS} />
+                            </div>
+                        </TabsContent>
+                    </ScrollArea>
+                     <div className="p-4 border-t space-y-3">
+                        <Textarea placeholder={manualStatus === 'INVALID' ? "WAJIB ISI ALASAN..." : "Catatan tambahan (Opsional)..."} value={notes} onChange={e => setNotes(e.target.value)} className="h-16 text-sm" />
+                        <Button size="lg" className={`w-full text-lg font-bold h-12 shadow-lg transition-all ${isFormDisabled ? 'bg-destructive' : 'bg-primary'}`} onClick={handleSubmit}>
+                            {isFormDisabled ? <><XCircle className="w-6 h-6 mr-2" /> TOLAK (INVALID)</> : <><CheckCircle2 className="w-6 h-6 mr-2" /> TETAPKAN: {finalCalc.level}</>}
+                        </Button>
                     </div>
-                    <Button size="lg" className={`w-full text-lg font-bold h-14 shadow-lg transition-all ${isFormDisabled ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-primary hover:bg-primary/90'}`} onClick={handleSubmit}>
-                        {isFormDisabled ? <><XCircle className="w-6 h-6 mr-2" /> TOLAK (INVALID)</> : <><CheckCircle2 className="w-6 h-6 mr-2" /> TETAPKAN: {finalCalc.level}</>}
-                    </Button>
-                </div>
+                </Tabs>
             </div>
         </div>
     </div>
@@ -246,42 +220,38 @@ export default function AssessmentPage() {
 // SUB COMPONENTS
 function ScoreSlider({ label, desc, val, setVal, disabled }: any) {
     return (
-        <div className={`bg-card p-5 rounded-xl border space-y-4 transition-all ${disabled ? 'opacity-50' : 'hover:shadow-md hover:border-primary/30'}`}>
+        <div className={`p-4 rounded-lg border space-y-3 transition-all ${disabled ? 'opacity-40 pointer-events-none' : 'hover:bg-secondary/20'}`}>
             <div className="flex justify-between items-center">
                 <Label className="text-base font-bold text-foreground">{label}</Label>
-                <Badge variant="outline" className="text-lg font-mono w-12 h-12 flex items-center justify-center bg-background text-foreground rounded-lg">
+                <Badge variant="outline" className="text-lg font-mono w-10 h-10 flex items-center justify-center bg-background text-foreground rounded-lg">
                     {val}
                 </Badge>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed font-medium h-10">{desc}</p>
+            <p className="text-sm text-muted-foreground h-5">{desc}</p>
             <Slider value={[val]} min={1} max={5} step={1} onValueChange={(v) => setVal(v[0])} className="py-2" disabled={disabled} />
-            <div className="flex justify-between text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">
-                <span>Buruk</span><span>Cukup</span><span>Sempurna</span>
-            </div>
         </div>
     )
 }
 
 function SkillGroup({ title, icon, items, state, setState, disabled }: any) {
     return (
-        <div className={`bg-card p-6 rounded-xl border shadow-sm transition-all ${disabled ? 'opacity-50' : 'hover:shadow-md'}`}>
-            <h4 className="font-bold text-lg mb-4 flex items-center gap-3 text-foreground border-b pb-3">
+        <div className={`p-4 rounded-lg border ${disabled ? 'opacity-40 pointer-events-none' : ''}`}>
+            <h4 className="font-bold text-base mb-3 flex items-center gap-2 text-foreground border-b pb-2">
                 {icon} {title}
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {items.map((i: any) => (
                     <div key={i.id} 
-                        className={`flex items-start space-x-3 p-3 rounded-lg border transition-all ${disabled ? 'cursor-not-allowed' : ''} ${state[i.id] ? 'bg-primary/5 border-primary/30' : `bg-background border-transparent ${!disabled && 'hover:bg-secondary'}`}`}
+                        className={`flex items-center space-x-2 p-2 rounded-md border transition-all cursor-pointer ${state[i.id] ? 'bg-primary/10 border-primary/30' : `bg-secondary/20 border-transparent ${!disabled && 'hover:bg-secondary/50'}`}`}
                         onClick={() => !disabled && setState({...state, [i.id]: !state[i.id]})}
                     >
                         <Checkbox 
                             id={i.id} 
                             checked={state[i.id] || false}
                             onCheckedChange={(c) => !disabled && setState({...state, [i.id]: !!c})} 
-                            className="mt-0.5 border-muted-foreground data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                             disabled={disabled}
                         />
-                        <label className={`text-sm font-semibold select-none leading-tight text-foreground ${!disabled && 'cursor-pointer'}`}>
+                        <label className={`text-sm font-semibold select-none leading-tight ${!disabled && 'cursor-pointer'}`}>
                             {i.l}
                         </label>
                     </div>
@@ -291,10 +261,9 @@ function SkillGroup({ title, icon, items, state, setState, disabled }: any) {
     )
 }
 
-
 const SectionWrapper = ({ title, children }: { title: string, children: React.ReactNode }) => (
   <div className="mb-6">
-    <h3 className="font-bold text-lg text-yellow-400 mb-3 border-l-4 border-yellow-400 pl-3">{title}</h3>
+    <h3 className="font-bold text-lg text-primary mb-3 border-l-4 border-primary pl-3">{title}</h3>
     {children}
   </div>
 );
@@ -303,9 +272,9 @@ const RubricItem = ({ title, data }: { title: string, data: any[] }) => (
   <SectionWrapper title={title}>
     <div className="space-y-4">
       {data.map((item, index) => (
-        <div key={index} className="p-4 bg-zinc-800 rounded-lg border border-zinc-700">
-          <p className="font-semibold text-white mb-2">{item.title}</p>
-          <ul className="space-y-1 text-xs text-zinc-400">
+        <div key={index} className="p-4 bg-secondary/20 rounded-lg border">
+          <p className="font-semibold text-foreground mb-2">{item.title}</p>
+          <ul className="space-y-1 text-xs text-muted-foreground">
             {item.scores.map((score: any, i: number) => (
               <li key={i}><strong>{score.score}:</strong> {score.desc}</li>
             ))}
@@ -320,12 +289,12 @@ const MethodItem = ({ title, data }: { title: string, data: any[] }) => (
   <SectionWrapper title={title}>
     {data.map((section, index) => (
       <div key={index} className="mb-4">
-        <h4 className="font-semibold text-base text-cyan-400 mb-2">{section.title}</h4>
+        <h4 className="font-semibold text-base text-accent-foreground mb-2">{section.title}</h4>
         <div className="space-y-3">
           {section.points.map((point: any, i: number) => (
-            <div key={i} className="p-3 bg-zinc-800 rounded-lg text-sm">
-              <p className="font-bold text-white">{point.subtitle}</p>
-              <p className="text-xs text-zinc-300">{point.desc}</p>
+            <div key={i} className="p-3 bg-secondary/20 rounded-lg text-sm">
+              <p className="font-bold text-foreground">{point.subtitle}</p>
+              <p className="text-xs text-muted-foreground">{point.desc}</p>
             </div>
           ))}
         </div>
@@ -339,18 +308,18 @@ const ComparisonTable = ({ title, data }: { title: string, data: any[] }) => (
     <div className="overflow-x-auto">
       <table className="w-full text-xs border-collapse">
         <thead>
-          <tr className="bg-zinc-800">
-            <th className="border border-zinc-600 p-2">Indikator</th>
-            <th className="border border-zinc-600 p-2">Saat Audit Video (Layar)</th>
-            <th className="border border-zinc-600 p-2">Saat di Lapangan (Mata)</th>
+          <tr className="bg-secondary/50">
+            <th className="border p-2">Indikator</th>
+            <th className="border p-2">Saat Audit Video (Layar)</th>
+            <th className="border p-2">Saat di Lapangan (Mata)</th>
           </tr>
         </thead>
         <tbody>
           {data.map((row, index) => (
-            <tr key={index}>
-              <td className="border border-zinc-700 p-2 font-bold text-white">{row.indicator}</td>
-              <td className="border border-zinc-700 p-2 text-zinc-300">{row.video_assessment}</td>
-              <td className="border border-zinc-700 p-2 text-zinc-300">{row.field_assessment}</td>
+            <tr key={index} className="odd:bg-background even:bg-secondary/20">
+              <td className="border p-2 font-bold text-foreground">{row.indicator}</td>
+              <td className="border p-2 text-muted-foreground">{row.video_assessment}</td>
+              <td className="border p-2 text-muted-foreground">{row.field_assessment}</td>
             </tr>
           ))}
         </tbody>
@@ -361,7 +330,7 @@ const ComparisonTable = ({ title, data }: { title: string, data: any[] }) => (
 
 const RedFlagItem = ({ title, data }: { title: string, data: string[] }) => (
   <SectionWrapper title={title}>
-    <ul className="space-y-2 list-disc pl-5 text-sm text-red-300">
+    <ul className="space-y-2 list-disc pl-5 text-sm text-destructive/80">
       {data.map((item, index) => (
         <li key={index}>{item}</li>
       ))}
