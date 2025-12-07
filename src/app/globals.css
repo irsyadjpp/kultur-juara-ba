@@ -98,3 +98,18 @@
     scrollbar-width: none; /* Firefox */
   }
 }
+
+@keyframes glitch-skew {
+  0% { transform: skew(0deg); }
+  20% { transform: skew(-20deg); }
+  40% { transform: skew(20deg); }
+  60% { transform: skew(-5deg); }
+  80% { transform: skew(5deg); }
+  100% { transform: skew(0deg); }
+}
+
+.animate-glitch {
+  animation: glitch-skew 3s infinite linear alternate-reverse;
+  display: inline-block;
+  text-shadow: 2px 0 #9e1d24, -2px 0 cyan;
+}
