@@ -113,3 +113,23 @@
   display: inline-block;
   text-shadow: 2px 0 #9e1d24, -2px 0 cyan;
 }
+
+@layer utilities {
+  .bg-grid-sporty {
+    /* Pola Grid Halus */
+    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(to right, rgba(158, 29, 36, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(158, 29, 36, 0.05) 1px, transparent 1px);
+    background-color: var(--background);
+    /* Supaya grid tetap diam saat di-scroll (Efek Premium) */
+    background-attachment: fixed; 
+  }
+
+  /* Support Dark Mode */
+  .dark .bg-grid-sporty {
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  }
+}

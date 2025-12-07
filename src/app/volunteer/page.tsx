@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -147,12 +146,20 @@ export default function VolunteerPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background font-body">
       <Header />
-      <main className="flex-grow py-12 px-4 md:px-8 bg-noise">
-        <div className="max-w-4xl mx-auto space-y-8">
+      
+      <main className="relative flex-grow py-12 px-4 md:px-8 bg-grid-sporty overflow-hidden">
+        
+        {/* 1. Dekorasi Glow Merah (Kiri Atas) */}
+        <div className="absolute top-0 left-[-10%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] pointer-events-none mix-blend-multiply dark:mix-blend-screen animate-pulse-slow" />
+        
+        {/* 2. Dekorasi Glow Biru/Gelap (Kanan Bawah) */}
+        <div className="absolute bottom-0 right-[-10%] w-[600px] h-[600px] bg-blue-900/10 rounded-full blur-[120px] pointer-events-none" />
+
+        <div className="relative z-10 max-w-4xl mx-auto space-y-8">
           
           {/* HEADER SECTION */}
           <div className="text-center space-y-4 mb-12 animate-fade-in-down">
-            <Badge variant="outline" className="border-primary text-primary px-4 py-1 text-sm mb-2 font-bold tracking-widest uppercase bg-primary/5">
+             <Badge variant="outline" className="border-primary text-primary px-4 py-1 text-sm mb-2 font-bold tracking-widest uppercase bg-primary/5">
               Open Recruitment Phase 1
             </Badge>
             <h1 className="text-4xl md:text-6xl font-black font-headline text-foreground tracking-tighter">
@@ -474,7 +481,7 @@ export default function VolunteerPage() {
                     {[
                         { id: "agreeData", label: "Saya menyatakan bahwa data yang diisi adalah benar, jujur, dan dapat dipertanggungjawabkan." },
                         { id: "agreeRules", label: "Saya bersedia mematuhi segala peraturan panitia (SOP) dan menjaga nama baik BCC 2026." },
-                        { id: "agreeCompetitive", label: "Saya memahami bahwa seleksi ini bersifat kompetitif dan keputusan panitia mutlak dan tidak dapat diganggu gugat." }
+                        { id: "agreeCompetitive", label: "Saya memahami seleksi ini bersifat kompetitif, keputusan panitia mutlak dan tidak dapat diganggu gugat." }
                     ].map((item) => (
                         <FormField key={item.id} control={form.control} name={item.id as any} render={({ field }) => (
                             <FormItem className="flex flex-row items-start space-x-3 space-y-0">
