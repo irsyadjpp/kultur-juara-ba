@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, type ReactNode } from 'react';
@@ -56,7 +57,7 @@ const getMenusByRole = (role: string) => {
       title: "KEUANGAN", 
       roles: ['FINANCE', 'DIRECTOR', 'BUSINESS_LEAD', 'TENANT_RELATIONS', 'BUSINESS'],
       items: [
-        { name: "Dashboard Keuangan", href: "/admin/finance", icon: LayoutDashboard, roles: ['FINANCE', 'DIRECTOR'] },
+        { name: "Dashboard Keuangan", href: "/admin/finance", icon: LayoutDashboard, roles: ['FINANCE', 'DIRECTOR'], exact: true },
         { name: "Verifikasi Pendaftaran", href: "/admin/teams", icon: Users, roles: ['FINANCE', 'DIRECTOR', 'BUSINESS_LEAD'] },
         { name: "Approval Reimbursement", href: "/admin/finance/reimbursement-approval", icon: CheckCircle, roles: ['FINANCE', 'DIRECTOR'] },
         { name: "Tagihan Sponsor", href: "/admin/finance/invoices", icon: Receipt, roles: ['FINANCE', 'DIRECTOR', 'BUSINESS_LEAD'] },
@@ -234,7 +235,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {group.title}
         </p>
         {group.items.map((menu: any) => {
-            const isActive = pathname.startsWith(menu.href);
+            const isActive = menu.exact ? pathname === menu.href : pathname.startsWith(menu.href);
             const NavLinkComponent = (
                  <Link 
                     key={menu.href} 
@@ -337,3 +338,5 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </>
   );
 }
+
+    
