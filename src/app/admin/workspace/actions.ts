@@ -55,6 +55,17 @@ export async function updateTaskStatus(taskId: string, newStatus: any) {
   return { success: true };
 }
 
+export async function createTask(data: Omit<Task, 'id' | 'status'>) {
+    await new Promise(r => setTimeout(r, 800));
+    const newTask: Task = {
+        ...data,
+        id: `T-${Date.now()}`,
+        status: 'TODO'
+    };
+    TASKS.unshift(newTask);
+    return { success: true };
+}
+
 export async function uploadResource(data: FormData) {
   await new Promise(r => setTimeout(r, 1000));
   // Simulasi upload
