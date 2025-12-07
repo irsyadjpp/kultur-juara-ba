@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -28,8 +28,10 @@ const BONUS_POINTS = {
   splitStep: 4, divingDefense: 3, deception: 4, intercept: 3, judgement: 2
 };
 
-export default function AssessmentPage({ params }: { params: { id: string } }) {
+export default function AssessmentPage() {
   const router = useRouter();
+  const params = useParams();
+  const id = params.id as string;
   const { toast } = useToast();
   const [player, setPlayer] = useState<PlayerVerification | null>(null);
   const [loading, setLoading] = useState(true);
@@ -48,11 +50,13 @@ export default function AssessmentPage({ params }: { params: { id: string } }) {
 
   // 1. Fetch Player Data
   useEffect(() => {
-    getPlayerById(params.id).then((data) => {
-        if (data) setPlayer(data);
-        setLoading(false);
-    });
-  }, [params.id]);
+    if (id) {
+        getPlayerById(id).then((data) => {
+            if (data) setPlayer(data);
+            setLoading(false);
+        });
+    }
+  }, [id]);
 
   // 2. Real-time Calculation Logic
   useEffect(() => {
