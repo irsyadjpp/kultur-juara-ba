@@ -1,17 +1,14 @@
-
 'use client';
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Printer, Download, FileSignature, CheckCircle2, UserPlus, X } from "lucide-react";
-import { SOP_TEMPLATES } from "@/lib/data/sop-templates"; // Import data SOP tadi
+import { Download, FileSignature } from "lucide-react";
+import { ROLE_DEFINITIONS } from "@/lib/data/role-definitions";
 import Image from "next/image";
 
 // Mock Data Personil (Dari Master Roster)
@@ -24,11 +21,11 @@ const STAFF_LIST = [
 ];
 
 export default function AssignmentLetterPage() {
-  const [selectedCategory, setSelectedCategory] = useState<keyof typeof SOP_TEMPLATES>("TPF");
+  const [selectedCategory, setSelectedCategory] = useState<keyof typeof ROLE_DEFINITIONS>("TPF");
   const [selectedStaff, setSelectedStaff] = useState<string[]>([]);
   const [letterNumber, setLetterNumber] = useState("002/SPT-TPF/BCC/XII/2025");
 
-  const template = SOP_TEMPLATES[selectedCategory];
+  const template = ROLE_DEFINITIONS[selectedCategory];
 
   const handleToggleStaff = (name: string) => {
     if (selectedStaff.includes(name)) {
@@ -64,7 +61,7 @@ export default function AssignmentLetterPage() {
                 <SelectItem value="TPF">Tim Pencari Fakta (TPF)</SelectItem>
                 <SelectItem value="MEDIS">Tim Medis</SelectItem>
                 <SelectItem value="KEAMANAN">Keamanan (Security)</SelectItem>
-                <SelectItem value="UMPIRE">Wasit & Perangkat</SelectItem>
+                <SelectItem value="MATCH_CONTROL">Match Control & Referee</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -111,7 +108,6 @@ export default function AssignmentLetterPage() {
       {/* --- AREA KANAN: LIVE PREVIEW SURAT --- */}
       <div className="flex-1 bg-zinc-950 relative flex items-center justify-center p-8 overflow-hidden">
         
-        {/* Background Texture */}
         <div className="absolute inset-0 bg-[url('/images/grid-pattern.png')] opacity-10 pointer-events-none"></div>
 
         {/* PAPER CONTAINER (A4 Aspect Ratio) */}
@@ -119,21 +115,18 @@ export default function AssignmentLetterPage() {
             
             {/* KOP SURAT */}
             <div className="flex items-center gap-4 border-b-4 border-double border-black pb-4 mb-6">
-                <div className="w-20 h-20 relative">
-                    {/* Ganti dengan Logo Real */}
-                    <div className="w-full h-full bg-red-600 rounded-full flex items-center justify-center text-white font-bold text-xs">
-                       <Image src="/images/logo.png" width={80} height={80} alt="Logo" />
-                    </div>
+                <div className="w-20 h-20 relative flex items-center justify-center">
+                    <Image src="/images/logo.png" width={80} height={80} alt="Logo" className="object-contain" />
                 </div>
                 <div className="flex-1 text-center uppercase">
                     <h2 className="text-lg font-bold tracking-wider">Panitia Pelaksana</h2>
                     <h1 className="text-2xl font-black font-sans tracking-tight mb-1">Bandung Community Championship (BCC) 2026</h1>
-                    <p className="text-xs font-normal normal-case">Sekretariat: GOR KONI Bandung, Jl. Jakarta No. 12 • Email: admin@bcc.com</p>
+                    <p className="text-xs font-normal normal-case">Sekretariat: GOR BBR, Jl. Komp. Buah Batu Regency • Email: admin@bccbandung.com</p>
                 </div>
             </div>
 
             {/* JUDUL SURAT */}
-            <div className="text-center mb-8">
+            <div className="text-center mb-6">
                 <h3 className="text-xl font-bold underline decoration-2 underline-offset-4">SURAT PERINTAH TUGAS</h3>
                 <p className="text-sm mt-1">Nomor: {letterNumber}</p>
             </div>
@@ -142,7 +135,7 @@ export default function AssignmentLetterPage() {
             <div className="space-y-4 mb-6">
                 <div className="flex gap-2">
                     <span className="font-bold w-24 shrink-0">DASAR</span>
-                    <span>: Surat Keputusan Project Director Nomor 001/SK/BCC/XII/2025 tanggal 8 Desember 2025 tentang Pembentukan Panitia Pelaksana.</span>
+                    <span>: Surat Keputusan Project Director Nomor 001/SK/BCC/XII/2025 tentang Pembentukan Panitia Pelaksana.</span>
                 </div>
                 <div className="flex gap-2">
                     <span className="font-bold w-24 shrink-0">MENIMBANG</span>
@@ -150,62 +143,68 @@ export default function AssignmentLetterPage() {
                 </div>
             </div>
 
-            {/* MEMBERI TUGAS */}
-            <div className="text-center font-bold my-6">MEMBERI TUGAS KEPADA:</div>
+            <div className="text-center font-bold my-4">MEMBERI TUGAS KEPADA:</div>
 
             {/* TABEL PERSONIL */}
-            <div className="mb-8">
+            <div className="mb-6">
                 <table className="w-full border-collapse border border-black text-sm">
                     <thead>
                         <tr className="bg-gray-100">
                             <th className="border border-black p-2 text-center w-10">NO</th>
                             <th className="border border-black p-2 text-left">NAMA</th>
                             <th className="border border-black p-2 text-left">JABATAN</th>
-                            <th className="border border-black p-2 text-left">KETERANGAN</th>
                         </tr>
                     </thead>
                     <tbody>
                         {selectedStaff.length === 0 && (
-                            <tr><td colSpan={4} className="border border-black p-4 text-center italic text-gray-500">Belum ada personil dipilih...</td></tr>
+                            <tr><td colSpan={3} className="border border-black p-4 text-center italic text-gray-500">Pilih personil di panel kiri...</td></tr>
                         )}
                         {selectedStaff.map((name, idx) => (
                             <tr key={idx}>
                                 <td className="border border-black p-2 text-center">{idx + 1}.</td>
                                 <td className="border border-black p-2 font-bold">{name}</td>
-                                <td className="border border-black p-2">Anggota {template.roleName}</td>
-                                <td className="border border-black p-2">-</td>
+                                <td className="border border-black p-2">Anggota {template.title}</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
 
-            {/* UNTUK (LIST TUGAS) */}
-            <div className="mb-8">
-                <div className="font-bold mb-2">UNTUK:</div>
+            <div className="font-bold mb-2">UNTUK:</div>
+
+            {/* BAGIAN 1: JOB DESC */}
+            <div className="mb-4">
+                <div className="font-bold underline mb-1">A. URAIAN TUGAS (JOB DESCRIPTION)</div>
                 <ol className="list-decimal ml-5 space-y-1 text-justify">
-                    {template.tugas.map((task, i) => (
-                        <li key={i}>{task}</li>
+                    {template.jobDescriptions.map((desc, i) => (
+                        <li key={`job-${i}`}>{desc}</li>
                     ))}
-                    <li>Melaksanakan perintah ini dengan penuh tanggung jawab dan melaporkan hasilnya kepada Project Director.</li>
                 </ol>
             </div>
 
-            {/* PENUTUP */}
-            <div className="text-justify mb-8">
-                Surat tugas ini berlaku terhitung mulai tanggal ditetapkan hingga berakhirnya kegiatan BCC 2026. Demikian Surat Perintah Tugas ini dibuat untuk dilaksanakan sebagaimana mestinya.
+            {/* BAGIAN 2: SOP */}
+            <div className="mb-6">
+                <div className="font-bold underline mb-1">B. PEDOMAN & SOP PELAKSANAAN</div>
+                <ul className="list-disc ml-5 space-y-1 text-justify">
+                    {template.sops.map((sop, i) => (
+                        <li key={`sop-${i}`}>{sop}</li>
+                    ))}
+                    <li>Melaksanakan perintah ini dengan penuh tanggung jawab dan melaporkan hasilnya kepada Project Director.</li>
+                </ul>
+            </div>
+
+            <div className="text-justify mb-8 text-xs italic">
+                *Surat tugas ini berlaku terhitung mulai tanggal ditetapkan hingga berakhirnya kegiatan BCC 2026.
             </div>
 
             {/* TANDA TANGAN */}
-            <div className="flex justify-end mt-12">
+            <div className="flex justify-end mt-8">
                 <div className="text-center w-64">
                     <p>Ditetapkan di: Bandung</p>
                     <p className="mb-4">Pada Tanggal: {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                    <p className="font-bold uppercase text-xs mb-20">Project Director,</p>
+                    <p className="font-bold uppercase text-xs mb-16">PROJECT DIRECTOR,</p>
                     
-                    {/* TTD DIGITAL */}
                     <div className="relative inline-block">
-                        {/* Simulasi Cap/Stempel */}
                         <div className="absolute -top-12 -left-8 w-24 h-24 border-4 border-red-600/50 rounded-full flex items-center justify-center rotate-[-15deg] pointer-events-none">
                             <span className="text-[10px] font-bold text-red-600/50 uppercase text-center leading-tight">Panitia<br/>BCC 2026<br/>OFFICIAL</span>
                         </div>
@@ -216,7 +215,6 @@ export default function AssignmentLetterPage() {
 
         </div>
       </div>
-
     </div>
   );
 }
