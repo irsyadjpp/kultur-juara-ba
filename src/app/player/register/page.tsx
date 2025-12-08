@@ -14,6 +14,7 @@ import { Loader2, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 export default function PlayerRegisterPage() {
   const { toast } = useToast();

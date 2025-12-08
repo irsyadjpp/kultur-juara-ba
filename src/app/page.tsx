@@ -1,5 +1,8 @@
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Users, UserPlus } from 'lucide-react';
 
 // Section Utama
 import { HeroSection } from '@/components/sections/hero';

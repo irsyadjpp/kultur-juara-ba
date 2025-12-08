@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { CalendarClock, ArrowRight, FileDown } from 'lucide-react';
+import { CalendarClock, ArrowRight, FileDown, Users, UserPlus } from 'lucide-react';
 import { Countdown } from '@/components/countdown';
 import { CourtLines } from '@/components/ui/court-lines';
 
@@ -37,7 +37,7 @@ export function HeroSection() {
       
       <div className="relative z-10 flex min-h-[90vh] items-center pt-20 md:min-h-[75vh] md:pt-0">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl">
+          <div className="max-w-4xl">
              {/* Badge Kecil */}
              <div className="flex flex-wrap gap-2 mb-6 animate-fade-in-down" style={{ animationDelay: '0.1s' }}>
                 <span className="inline-flex items-center rounded-full border border-primary/50 bg-primary/20 px-3 py-1 text-sm font-medium text-white backdrop-blur-md shadow-[0_0_15px_rgba(210,35,42,0.5)]">
@@ -56,7 +56,7 @@ export function HeroSection() {
             <h1 className="text-5xl md:text-[80px] leading-[0.9] font-black font-headline text-white mb-6 animate-fade-in-up tracking-tighter drop-shadow-2xl">
               INTEGRITAS.<br/>
               SOLIDARITAS.<br/>
-              <span className="animate-glitch">SPORTIVITAS.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-600">SPORTIVITAS.</span>
             </h1>
             
             <p className="text-lg md:text-2xl text-gray-300 max-w-2xl mb-10 font-body animate-fade-in-up leading-relaxed" style={{ animationDelay: '0.3s' }}>
@@ -64,21 +64,27 @@ export function HeroSection() {
               <span className="text-white font-semibold">13 Juni - 5 Juli 2026 | GOR KONI Bandung</span>
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
-              <Button asChild size="lg" className="font-bold text-lg h-14 px-8 rounded-lg">
-                <Link href="/manager/login">
-                  DAFTAR SEKARANG
-                  <ArrowRight className="ml-2 h-6 w-6" />
-                </Link>
-              </Button>
-              
-              <Button asChild variant="outline" size="lg" className="bg-transparent border-white/30 text-white hover:bg-white/10 font-bold text-lg h-14 px-8 rounded-lg backdrop-blur-sm">
-                <a href="/handbook-bcc-2026.pdf" target="_blank" rel="noopener noreferrer">
-                  <FileDown className="mr-2 h-6 w-6" />
-                  UNDUH HANDBOOK
-                </a>
-              </Button>
+            <div className="flex flex-col sm:flex-row gap-4 mt-8 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+               
+               {/* Tombol Utama: Manajer */}
+               <Button asChild size="lg" className="h-14 px-8 text-lg font-bold bg-white text-black hover:bg-zinc-200">
+                  <Link href="/manager/login">
+                     <Users className="mr-2 h-5 w-5"/> DAFTARKAN TIM
+                  </Link>
+               </Button>
+
+               {/* Tombol Sekunder: Atlet */}
+               <Button asChild size="lg" variant="outline" className="h-14 px-8 text-lg font-bold border-white/30 text-white hover:bg-white/10 backdrop-blur-sm">
+                  <Link href="/player/register">
+                     <UserPlus className="mr-2 h-5 w-5"/> SAYA ATLET (GABUNG)
+                  </Link>
+               </Button>
+
             </div>
+            
+            <p className="mt-4 text-sm text-zinc-400 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+               *Atlet wajib membuat akun sendiri untuk bergabung ke dalam Tim.
+            </p>
           </div>
         </div>
       </div>
