@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -19,6 +20,14 @@ export function MandateQRDialog({ isOpen, onClose, mandateData }: MandateQRDialo
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="bg-white text-black max-w-sm rounded-[32px] p-0 overflow-hidden border-none">
         
+        {/* FIX: Add a visually-hidden DialogHeader for accessibility */}
+        <DialogHeader className="sr-only">
+          <DialogTitle>Digital Mandate QR Code</DialogTitle>
+          <DialogDescription>
+            QR Code for mandate {mandateData.no}. Scan to verify.
+          </DialogDescription>
+        </DialogHeader>
+
         {/* Visual Header */}
         <div className="bg-zinc-950 p-8 text-center text-white">
             <h3 className="font-black font-headline uppercase tracking-widest text-lg">DIGITAL MANDATE</h3>
