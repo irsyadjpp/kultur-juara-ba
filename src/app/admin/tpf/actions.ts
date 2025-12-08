@@ -1,3 +1,4 @@
+
 'use server';
 
 // Tipe untuk Indikator Utama (Skor 1-5)
