@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -81,14 +82,21 @@ export default function PlayerDashboard() {
         <Card className="bg-zinc-900 border-zinc-800">
            <CardContent className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                 <div className="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center font-black text-xl">A</div>
+                 <div className="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center font-black text-xl overflow-hidden">
+                     {/* Jika ada foto, tampilkan. Jika tidak, inisial */}
+                     <img src="https://github.com/shadcn.png" alt="Avatar" className="w-full h-full object-cover" />
+                 </div>
                  <div>
                     <div className="font-bold text-white">Atlet Development</div>
                     <div className="text-xs text-zinc-500">ID: P-DEV-1234</div>
                  </div>
               </div>
-              <Button asChild variant="outline" size="sm" className="text-xs border-zinc-700">
-                 <Link href="/player/profile">Edit Profil</Link>
+              
+              {/* UPDATE DISINI: Menggunakan Link */}
+              <Button asChild variant="outline" size="sm" className="text-xs border-zinc-700 hover:bg-zinc-800 hover:text-white">
+                  <Link href="/player/profile">
+                     Edit Profil
+                  </Link>
               </Button>
            </CardContent>
         </Card>
