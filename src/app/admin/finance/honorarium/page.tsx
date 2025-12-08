@@ -112,7 +112,7 @@ export default function HonorariumPage() {
                 <div className="flex justify-between items-center mb-4">
                     <div className="flex items-center gap-2">
                         <Label className="text-sm font-bold text-foreground/80 tracking-wide uppercase">
-                            {paramId} • {title}
+                            {title}
                         </Label>
                         {/* 1. INFO TOOLTIP UNTUK PARAMETER */}
                         <Tooltip>
@@ -332,38 +332,87 @@ export default function HonorariumPage() {
         <DialogTrigger asChild><span id="guide-trigger" className="hidden"></span></DialogTrigger>
         <DialogContent className="max-w-4xl h-[85vh] flex flex-col bg-background rounded-[32px] border-none shadow-2xl p-0 overflow-hidden">
             <div className="p-8 border-b bg-muted/30"><DialogTitle className="text-3xl font-black uppercase tracking-tighter text-primary">Panduan Penilaian</DialogTitle><DialogDescription className="text-lg">Parameter P1-P16 untuk objektivitas honorarium.</DialogDescription></div>
-            <ScrollArea className="flex-grow p-8"><Accordion type="single" collapsible className="w-full space-y-2">{parameterDetails.map((param) => (<AccordionItem value={param.id} key={param.id} className="border-none bg-secondary/10 rounded-2xl px-4"><AccordionTrigger className="font-bold text-left hover:no-underline py-4 text-base">{param.id} — {param.title}</AccordionTrigger><AccordionContent className="pb-4"><p className="text-muted-foreground italic mb-4 text-sm">{param.description}</p><div className="grid grid-cols-1 md:grid-cols-2 gap-2">{param.scores.map((score, i) => (<div key={i} className="flex gap-3 items-center bg-background p-2 rounded-lg border text-sm"><div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">{i+1}</div><span className="text-foreground/80">{score}</span></div>))}</div></AccordionContent></AccordionItem>))}</Accordion></ScrollArea>
+            <ScrollArea className="flex-grow p-8"><Accordion type="single" collapsible className="w-full space-y-2">{parameterDetails.map((param) => (<AccordionItem value={param.id} key={param.id} className="border-none bg-secondary/10 rounded-2xl px-4"><AccordionTrigger className="font-bold text-left hover:no-underline py-4 text-base">{param.title}</AccordionTrigger><AccordionContent className="pb-4"><p className="text-muted-foreground italic mb-4 text-sm">{param.description}</p><div className="grid grid-cols-1 md:grid-cols-2 gap-2">{param.scores.map((score, i) => (<div key={i} className="flex gap-3 items-center bg-background p-2 rounded-lg border text-sm"><div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">{i+1}</div><span className="text-foreground/80">{score}</span></div>))}</div></AccordionContent></AccordionItem>))}</Accordion></ScrollArea>
         </DialogContent>
       </Dialog>
+      
+      {/* --- MODAL PENILAIAN (REVISI SCROLL) --- */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col bg-background rounded-[40px] border-none p-0 shadow-2xl">
-            <div className="p-8 border-b bg-muted/20 shrink-0">
+        {/* PERBAIKAN: 
+           1. h-[90vh]: Menetapkan tinggi fix agar flex-grow berfungsi.
+           2. p-0: Menghapus padding default dialog agar header/footer menempel ke tepi.
+        */}
+        <DialogContent className="max-w-4xl h-[90vh] flex flex-col bg-background rounded-[32px] border-none p-0 shadow-2xl">
+            
+            {/* HEADER (FIXED/STICKY) */}
+            <div className="p-8 border-b bg-muted/20 shrink-0 z-10">
                 <div className="flex items-center gap-4 mb-2">
-                    <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary"><Star className="w-6 h-6 fill-primary" /></div>
+                    <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+                        <Star className="w-6 h-6 fill-primary" />
+                    </div>
                     <div>
-                        <DialogTitle className="text-3xl font-black uppercase tracking-tight text-foreground">Lembar Evaluasi</DialogTitle>
-                        <DialogDescription className="text-lg">Menilai: <span className="font-bold text-primary">{selectedStaff?.name}</span></DialogDescription>
+                        <DialogTitle className="text-3xl font-black uppercase tracking-tight text-foreground">
+                            Lembar Evaluasi
+                        </DialogTitle>
+                        <DialogDescription className="text-lg">
+                            Menilai: <span className="font-bold text-primary">{selectedStaff?.name}</span>
+                        </DialogDescription>
                     </div>
                 </div>
             </div>
-            <ScrollArea className="flex-grow p-8 bg-muted/5">
-                {selectedStaff?.type === 'PANITIA' ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-                      {parameterDetails.map(p => <ScoreInput key={p.id} paramId={p.id} />)}
-                    </div>
-                ) : (
-                    <div className="p-8 rounded-[32px] bg-orange-50/50 border-2 border-orange-100 dark:bg-orange-950/20 dark:border-orange-900">
-                        <h4 className="font-black text-orange-700 dark:text-orange-400 mb-8 text-xl uppercase tracking-widest flex items-center gap-3"><BookOpen className="w-6 h-6"/> Parameter Kontributor</h4>
-                        <div className="grid gap-4">
-                            {['np1', 'np2', 'np3', 'np4'].map(id => <ScoreInput key={id} paramId={id} />)}
+            
+            {/* CONTENT AREA (SCROLLABLE) */}
+            {/* PERBAIKAN: 
+               Menggunakan ScrollArea dengan 'flex-1' agar mengisi sisa ruang antara Header & Footer.
+               Isi konten diberi padding yang cukup agar tidak terpotong scrollbar.
+            */}
+            <ScrollArea className="flex-1 bg-muted/5 w-full rounded-none">
+                <div className="p-8 pb-20"> {/* pb-20 untuk extra space di bawah */}
+                    {selectedStaff?.type === 'PANITIA' ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                          <ScoreInput paramId="P1" />
+                          <ScoreInput paramId="P2" />
+                          <ScoreInput paramId="P3" />
+                          <ScoreInput paramId="P4" />
+                          <ScoreInput paramId="P5" />
+                          <ScoreInput paramId="P6" />
+                          <ScoreInput paramId="P7" />
+                          <ScoreInput paramId="P8" />
+                          <ScoreInput paramId="P9" />
+                          <ScoreInput paramId="P10" />
+                          <ScoreInput paramId="P11" />
+                          <ScoreInput paramId="P12" />
+                          <ScoreInput paramId="P13" />
+                          <ScoreInput paramId="P14" />
+                          <ScoreInput paramId="P15" />
+                          <ScoreInput paramId="P16" />
                         </div>
-                    </div>
-                )}
+                    ) : (
+                        <div className="p-8 rounded-[32px] bg-orange-50/50 border-2 border-orange-100">
+                            <h4 className="font-black text-orange-700 mb-8 text-xl uppercase tracking-widest flex items-center gap-3">
+                                <BookOpen className="w-6 h-6"/> Parameter Kontributor
+                            </h4>
+                            <div className="grid gap-4">
+                                <ScoreInput paramId="NP1" /> {/* Pastikan ID ini ditangani di logic */}
+                                <div className="text-center text-muted-foreground p-4">
+                                    Parameter khusus kontributor (Non-Panitia).
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </ScrollArea>
-            <div className="p-6 border-t bg-background shrink-0 flex justify-end gap-4">
-                <Button variant="ghost" onClick={() => setIsModalOpen(false)} className="rounded-full px-8 font-bold h-14 text-lg hover:bg-zinc-200">Batal</Button>
-                <Button onClick={handleSave} className="rounded-full px-10 font-bold h-14 text-lg bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 transition-all active:scale-95"><Save className="w-6 h-6 mr-2" /> Simpan Penilaian</Button>
+
+            {/* FOOTER (FIXED/STICKY) */}
+            <div className="p-6 border-t bg-background shrink-0 flex justify-end gap-4 z-10 shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
+                <Button variant="ghost" onClick={() => setIsModalOpen(false)} className="rounded-full px-8 font-bold h-14 text-lg hover:bg-zinc-100 text-zinc-500">
+                    Batal
+                </Button>
+                <Button onClick={handleSave} className="rounded-full px-10 font-bold h-14 text-lg bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 transition-all active:scale-95">
+                    <Save className="w-6 h-6 mr-2" /> Simpan Penilaian
+                </Button>
             </div>
+
         </DialogContent>
       </Dialog>
     </div>
