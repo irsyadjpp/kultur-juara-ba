@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState, useEffect, type ReactNode } from 'react';
@@ -25,6 +23,8 @@ import { EmergencyButton } from '@/components/admin/emergency-button';
 import { Toaster } from "@/components/ui/toaster";
 import { DialogTitle } from '@/components/ui/dialog';
 import { NotificationBell } from '@/components/admin/notification-bell';
+import { AdminBackground } from "@/components/admin/admin-background"; // Import Background Baru
+import { Separator } from '@/components/ui/separator';
 
 // --- DEFINISI MENU ---
 const getMenusByRole = (role: string) => {
@@ -269,31 +269,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         onComplete={handlePactComplete}
         userName={session.name}
     />
-    <div className="flex min-h-screen bg-background text-foreground">
-      {/* Sidebar */}
-      <aside className="w-72 bg-card hidden md:flex flex-col fixed h-full">
-        <div className="p-6 flex items-center gap-3">
-          <Image src="/images/logo.png" alt="BCC Logo" width={32} height={32} />
-          <h1 className="font-headline font-black text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary to-fuchsia-500">
-            BCC ADMIN
-          </h1>
-        </div>
-        <nav className="flex-1 py-4 px-2 overflow-y-auto no-scrollbar space-y-2">
-          {renderNavLinks()}
-        </nav>
-        <div className="p-4 border-t">
-          <form action={handleLogout}>
-            <Button variant="outline" className="w-full">
-                <LogOut className="w-4 h-4 mr-2" /> Logout
-            </Button>
-          </form>
-        </div>
-      </aside>
+    <main className="w-full min-h-screen flex flex-col relative overflow-hidden">
+        
+        {/* --- GLOBAL BACKGROUND (Fixed) --- */}
+        <AdminBackground />
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col md:ml-72">
-        <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b border-zinc-800 px-4 bg-black/50 backdrop-blur sticky top-0 z-40">
-             <div className="flex items-center gap-2 md:hidden">
+        {/* --- HEADER --- */}
+        <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b border-white/5 px-4 bg-black/20 backdrop-blur-md sticky top-0 z-40">
+            <div className="flex items-center gap-2 md:hidden">
               <Sheet>
                   <SheetTrigger asChild>
                       <Button variant="ghost" size="icon">
@@ -318,7 +301,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                       </div>
                   </SheetContent>
               </Sheet>
-             </div>
+            </div>
              
              <div className="flex items-center gap-4 ml-auto">
                 <NotificationBell />
@@ -335,13 +318,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
              </div>
         </header>
         
-        <main className="flex-1 p-6 lg:p-8 overflow-auto">
-          {children}
-        </main>
-        <EmergencyButton />
+        {/* --- CONTENT AREA --- */}
+        {/* z-10 agar konten muncul di atas background */}
+        <div className="flex-1 overflow-auto relative z-10">
+            {children}
+        </div>
+        
+        {/* Fitur Global */}
+        <EmergencyButton /> 
         <Toaster />
-      </div>
-    </div>
+      </main>
     </>
   );
 }

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -198,7 +199,7 @@ export default function HonorariumPage() {
   };
 
   return (
-    <div className="space-y-10 font-body pb-20">
+    <div className="space-y-10 p-4 md:p-8 font-body pb-20">
       
       {/* HEADER SECTION */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
@@ -338,13 +339,8 @@ export default function HonorariumPage() {
       
       {/* --- MODAL PENILAIAN (REVISI SCROLL) --- */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        {/* PERBAIKAN: 
-           1. h-[90vh]: Menetapkan tinggi fix agar flex-grow berfungsi.
-           2. p-0: Menghapus padding default dialog agar header/footer menempel ke tepi.
-        */}
         <DialogContent className="max-w-4xl h-[90vh] flex flex-col bg-background rounded-[32px] border-none p-0 shadow-2xl">
             
-            {/* HEADER (FIXED/STICKY) */}
             <div className="p-8 border-b bg-muted/20 shrink-0 z-10">
                 <div className="flex items-center gap-4 mb-2">
                     <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
@@ -361,11 +357,6 @@ export default function HonorariumPage() {
                 </div>
             </div>
             
-            {/* CONTENT AREA (SCROLLABLE) */}
-            {/* PERBAIKAN: 
-               Menggunakan ScrollArea dengan 'flex-1' agar mengisi sisa ruang antara Header & Footer.
-               Isi konten diberi padding yang cukup agar tidak terpotong scrollbar.
-            */}
             <ScrollArea className="flex-1 bg-muted/5 w-full rounded-none">
                 <div className="p-8 pb-20"> {/* pb-20 untuk extra space di bawah */}
                     {selectedStaff?.type === 'PANITIA' ? (
@@ -403,7 +394,6 @@ export default function HonorariumPage() {
                 </div>
             </ScrollArea>
 
-            {/* FOOTER (FIXED/STICKY) */}
             <div className="p-6 border-t bg-background shrink-0 flex justify-end gap-4 z-10 shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
                 <Button 
                     variant="ghost" 
