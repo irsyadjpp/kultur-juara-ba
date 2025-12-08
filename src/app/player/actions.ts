@@ -81,15 +81,14 @@ export async function getPlayerSession() {
   }
 }
 
-export async function updatePlayerProfile(data: FormData) {
+export async function updatePlayerProfile(formData: FormData) {
   await new Promise(r => setTimeout(r, 1000));
   // In a real app, you would find the user by session ID and update their data in the database.
   
   const updates = {
-    nickname: data.get('nickname'),
-    phone: data.get('phone'),
-    address: data.get('address'),
-    // jerseySize is removed
+    nickname: formData.get('nickname'),
+    phone: formData.get('phone'),
+    address: formData.get('address'),
   };
 
   console.log("Updating player profile with:", updates);
