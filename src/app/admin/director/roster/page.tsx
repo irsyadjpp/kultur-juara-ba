@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from "react";
@@ -129,70 +128,70 @@ export default function RosterPage() {
               <div className="text-zinc-500 font-bold group-hover:text-primary tracking-widest text-sm">ASSIGN NEW STAFF</div>
           </button>
 
-            {/* STAFF CARDS (REVISI: ANTI-OVERLAP) */}
+            {/* STAFF CARDS (REVISI LAYOUT: STACKED FLOW) */}
             {filteredRoster.map((staff) => (
-                <div key={staff.id} className="group relative bg-zinc-900 rounded-[32px] p-6 border border-zinc-800 hover:border-zinc-700 transition-all hover:-translate-y-1 hover:shadow-2xl flex flex-col justify-between h-full">
+                <div key={staff.id} className="group flex flex-col justify-between bg-zinc-900 rounded-[32px] p-6 border border-zinc-800 hover:border-zinc-700 transition-all hover:-translate-y-1 hover:shadow-2xl h-full">
                     
-                    {/* Role Badge (Posisi Absolute di Pojok Kanan Atas) */}
-                    <div className="absolute top-5 right-5 z-20">
-                        <Badge className={cn(
-                            "rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-wider border-none shadow-lg",
-                            staff.role.includes("HEAD") || staff.role.includes("DIRECTOR") 
-                                ? "bg-white text-black" 
-                                : "bg-zinc-800 text-zinc-400"
-                        )}>
-                            {staff.role}
-                        </Badge>
-                    </div>
-
-                    {/* Content Body */}
-                    <div className="flex items-start gap-4 relative z-10">
-                        {/* Avatar: shrink-0 agar tidak gepeng */}
-                        <Avatar className="w-14 h-14 md:w-16 md:h-16 rounded-[24px] border-2 border-zinc-800 group-hover:border-primary/50 transition-colors shadow-xl shrink-0">
+                    {/* BAGIAN ATAS: AVATAR & TEXT FLOW */}
+                    <div className="flex items-start gap-5">
+                        
+                        {/* 1. Avatar (Kiri) */}
+                        <Avatar className="w-16 h-16 md:w-20 md:h-20 rounded-[24px] border-2 border-zinc-800 group-hover:border-primary/50 transition-colors shadow-xl shrink-0">
                             <AvatarImage src={staff.avatar} className="object-cover" />
-                            <AvatarFallback className="bg-zinc-800 text-zinc-500 font-black text-xl rounded-[24px]">
+                            <AvatarFallback className="bg-zinc-800 text-zinc-500 font-black text-2xl rounded-[24px]">
                                 {staff.name.charAt(0)}
                             </AvatarFallback>
                         </Avatar>
                         
-                        {/* Container Teks: min-w-0 penting agar text-wrap berfungsi di dalam flex */}
-                        <div className="flex flex-col gap-2 w-full min-w-0">
+                        {/* 2. Content Container (Kanan) - Menggunakan Flex Col agar elemen tersusun rapi ke bawah */}
+                        <div className="flex flex-col gap-2 min-w-0 w-full">
                             
-                            {/* 1. NAMA: padding-right besar agar tidak nabrak Badge Role */}
-                            <h3 className="text-lg md:text-xl font-black text-white leading-tight pr-24 break-words group-hover:text-primary transition-colors">
+                            {/* A. Role Badge (Sekarang di dalam flow, bukan absolute) */}
+                            <div className="flex justify-between items-start">
+                                <Badge className={cn(
+                                    "rounded-lg px-2 py-1 text-[9px] font-black uppercase tracking-wider border-none w-fit",
+                                    staff.role.includes("HEAD") || staff.role.includes("DIRECTOR") 
+                                        ? "bg-white text-black" 
+                                        : "bg-zinc-800 text-zinc-400"
+                                )}>
+                                    {staff.role}
+                                </Badge>
+                                
+                                {/* Tombol Opsi (Pindah ke atas agar layout seimbang) */}
+                                <Button variant="ghost" size="icon" className="h-6 w-6 -mt-1 -mr-2 text-zinc-500 hover:text-white">
+                                    <MoreVertical className="w-4 h-4" />
+                                </Button>
+                            </div>
+
+                            {/* B. Nama (Otomatis turun di bawah Badge) */}
+                            <h3 className="text-xl font-black text-white leading-tight group-hover:text-primary transition-colors break-words">
                                 {staff.name}
                             </h3>
                             
-                            <div className="flex flex-col gap-1.5">
-                                {/* 2. DIVISI: Menggunakan w-fit max-w-full agar tidak melebar sembarangan */}
-                                <div className="inline-flex items-start gap-2 text-xs font-bold text-zinc-400 bg-zinc-950/50 px-3 py-1.5 rounded-xl w-fit max-w-full border border-zinc-800/50">
-                                    <Briefcase className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" /> 
-                                    {/* break-words & leading-snug agar teks panjang turun ke bawah dengan rapi */}
-                                    <span className="break-words leading-snug">
-                                        {staff.division}
-                                    </span>
-                                </div>
-                                
-                                {/* Email */}
-                                <div className="text-[10px] text-zinc-600 font-mono truncate pl-1">
-                                    {staff.email}
-                                </div>
+                            {/* C. Email (Informasi Tambahan) */}
+                            <div className="text-[10px] text-zinc-500 font-mono truncate">
+                                {staff.email}
                             </div>
                         </div>
                     </div>
 
-                    {/* Footer Actions */}
-                    <div className="mt-6 pt-4 border-t border-zinc-800 flex justify-between items-center">
-                        <div className="flex items-center gap-2 bg-zinc-950/30 px-3 py-1.5 rounded-full">
+                    {/* BAGIAN BAWAH: DIVISI & STATUS (FOOTER) */}
+                    <div className="mt-6 pt-4 border-t border-zinc-800/50 flex flex-wrap items-center justify-between gap-3">
+                        
+                        {/* Divisi Chip */}
+                        <div className="inline-flex items-center gap-2 text-xs font-bold text-zinc-300 bg-zinc-950 px-3 py-2 rounded-xl border border-zinc-800 max-w-[70%]">
+                            <Briefcase className="w-3.5 h-3.5 text-primary shrink-0" /> 
+                            <span className="truncate">{staff.division}</span>
+                        </div>
+
+                        {/* Status Dot */}
+                        <div className="flex items-center gap-2 pl-1">
                             <div className={cn("w-2 h-2 rounded-full shadow-[0_0_8px]", staff.status === 'ACTIVE' ? "bg-green-500 shadow-green-500/50" : "bg-yellow-500 shadow-yellow-500/50")}></div>
-                            <span className={cn("text-[10px] font-bold uppercase tracking-wide", staff.status === 'ACTIVE' ? "text-green-500" : "text-yellow-500")}>
+                            <span className={cn("text-[10px] font-bold uppercase tracking-wide hidden sm:block", staff.status === 'ACTIVE' ? "text-green-500" : "text-yellow-500")}>
                                 {staff.status}
                             </span>
                         </div>
-                        
-                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full hover:bg-white hover:text-black transition-all">
-                            <MoreVertical className="w-4 h-4" />
-                        </Button>
+
                     </div>
                 </div>
             ))}
@@ -287,5 +286,5 @@ export default function RosterPage() {
       </Dialog>
 
     </div>
-  )
+  );
 }
