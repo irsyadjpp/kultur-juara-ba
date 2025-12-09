@@ -64,7 +64,7 @@ const data = {
   // 4. PERTANDINGAN
   navMatch: [
     { title: "Arena Manager", url: "/admin/match-control", icon: Trophy },
-    { title: "Editor Jadwal", url: "/admin/match-control/schedule-editor", icon: CalendarDays },
+    { title: "Editor Jadwal", url: "/admin/match-control/schedule", icon: CalendarDays },
     { title: "Generate Bagan", url: "/admin/match-control/bracket", icon: Network },
     { title: "Berita Acara Hasil", url: "/admin/matches/result-sheet", icon: FileText },
     { title: "Verifikasi TPF", url: "/admin/tpf", icon: ShieldAlert },
