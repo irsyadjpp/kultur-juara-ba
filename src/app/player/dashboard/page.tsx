@@ -9,7 +9,7 @@ import {
   User, Mail, Phone, Upload, Award, FileText,
   Clock, RefreshCcw, Home
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -20,6 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 
 
 // --- MOCK DATA ---
@@ -50,58 +51,49 @@ export default function AthleteDashboard() {
   const [joinCode, setJoinCode] = useState("");
   const [isJoining, setIsJoining] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  
   const [isClient, setIsClient] = useState(false);
-
-  // Set initial state to false to ensure server and client match
+  const [isLoading, setIsLoading] = useState(true);
   const [hasJoinedTeam, setHasJoinedTeam] = useState(false);
   const [isProfileComplete, setIsProfileComplete] = useState(false);
 
-  // For development, use useEffect to change state after initial render
   useEffect(() => {
     setIsClient(true);
+    // Simulate fetching user status
     if (DEV_MODE_ENABLED) {
-      setHasJoinedTeam(true);
-      setIsProfileComplete(true);
-      // Also update the athlete data to reflect the joined team for the full dashboard
-      setAthlete(prev => ({
-        ...prev,
-        team: { 
-          name: "PB Djarum Official", 
-          logo: "/logos/djarum.png", 
-          role: "Athlete" 
-        }
-      }));
+        setHasJoinedTeam(true);
+        setIsProfileComplete(true);
+        setAthlete(prev => ({
+            ...prev,
+            team: { name: "PB Djarum Official", logo: "/logos/djarum.png", role: "Athlete" }
+        }));
     }
-  }, []); // Empty dependency array ensures this runs once on mount on the client
+    setIsLoading(false);
+  }, []);
 
-  // Simulasi Join Team (Tetap ada, tapi tidak dipanggil di awal)
+  // Simulasi Join Team
   const handleJoinTeam = () => {
     if (!joinCode) return;
     setIsJoining(true);
 
     setTimeout(() => {
       setIsJoining(false);
-      // For dev, any code works
       setAthlete(prev => ({
         ...prev,
-        team: {
-          name: "PB Djarum Official",
-          logo: "/logos/djarum.png",
-          role: "Athlete"
-        }
+        team: { name: "PB Djarum Official", logo: "/logos/djarum.png", role: "Athlete" }
       }));
-      setHasJoinedTeam(true); // Pindah ke Step 2
+      setHasJoinedTeam(true);
       setShowSuccessModal(true);
     }, 1500);
   };
   
-  // Simulasi Submit Data Diri (Tetap ada)
+  // Simulasi Submit Data Diri
   const handleSubmitProfile = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsProfileComplete(true); // Pindah ke Step 3 (Full Dashboard)
+    setIsProfileComplete(true);
   }
 
-  // --- RENDER FUNCTIONS (SAMA SEPERTI SEBELUMNYA) ---
+  // --- RENDER FUNCTIONS ---
   
   const renderJoinTeam = () => (
     <Card className="bg-zinc-900 border-zinc-800 rounded-[32px] overflow-hidden relative border-dashed border-2 p-12 max-w-xl mx-auto">
@@ -231,7 +223,6 @@ export default function AthleteDashboard() {
                     <h2 className="text-2xl font-black text-white uppercase leading-tight mb-1">{athlete.name}</h2>
                     <p className="text-zinc-500 text-sm font-bold mb-6">Mens Singles Specialist</p>
 
-                    {/* Stats Row */}
                     <div className="grid grid-cols-2 gap-4 border-t border-zinc-800 pt-6">
                         <div>
                             <p className="text-[10px] text-zinc-500 font-bold uppercase">Points</p>
@@ -279,8 +270,10 @@ export default function AthleteDashboard() {
                             </p>
                         </div>
                     </div>
-                    <Button variant="outline" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 h-12 rounded-xl">
-                        <User className="w-4 h-4 mr-2"/> MANAGE PROFILE
+                    <Button variant="outline" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 h-12 rounded-xl" asChild>
+                        <Link href="/player/profile">
+                            <User className="w-4 h-4 mr-2"/> MANAGE PROFILE
+                        </Link>
                     </Button>
                 </CardContent>
             </Card>
@@ -333,10 +326,12 @@ export default function AthleteDashboard() {
   );
 
   // --- MAIN RENDER LOGIC ---
-  
-  if (!isClient) {
-    // On the server, and first client render, render nothing to prevent mismatch
-    return null;
+  if (!isClient || isLoading) {
+    return (
+        <div className="flex items-center justify-center h-full min-h-[50vh]">
+            <Loader2 className="w-8 h-8 animate-spin text-cyan-500" />
+        </div>
+    );
   }
   
   let mainContent;
@@ -395,3 +390,4 @@ export default function AthleteDashboard() {
     </div>
   );
 }
+
