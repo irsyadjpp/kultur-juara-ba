@@ -8,23 +8,27 @@ import {
   CheckCircle2, LogOut, User, Upload, 
   FileText, Activity, Instagram, 
   Info, ChevronRight, ChevronLeft,
-  Users, MapPin, Trophy, AlertTriangle, Loader2
+  Camera, MessageCircle, Download, Gavel, Clock, 
+  Share2, RotateCw, AlertOctagon, Send, Paperclip, 
+  MoreVertical, CheckCheck, Smile, Users, MapPin, Trophy, Loader2
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-
-// Import komponen Full Dashboard yang sudah kita buat sebelumnya
-// Anggap saja kode panjang tadi kita simpan di komponen terpisah agar rapi
-import PlayerDashboardFull from "@/components/player/dashboard-full"; 
+import PlayerDashboardFull from "@/components/player/dashboard-full";
+import { AlertTriangle } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 // --- MOCK DATA: TEAM TWINTON ---
 const MOCK_TEAM_DATA = {
@@ -68,7 +72,6 @@ export default function PlayerPage() {
     }
   });
   
-  // NEW: Hydration-safe logic
   useEffect(() => {
     // This logic now runs only on the client after hydration
     // You would replace this mock logic with a real session check
@@ -90,6 +93,12 @@ export default function PlayerPage() {
     };
     checkSession();
   }, []);
+
+  const renderLoading = () => (
+    <div className="flex items-center justify-center min-h-screen">
+      <Loader2 className="w-12 h-12 text-cyan-500 animate-spin" />
+    </div>
+  );
 
 
   // --- HANDLERS ---
@@ -171,7 +180,7 @@ export default function PlayerPage() {
 
   // VIEW 2: FORM WIZARD
   const renderFormWizard = () => (
-    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-500">
+    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-500 py-10">
       
       {/* Team Header Info */}
       <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-[24px] flex items-center gap-6">
@@ -280,7 +289,7 @@ export default function PlayerPage() {
         </Card>
       )}
 
-      {/* --- STEP 3: BIODATA --- */}
+      {/* --- STEP 3: BIODATA & TPF --- */}
       {currentStep === 3 && (
         <div className="space-y-6">
             <Card className="bg-zinc-900 border-zinc-800 rounded-[32px] p-8">
@@ -330,7 +339,7 @@ export default function PlayerPage() {
                             </div>
                         </div>
                         
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
                             <div className="space-y-2">
                                 <Label className="text-xs text-zinc-500 font-bold">Foto KTP</Label>
                                 <div className="h-24 bg-black border-2 border-dashed border-zinc-800 rounded-xl flex items-center justify-center text-zinc-600 hover:text-white hover:border-cyan-500 cursor-pointer">
@@ -338,7 +347,13 @@ export default function PlayerPage() {
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <Label className="text-xs text-zinc-500 font-bold">Screenshot Follow @bccbandung.id</Label>
+                                <Label className="text-xs text-zinc-500 font-bold">Foto Selfie</Label>
+                                <div className="h-24 bg-black border-2 border-dashed border-zinc-800 rounded-xl flex items-center justify-center text-zinc-600 hover:text-white hover:border-cyan-500 cursor-pointer">
+                                    <Upload className="w-5 h-5"/>
+                                </div>
+                            </div>
+                             <div className="space-y-2">
+                                <Label className="text-xs text-zinc-500 font-bold">Screenshot Follow IG</Label>
                                 <div className="h-24 bg-black border-2 border-dashed border-zinc-800 rounded-xl flex items-center justify-center text-zinc-600 hover:text-white hover:border-cyan-500 cursor-pointer">
                                     <Upload className="w-5 h-5"/>
                                 </div>
@@ -353,7 +368,7 @@ export default function PlayerPage() {
 
       {/* --- WIZARD NAVIGATION --- */}
       {viewState === 'FORM' && (
-        <div className="flex justify-between pt-4 pb-8">
+        <div className="flex justify-between pt-4 pb-8 max-w-4xl mx-auto">
             <Button 
                 variant="outline" 
                 onClick={handlePrevStep} 
@@ -368,7 +383,7 @@ export default function PlayerPage() {
                     onClick={handleSubmit}
                     className="h-14 px-10 rounded-xl bg-green-600 hover:bg-green-700 text-white font-black text-lg shadow-[0_0_20px_rgba(22,163,74,0.4)]"
                 >
-                    FINISH & JOIN <CheckCircle2 className="ml-2 w-6 h-6"/>
+                    FINISH &amp; JOIN <CheckCircle2 className="ml-2 w-6 h-6"/>
                 </Button>
             ) : (
                 <Button 
@@ -384,12 +399,6 @@ export default function PlayerPage() {
             )}
         </div>
       )}
-    </div>
-  );
-
-  const renderLoading = () => (
-    <div className="flex items-center justify-center min-h-screen">
-      <Loader2 className="w-12 h-12 text-cyan-500 animate-spin" />
     </div>
   );
 
