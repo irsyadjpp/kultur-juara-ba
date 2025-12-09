@@ -6,7 +6,8 @@ import {
   Trophy, Users, Shield, QrCode, 
   Activity, Calendar, MapPin, Hash, 
   ArrowRight, CheckCircle2, LogOut,
-  User, Mail, Phone, Home, Crown, RefreshCcw, FileText
+  User, Mail, Phone, Upload, Award, FileText,
+  Clock, RefreshCcw, Home
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,8 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
+
 
 // --- MOCK DATA ---
 const ATHLETE_INITIAL_DATA = {
@@ -28,11 +31,7 @@ const ATHLETE_INITIAL_DATA = {
   winRate: 78,
   avatar: "https://github.com/shadcn.png",
   verificationStatus: "VERIFIED" as "PENDING" | "VERIFIED" | "ISSUE", // SIMULASI VERIFIED
-  team: { 
-    name: "PB Djarum Official", 
-    logo: "/logos/djarum.png", 
-    role: "Athlete" 
-  } as { name: string; logo: string; role: string } | null 
+  team: null as { name: string; logo: string; role: string } | null 
 };
 
 const UPCOMING_MATCH = {
@@ -51,6 +50,7 @@ export default function AthleteDashboard() {
   const [joinCode, setJoinCode] = useState("");
   const [isJoining, setIsJoining] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   // Set initial state to false to ensure server and client match
   const [hasJoinedTeam, setHasJoinedTeam] = useState(false);
@@ -58,11 +58,21 @@ export default function AthleteDashboard() {
 
   // For development, use useEffect to change state after initial render
   useEffect(() => {
+    setIsClient(true);
     if (DEV_MODE_ENABLED) {
       setHasJoinedTeam(true);
       setIsProfileComplete(true);
+      // Also update the athlete data to reflect the joined team for the full dashboard
+      setAthlete(prev => ({
+        ...prev,
+        team: { 
+          name: "PB Djarum Official", 
+          logo: "/logos/djarum.png", 
+          role: "Athlete" 
+        }
+      }));
     }
-  }, []);
+  }, []); // Empty dependency array ensures this runs once on mount on the client
 
   // Simulasi Join Team (Tetap ada, tapi tidak dipanggil di awal)
   const handleJoinTeam = () => {
@@ -71,6 +81,7 @@ export default function AthleteDashboard() {
 
     setTimeout(() => {
       setIsJoining(false);
+      // For dev, any code works
       setAthlete(prev => ({
         ...prev,
         team: {
@@ -90,7 +101,7 @@ export default function AthleteDashboard() {
     setIsProfileComplete(true); // Pindah ke Step 3 (Full Dashboard)
   }
 
-  // --- RENDER FUNCTIONS ---
+  // --- RENDER FUNCTIONS (SAMA SEPERTI SEBELUMNYA) ---
   
   const renderJoinTeam = () => (
     <Card className="bg-zinc-900 border-zinc-800 rounded-[32px] overflow-hidden relative border-dashed border-2 p-12 max-w-xl mx-auto">
@@ -99,7 +110,7 @@ export default function AthleteDashboard() {
             <h3 className="text-3xl font-black text-white">Squad Synchronization</h3>
         </div>
         <p className="text-zinc-400 text-sm text-center">
-            Minta <strong>Kode Unik Komunitas</strong> dari manajer/kapten tim Anda untuk mendaftar ke kompetisi.
+            Minta <strong>Kode Unik Komunitas</strong> dari manajer Anda. Ini adalah langkah pertama untuk terdaftar di turnamen.
         </p>
         <div className="w-full bg-black p-6 rounded-3xl border border-zinc-800 flex flex-col gap-4">
             <div className="space-y-1">
@@ -220,6 +231,7 @@ export default function AthleteDashboard() {
                     <h2 className="text-2xl font-black text-white uppercase leading-tight mb-1">{athlete.name}</h2>
                     <p className="text-zinc-500 text-sm font-bold mb-6">Mens Singles Specialist</p>
 
+                    {/* Stats Row */}
                     <div className="grid grid-cols-2 gap-4 border-t border-zinc-800 pt-6">
                         <div>
                             <p className="text-[10px] text-zinc-500 font-bold uppercase">Points</p>
@@ -233,23 +245,19 @@ export default function AthleteDashboard() {
                 </CardContent>
             </Card>
 
-            <Card className={cn(
-                "bg-zinc-900 border rounded-[32px] p-6",
-                athlete.verificationStatus === 'VERIFIED' ? "border-green-500/50" : "border-yellow-500/50"
-            )}>
+            {/* UPCOMING MATCH WIDGET */}
+            <Card className="bg-zinc-900 border-zinc-800 rounded-[32px] p-6 relative overflow-hidden">
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-red-500"></div>
                 <h3 className="text-xs font-black text-zinc-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <Shield className="w-4 h-4 text-cyan-500"/> Verification Status
+                    <Calendar className="w-4 h-4 text-red-500"/> Next Match
                 </h3>
-                <div className="flex justify-between items-center">
-                    <div className="space-y-1">
-                        <p className={cn("text-xl font-black", athlete.verificationStatus === 'VERIFIED' ? "text-green-500" : "text-yellow-500 animate-pulse")}>
-                            {athlete.verificationStatus === 'VERIFIED' ? "VERIFIED" : "PENDING"}
-                        </p>
-                        <p className="text-zinc-400 text-sm">Status dokumen oleh Sekretariat.</p>
+                <div className="space-y-1">
+                    <p className="text-lg font-bold text-white">{UPCOMING_MATCH.opponent}</p>
+                    <p className="text-xs text-zinc-400">{UPCOMING_MATCH.event}</p>
+                    <div className="flex items-center gap-3 mt-3 pt-3 border-t border-zinc-800/50">
+                        <Badge variant="outline" className="text-[10px] border-zinc-700 text-zinc-300">{UPCOMING_MATCH.court}</Badge>
+                        <span className="text-[10px] text-red-400 font-bold animate-pulse">{UPCOMING_MATCH.time}</span>
                     </div>
-                    <Button size="icon" className="bg-zinc-800 hover:bg-zinc-700 text-zinc-400">
-                        <FileText className="w-5 h-5"/>
-                    </Button>
                 </div>
             </Card>
         </div>
@@ -277,18 +285,24 @@ export default function AthleteDashboard() {
                 </CardContent>
             </Card>
             
-            <Card className="bg-zinc-900 border-zinc-800 rounded-[32px] p-6 relative overflow-hidden">
-                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-red-500"></div>
+            <Card className={cn(
+                "bg-zinc-900 border rounded-[32px] p-6",
+                athlete.verificationStatus === 'VERIFIED' ? "border-green-500/50" : 
+                athlete.verificationStatus === 'ISSUE' ? "border-red-500/50" : "border-yellow-500/50"
+            )}>
                 <h3 className="text-xs font-black text-zinc-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-red-500"/> Next Match
+                    <Shield className="w-4 h-4 text-cyan-500"/> Verification Status
                 </h3>
-                <div className="space-y-1">
-                    <p className="text-lg font-bold text-white">{UPCOMING_MATCH.opponent}</p>
-                    <p className="text-xs text-zinc-400">{UPCOMING_MATCH.event}</p>
-                    <div className="flex items-center gap-3 mt-3 pt-3 border-t border-zinc-800/50">
-                        <Badge variant="outline" className="text-[10px] border-zinc-700 text-zinc-300">{UPCOMING_MATCH.court}</Badge>
-                        <span className="text-[10px] text-red-400 font-bold animate-pulse">{UPCOMING_MATCH.time}</span>
+                <div className="flex justify-between items-center">
+                    <div className="space-y-1">
+                        <p className={cn("text-xl font-black", athlete.verificationStatus === 'VERIFIED' ? "text-green-500" : "text-yellow-500 animate-pulse")}>
+                            {athlete.verificationStatus === 'VERIFIED' ? "VERIFIED" : "AWAITING CHECKPOINT"}
+                        </p>
+                        <p className="text-zinc-400 text-sm">Status dokumen oleh Sekretariat.</p>
                     </div>
+                    <Button size="icon" className="bg-zinc-800 hover:bg-zinc-700 text-zinc-400">
+                        <FileText className="w-5 h-5"/>
+                    </Button>
                 </div>
             </Card>
 
@@ -310,18 +324,6 @@ export default function AthleteDashboard() {
                                 <p className="text-lg font-black font-mono text-green-500">W 21-19</p>
                             </div>
                         </div>
-                        <div className="flex items-center justify-between p-4 bg-zinc-900 border border-zinc-800 rounded-[20px] hover:bg-zinc-800 transition-colors">
-                            <div className="flex items-center gap-4">
-                                <div className="w-2 h-12 rounded-full bg-red-500"></div>
-                                <div>
-                                    <p className="text-sm font-bold text-white">vs. Lee Chong Wei</p>
-                                    <p className="text-xs text-zinc-500">MS Open • Quarter Final</p>
-                                </div>
-                            </div>
-                            <div className="text-right">
-                                <p className="text-lg font-black font-mono text-red-500">L 15-21</p>
-                            </div>
-                        </div>
                     </div>
                 </ScrollArea>
             </Card>
@@ -331,6 +333,12 @@ export default function AthleteDashboard() {
   );
 
   // --- MAIN RENDER LOGIC ---
+  
+  if (!isClient) {
+    // On the server, and first client render, render nothing to prevent mismatch
+    return null;
+  }
+  
   let mainContent;
   if (!hasJoinedTeam) {
     mainContent = renderJoinTeam();
@@ -387,5 +395,3 @@ export default function AthleteDashboard() {
     </div>
   );
 }
-
-    
