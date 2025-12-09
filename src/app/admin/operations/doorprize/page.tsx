@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import confetti from "canvas-confetti"; 
 
@@ -168,29 +168,20 @@ export default function DoorprizePage() {
                 <div className="absolute inset-0 bg-[url('/images/grid-pattern.png')] opacity-10 pointer-events-none"></div>
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-600/20 rounded-full blur-[100px] pointer-events-none"></div>
 
-                <CardContent className="flex-1 flex flex-col items-center justify-center p-8 relative z-10 text-center space-y-10">
+                <CardContent className="flex-1 flex flex-col items-center justify-center p-8 relative z-10 text-center space-y-8">
                     
                     {/* Active Prize Info */}
-                    <div className="space-y-4">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900 border border-zinc-800 shadow-sm">
-                            <Box className="w-4 h-4 text-zinc-500" />
-                            <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Selected Prize</span>
-                        </div>
-                        
+                    <div className="space-y-2">
+                        <p className="text-sm font-bold text-zinc-500 uppercase tracking-[0.2em]">Current Prize</p>
                         {activePrizeObj ? (
-                            <div className="animate-in fade-in zoom-in duration-300 space-y-2">
-                                <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tight leading-none drop-shadow-xl">
-                                    {activePrizeObj.name}
-                                </h2>
-                                <Badge className={cn("text-xs font-black px-3 py-1", activePrizeObj.color)}>
+                            <div className="animate-in fade-in zoom-in duration-300">
+                                <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight">{activePrizeObj.name}</h2>
+                                <Badge className={cn("mt-2 text-xs font-black", activePrizeObj.color)}>
                                     {activePrizeObj.tier} TIER
                                 </Badge>
                             </div>
                         ) : (
-                            <div className="flex flex-col items-center gap-2 text-zinc-600 animate-pulse">
-                                <AlertCircle className="w-12 h-12"/>
-                                <h2 className="text-xl font-bold uppercase">Pilih Hadiah di Kiri</h2>
-                            </div>
+                            <h2 className="text-2xl font-bold text-zinc-700 uppercase">Select a Prize to Start</h2>
                         )}
                     </div>
 
@@ -202,22 +193,22 @@ export default function DoorprizePage() {
                         <h1 className={cn(
                             "text-4xl md:text-6xl font-black uppercase transition-all z-20 text-center px-4",
                             isSpinning 
-                                ? "text-zinc-500 blur-[2px] scale-95" 
+                                ? "text-zinc-500 blur-[1px]" 
                                 : "text-transparent bg-clip-text bg-gradient-to-br from-white to-zinc-400 scale-110 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]"
                         )}>
                             {displayCandidate}
                         </h1>
                     </div>
 
-                    {/* SPIN ACTION */}
+                    {/* SPIN BUTTON */}
                     <Button 
                         disabled={!selectedPrize || isSpinning}
                         onClick={handleSpin}
                         className={cn(
-                            "w-72 h-24 rounded-full font-black text-3xl tracking-widest shadow-[0_0_40px_rgba(236,72,153,0.4)] transition-all transform active:scale-95",
+                            "w-64 h-20 rounded-full font-black text-2xl tracking-widest shadow-[0_0_40px_rgba(236,72,153,0.4)] transition-all transform active:scale-95",
                             isSpinning 
-                                ? "bg-zinc-800 text-zinc-600 cursor-not-allowed border border-zinc-700" 
-                                : "bg-gradient-to-r from-pink-600 to-purple-600 hover:scale-105 hover:shadow-[0_0_80px_rgba(236,72,153,0.6)] text-white border-4 border-pink-400/20"
+                                ? "bg-zinc-800 text-zinc-600 cursor-not-allowed" 
+                                : "bg-gradient-to-r from-pink-600 to-purple-600 hover:scale-105 hover:shadow-[0_0_60px_rgba(236,72,153,0.6)] text-white"
                         )}
                     >
                         {isSpinning ? "ROLLING..." : "SPIN NOW"}
@@ -236,7 +227,7 @@ export default function DoorprizePage() {
                     </h3>
                 </div>
                 <ScrollArea className="flex-1 p-4">
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                         {WINNERS_HISTORY.map((hist) => (
                             <div key={hist.id} className="flex items-start gap-3 p-3 rounded-xl bg-zinc-950 border border-zinc-800">
                                 <div className="mt-1">
@@ -262,7 +253,10 @@ export default function DoorprizePage() {
       {/* --- WINNER REVEAL MODAL --- */}
       <Dialog open={isWinnerModalOpen} onOpenChange={setIsWinnerModalOpen}>
         <DialogContent className="bg-zinc-950 border-4 border-pink-500 text-white rounded-[40px] max-w-lg p-0 overflow-hidden shadow-[0_0_100px_rgba(236,72,153,0.5)]">
-            
+            <DialogHeader className="sr-only">
+              <DialogTitle>Winner Announcement</DialogTitle>
+              <DialogDescription>The winner of the doorprize draw is revealed.</DialogDescription>
+            </DialogHeader>
             <div className="h-56 bg-gradient-to-b from-pink-600 to-purple-900 relative flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 bg-[url('/images/noise.png')] opacity-30 mix-blend-overlay"></div>
                 
@@ -283,7 +277,7 @@ export default function DoorprizePage() {
                     <h1 className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-400 leading-tight">
                         {winner}
                     </h1>
-                    <Badge variant="outline" className="border-pink-500 text-pink-500 mt-2 px-4 py-1">
+                    <Badge variant="outline" className="border-pink-500 text-pink-500 mt-2">
                         ID: TICKET-LUCKY-88
                     </Badge>
                 </div>
