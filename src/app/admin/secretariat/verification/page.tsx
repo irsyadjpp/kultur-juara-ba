@@ -379,7 +379,3 @@ export default function VerificationPage() {
     </div>
   );
 }
-
-```
-- I am also deleting `src/app/admin/teams/page.tsx` since this new page replaces its functionality.
-- I will also update the sidebar navigation in `src/components/ui/app-sidebar.tsx` to point to the new page.
