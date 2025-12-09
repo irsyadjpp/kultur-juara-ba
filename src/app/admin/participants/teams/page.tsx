@@ -35,7 +35,12 @@ const TEAMS = [
     athletes: 24,
     officials: 5,
     contact: "0811-xxxx-xxxx",
-    rank: 1
+    rank: 1,
+    athleteDetails: [
+      { name: "Kevin Sanjaya", rank: 1, img: "https://github.com/shadcn.png" },
+      { name: "Siti Fadia", rank: 5, img: "" },
+      { name: "Praveen Jordan", rank: 8, img: "" },
+    ]
   },
   { 
     id: "TM-002", 
@@ -49,7 +54,11 @@ const TEAMS = [
     athletes: 18,
     officials: 4,
     contact: "0812-xxxx-xxxx",
-    rank: 2
+    rank: 2,
+     athleteDetails: [
+      { name: "Hendra Setiawan", rank: 2, img: "" },
+      { name: "Marcus Gideon", rank: 3, img: "" },
+    ]
   },
   { 
     id: "TM-003", 
@@ -63,7 +72,10 @@ const TEAMS = [
     athletes: 12,
     officials: 3,
     contact: "0857-xxxx-xxxx",
-    rank: 5
+    rank: 5,
+    athleteDetails: [
+      { name: "Anthony Ginting", rank: 4, img: "" },
+    ]
   },
   { 
     id: "TM-004", 
@@ -77,7 +89,8 @@ const TEAMS = [
     athletes: 15,
     officials: 4,
     contact: "0813-xxxx-xxxx",
-    rank: 3
+    rank: 3,
+    athleteDetails: []
   },
 ];
 
@@ -176,7 +189,7 @@ export default function TeamManagementPage() {
          </Card>
       </div>
 
-      {/* --- ROSTER GRID (ADAPTED FROM VOLUNTEER PAGE) --- */}
+      {/* --- ROSTER GRID --- */}
       <div className="flex-1 bg-zinc-900/50 border border-zinc-800/50 rounded-[40px] p-2 backdrop-blur-sm flex flex-col min-h-0">
         <Tabs defaultValue="all" className="w-full h-full flex flex-col">
             
@@ -210,7 +223,7 @@ export default function TeamManagementPage() {
                                 onClick={() => setSelectedTeam(team)}
                                 className="group bg-zinc-900 border border-zinc-800 rounded-[32px] p-6 hover:border-indigo-500/50 transition-all cursor-pointer relative overflow-hidden"
                             >
-                                {/* Performance Bar (Pengganti XP Bar) */}
+                                {/* Performance Bar */}
                                 <div className="absolute top-0 left-0 right-0 h-1 bg-zinc-800">
                                     <div className="h-full bg-gradient-to-r from-indigo-500 to-cyan-500" style={{ width: `${team.performance}%` }}></div>
                                 </div>
@@ -251,7 +264,7 @@ export default function TeamManagementPage() {
         </Tabs>
       </div>
 
-      {/* --- DETAIL SHEET (LOCKER ROOM STYLE) --- */}
+      {/* --- DETAIL SHEET (THE LOCKER ROOM) --- */}
       <Sheet open={!!selectedTeam} onOpenChange={() => setSelectedTeam(null)}>
         <SheetContent className="w-full sm:max-w-md bg-zinc-950 border-l border-zinc-800 p-0 overflow-y-auto">
             {selectedTeam && (
@@ -326,14 +339,17 @@ export default function TeamManagementPage() {
                         <div>
                             <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Key Players</h3>
                             <div className="flex -space-x-3">
-                                {[1,2,3,4,5].map(i => (
+                                {selectedTeam.athleteDetails.slice(0, 5).map((player, i) => (
                                     <Avatar key={i} className="w-10 h-10 border-2 border-zinc-900 bg-zinc-800">
-                                        <AvatarFallback className="text-xs font-bold text-zinc-500">P{i}</AvatarFallback>
+                                        <AvatarImage src={player.img} />
+                                        <AvatarFallback className="text-xs font-bold text-zinc-500">{player.name.charAt(0)}</AvatarFallback>
                                     </Avatar>
                                 ))}
+                                {selectedTeam.athletes > 5 && (
                                 <div className="w-10 h-10 rounded-full bg-zinc-800 border-2 border-zinc-900 flex items-center justify-center text-xs font-bold text-zinc-400">
                                     +{selectedTeam.athletes - 5}
                                 </div>
+                                )}
                             </div>
                         </div>
 
