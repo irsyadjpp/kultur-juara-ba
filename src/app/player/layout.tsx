@@ -6,8 +6,15 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Home } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function PlayerLayout({ children }: { children: React.ReactNode }) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <div className="relative flex flex-col min-h-screen bg-transparent overflow-hidden">
       <div className="fixed inset-0 -z-50 pointer-events-none">
@@ -21,7 +28,7 @@ export default function PlayerLayout({ children }: { children: React.ReactNode }
             </Button>
         </div>
         <div className="flex items-center gap-2">
-            <ThemeToggle />
+            {isMounted && <ThemeToggle />}
         </div>
       </header>
       <main className="relative z-10 flex-1 overflow-auto scroll-smooth">
