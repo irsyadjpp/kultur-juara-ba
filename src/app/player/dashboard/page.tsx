@@ -170,7 +170,7 @@ export default function PlayerPage() {
   );
 
   // VIEW 2: FORM WIZARD
-  const renderWizard = () => (
+  const renderFormWizard = () => (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-500">
       
       {/* Team Header Info */}
@@ -213,7 +213,7 @@ export default function PlayerPage() {
             <div className="space-y-6">
                 <div className="bg-red-900/20 border border-red-500/30 p-4 rounded-xl flex gap-3 text-red-200 text-sm">
                     <AlertTriangle className="w-5 h-5 shrink-0 text-red-500"/>
-                    <p>Data palsu = Diskualifikasi Tim & Blacklist.</p>
+                    <p>Harap baca dengan teliti. Pelanggaran data (pencurian umur/manipulasi level) akan menyebabkan <strong>Tim Diskualifikasi</strong>.</p>
                 </div>
                 <div className="space-y-4">
                     {['valid', 'health', 'rules', 'media'].map((key) => (
@@ -329,17 +329,8 @@ export default function PlayerPage() {
                                 <Input className="bg-black border-zinc-800 pl-10" placeholder="@username (Wajib Public)" value={formData.tpf.ig} onChange={(e) => setFormData({...formData, tpf: {...formData.tpf, ig: e.target.value}})} />
                             </div>
                         </div>
-                        <div className="space-y-2">
-                            <Label className="text-xs text-zinc-500 font-bold uppercase">Riwayat Turnamen / Prestasi</Label>
-                            <Textarea 
-                                className="bg-black border-zinc-800 min-h-[100px]" 
-                                placeholder="Contoh: Juara 2 Kejurkot 2024, 8 Besar Open Bandung..." 
-                                value={formData.tpf.history} 
-                                onChange={(e) => setFormData({...formData, tpf: {...formData.tpf, history: e.target.value}})}
-                            />
-                        </div>
                         
-                        <div className="grid grid-cols-2 gap-4 pt-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                             <div className="space-y-2">
                                 <Label className="text-xs text-zinc-500 font-bold">Foto KTP</Label>
                                 <div className="h-24 bg-black border-2 border-dashed border-zinc-800 rounded-xl flex items-center justify-center text-zinc-600 hover:text-white hover:border-cyan-500 cursor-pointer">
@@ -347,7 +338,7 @@ export default function PlayerPage() {
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <Label className="text-xs text-zinc-500 font-bold">Foto Diri (Resmi)</Label>
+                                <Label className="text-xs text-zinc-500 font-bold">Screenshot Follow @bccbandung.id</Label>
                                 <div className="h-24 bg-black border-2 border-dashed border-zinc-800 rounded-xl flex items-center justify-center text-zinc-600 hover:text-white hover:border-cyan-500 cursor-pointer">
                                     <Upload className="w-5 h-5"/>
                                 </div>
@@ -361,37 +352,38 @@ export default function PlayerPage() {
 
 
       {/* --- WIZARD NAVIGATION --- */}
-      <div className="flex justify-between pt-4 pb-8">
-        <Button 
-            variant="outline" 
-            onClick={handlePrevStep} 
-            disabled={currentStep === 1}
-            className="h-14 px-8 rounded-xl border-zinc-700 text-zinc-300 hover:text-white font-bold"
-        >
-            <ChevronLeft className="w-5 h-5 mr-2"/> BACK
-        </Button>
-        
-        {currentStep === 3 ? (
+      {viewState === 'FORM' && (
+        <div className="flex justify-between pt-4 pb-8">
             <Button 
-                onClick={handleSubmit}
-                className="h-14 px-10 rounded-xl bg-green-600 hover:bg-green-700 text-white font-black text-lg shadow-[0_0_20px_rgba(22,163,74,0.4)]"
+                variant="outline" 
+                onClick={handlePrevStep} 
+                disabled={currentStep === 1}
+                className="h-14 px-8 rounded-xl border-zinc-700 text-zinc-300 hover:text-white font-bold"
             >
-                FINISH & JOIN <CheckCircle2 className="ml-2 w-6 h-6"/>
+                <ChevronLeft className="w-5 h-5 mr-2"/> BACK
             </Button>
-        ) : (
-            <Button 
-                onClick={handleNextStep}
-                disabled={
-                    (currentStep === 1 && !Object.values(formData.agreements).every(Boolean)) || // Step 1 Validasi
-                    (currentStep === 2 && !formData.selectedSkill) // Step 2 Validasi
-                }
-                className="h-14 px-8 rounded-xl bg-white text-black hover:bg-zinc-200 font-bold text-lg"
-            >
-                NEXT STEP <ChevronRight className="w-5 h-5 ml-2"/>
-            </Button>
-        )}
-      </div>
-
+            
+            {currentStep === 3 ? (
+                <Button 
+                    onClick={handleSubmit}
+                    className="h-14 px-10 rounded-xl bg-green-600 hover:bg-green-700 text-white font-black text-lg shadow-[0_0_20px_rgba(22,163,74,0.4)]"
+                >
+                    FINISH & JOIN <CheckCircle2 className="ml-2 w-6 h-6"/>
+                </Button>
+            ) : (
+                <Button 
+                    onClick={handleNextStep}
+                    disabled={
+                        (currentStep === 1 && !Object.values(formData.agreements).every(Boolean)) || // Step 1 Validasi
+                        (currentStep === 2 && !formData.selectedSkill) // Step 2 Validasi
+                    }
+                    className="h-14 px-8 rounded-xl bg-white text-black hover:bg-zinc-200 font-bold text-lg"
+                >
+                    NEXT STEP <ChevronRight className="w-5 h-5 ml-2"/>
+                </Button>
+            )}
+        </div>
+      )}
     </div>
   );
 
@@ -408,10 +400,12 @@ export default function PlayerPage() {
     case 'JOIN':
       return renderJoinGate();
     case 'FORM':
-      return renderWizard();
+      return renderFormWizard();
     case 'DASHBOARD':
       return <PlayerDashboardFull />;
     default:
       return renderLoading();
   }
 }
+
+    
