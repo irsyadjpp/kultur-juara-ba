@@ -57,7 +57,7 @@ const data = {
   navFinance: [
     { title: "Dashboard Keuangan", url: "/admin/finance", icon: PieChart },
     { title: "Approval Reimbursement", url: "/admin/finance/reimbursement-approval", icon: Stamp },
-    { title: "Tagihan Sponsor", url: "/admin/finance/sponsorship-billing", icon: Receipt },
+    { title: "Tagihan Sponsor", url: "/admin/finance/invoices", icon: Receipt },
     { title: "Skema Honorarium", url: "/admin/finance/honorarium", icon: Wallet },
     { title: "Kas Kecil (Petty Cash)", url: "/admin/finance/petty-cash", icon: Coins },
   ],
@@ -73,7 +73,7 @@ const data = {
     { title: "MLO: Verifikasi Line-Up", url: "/admin/mlo/lineups", icon: ClipboardList },
     { title: "Keputusan Protes", url: "/admin/protests", icon: Gavel },
     { title: "Papan Skor Wasit", url: "/admin/referee/match/1", icon: MonitorPlay },
-    { title: "Checklist Venue", url: "/admin/referee/checklist", icon: ClipboardCheck },
+    { title: "Checklist Venue", url: "/admin/match-control/venue-check", icon: ClipboardCheck },
     { title: "Dispatch Service", url: "/admin/match-control/service", icon: Megaphone },
   ],
   // 5. OPERASIONAL
