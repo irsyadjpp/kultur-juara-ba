@@ -12,7 +12,7 @@ import {
   Trophy, CalendarDays, FileText, ShieldAlert, Mic2, LifeBuoy, ClipboardList, Gavel, MonitorPlay, ClipboardCheck, 
   QrCode, Stethoscope, Package, Box, Database, Utensils, Gift, Upload, Layers, 
   Timer, Navigation,
-  BarChart3, Megaphone, Image as ImageIcon, 
+  BarChart3, Megaphone,
   Mail, FileSignature, Award, 
   Tags, UserCog, Handshake, Newspaper, Settings, ChevronRight, LogOut 
 } from "lucide-react"
@@ -97,8 +97,6 @@ const data = {
     { title: "Analisis Pengunjung", url: "/admin/business/visitors", icon: BarChart3 },
     { title: "Sponsorship CRM", url: "/admin/business/partners", icon: Handshake },
     { title: "Laporan Sponsor", url: "/admin/business/reports", icon: BarChart3 },
-    { title: "Manajemen Media", url: "/admin/media", icon: ImageIcon },
-    { title: "Tulis Berita", url: "/admin/media/news", icon: Newspaper },
   ],
   // 8. SEKRETARIAT
   navSecretariat: [
@@ -112,6 +110,7 @@ const data = {
     { title: "Verifikasi Pendaftaran Tim", url: "/admin/teams", icon: FileCheck },
     { title: "Master Tim/Pemain", url: "/admin/master/teams", icon: Users },
     { title: "Master Kategori", url: "/admin/master/categories", icon: Tags },
+    { title: "Manajemen Berita", url: "/admin/master/news", icon: Newspaper },
     { title: "Manajemen User", url: "/admin/settings/users", icon: UserCog },
   ]
 }
