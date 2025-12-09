@@ -10,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import confetti from "canvas-confetti"; 
 
@@ -40,18 +40,14 @@ export default function DoorprizePage() {
   const [displayCandidate, setDisplayCandidate] = useState("READY TO ROLL");
   const [winner, setWinner] = useState<string | null>(null);
   const [isWinnerModalOpen, setIsWinnerModalOpen] = useState(false);
-  
-  // State untuk Big Screen
   const [isBigScreen, setIsBigScreen] = useState(false);
 
-  // Auto-select prize pertama
   useEffect(() => {
     if (PRIZE_POOL.length > 0) {
         setSelectedPrize(PRIZE_POOL[0].id);
     }
   }, []);
 
-  // Animation Loop
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isSpinning) {
@@ -63,7 +59,7 @@ export default function DoorprizePage() {
     return () => clearInterval(interval);
   }, [isSpinning]);
 
-  // Listener untuk tombol ESC agar keluar dari fullscreen
+  // Listener ESC Key & Fullscreen Change
   useEffect(() => {
     const handleEsc = () => {
       if (!document.fullscreenElement) {
@@ -122,9 +118,16 @@ export default function DoorprizePage() {
   const activePrizeObj = PRIZE_POOL.find(p => p.id === selectedPrize);
 
   return (
-    <div className="space-y-8 p-4 md:p-8 font-body pb-24 h-[calc(100vh-64px)] flex flex-col">
+    // PERBAIKAN DISINI: 
+    // Menggunakan 'fixed inset-0 z-[9999]' saat big screen untuk menutupi Sidebar & Header Layout.
+    <div className={cn(
+        "font-body flex flex-col transition-all duration-500 bg-zinc-950",
+        isBigScreen 
+            ? "fixed inset-0 z-[9999] h-screen w-screen p-8 overflow-hidden" 
+            : "space-y-8 p-4 md:p-8 pb-24 h-[calc(100vh-64px)] relative"
+    )}>
       
-      {/* --- HEADER --- */}
+      {/* HEADER (Sembunyi saat Big Screen) */}
       <div className={cn("flex flex-col md:flex-row justify-between items-start md:items-end gap-6 shrink-0 transition-all", isBigScreen ? "hidden" : "flex")}>
         <div>
             <div className="flex items-center gap-2 mb-2">
@@ -140,12 +143,7 @@ export default function DoorprizePage() {
             </p>
         </div>
 
-        {/* TOMBOL BIG SCREEN */}
-        <Button 
-            variant="outline" 
-            onClick={toggleFullScreen}
-            className="h-14 rounded-full border-zinc-700 text-zinc-300 hover:text-white hover:bg-zinc-800 font-bold"
-        >
+        <Button variant="outline" onClick={toggleFullScreen} className="h-14 rounded-full border-zinc-700 text-zinc-300 hover:text-white hover:bg-zinc-800 font-bold">
             <Monitor className="mr-2 w-5 h-5"/> BIG SCREEN MODE
         </Button>
       </div>
@@ -193,7 +191,7 @@ export default function DoorprizePage() {
             </Card>
          </div>
 
-         {/* CENTER: THE SPINNER (Expands on Big Screen) */}
+         {/* CENTER: THE SPINNER (Expands to Full Width on Big Screen) */}
          <div className={cn("flex flex-col justify-center h-full transition-all duration-500", isBigScreen ? "lg:col-span-12" : "lg:col-span-6")}>
             <Card className="bg-zinc-950 border-zinc-800 rounded-[40px] overflow-hidden relative shadow-2xl h-full flex flex-col">
                 
@@ -204,12 +202,11 @@ export default function DoorprizePage() {
                 {/* EXIT BUTTON (Only Visible on Big Screen) */}
                 {isBigScreen && (
                     <Button 
-                        variant="ghost" 
-                        size="icon" 
+                        variant="secondary" 
                         onClick={toggleFullScreen}
-                        className="absolute top-6 right-6 z-50 text-zinc-500 hover:text-white hover:bg-zinc-800 rounded-full"
+                        className="absolute top-8 right-8 z-50 rounded-full h-12 px-6 font-bold bg-zinc-800 hover:bg-white hover:text-black shadow-xl border border-zinc-700"
                     >
-                        <Minimize className="w-8 h-8" />
+                        <Minimize className="w-5 h-5 mr-2" /> EXIT FULLSCREEN
                     </Button>
                 )}
 
@@ -244,7 +241,6 @@ export default function DoorprizePage() {
                         "bg-black/80 border-4 border-zinc-800 rounded-[32px] flex items-center justify-center overflow-hidden relative shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] group transition-all",
                         isBigScreen ? "w-3/4 h-64 border-pink-500/30" : "w-full h-48"
                     )}>
-                        {/* Scanlines Effect */}
                         <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 pointer-events-none bg-[length:100%_2px,3px_100%]"></div>
                         
                         <h1 className={cn(
@@ -315,14 +311,15 @@ export default function DoorprizePage() {
             "bg-zinc-950 border-4 border-pink-500 text-white rounded-[40px] overflow-hidden shadow-[0_0_100px_rgba(236,72,153,0.5)] transition-all",
             isBigScreen ? "max-w-4xl p-0 scale-125" : "max-w-lg p-0"
         )}>
-            
-            <DialogHeader className="sr-only">
+             <DialogHeader className="sr-only">
                 <DialogTitle>Winner Announcement</DialogTitle>
                 <DialogDescription>The winner is {winner}</DialogDescription>
             </DialogHeader>
-
+            
             <div className={cn("bg-gradient-to-b from-pink-600 to-purple-900 relative flex items-center justify-center overflow-hidden", isBigScreen ? "h-96" : "h-56")}>
                 <div className="absolute inset-0 bg-[url('/images/noise.png')] opacity-30 mix-blend-overlay"></div>
+                
+                {/* Winner Crown Animation */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-white/10 rounded-full blur-[80px] animate-pulse"></div>
                 
                 <div className="relative z-10 flex flex-col items-center animate-in zoom-in slide-in-from-bottom-10 duration-500">
@@ -338,9 +335,7 @@ export default function DoorprizePage() {
                     <h1 className={cn("font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-400 leading-tight", isBigScreen ? "text-7xl" : "text-4xl md:text-5xl")}>
                         {winner}
                     </h1>
-                    <Badge variant="outline" className="border-pink-500 text-pink-500 mt-2 px-4 py-1">
-                        ID: TICKET-LUCKY-88
-                    </Badge>
+                    <Badge variant="outline" className="border-pink-500 text-pink-500 mt-2 px-4 py-1">ID: TICKET-LUCKY-88</Badge>
                 </div>
 
                 <div className="bg-black/60 p-6 rounded-3xl border border-zinc-800 shadow-inner">
