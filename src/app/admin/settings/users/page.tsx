@@ -6,7 +6,8 @@ import {
   ShieldCheck, UserCog, Key, Plus, 
   Search, Filter, MoreHorizontal, Lock, 
   Unlock, Mail, RefreshCw, Smartphone, 
-  Trash2, BadgeCheck, LayoutGrid, CircleUser 
+  Trash2, BadgeCheck, LayoutGrid, CircleUser,
+  UserPlus
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -389,5 +390,3 @@ export default function UserManagementPage() {
     </div>
   );
 }
-
-    
