@@ -97,6 +97,7 @@ const data = {
     { title: "Analisis Pengunjung", url: "/admin/business/visitors", icon: BarChart3 },
     { title: "Sponsorship CRM", url: "/admin/business/partners", icon: Handshake },
     { title: "Laporan Sponsor", url: "/admin/business/reports", icon: BarChart3 },
+    { title: "Manajemen Media", url: "/admin/media", icon: Megaphone },
   ],
   // 8. SEKRETARIAT
   navSecretariat: [
