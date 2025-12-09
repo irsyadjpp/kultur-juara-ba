@@ -6,7 +6,7 @@ import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { loginManager, loginPlayerGoogle } from "../actions";
+import { loginPlayerManual, loginPlayerGoogle } from "../actions";
 import { Loader2, Mail } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -51,7 +51,7 @@ export default function PlayerLoginPage() {
   const { toast } = useToast();
 
   const [googleState, googleAction] = useActionState(loginPlayerGoogle, { success: false });
-  const [manualState, manualAction] = useActionState(loginManager, { success: false, message: '' });
+  const [manualState, manualAction] = useActionState(loginPlayerManual, { success: false, message: '' });
 
   useEffect(() => {
     if (googleState.success) {

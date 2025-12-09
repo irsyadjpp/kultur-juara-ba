@@ -4,14 +4,54 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { z } from 'zod';
+
+const authSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6, "Password minimal 6 karakter"),
+});
+
 
 // MOCK DB
-let PLAYERS_DB: any[] = [];
+let PLAYERS_DB: any[] = [
+    { email: "player@bcc.com", password: "password123", name: "Budi Atlet", phone: "08123456789" }
+];
 // Tim dengan Kode Unik
 const TEAMS_DB = [
   { id: "TEAM-01", name: "PB Djarum", code: "BCC-8821", manager: "Budi" },
   { id: "TEAM-02", name: "PB Jaya Raya", code: "BCC-9912", manager: "Susi" }
 ];
+
+export async function loginPlayerManual(prevState: any, formData: FormData) {
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
+
+  const validation = authSchema.safeParse({ email, password });
+  if (!validation.success) {
+    return { success: false, message: "Format email atau password salah." };
+  }
+
+  // Simulasi Cek DB
+  await new Promise(r => setTimeout(r, 1000));
+  
+  // Set Session Cookie
+  const sessionData = JSON.stringify({
+    email,
+    name: email.split('@')[0],
+    role: 'PLAYER',
+    isLoggedIn: true
+  });
+
+  cookies().set('bcc_player_session', sessionData, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 60 * 60 * 24, // 1 Hari
+    path: '/',
+  });
+
+  return { success: true, message: "Login berhasil!" };
+}
+
 
 export async function registerPlayer(data: any) {
   // 1. Cek NIK Duplikat (Wajib)
