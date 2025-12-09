@@ -314,12 +314,3 @@ export default function MedicalLogPage() {
     </div>
   );
 }
-```
-
-### Highlights Desain "Vital Monitor":
-
-1.  **High-Contrast UI:** Tema gelap dengan aksen merah cerah (bukan oranye/biru) langsung mengkomunikasikan fungsi halaman ini adalah untuk situasi darurat dan medis.
-2.  **Emergency-First:** Tombol "Log New Incident" dibuat sangat besar dan mencolok, karena ini adalah aksi utama dan paling sering dilakukan oleh tim medis.
-3.  **Ambulance Status:** Widget status ambulans dibuat mencolok di header. Ini adalah informasi kritikal, dan menempatkannya di atas memastikan semua orang di tim tahu apakah transportasi darurat tersedia atau sedang dikirim.
-4.  **Severity Tags:** Setiap insiden di log memiliki *tag* "Severity" (Critical/Medium/Low), memungkinkan triase visual cepat untuk memprioritaskan penanganan.
-5.  **Smart Form:** Form input menggunakan *preset* tombol untuk tindakan umum ("Ice Spray", "Plaster", dll.), mengurangi waktu mengetik manual di lapangan.
