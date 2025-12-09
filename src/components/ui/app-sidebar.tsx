@@ -14,7 +14,7 @@ import {
   Timer, Navigation,
   BarChart3, Megaphone,
   Mail, FileSignature, Award, 
-  Tags, UserCog, Handshake, Newspaper, Settings, ChevronRight, LogOut 
+  Tags, UserCog, Handshake, Newspaper, Settings, ChevronRight, LogOut, UserCheck
 } from "lucide-react"
 
 import {
@@ -68,7 +68,7 @@ const data = {
     { title: "Generate Bagan", url: "/admin/match-control/bracket", icon: Network },
     { title: "Verifikasi Hasil", url: "/admin/match-control/results", icon: FileText },
     { title: "Verifikasi TPF", url: "/admin/tpf", icon: ShieldAlert },
-    { title: "MLO: Call Room", url: "/admin/mlo/call-room", icon: Mic2 },
+    { title: "MLO: Call Room", url: "/admin/mlo/dashboard", icon: Mic2 },
     { title: "MLO: Helpdesk", url: "/admin/mlo/helpdesk", icon: LifeBuoy },
     { title: "MLO: Verifikasi Line-Up", url: "/admin/mlo/lineups", icon: ClipboardList },
     { title: "Keputusan Protes", url: "/admin/protests", icon: Gavel },
@@ -85,7 +85,7 @@ const data = {
     { title: "Database Volunteer", url: "/admin/hr/volunteers", icon: Database },
     { title: "Absensi & Konsumsi", url: "/admin/hr/meals", icon: Utensils },
     { title: "Undian Doorprize", url: "/admin/operations/doorprize", icon: Gift },
-    { title: "Pengajuan Reimbursement", url: "/admin/operations/reimbursement-request", icon: Upload },
+    { title: "Pengajuan Reimbursement", url: "/admin/reimbursement/submit", icon: Upload },
     { title: "Logistik Habis Pakai", url: "/admin/logistics/consumables", icon: Layers },
   ],
   // 6. ACARA & PENUTUPAN
