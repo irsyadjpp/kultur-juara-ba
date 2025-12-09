@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { 
   Trophy, Users, Shield, QrCode, Activity, Calendar, 
@@ -43,392 +43,453 @@ const PRICES = {
   ADVANCE: 300000
 };
 
+const TEAM_CHATS = [
+  { id: 1, user: "Coach Herry", msg: "Kumpul di Court 4 sekarang ya, warming up.", time: "10:00", self: false },
+  { id: 2, user: "Ginting", msg: "Siap coach, otw.", time: "10:02", self: false },
+  { id: 3, user: "You", msg: "Aman coach, saya bawa kok.", time: "10:06", self: true },
+];
+
+const SCHEDULE = {
+  status: "CALLING", 
+  court: "Court 1 (TV)",
+  match: "MS Round of 16",
+  opponent: "Lee Zii Jia",
+  time: "LIVE NOW"
+};
+
+const HISTORY = [
+  { event: "Round of 32", opponent: "Kento Momota", score: "21-15, 21-18", result: "WIN", date: "Yesterday" },
+  { event: "Round of 16", opponent: "Viktor Axelsen", score: "19-21, 15-21", result: "LOSE", date: "2 days ago" },
+];
+
+const GALLERY = [1, 2, 3, 4];
+
 // --- COMPONENT: FULL DASHBOARD (VIEW 3 - FINAL) ---
 function PlayerDashboardFull() {
   const [isIdCardFlipped, setIsIdCardFlipped] = useState(false);
   const [isProtestOpen, setIsProtestOpen] = useState(false);
+  const [chatMessage, setChatMessage] = useState("");
 
-  return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card className="bg-zinc-900 border-zinc-800 p-4 flex items-center gap-3">
-                <div className="p-2 bg-indigo-500/20 rounded-lg text-indigo-400"><Trophy className="w-5 h-5"/></div>
-                <div><p className="text-[10px] text-zinc-500 uppercase font-bold">Rank</p><p className="text-lg font-black text-white">PRO</p></div>
+  const renderDigitalID = () => (
+    <div className="perspective-1000 group cursor-pointer h-[450px] w-full" onClick={() => setIsIdCardFlipped(!isIdCardFlipped)}>
+        <div className={cn(
+            "relative w-full h-full transition-all duration-700 transform-style-3d",
+            isIdCardFlipped ? "rotate-y-180" : ""
+        )}>
+            {/* FRONT */}
+            <Card className="absolute inset-0 bg-gradient-to-b from-zinc-800 to-zinc-950 border-2 border-zinc-700/50 rounded-[32px] overflow-hidden backface-hidden shadow-[0_0_40px_rgba(0,0,0,0.5)]">
+                <div className="absolute inset-0 bg-[url('/images/noise.png')] opacity-10 mix-blend-overlay z-10"></div>
+                <div className="absolute top-0 right-0 w-48 h-48 bg-cyan-500/20 rounded-full blur-[80px]"></div>
+                <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-500/20 rounded-full blur-[60px]"></div>
+
+                <CardContent className="p-8 flex flex-col items-center h-full relative z-10">
+                    <div className="flex justify-between w-full mb-6 items-center">
+                        <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span className="text-[10px] font-bold text-zinc-400 tracking-widest uppercase">Verified Athlete</span>
+                        </div>
+                        <Trophy className="w-5 h-5 text-yellow-500"/>
+                    </div>
+                    
+                    <div className="relative mb-6">
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 blur-md opacity-50"></div>
+                        <Avatar className="w-32 h-32 border-4 border-zinc-950 relative">
+                            <AvatarImage src={ATHLETE.avatar} className="object-cover"/>
+                            <AvatarFallback>AT</AvatarFallback>
+                        </Avatar>
+                    </div>
+
+                    <h2 className="text-3xl font-black text-white text-center uppercase leading-none mb-2">{ATHLETE.name}</h2>
+                    <p className="text-sm font-bold text-zinc-400 mb-6">{ATHLETE.team}</p>
+                    
+                    <div className="grid grid-cols-2 gap-2 w-full mb-auto">
+                        <Badge variant="secondary" className="bg-zinc-900/50 border-zinc-700 justify-center py-1.5">Mens Singles</Badge>
+                        <Badge variant="secondary" className="bg-zinc-900/50 border-zinc-700 justify-center py-1.5">ID: {ATHLETE.id}</Badge>
+                    </div>
+                    
+                    <div className="w-full pt-4 border-t border-white/10 flex justify-center">
+                        <span className="flex items-center gap-2 text-cyan-400 font-bold text-xs animate-pulse">
+                            <RotateCw className="w-4 h-4"/> TAP TO REVEAL QR
+                        </span>
+                    </div>
+                </CardContent>
             </Card>
-            <Card className="bg-zinc-900 border-zinc-800 p-4 flex items-center gap-3">
-                <div className="p-2 bg-green-500/20 rounded-lg text-green-400"><Activity className="w-5 h-5"/></div>
-                <div><p className="text-[10px] text-zinc-500 uppercase font-bold">Win Rate</p><p className="text-lg font-black text-white">78%</p></div>
-            </Card>
-            <Card className="bg-zinc-900 border-zinc-800 p-4 flex items-center gap-3">
-                <div className="p-2 bg-yellow-500/20 rounded-lg text-yellow-400"><Users className="w-5 h-5"/></div>
-                <div><p className="text-[10px] text-zinc-500 uppercase font-bold">Team</p><p className="text-lg font-black text-white truncate w-20">Twinton</p></div>
-            </Card>
-            <Card className="bg-red-950/30 border-red-900/50 p-4 flex items-center gap-3 cursor-pointer hover:bg-red-900/50 transition-colors group">
-                <div className="p-2 bg-red-500/20 rounded-lg text-red-500 group-hover:animate-pulse"><AlertOctagon className="w-5 h-5"/></div>
-                <div><p className="text-[10px] text-red-400 uppercase font-bold">Integritas</p><p className="text-sm font-black text-white">Lapor/Sanggah</p></div>
+
+            {/* BACK */}
+            <Card className="absolute inset-0 bg-white border-4 border-zinc-200 rounded-[32px] overflow-hidden backface-hidden rotate-y-180 shadow-2xl">
+                <CardContent className="p-8 flex flex-col items-center justify-center h-full text-center space-y-6">
+                    <div>
+                        <h3 className="text-black font-black text-2xl uppercase tracking-tighter">Access Pass</h3>
+                        <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest">Gate • Medical • Umpire</p>
+                    </div>
+                    <div className="p-2 border-4 border-black rounded-2xl">
+                        <QrCode className="w-48 h-48 text-black"/>
+                    </div>
+                    <span className="flex items-center gap-2 text-zinc-400 font-bold text-xs mt-4">
+                        <RotateCw className="w-4 h-4"/> Tap to Front
+                    </span>
+                </CardContent>
             </Card>
         </div>
+    </div>
+  );
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-1 space-y-6">
-                {/* ID CARD */}
-                <div className="perspective-1000 group cursor-pointer h-[420px] w-full" onClick={() => setIsIdCardFlipped(!isIdCardFlipped)}>
-                    <div className={cn("relative w-full h-full transition-all duration-700 transform-style-3d", isIdCardFlipped ? "rotate-y-180" : "")}>
-                        <Card className="absolute inset-0 bg-gradient-to-b from-zinc-800 to-black border-2 border-zinc-700 rounded-[32px] overflow-hidden backface-hidden shadow-2xl flex flex-col">
-                            <div className="absolute inset-0 bg-[url('/images/noise.png')] opacity-20 mix-blend-overlay"></div>
-                            <CardContent className="p-6 flex flex-col items-center h-full relative z-10">
-                                <div className="flex justify-between w-full mb-6">
-                                    <Trophy className="w-6 h-6 text-yellow-500"/>
-                                    <span className="font-black text-white tracking-widest text-xs">BCC 2026 OFFICIAL</span>
-                                </div>
-                                <Avatar className="w-32 h-32 border-4 border-zinc-900 shadow-xl mb-4">
-                                    <AvatarImage src={ATHLETE.avatar} className="object-cover"/>
-                                    <AvatarFallback>AT</AvatarFallback>
-                                </Avatar>
-                                <h2 className="text-2xl font-black text-white text-center uppercase leading-none mb-2">{ATHLETE.name}</h2>
-                                <Badge className="bg-indigo-600 hover:bg-indigo-700 mb-2">{ATHLETE.team}</Badge>
-                                <div className="mt-auto w-full pt-4 border-t border-zinc-800 flex justify-between items-center text-xs text-zinc-400">
-                                    <span className="font-mono">{ATHLETE.id}</span>
-                                    <span className="flex items-center gap-1 text-cyan-400 font-bold animate-pulse"><RotateCw className="w-3 h-3"/> Flip Card</span>
-                                </div>
-                            </CardContent>
-                        </Card>
-                        <Card className="absolute inset-0 bg-white border-2 border-zinc-200 rounded-[32px] overflow-hidden backface-hidden rotate-y-180 shadow-2xl">
-                            <CardContent className="p-8 flex flex-col items-center justify-center h-full text-center space-y-6">
-                                <div><h3 className="text-black font-black text-2xl uppercase">Access Pass</h3><p className="text-zinc-500 text-xs">Show to Gate / Umpire</p></div>
-                                <div className="p-2 border-4 border-black rounded-xl"><QrCode className="w-40 h-40 text-black"/></div>
-                                <span className="flex items-center gap-1 text-cyan-600 font-bold text-xs mt-4"><RotateCw className="w-3 h-3"/> Flip Back</span>
-                            </CardContent>
-                        </Card>
+  const renderSquadChat = () => (
+    <Sheet>
+        <SheetTrigger asChild>
+            <Button className="w-full bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-white justify-between h-20 rounded-[24px] px-6 group transition-all">
+                <div className="flex items-center gap-4">
+                    <div className="flex -space-x-3">
+                        <Avatar className="w-10 h-10 border-2 border-zinc-900"><AvatarFallback>CH</AvatarFallback></Avatar>
+                        <Avatar className="w-10 h-10 border-2 border-zinc-900"><AvatarFallback>GT</AvatarFallback></Avatar>
+                        <Avatar className="w-10 h-10 border-2 border-zinc-900"><AvatarFallback>KS</AvatarFallback></Avatar>
+                    </div>
+                    <div className="text-left">
+                        <p className="text-sm font-black text-white uppercase">Team Lounge</p>
+                        <p className="text-xs text-green-500 font-bold flex items-center gap-1">
+                            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> 4 Online
+                        </p>
                     </div>
                 </div>
+                <div className="w-10 h-10 rounded-full bg-zinc-950 flex items-center justify-center border border-zinc-800 group-hover:bg-indigo-600 group-hover:border-indigo-600 group-hover:text-white transition-colors text-zinc-500">
+                    <MessageCircle className="w-5 h-5"/>
+                </div>
+            </Button>
+        </SheetTrigger>
+        <SheetContent side="right" className="bg-zinc-950 border-l border-zinc-800 w-full sm:max-w-md p-0 flex flex-col">
+            <SheetHeader className="p-4 border-b border-zinc-800 bg-zinc-900/80 backdrop-blur-md">
+                <div className="flex items-center gap-3">
+                    <Avatar><AvatarImage src="/logos/djarum.png"/><AvatarFallback>TM</AvatarFallback></Avatar>
+                    <div className="text-left">
+                        <SheetTitle className="text-white text-sm font-bold">PB Djarum Official</SheetTitle>
+                        <p className="text-xs text-zinc-400">Team Strategy Channel</p>
+                    </div>
+                </div>
+            </SheetHeader>
+            <ScrollArea className="flex-1 p-4">
+                <div className="space-y-6">
+                    {TEAM_CHATS.map(c => (
+                        <div key={c.id} className={cn("flex flex-col max-w-[85%]", c.self ? "ml-auto items-end" : "mr-auto items-start")}>
+                            {!c.self && <span className="text-[10px] text-zinc-500 mb-1 ml-2 font-bold">{c.user}</span>}
+                            <div className={cn("p-4 rounded-3xl text-sm font-medium shadow-sm", c.self ? "bg-indigo-600 text-white rounded-tr-sm" : "bg-zinc-800 text-zinc-200 rounded-tl-sm")}>
+                                {c.msg}
+                            </div>
+                            <span className="text-[10px] text-zinc-600 mt-1 mx-2">{c.time}</span>
+                        </div>
+                    ))}
+                </div>
+            </ScrollArea>
+            <div className="p-4 border-t border-zinc-800 bg-zinc-900">
+                <div className="flex items-center gap-2 bg-zinc-950 p-1.5 rounded-full border border-zinc-800 focus-within:border-indigo-500 transition-colors">
+                    <Button size="icon" className="rounded-full bg-zinc-800 hover:bg-zinc-700 w-8 h-8 shrink-0"><Paperclip className="w-4 h-4 text-zinc-400"/></Button>
+                    <Input className="bg-transparent border-none h-9 text-sm focus-visible:ring-0 placeholder:text-zinc-600" placeholder="Message team..." value={chatMessage} onChange={(e) => setChatMessage(e.target.value)} />
+                    <Button size="icon" className="rounded-full bg-indigo-600 hover:bg-indigo-700 w-9 h-9 shrink-0"><Send className="w-4 h-4 text-white"/></Button>
+                </div>
             </div>
+        </SheetContent>
+    </Sheet>
+  );
 
-            <div className="lg:col-span-2">
-                <Card className="bg-zinc-900 border-zinc-800 rounded-[32px] p-8 text-center flex flex-col items-center justify-center min-h-[300px]">
-                    <Calendar className="w-16 h-16 text-zinc-700 mb-4"/>
-                    <h3 className="text-2xl font-bold text-white">Verification in Progress</h3>
-                    <p className="text-zinc-500 text-sm max-w-md mt-2">
-                        Data pendaftaran Anda sedang diverifikasi oleh Tim Pencari Fakta. Jadwal drawing akan diumumkan H-3 pertandingan.
-                    </p>
-                </Card>
+  const renderCourtCall = () => (
+    <Card className="bg-zinc-900 border-zinc-800 rounded-[32px] p-6 relative overflow-hidden group">
+        <div className={cn("absolute left-0 top-0 bottom-0 w-2 transition-all", 
+            SCHEDULE.status === 'CALLING' ? "bg-red-600 animate-pulse" : "bg-green-500"
+        )}></div>
+        
+        <div className="flex justify-between items-start mb-4 relative z-10">
+            <h3 className="text-xs font-black text-zinc-500 uppercase tracking-widest flex items-center gap-2">
+                <Clock className="w-4 h-4"/> Court Status
+            </h3>
+            <Badge className={cn("font-bold border-none px-3 py-1 text-[10px]", 
+                SCHEDULE.status === 'CALLING' ? "bg-red-600 text-white animate-bounce" : "bg-green-600"
+            )}>
+                {SCHEDULE.status}
+            </Badge>
+        </div>
+        
+        <div className="space-y-1 relative z-10">
+            <p className="text-xs text-zinc-400">Opponent</p>
+            <p className="text-2xl font-black text-white uppercase leading-none">{SCHEDULE.opponent}</p>
+            <p className="text-sm font-bold text-cyan-500 mt-1">{SCHEDULE.match}</p>
+        </div>
+
+        <div className="mt-4 pt-4 border-t border-zinc-800 flex justify-between items-center relative z-10">
+            <Badge variant="outline" className="border-zinc-700 text-white h-8 px-3 text-sm">{SCHEDULE.court}</Badge>
+            <span className="text-xs font-mono text-zinc-500">Est: {SCHEDULE.time}</span>
+        </div>
+    </Card>
+  );
+
+  const renderLiveScore = () => (
+    <Card className="bg-zinc-900/50 border border-zinc-800/50 rounded-[32px] p-6">
+        <div className="flex justify-between items-center mb-6">
+            <h3 className="text-sm font-black text-white uppercase flex items-center gap-2">
+                <Activity className="w-4 h-4 text-green-500"/> Live Scoring
+            </h3>
+            <Badge variant="outline" className="border-red-500 text-red-500 text-[10px] animate-pulse bg-red-500/10">● LIVE</Badge>
+        </div>
+        
+        <div className="bg-black rounded-2xl border border-zinc-800 p-4 flex items-center justify-between">
+            <div className="text-center w-1/3">
+                <p className="text-xs font-bold text-zinc-500 mb-2">You</p>
+                <p className="text-4xl font-black text-white">21</p>
+                <div className="mt-2 w-full h-1 bg-zinc-800 rounded-full overflow-hidden">
+                    <div className="h-full bg-green-500 w-3/4"></div>
+                </div>
+            </div>
+            <div className="text-center w-1/3 border-x border-zinc-800 h-12 flex flex-col justify-center">
+                <p className="text-xs text-zinc-600 font-mono">VS</p>
+                <p className="text-[10px] text-zinc-700">00:45</p>
+            </div>
+            <div className="text-center w-1/3">
+                <p className="text-xs font-bold text-zinc-500 mb-2">Opponent</p>
+                <p className="text-4xl font-black text-zinc-600">18</p>
+                <div className="mt-2 w-full h-1 bg-zinc-800 rounded-full"></div>
             </div>
         </div>
+        <Button variant="ghost" className="w-full mt-2 text-xs text-zinc-500 hover:text-white">View Full Bracket</Button>
+    </Card>
+  );
+
+  return (
+    <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-1 space-y-6">
+                {renderDigitalID()}
+            </div>
+            <div className="lg:col-span-2 space-y-6">
+                {renderCourtCall()}
+                {renderLiveScore()}
+                {renderSquadChat()}
+            </div>
+        </div>
+        <Tabs defaultValue="history" className="w-full">
+            <TabsList className="bg-zinc-900 p-1 rounded-2xl mb-6">
+                <TabsTrigger value="history" className="rounded-xl px-6 font-bold data-[state=active]:bg-zinc-800">Match History</TabsTrigger>
+                <TabsTrigger value="gallery" className="rounded-xl px-6 font-bold data-[state=active]:bg-zinc-800">Media Gallery</TabsTrigger>
+            </TabsList>
+            <TabsContent value="history" className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {HISTORY.map((match, i) => (
+                        <Card key={i} className="bg-zinc-900 border-zinc-800 rounded-[24px] p-0 overflow-hidden hover:bg-zinc-800/80 transition-colors cursor-pointer group">
+                            <div className="p-5 flex items-center justify-between">
+                                <div className="flex items-center gap-4">
+                                    <div className={cn("w-1.5 h-12 rounded-full", match.result === 'WIN' ? "bg-green-500" : "bg-red-500")}></div>
+                                    <div>
+                                        <p className="text-xs text-zinc-500 font-bold uppercase mb-0.5">{match.event}</p>
+                                        <h4 className="text-base font-black text-white">vs. {match.opponent}</h4>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <Badge variant="secondary" className={cn("mb-1 font-bold text-[10px]", match.result === 'WIN' ? "bg-green-500/10 text-green-500" : "bg-red-500/10 text-red-500")}>
+                                        {match.result}
+                                    </Badge>
+                                    <p className="text-xs font-mono text-zinc-400">{match.score}</p>
+                                </div>
+                            </div>
+                        </Card>
+                    ))}
+                </div>
+            </TabsContent>
+            <TabsContent value="gallery">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {GALLERY.map((i) => (
+                        <div key={i} className="group relative aspect-square bg-zinc-800 rounded-3xl overflow-hidden cursor-pointer border border-zinc-800 hover:border-zinc-600 transition-all">
+                            <div className="absolute inset-0 flex items-center justify-center text-zinc-700 bg-zinc-900">
+                                <Camera className="w-8 h-8 opacity-20"/>
+                            </div>
+                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex flex-col items-center justify-center gap-3 p-4 backdrop-blur-sm">
+                                <p className="text-white text-[10px] font-bold tracking-widest uppercase">Match Day {i}</p>
+                                <div className="flex gap-2">
+                                    <Button size="icon" className="rounded-full bg-white text-black hover:bg-zinc-200 w-10 h-10 shadow-lg"><Download className="w-4 h-4"/></Button>
+                                    <Button size="icon" className="rounded-full bg-pink-600 text-white hover:bg-pink-700 w-10 h-10 shadow-lg"><Share2 className="w-4 h-4"/></Button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </TabsContent>
+        </Tabs>
     </div>
   );
 }
 
-// --- MAIN PAGE ---
+// =================================================================================================
+// MAIN PAGE COMPONENT (CONTROLLER)
+// =================================================================================================
 export default function PlayerPage() {
-  const [hasJoinedTeam, setHasJoinedTeam] = useState(false); 
-  const [isRegistrationComplete, setIsRegistrationComplete] = useState(false); 
+    const [isLoading, setIsLoading] = useState(true);
+    const [hasJoinedTeam, setHasJoinedTeam] = useState(false); 
+    const [isRegistrationComplete, setIsRegistrationComplete] = useState(false); 
+  
+    useEffect(() => {
+        setHasJoinedTeam(false); 
+        setIsRegistrationComplete(false);
+        setIsLoading(false);
+    }, []);
 
-  // Wizard States
-  const [joinCode, setJoinCode] = useState("");
-  const [isJoining, setIsJoining] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState({
-    agreements: { valid: false, health: false, rules: false, media: false },
-    skillLevel: "BEGINNER",
-    personal: { name: "", nik: "", dob: "", gender: "M", wa: "", address: "" },
-    tpf: { ig: "", history: "" },
-    manager: { name: "Budi Santoso", wa: "0812345678" } // Pre-filled from Team
-  });
+    // Wizard States
+    const [joinCode, setJoinCode] = useState("");
+    const [isJoining, setIsJoining] = useState(false);
+    const [currentStep, setCurrentStep] = useState(1);
+    const [formData, setFormData] = useState({ agreements: { valid: false, health: false, rules: false, media: false }, skillLevel: "BEGINNER" });
 
-  const totalPrice = PRICES[formData.skillLevel as keyof typeof PRICES];
+    // HANDLERS
+    const handleVerifyCode = () => {
+        if (!joinCode) return;
+        setIsJoining(true);
+        setTimeout(() => {
+            setIsJoining(false);
+            if (joinCode === "TWIN-2026") {
+                setHasJoinedTeam(true);
+            } else {
+                alert("Kode Salah! Coba: TWIN-2026");
+            }
+        }, 1000);
+    };
 
-  // --- HANDLERS ---
-  const handleVerifyCode = () => {
-    if (!joinCode) return;
-    setIsJoining(true);
-    setTimeout(() => {
-      setIsJoining(false);
-      if (joinCode === "TWIN-2026") {
-        setHasJoinedTeam(true);
-      } else {
-        alert("Kode Salah! Coba: TWIN-2026");
-      }
-    }, 1000);
-  };
+    const handleNextStep = () => setCurrentStep(prev => Math.min(prev + 1, 5));
+    const handlePrevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
+    const updateAgreement = (key: string) => {
+        setFormData(prev => ({ ...prev, agreements: { ...prev.agreements, [key]: !prev.agreements[key as keyof typeof prev.agreements] } }));
+    };
 
-  const updateAgreement = (key: keyof typeof formData.agreements) => {
-    setFormData(prev => ({ ...prev, agreements: { ...prev.agreements, [key]: !prev.agreements[key as keyof typeof prev.agreements] } }));
-  };
-
-  const renderWizardContent = () => {
-    switch (currentStep) {
-        // STEP 1: DISCLAIMER
-        case 1:
-            return (
-                <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300">
-                    <div className="bg-red-900/20 border border-red-500/30 p-6 rounded-3xl flex gap-4 items-start">
-                        <Shield className="w-8 h-8 text-red-500 shrink-0 mt-1"/>
-                        <div className="space-y-1">
-                            <h3 className="font-black text-red-100 text-lg uppercase">Perjanjian Atlet</h3>
-                            <p className="text-red-200/80 text-xs">Pelanggaran poin ini menyebabkan diskualifikasi permanen.</p>
-                        </div>
-                    </div>
-                    <div className="space-y-3">
-                        {[
-                            { id: 'valid', label: 'Validitas Data', desc: 'Data yang saya isi BENAR. Siap didiskualifikasi jika ditemukan pemalsuan.' },
-                            { id: 'health', label: 'Kesehatan Fisik', desc: 'Sehat jasmani rohani. Panitia tidak bertanggung jawab atas cedera berat.' },
-                            { id: 'rules', label: 'Regulasi', desc: 'Menyetujui aturan main dan keputusan mutlak Wasit/TPF.' },
-                            { id: 'media', label: 'Publikasi', desc: 'Mengizinkan dokumentasi foto/video untuk kepentingan acara.' }
-                        ].map((item) => (
-                            <div key={item.id} className="flex gap-4 items-start p-4 bg-zinc-900 border border-zinc-800 rounded-2xl hover:border-zinc-700 cursor-pointer transition-colors" onClick={() => updateAgreement(item.id as keyof typeof formData.agreements)}>
-                                <Checkbox checked={formData.agreements[item.id as keyof typeof formData.agreements]} className="mt-1 border-zinc-600 data-[state=checked]:bg-cyan-600 data-[state=checked]:border-cyan-600"/>
-                                <div>
-                                    <Label className="font-bold text-white cursor-pointer text-sm uppercase">{item.label}</Label>
-                                    <p className="text-xs text-zinc-400 mt-0.5">{item.desc}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            );
-        
-        // STEP 2: SKILL LEVEL
-        case 2:
-            return (
-                <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300">
-                    <div className="text-center mb-6">
-                        <h3 className="text-xl font-black text-white uppercase">Pilih Slot Tim</h3>
-                        <p className="text-zinc-400 text-sm">Tim <strong>PB Twinton</strong> membuka slot berikut:</p>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {Object.entries(PRICES).map(([level, price]) => (
-                            <div 
-                                key={level}
-                                onClick={() => setFormData({...formData, skillLevel: level})}
-                                className={cn(
-                                    "p-6 rounded-3xl border-2 transition-all cursor-pointer relative overflow-hidden group",
-                                    formData.skillLevel === level ? "border-cyan-500 bg-cyan-900/20" : "border-zinc-800 bg-zinc-900 hover:border-zinc-600"
-                                )}
-                            >
-                                <div className="flex justify-between items-start mb-2 relative z-10">
-                                    <h4 className="font-black text-white text-lg">{level}</h4>
-                                    {formData.skillLevel === level && <CheckCircle2 className="w-6 h-6 text-cyan-500"/>}
-                                </div>
-                                <p className="text-xs text-zinc-400 mb-4 relative z-10">
-                                    {level === 'BEGINNER' ? "Pemula / Hobi" : level === 'INTERMEDIATE' ? "Rutin / Kompetitif" : "Semi-Pro / Eks Atlet"}
-                                </p>
-                                <Badge className="bg-zinc-950 border border-zinc-700 text-white font-mono">Rp {price.toLocaleString()}</Badge>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            );
-
-        // STEP 3: BIODATA & TPF
-        case 3:
-            return (
-                <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300">
-                    <div className="grid grid-cols-1 gap-6">
-                        <Card className="bg-zinc-900 border-zinc-800 rounded-[32px]">
-                            <CardHeader className="border-b border-zinc-800 pb-4"><CardTitle className="text-sm font-black text-white uppercase flex items-center gap-2"><User className="w-4 h-4 text-cyan-500"/> Data Diri Atlet</CardTitle></CardHeader>
-                            <CardContent className="p-6 space-y-4">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="space-y-2 col-span-2">
-                                        <Label className="text-xs text-zinc-500 font-bold uppercase">Nama Lengkap (KTP)</Label>
-                                        <Input className="bg-black border-zinc-800 h-12 rounded-xl" value={formData.personal.name} onChange={(e) => setFormData({...formData, personal: {...formData.personal, name: e.target.value}})} />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label className="text-xs text-zinc-500 font-bold uppercase">NIK (16 Digit)</Label>
-                                        <Input className="bg-black border-zinc-800 h-12 rounded-xl" maxLength={16} value={formData.personal.nik} onChange={(e) => setFormData({...formData, personal: {...formData.personal, nik: e.target.value}})} />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label className="text-xs text-zinc-500 font-bold uppercase">Tgl Lahir</Label>
-                                        <Input type="date" className="bg-black border-zinc-800 h-12 rounded-xl" value={formData.personal.dob} onChange={(e) => setFormData({...formData, personal: {...formData.personal, dob: e.target.value}})} />
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card className="bg-zinc-900 border-zinc-800 rounded-[32px]">
-                            <CardHeader className="border-b border-zinc-800 pb-4"><CardTitle className="text-sm font-black text-white uppercase flex items-center gap-2"><Activity className="w-4 h-4 text-red-500"/> Validasi TPF (Wajib)</CardTitle></CardHeader>
-                            <CardContent className="p-6 space-y-4">
-                                <div className="space-y-2">
-                                    <Label className="text-xs text-zinc-500 font-bold uppercase">Instagram (Public)</Label>
-                                    <div className="relative">
-                                        <Instagram className="absolute left-3 top-3.5 w-4 h-4 text-zinc-500"/>
-                                        <Input className="bg-black border-zinc-800 pl-10 h-12 rounded-xl" placeholder="@username" value={formData.tpf.ig} onChange={(e) => setFormData({...formData, tpf: {...formData.tpf, ig: e.target.value}})} />
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <Label className="text-xs text-zinc-500 font-bold uppercase">Riwayat Prestasi</Label>
-                                    <Textarea className="bg-black border-zinc-800 min-h-[80px] rounded-xl" placeholder="Sebutkan turnamen terakhir..." value={formData.tpf.history} onChange={(e) => setFormData({...formData, tpf: {...formData.tpf, history: e.target.value}})} />
-                                </div>
-                                <div className="grid grid-cols-2 gap-3 pt-2">
-                                    <div className="h-20 bg-black border-2 border-dashed border-zinc-800 rounded-xl flex flex-col items-center justify-center text-zinc-600 hover:text-white cursor-pointer"><Upload className="w-4 h-4 mb-1"/><span className="text-[9px] font-bold uppercase">Foto KTP</span></div>
-                                    <div className="h-20 bg-black border-2 border-dashed border-zinc-800 rounded-xl flex flex-col items-center justify-center text-zinc-600 hover:text-white cursor-pointer"><Upload className="w-4 h-4 mb-1"/><span className="text-[9px] font-bold uppercase">Foto Diri</span></div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-                </div>
-            );
-
-        // STEP 4: MANAGER
-        case 4:
-            return (
-                <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300 max-w-xl mx-auto">
-                    <Card className="bg-zinc-900 border-zinc-800 rounded-[32px] p-8 text-center">
-                        <div className="w-16 h-16 bg-zinc-800 rounded-full mx-auto flex items-center justify-center mb-4"><Users className="w-8 h-8 text-white"/></div>
-                        <h3 className="text-xl font-black text-white mb-2">Kontak Manajer</h3>
-                        <p className="text-zinc-400 text-sm mb-6">Data ini diambil dari database tim. Pastikan ini adalah orang yang benar.</p>
-                        <div className="bg-black p-4 rounded-2xl border border-zinc-800 text-left space-y-3">
-                            <div>
-                                <p className="text-[10px] text-zinc-500 uppercase font-bold">Nama Manajer</p>
-                                <p className="text-white font-bold">{formData.manager.name}</p>
-                            </div>
-                            <div>
-                                <p className="text-[10px] text-zinc-500 uppercase font-bold">No. WhatsApp</p>
-                                <p className="text-white font-mono">{formData.manager.wa}</p>
-                            </div>
-                        </div>
-                    </Card>
-                </div>
-            );
-
-        // STEP 5: PAYMENT
-        case 5:
-            return (
-                <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300 max-w-xl mx-auto">
-                    <Card className="bg-gradient-to-br from-zinc-900 to-black border-zinc-800 rounded-[32px] p-8">
-                        <div className="text-center mb-8">
-                            <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs mb-2">Total Tagihan</p>
-                            <h2 className="text-5xl font-black text-white">Rp {totalPrice.toLocaleString()}</h2>
-                            <Badge variant="outline" className="mt-4 border-cyan-500 text-cyan-400">{formData.skillLevel} CLASS</Badge>
-                        </div>
-                        <div className="bg-zinc-950 p-6 rounded-2xl border border-zinc-800 space-y-4 mb-6">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3"><Wallet className="w-5 h-5 text-white"/><span className="text-sm font-bold text-zinc-300">Bank BJB</span></div>
-                                <span className="font-mono text-white font-bold">0012-3456-7890</span>
-                            </div>
-                            <div className="flex items-center justify-between border-t border-zinc-800 pt-4">
-                                <div className="flex items-center gap-3"><QrCode className="w-5 h-5 text-white"/><span className="text-sm font-bold text-zinc-300">QRIS</span></div>
-                                <span className="text-xs text-zinc-500">Panitia BCC 2026</span>
-                            </div>
-                        </div>
-                        <div className="h-28 bg-zinc-900 border-2 border-dashed border-zinc-700 rounded-2xl flex flex-col items-center justify-center text-zinc-500 hover:text-white hover:border-cyan-500 cursor-pointer transition-all">
-                            <Upload className="w-6 h-6 mb-2"/>
-                            <span className="text-xs font-bold uppercase">Upload Bukti Transfer</span>
-                        </div>
-                    </Card>
-                </div>
-            );
-        default: return null;
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+                <Loader2 className="w-8 h-8 text-white animate-spin" />
+            </div>
+        );
     }
-  };
-
-  // --- RENDER VIEW 1: GATE ---
-  if (!hasJoinedTeam) {
-    return (
-      <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-4 font-body relative overflow-hidden">
-        <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none"></div>
-        <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-cyan-600/10 rounded-full blur-[120px] pointer-events-none"></div>
-
-        <Card className="w-full max-w-lg bg-zinc-900/80 backdrop-blur-xl border-zinc-800 rounded-[40px] p-8 md:p-12 border-dashed border-2 relative overflow-hidden shadow-2xl">
-          <div className="text-center space-y-8 relative z-10">
-            <div className="w-20 h-20 bg-gradient-to-br from-zinc-800 to-black rounded-3xl mx-auto flex items-center justify-center border border-zinc-700 shadow-inner">
-                <Hash className="w-10 h-10 text-white"/>
-            </div>
-            
-            <div>
-                <h2 className="text-4xl font-black text-white uppercase tracking-tighter">Team Access</h2>
-                <p className="text-zinc-400 text-sm mt-3 leading-relaxed px-4">
-                  Masukkan <strong>Kode Unik</strong> yang diberikan oleh Manajer Tim/Komunitas untuk membuka formulir.
-                </p>
-            </div>
-
-            <div className="space-y-4">
-                <div className="relative group">
-                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition-opacity"></div>
+    
+    // --- RENDER VIEW 1: GATE (INPUT CODE) ---
+    if (!hasJoinedTeam) {
+        return (
+          <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-4 font-body relative overflow-hidden">
+            <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none"></div>
+            <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-cyan-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+    
+            <Card className="w-full max-w-lg bg-zinc-900/80 backdrop-blur-xl border-zinc-800 rounded-[40px] p-8 md:p-12 border-dashed border-2 relative overflow-hidden shadow-2xl">
+              <div className="text-center space-y-8 relative z-10">
+                <div className="w-20 h-20 bg-gradient-to-br from-zinc-800 to-black rounded-3xl mx-auto flex items-center justify-center border border-zinc-700 shadow-inner">
+                    <Hash className="w-10 h-10 text-white"/>
+                </div>
+                
+                <div>
+                    <h2 className="text-4xl font-black text-white uppercase tracking-tighter">Team Access</h2>
+                    <p className="text-zinc-400 text-sm mt-3 leading-relaxed px-4">
+                      Masukkan <strong>Kode Unik</strong> yang diberikan oleh Manajer Tim/Komunitas untuk membuka formulir pendaftaran.
+                    </p>
+                </div>
+    
+                <div className="space-y-4">
                     <Input 
                         placeholder="CONTOH: TWIN-2026" 
-                        className="relative bg-black border-zinc-700 h-16 text-center text-2xl font-mono uppercase tracking-[0.2em] text-white rounded-2xl focus:border-cyan-500 focus:ring-0 placeholder:text-zinc-800 transition-all"
+                        className="bg-black border-zinc-700 h-16 text-center text-2xl font-mono uppercase tracking-[0.2em] text-white rounded-2xl focus:border-cyan-500 focus:ring-0 placeholder:text-zinc-800"
                         value={joinCode}
                         onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
                         maxLength={9}
                     />
+                    <Button 
+                        onClick={handleVerifyCode} 
+                        disabled={isJoining || joinCode.length < 5} 
+                        className="w-full h-14 rounded-2xl bg-white hover:bg-zinc-200 text-black font-black text-lg shadow-xl"
+                    >
+                        {isJoining ? "VERIFYING..." : "ENTER TEAM SQUAD"} <ArrowRight className="ml-2 w-5 h-5"/>
+                    </Button>
                 </div>
-                <Button 
-                    onClick={handleVerifyCode} 
-                    disabled={isJoining || joinCode.length < 5} 
-                    className="w-full h-14 rounded-2xl bg-white hover:bg-zinc-200 text-black font-black text-lg shadow-xl"
-                >
-                    {isJoining ? "VERIFYING..." : "ENTER SQUAD"} <ArrowRight className="ml-2 w-5 h-5"/>
-                </Button>
-            </div>
-        </div>
-      </Card>
-      <p className="text-zinc-600 text-xs mt-8 font-mono relative z-10">BCC 2026 • OFFICIAL REGISTRATION PORTAL</p>
-    </div>
-    );
-  }
-
-  // --- RENDER VIEW 2: WIZARD FORM ---
-  if (!isRegistrationComplete) {
-    return (
-      <div className="min-h-screen bg-zinc-950 font-body py-8 px-4 md:py-12">
-        <div className="max-w-3xl mx-auto">
-            <div className="mb-10 text-center space-y-4">
-                <Badge variant="outline" className="border-indigo-500 text-indigo-400 px-4 py-1 tracking-widest uppercase">Joining: PB TWINTON</Badge>
-                <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tight">Athlete Data</h1>
-                
-                {/* Progress Bar */}
-                <div className="w-full bg-zinc-900 rounded-full h-2 overflow-hidden mt-6">
-                    <div className="h-full bg-gradient-to-r from-cyan-500 to-indigo-600 transition-all duration-500 ease-out" style={{ width: `${(currentStep/5)*100}%` }}></div>
-                </div>
-                <div className="flex justify-between text-[10px] font-bold text-zinc-500 uppercase tracking-widest mt-2 px-1">
-                    <span>Agreement</span>
-                    <span>Skill</span>
-                    <span>Bio</span>
-                    <span>Contact</span>
-                    <span>Pay</span>
-                </div>
-            </div>
-
-            <Card className="bg-zinc-900 border-zinc-800 rounded-[40px] p-8 md:p-10 min-h-[400px] shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-[100px] pointer-events-none"></div>
-                <div className="relative z-10">
-                    {renderWizardContent()}
-                </div>
+              </div>
             </Card>
-
-            <div className="flex justify-between mt-8 px-2">
-                <Button variant="ghost" onClick={() => setCurrentStep(p => Math.max(1, p-1))} disabled={currentStep===1} className="h-14 px-8 rounded-2xl text-zinc-500 hover:text-white hover:bg-zinc-900 font-bold"><ChevronLeft className="w-5 h-5 mr-2"/> BACK</Button>
-                
-                {currentStep === 5 ? (
-                    <Button onClick={() => setIsRegistrationComplete(true)} className="h-14 px-10 rounded-2xl bg-green-600 hover:bg-green-700 text-white font-black text-lg shadow-lg shadow-green-900/20">
-                        SUBMIT REGISTRATION <CheckCircle2 className="ml-3 w-5 h-5"/>
-                    </Button>
-                ) : (
-                    <Button onClick={handleNextStep} disabled={currentStep === 1 && !Object.values(formData.agreements).every(Boolean)} className="h-14 px-10 rounded-2xl bg-white text-black hover:bg-zinc-200 font-bold text-lg">
-                        NEXT STEP <ChevronRight className="w-5 h-5 ml-2"/>
-                    </Button>
-                )}
-            </div>
+            
+            <p className="text-zinc-600 text-xs mt-8 font-mono">BCC 2026 • OFFICIAL REGISTRATION PORTAL</p>
+          </div>
+        );
+    }
+  
+    // --- RENDER VIEW 2: WIZARD FORM ---
+    if (!isRegistrationComplete) {
+      return (
+        <div className="min-h-screen bg-zinc-950 font-body py-8 px-4 md:py-12">
+          <div className="max-w-3xl mx-auto">
+              <div className="mb-10 text-center space-y-4">
+                  <Badge variant="outline" className="border-indigo-500 text-indigo-400 px-4 py-1 tracking-widest uppercase">Joining: PB TWINTON</Badge>
+                  <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tight">Athlete Data</h1>
+                  
+                  <div className="w-full bg-zinc-900 rounded-full h-2 overflow-hidden mt-6">
+                      <div className="h-full bg-gradient-to-r from-cyan-500 to-indigo-600 transition-all duration-500 ease-out" style={{ width: `${(currentStep/5)*100}%` }}></div>
+                  </div>
+                  <div className="flex justify-between text-[10px] font-bold text-zinc-500 uppercase tracking-widest mt-2 px-1">
+                      <span>Agreement</span>
+                      <span>Skill</span>
+                      <span>Bio</span>
+                      <span>Contact</span>
+                      <span>Pay</span>
+                  </div>
+              </div>
+  
+              <Card className="bg-zinc-900 border-zinc-800 rounded-[40px] p-8 md:p-10 min-h-[400px] shadow-2xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-[100px] pointer-events-none"></div>
+                  <div className="relative z-10">
+                      {/* Wizard Content Here */}
+                      <div className="text-center py-16 animate-in fade-in zoom-in duration-300">
+                          <div className="w-20 h-20 bg-zinc-800 rounded-3xl mx-auto flex items-center justify-center mb-6 animate-pulse">
+                              <FileText className="w-10 h-10 text-zinc-600"/>
+                          </div>
+                          <h3 className="text-white text-2xl font-black mb-2 uppercase">Step {currentStep}: Form Placeholder</h3>
+                          <p className="text-zinc-500 text-sm max-w-sm mx-auto mb-8">
+                              This section is a placeholder for the full form content of Step {currentStep}.
+                          </p>
+                          {currentStep === 5 && (
+                              <Button 
+                                  onClick={() => setIsRegistrationComplete(true)} 
+                                  className="h-16 px-10 rounded-2xl bg-green-600 hover:bg-green-700 text-white font-black text-xl shadow-[0_0_30px_rgba(22,163,74,0.4)] transition-transform hover:scale-105"
+                              >
+                                  SUBMIT & FINISH <CheckCircle2 className="ml-3 w-6 h-6"/>
+                              </Button>
+                          )}
+                      </div>
+                  </div>
+              </Card>
+  
+              <div className="flex justify-between mt-12 pt-6 border-t border-zinc-800">
+                  <Button variant="ghost" onClick={handlePrevStep} disabled={currentStep===1} className="h-14 px-8 rounded-xl text-zinc-500 hover:text-white hover:bg-zinc-900 font-bold"><ChevronLeft className="w-5 h-5 mr-2"/> BACK</Button>
+                  
+                  {currentStep < 5 && (
+                      <Button onClick={handleNextStep} className="h-14 px-8 rounded-xl bg-white text-black hover:bg-zinc-200 font-bold text-lg">
+                          NEXT STEP <ChevronRight className="w-5 h-5 ml-2"/>
+                      </Button>
+                  )}
+              </div>
+          </div>
         </div>
+      );
+    }
+  
+    // --- RENDER VIEW 3: FULL DASHBOARD ---
+    return (
+      <div className="min-h-screen bg-zinc-950 font-body pb-24">
+          <div className="sticky top-0 z-50 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800 px-4 md:px-8 py-4 flex justify-between items-center">
+              <div className="flex items-center gap-2"><Trophy className="w-6 h-6 text-cyan-500"/><span className="font-black text-white tracking-tighter hidden md:inline text-lg">PLAYER DASHBOARD</span></div>
+              <div className="flex items-center gap-4">
+                  <div className="text-right hidden md:block">
+                      <p className="text-xs font-bold text-white">{ATHLETE_MOCK.name}</p>
+                      <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">{ATHLETE_MOCK.team}</p>
+                  </div>
+                  <Avatar className="h-10 w-10 border-2 border-zinc-800 ring-2 ring-black">
+                      <AvatarImage src={ATHLETE_MOCK.avatar} />
+                      <AvatarFallback>PL</AvatarFallback>
+                  </Avatar>
+                  <div className="h-8 w-[1px] bg-zinc-800 mx-2"></div>
+                  <Link href="/" passHref>
+                      <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded-xl"><LogOut className="w-5 h-5"/></Button>
+                  </Link>
+              </div>
+          </div>
+          <div className="max-w-6xl mx-auto p-4 md:p-8">
+              <PlayerDashboardFull />
+          </div>
       </div>
     );
   }
 
-  // --- RENDER VIEW 3: DASHBOARD ---
-  return (
-    <div className="min-h-screen bg-zinc-950 font-body pb-24">
-        <div className="sticky top-0 z-50 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800 px-4 md:px-8 py-4 flex justify-between items-center">
-            <div className="flex items-center gap-2"><Trophy className="w-6 h-6 text-cyan-500"/><span className="font-black text-white tracking-tighter hidden md:inline text-lg">PLAYER DASHBOARD</span></div>
-            <div className="flex items-center gap-4">
-                <div className="text-right hidden md:block"><p className="text-xs font-bold text-white">Guest Athlete</p><p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">PB Twinton</p></div>
-                <Avatar className="h-10 w-10 border-2 border-zinc-800 ring-2 ring-black"><AvatarFallback>GA</AvatarFallback></Avatar>
-                <div className="h-8 w-[1px] bg-zinc-800 mx-2"></div>
-                <Link href="/" passHref><Button variant="ghost" size="icon" className="text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded-xl"><LogOut className="w-5 h-5"/></Button></Link>
-            </div>
-        </div>
-        <div className="max-w-6xl mx-auto p-4 md:p-8">
-            <PlayerDashboardFull />
-        </div>
-    </div>
-  );
-}
+    
