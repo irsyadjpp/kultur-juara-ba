@@ -1,205 +1,295 @@
-
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from "react";
+import { 
+  QrCode, ScanLine, Search, UserCheck, 
+  XCircle, CheckCircle2, ShieldAlert, History, 
+  Ticket, Zap, ArrowRight, DoorOpen 
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Textarea } from "@/components/ui/textarea";
-import { 
-  ScanLine, UserCheck, Ban, ShieldAlert, 
-  RefreshCw, History, Siren 
-} from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { verifyTicket, getAccessLogs, reportSecurityIncident } from "./actions";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 
-export default function GateDashboard() {
-  const { toast } = useToast();
-  const [scanInput, setScanInput] = useState("");
-  const [scanResult, setScanResult] = useState<any>(null);
+// --- MOCK DATA ---
+const RECENT_ENTRIES = [
+  { id: "T-8821", name: "Kevin Sanjaya", role: "ATHLETE", time: "Just now", status: "ALLOWED", gate: "G1", avatar: "https://github.com/shadcn.png" },
+  { id: "T-8822", name: "Budi Santoso", role: "SPECTATOR", time: "2 min ago", status: "ALLOWED", gate: "G1", avatar: "" },
+  { id: "T-8823", name: "Unknown", role: "INVALID", time: "5 min ago", status: "DENIED", gate: "G1", avatar: "" },
+  { id: "T-8824", name: "Siti Aminah", role: "MEDIA", time: "10 min ago", status: "ALLOWED", gate: "G2", avatar: "" },
+];
+
+const GATE_STATS = {
+  totalIn: 1240,
+  capacity: 2500,
+  vipCount: 45,
+  athleteCount: 120
+};
+
+export default function GateCheckInPage() {
   const [isScanning, setIsScanning] = useState(false);
-  const [logs, setLogs] = useState<any[]>([]);
-  const [isIncidentOpen, setIsIncidentOpen] = useState(false);
+  const [manualCode, setManualCode] = useState("");
+  const [scanResult, setScanResult] = useState<any>(null); // State untuk hasil scan
 
-  // Real-time Clock
-  const [time, setTime] = useState(new Date());
-  useEffect(() => {
-      const timer = setInterval(() => setTime(new Date()), 1000);
-      getAccessLogs().then(setLogs); // Load logs awal
-      return () => clearInterval(timer);
-  }, []);
-
-  const handleScan = async (e?: React.FormEvent) => {
-      if (e) e.preventDefault();
-      if (!scanInput) return;
-
-      setIsScanning(true);
-      setScanResult(null); // Reset tampilan
-
-      const res = await verifyTicket(scanInput);
-      
-      setIsScanning(false);
-      setScanResult(res);
-
-      if (res.success) {
-          // Play Sound Success (Opsional)
-          toast({ title: "Akses Diterima", className: "bg-green-600 text-white" });
-          getAccessLogs().then(setLogs); // Refresh logs
-      } else {
-          // Play Sound Error (Opsional)
-          toast({ title: "Akses Ditolak", description: res.message, variant: "destructive" });
-      }
-      
-      setScanInput(""); // Clear input agar siap scan lagi
-  };
-
-  const handleIncidentReport = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const formData = new FormData(e.currentTarget);
-      const data = Object.fromEntries(formData);
-      
-      await reportSecurityIncident(data);
-      toast({ title: "Laporan Terkirim", description: "Koordinator Operasional telah dinotifikasi." });
-      setIsIncidentOpen(false);
+  // Simulasi Scan
+  const handleScan = () => {
+    setIsScanning(true);
+    setTimeout(() => {
+        setIsScanning(false);
+        // Simulasi Hasil Random
+        const isSuccess = Math.random() > 0.3;
+        setScanResult({
+            valid: isSuccess,
+            name: isSuccess ? "Marcus Gideon" : "Ticket Expired",
+            role: isSuccess ? "ATHLETE" : "UNKNOWN",
+            id: "T-9999",
+            zone: isSuccess ? "ALL ACCESS" : "NO ACCESS"
+        });
+    }, 1500);
   };
 
   return (
-    <div className="space-y-6">
-      {/* HEADER & JAM */}
-      <div className="flex justify-between items-center bg-black text-white p-4 rounded-xl shadow-lg">
-         <div>
-            <h2 className="text-2xl font-black font-headline">GATE CONTROL</h2>
-            <p className="text-zinc-400 text-sm">Pos Keamanan Utama</p>
-         </div>
-         <div className="text-right">
-             <div className="text-3xl font-mono font-bold">{time.toLocaleTimeString('id-ID', {hour12: false})}</div>
-             <div className="text-xs text-zinc-400">{time.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
-         </div>
+    <div className="space-y-6 p-4 md:p-8 font-body pb-24 h-[calc(100vh-64px)] flex flex-col">
+      
+      {/* --- HEADER --- */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 shrink-0">
+        <div>
+            <div className="flex items-center gap-2 mb-2">
+                <Badge variant="outline" className="rounded-full px-3 py-1 border-violet-500 text-violet-500 bg-violet-500/10 backdrop-blur-md animate-pulse">
+                    <DoorOpen className="w-3 h-3 mr-2" /> GATE 1 ACTIVE
+                </Badge>
+            </div>
+            <h1 className="text-3xl md:text-4xl font-black font-headline uppercase tracking-tighter text-white">
+                Access <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-600">Control</span>
+            </h1>
+            <p className="text-zinc-400 mt-2 max-w-xl text-lg">
+                Validasi tiket dan kontrol akses masuk venue secara real-time.
+            </p>
+        </div>
+
+        {/* CROWD METER */}
+        <div className="flex items-center gap-4 bg-zinc-900 border border-zinc-800 p-3 rounded-[24px]">
+            <div className="text-right">
+                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Venue Capacity</p>
+                <div className="flex items-baseline gap-1 justify-end">
+                    <span className="text-2xl font-black text-white">{Math.round((GATE_STATS.totalIn / GATE_STATS.capacity) * 100)}%</span>
+                    <span className="text-xs text-zinc-400 font-bold">Filled</span>
+                </div>
+            </div>
+            <div className="h-12 w-2 bg-zinc-800 rounded-full overflow-hidden flex flex-col-reverse">
+                <div className="w-full bg-violet-500" style={{ height: '50%' }}></div>
+            </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
-          {/* AREA SCANNER */}
-          <div className="space-y-6">
-              <Card className="border-2 border-primary/20 shadow-xl">
-                  <CardHeader className="pb-2"><CardTitle>Scan Tiket / ID Card</CardTitle></CardHeader>
-                  <CardContent>
-                      <form onSubmit={handleScan} className="flex gap-3">
-                          <Input 
-                             autoFocus
-                             placeholder="Klik disini & Scan QR..." 
-                             value={scanInput}
-                             onChange={(e) => setScanInput(e.target.value)}
-                             className="h-14 text-lg font-mono"
-                          />
-                          <Button type="submit" size="icon" className="h-14 w-14 bg-primary hover:bg-primary/90" disabled={isScanning}>
-                              {isScanning ? <RefreshCw className="w-6 h-6 animate-spin" /> : <ScanLine className="w-6 h-6" />}
-                          </Button>
-                      </form>
-                      <p className="text-xs text-muted-foreground mt-2">
-                          *Pastikan kursor aktif di kolom input saat menggunakan alat scanner.
-                      </p>
-                  </CardContent>
-              </Card>
+      {/* --- MAIN INTERFACE --- */}
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-8 min-h-0">
+         
+         {/* LEFT: SCANNER CONSOLE (1/3) */}
+         <Card className="lg:col-span-1 bg-zinc-900 border-zinc-800 rounded-[32px] flex flex-col overflow-hidden h-full shadow-2xl relative">
+            
+            {/* Visual Scanner Box */}
+            <div className="flex-1 bg-black relative flex flex-col items-center justify-center p-8 group cursor-pointer" onClick={handleScan}>
+                {/* Grid Overlay */}
+                <div className="absolute inset-0 bg-[url('/images/grid-pattern.png')] opacity-20"></div>
+                
+                {/* Scan Frame */}
+                <div className={cn(
+                    "w-64 h-64 border-4 rounded-[32px] flex items-center justify-center relative transition-all duration-300",
+                    isScanning ? "border-violet-500 shadow-[0_0_50px_rgba(139,92,246,0.5)]" : "border-zinc-700 group-hover:border-violet-500/50"
+                )}>
+                    {/* Scanning Laser */}
+                    {isScanning && (
+                        <div className="absolute top-0 left-0 right-0 h-1 bg-violet-400 shadow-[0_0_20px_#a78bfa] animate-scan"></div>
+                    )}
+                    
+                    <div className="text-center z-10">
+                        {isScanning ? (
+                            <div className="flex flex-col items-center gap-2">
+                                <ScanLine className="w-16 h-16 text-violet-400 animate-pulse"/>
+                                <span className="text-violet-400 font-bold text-sm tracking-widest animate-pulse">VERIFYING...</span>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col items-center gap-4 text-zinc-500 group-hover:text-white transition-colors">
+                                <QrCode className="w-20 h-20"/>
+                                <div className="space-y-1">
+                                    <p className="font-black text-xl uppercase tracking-widest">Tap to Scan</p>
+                                    <p className="text-xs font-medium opacity-60">Arahkan kamera ke QR Code</p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
 
-              {/* HASIL SCAN (RESULT CARD) */}
-              {scanResult && (
-                  <Card className={`border-l-8 shadow-lg animate-in fade-in zoom-in duration-300 ${scanResult.success ? 'border-l-green-500 bg-green-50' : 'border-l-red-600 bg-red-50'}`}>
-                      <CardContent className="p-8 text-center">
-                          {scanResult.success ? (
-                              <>
-                                  <div className="bg-green-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4">
-                                      <UserCheck className="w-12 h-12 text-green-600" />
-                                  </div>
-                                  <h2 className="text-3xl font-black text-green-800 mb-1">AKSES DITERIMA</h2>
-                                  <p className="text-green-700 font-medium text-lg">{scanResult.data.name}</p>
-                                  <Badge className="mt-3 text-lg px-4 py-1 bg-green-600">{scanResult.data.role}</Badge>
-                                  {scanResult.data.team && <p className="mt-2 text-muted-foreground">{scanResult.data.team}</p>}
-                              </>
-                          ) : (
-                              <>
-                                  <div className="bg-red-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4">
-                                      <Ban className="w-12 h-12 text-red-600" />
-                                  </div>
-                                  <h2 className="text-3xl font-black text-red-800 mb-1">AKSES DITOLAK</h2>
-                                  <p className="text-red-700 font-bold text-xl">{scanResult.message}</p>
-                                  <p className="text-sm text-red-600 mt-2">Silakan hubungi meja registrasi jika ada masalah.</p>
-                              </>
-                          )}
-                      </CardContent>
-                  </Card>
-              )}
-          </div>
+                    {/* Corner Accents */}
+                    <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-white/20 rounded-tl-xl"></div>
+                    <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-white/20 rounded-tr-xl"></div>
+                    <div className="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4 border-white/20 rounded-bl-xl"></div>
+                    <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-white/20 rounded-br-xl"></div>
+                </div>
+            </div>
 
-          {/* SIDEBAR INFO */}
-          <div className="space-y-6">
-              
-              {/* TOMBOL DARURAT */}
-              <Dialog open={isIncidentOpen} onOpenChange={setIsIncidentOpen}>
-                  <DialogTrigger asChild>
-                      <Button variant="destructive" className="w-full h-16 text-lg font-bold shadow-red-200 shadow-lg">
-                          <Siren className="w-6 h-6 mr-3 animate-pulse" /> LAPOR INSIDEN KEAMANAN
-                      </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                      <DialogHeader>
-                          <DialogTitle className="flex items-center gap-2 text-red-600">
-                              <ShieldAlert className="w-6 h-6" /> Laporan Insiden
-                          </DialogTitle>
-                      </DialogHeader>
-                      <form onSubmit={handleIncidentReport} className="space-y-4">
-                          <div className="space-y-2">
-                              <label className="text-sm font-bold">Jenis Kejadian</label>
-                              <Input name="type" placeholder="Cth: Perkelahian, Pencurian, Tiket Palsu" required />
-                          </div>
-                          <div className="space-y-2">
-                              <label className="text-sm font-bold">Lokasi</label>
-                              <Input name="location" placeholder="Cth: Gerbang Utama" required />
-                          </div>
-                          <div className="space-y-2">
-                              <label className="text-sm font-bold">Keterangan</label>
-                              <Textarea name="desc" placeholder="Kronologi singkat..." required />
-                          </div>
-                          <DialogFooter>
-                              <Button type="submit" className="bg-red-600 hover:bg-red-700">Kirim Laporan Cepat</Button>
-                          </DialogFooter>
-                      </form>
-                  </DialogContent>
-              </Dialog>
+            {/* Manual Input Footer */}
+            <div className="p-6 bg-zinc-900 border-t border-zinc-800 space-y-4">
+                <div className="relative">
+                    <Search className="absolute left-4 top-4 w-5 h-5 text-zinc-500" />
+                    <Input 
+                        placeholder="Input Manual ID / Kode..." 
+                        className="h-14 bg-zinc-950 border-zinc-800 rounded-2xl pl-12 text-white font-mono font-bold focus:ring-violet-500"
+                        value={manualCode}
+                        onChange={(e) => setManualCode(e.target.value)}
+                    />
+                </div>
+                <Button className="w-full h-14 rounded-2xl font-black text-lg bg-white text-black hover:bg-zinc-200 shadow-xl" onClick={handleScan}>
+                    CHECK TICKET <ArrowRight className="ml-2 w-5 h-5"/>
+                </Button>
+            </div>
+         </Card>
 
-              {/* LOG MASUK TERAKHIR */}
-              <Card>
-                  <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <History className="w-4 h-4" /> Log Masuk Terakhir
-                      </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                      <Table>
-                          <TableHeader>
-                              <TableRow>
-                                  <TableHead className="w-[80px]">Jam</TableHead>
-                                  <TableHead>Nama</TableHead>
-                                  <TableHead>Role</TableHead>
-                              </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                              {logs.slice(0, 5).map((log: any) => (
-                                  <TableRow key={log.id}>
-                                      <TableCell className="font-mono text-xs">{log.time}</TableCell>
-                                      <TableCell className="font-medium text-sm">{log.name}</TableCell>
-                                      <TableCell><Badge variant="outline" className="text-[10px]">{log.role}</Badge></TableCell>
-                                  </TableRow>
-                              ))}
-                          </TableBody>
-                      </Table>
-                  </CardContent>
-              </Card>
-          </div>
+         {/* RIGHT: LIVE FEED & STATS (2/3) */}
+         <div className="lg:col-span-2 flex flex-col gap-6 h-full overflow-hidden">
+            
+            {/* 1. QUICK STATS CARDS */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 shrink-0">
+                <Card className="bg-zinc-900 border-zinc-800 rounded-[24px] p-5 flex flex-col justify-between">
+                    <div className="flex justify-between items-start">
+                        <div className="p-2 bg-green-500/10 rounded-xl text-green-500"><Ticket className="w-5 h-5"/></div>
+                        <Badge variant="outline" className="border-green-900 text-green-500">Total In</Badge>
+                    </div>
+                    <div className="mt-2">
+                        <span className="text-3xl font-black text-white">{GATE_STATS.totalIn}</span>
+                        <span className="text-xs text-zinc-500 ml-1 font-bold">Pax</span>
+                    </div>
+                </Card>
+                <Card className="bg-zinc-900 border-zinc-800 rounded-[24px] p-5 flex flex-col justify-between">
+                    <div className="flex justify-between items-start">
+                        <div className="p-2 bg-violet-500/10 rounded-xl text-violet-500"><UserCheck className="w-5 h-5"/></div>
+                        <Badge variant="outline" className="border-violet-900 text-violet-500">Athletes</Badge>
+                    </div>
+                    <div className="mt-2">
+                        <span className="text-3xl font-black text-white">{GATE_STATS.athleteCount}</span>
+                        <span className="text-xs text-zinc-500 ml-1 font-bold">Check-in</span>
+                    </div>
+                </Card>
+                <Card className="bg-zinc-900 border-zinc-800 rounded-[24px] p-5 flex flex-col justify-between md:col-span-1 col-span-2">
+                    <div className="flex justify-between items-start">
+                        <div className="p-2 bg-yellow-500/10 rounded-xl text-yellow-500"><Zap className="w-5 h-5"/></div>
+                        <Badge variant="outline" className="border-yellow-900 text-yellow-500">VIP / Media</Badge>
+                    </div>
+                    <div className="mt-2">
+                        <span className="text-3xl font-black text-white">{GATE_STATS.vipCount}</span>
+                        <span className="text-xs text-zinc-500 ml-1 font-bold">Guests</span>
+                    </div>
+                </Card>
+            </div>
+
+            {/* 2. RECENT ACTIVITY LOG */}
+            <Card className="bg-zinc-900 border-zinc-800 rounded-[32px] flex-1 flex flex-col overflow-hidden">
+                <div className="p-6 border-b border-zinc-800 bg-zinc-950/50">
+                    <h3 className="text-sm font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2">
+                        <History className="w-4 h-4 text-violet-500"/> Recent Entry Log
+                    </h3>
+                </div>
+                <ScrollArea className="flex-1 p-4">
+                    <div className="space-y-3">
+                        {RECENT_ENTRIES.map((entry, i) => (
+                            <div key={i} className="flex items-center justify-between p-4 bg-zinc-950 border border-zinc-800 rounded-[24px] group hover:border-violet-500/30 transition-colors">
+                                <div className="flex items-center gap-4">
+                                    <Avatar className="h-12 w-12 border-2 border-zinc-800 group-hover:border-violet-500 transition-colors">
+                                        <AvatarImage src={entry.avatar} />
+                                        <AvatarFallback className="bg-zinc-900 font-bold text-zinc-500">{entry.name.charAt(0)}</AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                        <div className="flex items-center gap-2">
+                                            <h4 className="font-bold text-white text-base">{entry.name}</h4>
+                                            <Badge variant="secondary" className="text-[9px] h-5 bg-zinc-900 border border-zinc-700 text-zinc-400">
+                                                {entry.id}
+                                            </Badge>
+                                        </div>
+                                        <p className="text-xs text-zinc-500 font-medium mt-0.5 flex items-center gap-1.5">
+                                            <span className={cn("w-2 h-2 rounded-full", entry.status === 'ALLOWED' ? "bg-green-500" : "bg-red-500")}></span>
+                                            {entry.role} • {entry.time}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <div className={cn("font-black text-sm uppercase", entry.status === 'ALLOWED' ? "text-green-500" : "text-red-500")}>
+                                        {entry.status}
+                                    </div>
+                                    <div className="text-[10px] font-bold text-zinc-600">{entry.gate}</div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </ScrollArea>
+            </Card>
+
+         </div>
+
       </div>
+
+      {/* --- RESULT MODAL (POP UP) --- */}
+      <Dialog open={!!scanResult} onOpenChange={() => setScanResult(null)}>
+        <DialogContent className="bg-transparent border-none shadow-none max-w-sm p-0 flex items-center justify-center">
+            {scanResult && (
+                <div className={cn(
+                    "w-full bg-zinc-950 border-4 rounded-[40px] overflow-hidden shadow-2xl relative animate-in zoom-in-95 duration-300",
+                    scanResult.valid ? "border-green-500 shadow-[0_0_50px_rgba(34,197,94,0.4)]" : "border-red-500 shadow-[0_0_50px_rgba(239,68,68,0.4)]"
+                )}>
+                    {/* Visual Status Header */}
+                    <div className={cn(
+                        "h-32 flex flex-col items-center justify-center relative overflow-hidden",
+                        scanResult.valid ? "bg-green-600" : "bg-red-600"
+                    )}>
+                        <div className="absolute inset-0 bg-[url('/images/noise.png')] opacity-30 mix-blend-overlay"></div>
+                        {scanResult.valid ? (
+                            <CheckCircle2 className="w-16 h-16 text-white mb-2 drop-shadow-md animate-bounce" />
+                        ) : (
+                            <XCircle className="w-16 h-16 text-white mb-2 drop-shadow-md animate-shake" />
+                        )}
+                        <h2 className="text-2xl font-black text-white uppercase tracking-widest drop-shadow-md">
+                            {scanResult.valid ? "ACCESS GRANTED" : "ACCESS DENIED"}
+                        </h2>
+                    </div>
+
+                    <div className="p-8 space-y-6 bg-zinc-900 text-center">
+                        <div className="space-y-1">
+                            <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Ticket Holder</p>
+                            <h3 className="text-2xl font-black text-white">{scanResult.name}</h3>
+                            <Badge variant="outline" className="mt-2 border-zinc-700 text-zinc-300">
+                                {scanResult.id}
+                            </Badge>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="bg-zinc-950 p-3 rounded-2xl border border-zinc-800">
+                                <p className="text-[10px] text-zinc-500 font-bold uppercase">Role</p>
+                                <p className="font-bold text-white">{scanResult.role}</p>
+                            </div>
+                            <div className="bg-zinc-900 p-3 rounded-2xl border border-zinc-800">
+                                <p className="text-[10px] text-zinc-500 font-bold uppercase">Zone</p>
+                                <p className={cn("font-bold", scanResult.valid ? "text-green-500" : "text-red-500")}>
+                                    {scanResult.zone}
+                                </p>
+                            </div>
+                        </div>
+
+                        <Button 
+                            className="w-full h-14 rounded-2xl font-black text-lg bg-white text-black hover:bg-zinc-200"
+                            onClick={() => setScanResult(null)}
+                        >
+                            CLOSE & SCAN NEXT
+                        </Button>
+                    </div>
+                </div>
+            )}
+        </DialogContent>
+      </Dialog>
+
     </div>
   );
 }
