@@ -1,41 +1,98 @@
+
 'use client';
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { 
-  Hash, ArrowRight, Trophy, Shield, 
-  CheckCircle2, Users, AlertTriangle, Wallet,
-  Upload, User, Activity, Instagram
+  Shield, QrCode, Hash, ArrowRight, 
+  CheckCircle2, LogOut, User, Upload, 
+  FileText, Activity, Instagram, 
+  Info, ChevronRight, ChevronLeft,
+  Users, MapPin, Trophy, AlertTriangle, Loader2
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 // Import komponen Full Dashboard yang sudah kita buat sebelumnya
 // Anggap saja kode panjang tadi kita simpan di komponen terpisah agar rapi
 import PlayerDashboardFull from "@/components/player/dashboard-full"; 
 
-export default function PlayerPage() {
-  // --- STATE LEVEL: MENENTUKAN USER ADA DI TAHAP MANA ---
-  
-  // Tahap 1: Belum Join Tim (Default untuk user baru)
-  const [hasJoinedTeam, setHasJoinedTeam] = useState(false);
-  
-  // Tahap 2: Sudah Join Tim, tapi Belum Isi Formulir
-  const [isRegistrationComplete, setIsRegistrationComplete] = useState(false);
+// --- MOCK DATA: TEAM TWINTON ---
+const MOCK_TEAM_DATA = {
+  id: "TM-8821",
+  name: "PB Twinton",
+  category: "Beregu Putra (Team Event)",
+  logo: "/logos/twinton.png",
+  manager: "Budi Santoso",
+  slots: {
+    BEGINNER: { total: 4, filled: 2 },
+    INTERMEDIATE: { total: 4, filled: 3 },
+    ADVANCE: { total: 2, filled: 0 }
+  }
+};
 
-  // Data Sementara
+const ATHLETE_INITIAL = {
+  name: "Guest Athlete",
+  email: "guest@mail.com",
+  avatar: ""
+};
+
+
+export default function PlayerPage() {
+  // --- STATE MANAGEMENT ---
+  const [viewState, setViewState] = useState<"LOADING" | "JOIN" | "FORM" | "DASHBOARD">("LOADING");
+  const [athlete, setAthlete] = useState(ATHLETE_INITIAL);
   const [joinCode, setJoinCode] = useState("");
   const [isJoining, setIsJoining] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1); // Untuk Wizard Form
+  const [teamData, setTeamData] = useState<typeof MOCK_TEAM_DATA | null>(null);
 
-  // ---------------------------------------------------------
-  // TAHAP 1: INPUT KODE TIM (GATEKEEPER)
-  // ---------------------------------------------------------
+  // FORM WIZARD STATE
+  const [currentStep, setCurrentStep] = useState(1);
+  const [formData, setFormData] = useState({
+    agreements: { valid: false, health: false, rules: false, media: false },
+    selectedSkill: "", // BEGINNER, INTERMEDIATE, ADVANCE
+    personal: {
+      name: "", nik: "", dob: "", gender: "M", wa: "", size: "M", address: ""
+    },
+    tpf: {
+      ig: "", pbsi: "", history: ""
+    }
+  });
+  
+  // NEW: Hydration-safe logic
+  useEffect(() => {
+    // This logic now runs only on the client after hydration
+    // You would replace this mock logic with a real session check
+    const checkSession = () => {
+      // Ex: const session = getSession();
+      const hasJoinedTeam = false; // Mock: session?.teamId
+      const isRegistrationComplete = false; // Mock: session?.isRegistered
+
+      if (!hasJoinedTeam) {
+        setViewState("JOIN");
+      } else if (!isRegistrationComplete) {
+        setViewState("FORM");
+        setTeamData(MOCK_TEAM_DATA); // Assume team data is in session
+      } else {
+        setViewState("DASHBOARD");
+        setTeamData(MOCK_TEAM_DATA);
+        setAthlete({ name: "Jojo Christie", email: "jojo@mail.com", avatar: "https://github.com/shadcn.png" });
+      }
+    };
+    checkSession();
+  }, []);
+
+
+  // --- HANDLERS ---
+
+  // 1. Validate Team Code
   const handleVerifyCode = () => {
     if (!joinCode) return;
     setIsJoining(true);
@@ -44,15 +101,35 @@ export default function PlayerPage() {
     setTimeout(() => {
       setIsJoining(false);
       if (joinCode === "TWIN-2026") {
-        setHasJoinedTeam(true); // Lolos Tahap 1 -> Masuk ke Form Wizard
+        setTeamData(MOCK_TEAM_DATA);
+        setViewState("FORM"); // Pindah ke pengisian data
       } else {
-        alert("Kode Salah! Coba: TWIN-2026");
+        alert("Kode Tim Tidak Ditemukan! Coba: TWIN-2026");
       }
     }, 1000);
   };
 
+  // 2. Navigation
+  const handleNextStep = () => setCurrentStep(prev => Math.min(prev + 1, 3));
+  const handlePrevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
+
+  // 3. Final Submit
+  const handleSubmit = () => {
+    // Simulasi Save Data
+    setAthlete({
+      ...athlete,
+      name: formData.personal.name || "Atlet Baru",
+      // @ts-ignore
+      team: teamData
+    });
+    setViewState("DASHBOARD");
+  };
+
+  // --- RENDER COMPONENTS ---
+
+  // VIEW 1: INPUT CODE (GATEKEEPER)
   const renderJoinGate = () => (
-    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-4">
+    <div className="flex flex-col items-center justify-center min-h-[60vh] p-4">
       <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 rounded-[32px] p-8 md:p-12 border-dashed border-2 relative overflow-hidden">
         {/* Background Blob */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-[50px] pointer-events-none"></div>
@@ -65,7 +142,7 @@ export default function PlayerPage() {
           <div>
             <h2 className="text-3xl font-black text-white uppercase tracking-tight">Team Access</h2>
             <p className="text-zinc-400 text-sm mt-2">
-              Masukkan <strong>Kode Unik</strong> dari Manajer Komunitas (Misal: Twinton) untuk mendaftar.
+              Masukkan <strong>Kode Unik</strong> dari Manajer Tim/Komunitas Anda untuk mengisi biodata.
             </p>
           </div>
 
@@ -90,70 +167,233 @@ export default function PlayerPage() {
     </div>
   );
 
-  // ---------------------------------------------------------
-  // TAHAP 2: FORMULIR WIZARD (DISCLAIMER -> DATA -> PAYMENT)
-  // ---------------------------------------------------------
-  
-  // ... (Kode renderStep1 s/d renderStep5 sama seperti sebelumnya) ...
-  // Saya persingkat di sini untuk fokus ke Flow Logic
-  
+  // VIEW 2: FORM WIZARD
   const renderWizard = () => (
-    <div className="min-h-screen bg-zinc-950 font-body py-12 px-4">
-        <div className="max-w-3xl mx-auto">
-            <div className="mb-8 text-center">
-                <Badge className="bg-indigo-600 mb-4">BERGABUNG DENGAN: PB TWINTON</Badge>
-                <h1 className="text-3xl font-black text-white">Lengkapi Data Peserta</h1>
-                <p className="text-zinc-400">Step {currentStep} of 5</p>
-            </div>
-
-            {/* CONTOH STEP 1: DISCLAIMER (Sederhana) */}
-            {currentStep === 1 && (
-                <Card className="bg-zinc-900 border-zinc-800 p-8 rounded-[32px]">
-                    <div className="space-y-6">
-                        <div className="bg-red-900/20 border border-red-500/30 p-4 rounded-xl flex gap-3 text-red-200 text-sm">
-                            <AlertTriangle className="w-5 h-5 shrink-0 text-red-500"/>
-                            <p>Data palsu = Diskualifikasi Tim & Blacklist.</p>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <Checkbox id="agg" className="border-white"/>
-                            <Label htmlFor="agg" className="text-white">Saya menyetujui aturan BCC 2026.</Label>
-                        </div>
-                        <Button onClick={() => setCurrentStep(2)} className="w-full h-12 bg-white text-black font-bold">NEXT: PILIH SKILL</Button>
-                    </div>
-                </Card>
-            )}
-
-            {/* CONTOH STEP 2 dst... (Langsung ke tombol Finish untuk simulasi) */}
-            {currentStep > 1 && (
-                 <Card className="bg-zinc-900 border-zinc-800 p-8 rounded-[32px] text-center">
-                    <h3 className="text-white text-xl font-bold mb-4">Simulasi Pengisian Data...</h3>
-                    <Button 
-                        onClick={() => setIsRegistrationComplete(true)} // Lolos Tahap 2 -> Masuk Dashboard
-                        className="w-full h-14 rounded-xl bg-green-600 hover:bg-green-700 text-white font-black text-lg"
-                    >
-                        SUBMIT & SELESAI
-                    </Button>
-                 </Card>
-            )}
+    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-500">
+      
+      {/* Team Header Info */}
+      <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-[24px] flex items-center gap-6">
+        <Avatar className="w-16 h-16 border-2 border-zinc-700">
+            <AvatarImage src={teamData?.logo} />
+            <AvatarFallback>TM</AvatarFallback>
+        </Avatar>
+        <div>
+            <Badge variant="outline" className="border-cyan-500 text-cyan-500 mb-1">You are joining</Badge>
+            <h2 className="text-2xl font-black text-white">{teamData?.name}</h2>
+            <p className="text-zinc-400 text-sm flex items-center gap-2">
+                <Trophy className="w-4 h-4"/> {teamData?.category} 
+                <span className="text-zinc-600">•</span>
+                <User className="w-4 h-4"/> Manager: {teamData?.manager}
+            </p>
         </div>
+      </div>
+
+      {/* Steps Indicator */}
+      <div className="flex justify-between items-center px-2">
+        {['Disclaimer', 'Pilih Skill', 'Biodata & TPF'].map((label, idx) => (
+            <div key={idx} className="flex items-center gap-2">
+                <div className={cn(
+                    "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all",
+                    currentStep > idx + 1 ? "bg-green-500 text-black" : 
+                    currentStep === idx + 1 ? "bg-cyan-500 text-black" : "bg-zinc-800 text-zinc-500"
+                )}>
+                    {currentStep > idx + 1 ? <CheckCircle2 className="w-4 h-4"/> : idx + 1}
+                </div>
+                <span className={cn("text-xs font-bold uppercase hidden md:block", currentStep === idx + 1 ? "text-white" : "text-zinc-600")}>{label}</span>
+                {idx < 2 && <div className="w-12 h-[2px] bg-zinc-800 mx-2 hidden md:block"></div>}
+            </div>
+        ))}
+      </div>
+
+      {/* --- STEP 1: DISCLAIMER --- */}
+      {currentStep === 1 && (
+        <Card className="bg-zinc-900 border-zinc-800 rounded-[32px] p-8">
+            <div className="space-y-6">
+                <div className="bg-red-900/20 border border-red-500/30 p-4 rounded-xl flex gap-3 text-red-200 text-sm">
+                    <AlertTriangle className="w-5 h-5 shrink-0 text-red-500"/>
+                    <p>Data palsu = Diskualifikasi Tim & Blacklist.</p>
+                </div>
+                <div className="flex items-center gap-3">
+                    <Checkbox id="agg" className="border-white"/>
+                    <Label htmlFor="agg" className="text-white">Saya menyetujui aturan BCC 2026.</Label>
+                </div>
+                <Button onClick={() => setCurrentStep(2)} className="w-full h-12 bg-white text-black font-bold">NEXT: PILIH SKILL</Button>
+            </div>
+        </Card>
+      )}
+
+      {/* --- STEP 2: SKILL SLOT --- */}
+      {currentStep === 2 && (
+        <Card className="bg-zinc-900 border-zinc-800 rounded-[32px] p-8">
+            <div className="text-center mb-8">
+                <h3 className="text-xl font-black text-white uppercase">Pilih Slot Kemampuan</h3>
+                <p className="text-zinc-400 text-sm">Tim {teamData?.name} membutuhkan komposisi pemain berikut. Pilih sesuai kemampuan Anda.</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {Object.entries(teamData?.slots || {}).map(([level, data]) => {
+                    const isFull = data.filled >= data.total;
+                    const isSelected = formData.selectedSkill === level;
+                    
+                    return (
+                        <div 
+                            key={level}
+                            onClick={() => !isFull && setFormData({...formData, selectedSkill: level})}
+                            className={cn(
+                                "p-6 rounded-2xl border-2 transition-all relative overflow-hidden",
+                                isFull ? "opacity-50 cursor-not-allowed border-zinc-800 bg-zinc-900" : 
+                                isSelected ? "border-cyan-500 bg-cyan-900/20 cursor-pointer" : "border-zinc-800 bg-zinc-900 hover:border-zinc-600 cursor-pointer"
+                            )}
+                        >
+                            <div className="flex justify-between items-start mb-2">
+                                <h4 className="font-black text-white">{level}</h4>
+                                {isFull ? <Badge variant="destructive" className="text-[10px]">FULL</Badge> : <Badge className="bg-zinc-800 text-[10px]">{data.filled}/{data.total}</Badge>}
+                            </div>
+                            <p className="text-xs text-zinc-400">
+                                {level === 'BEGINNER' && "Hobi / Pemula"}
+                                {level === 'INTERMEDIATE' && "Kompetitif Rutin"}
+                                {level === 'ADVANCE' && "Eks Atlet / Semi-Pro"}
+                            </p>
+                            {isSelected && <div className="absolute top-2 right-2"><CheckCircle2 className="w-5 h-5 text-cyan-500"/></div>}
+                        </div>
+                    )
+                })}
+            </div>
+        </Card>
+      )}
+
+      {/* --- STEP 3: BIODATA --- */}
+      {currentStep === 3 && (
+        <div className="space-y-6">
+            <Card className="bg-zinc-900 border-zinc-800 rounded-[32px] p-8">
+                <div className="space-y-4">
+                    <h3 className="text-lg font-black text-white border-b border-zinc-800 pb-2">Identitas Diri</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label className="text-xs text-zinc-500 font-bold uppercase">Nama Lengkap (KTP)</Label>
+                            <Input className="bg-black border-zinc-800" value={formData.personal.name} onChange={(e) => setFormData({...formData, personal: {...formData.personal, name: e.target.value}})} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-xs text-zinc-500 font-bold uppercase">NIK (16 Digit)</Label>
+                            <Input className="bg-black border-zinc-800" maxLength={16} placeholder="Wajib untuk asuransi" value={formData.personal.nik} onChange={(e) => setFormData({...formData, personal: {...formData.personal, nik: e.target.value}})} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-xs text-zinc-500 font-bold uppercase">No. WhatsApp</Label>
+                            <Input className="bg-black border-zinc-800" type="tel" value={formData.personal.wa} onChange={(e) => setFormData({...formData, personal: {...formData.personal, wa: e.target.value}})} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-xs text-zinc-500 font-bold uppercase">Ukuran Jersey</Label>
+                            <Select onValueChange={(val) => setFormData({...formData, personal: {...formData.personal, size: val}})}>
+                                <SelectTrigger className="bg-black border-zinc-800"><SelectValue placeholder="Pilih" /></SelectTrigger>
+                                <SelectContent>
+                                    {['S','M','L','XL','XXL'].map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+                </div>
+            </Card>
+
+            <Card className="bg-zinc-900 border-zinc-800 rounded-[32px] p-8">
+                <div className="space-y-4">
+                    <h3 className="text-lg font-black text-white border-b border-zinc-800 pb-2 flex items-center gap-2">
+                        <Activity className="w-5 h-5 text-cyan-500"/> Validasi TPF
+                    </h3>
+                    <div className="bg-cyan-900/10 border border-cyan-500/20 p-3 rounded-xl text-xs text-cyan-200">
+                        Isi dengan jujur. TPF akan mengecek jejak digital Anda. Kebohongan level = Blacklist.
+                    </div>
+                    
+                    <div className="space-y-4">
+                        <div className="space-y-2">
+                            <Label className="text-xs text-zinc-500 font-bold uppercase">Username Instagram</Label>
+                            <div className="relative">
+                                <Instagram className="absolute left-3 top-3 w-4 h-4 text-zinc-500"/>
+                                <Input className="bg-black border-zinc-800 pl-10" placeholder="@username (Wajib Public)" value={formData.tpf.ig} onChange={(e) => setFormData({...formData, tpf: {...formData.tpf, ig: e.target.value}})} />
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-xs text-zinc-500 font-bold uppercase">Riwayat Turnamen / Prestasi</Label>
+                            <Textarea 
+                                className="bg-black border-zinc-800 min-h-[100px]" 
+                                placeholder="Contoh: Juara 2 Kejurkot 2024, 8 Besar Open Bandung..." 
+                                value={formData.tpf.history} 
+                                onChange={(e) => setFormData({...formData, tpf: {...formData.tpf, history: e.target.value}})}
+                            />
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4 pt-2">
+                            <div className="space-y-2">
+                                <Label className="text-xs text-zinc-500 font-bold">Foto KTP</Label>
+                                <div className="h-24 bg-black border-2 border-dashed border-zinc-800 rounded-xl flex items-center justify-center text-zinc-600 hover:text-white hover:border-cyan-500 cursor-pointer">
+                                    <Upload className="w-5 h-5"/>
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <Label className="text-xs text-zinc-500 font-bold">Foto Diri (Resmi)</Label>
+                                <div className="h-24 bg-black border-2 border-dashed border-zinc-800 rounded-xl flex items-center justify-center text-zinc-600 hover:text-white hover:border-cyan-500 cursor-pointer">
+                                    <Upload className="w-5 h-5"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Card>
+        </div>
+      )}
+
+
+      {/* --- WIZARD NAVIGATION --- */}
+      <div className="flex justify-between pt-4 pb-8">
+        <Button 
+            variant="outline" 
+            onClick={handlePrevStep} 
+            disabled={currentStep === 1}
+            className="h-14 px-8 rounded-xl border-zinc-700 text-zinc-300 hover:text-white font-bold"
+        >
+            <ChevronLeft className="w-5 h-5 mr-2"/> BACK
+        </Button>
+        
+        {currentStep === 3 ? (
+            <Button 
+                onClick={handleSubmit}
+                className="h-14 px-10 rounded-xl bg-green-600 hover:bg-green-700 text-white font-black text-lg shadow-[0_0_20px_rgba(22,163,74,0.4)]"
+            >
+                FINISH & JOIN <CheckCircle2 className="ml-2 w-6 h-6"/>
+            </Button>
+        ) : (
+            <Button 
+                onClick={handleNextStep}
+                disabled={
+                    (currentStep === 1 && !Object.values(formData.agreements).every(Boolean)) || // Step 1 Validasi
+                    (currentStep === 2 && !formData.selectedSkill) // Step 2 Validasi
+                }
+                className="h-14 px-8 rounded-xl bg-white text-black hover:bg-zinc-200 font-bold text-lg"
+            >
+                NEXT STEP <ChevronRight className="w-5 h-5 ml-2"/>
+            </Button>
+        )}
+      </div>
+
     </div>
   );
 
-  // ---------------------------------------------------------
-  // LOGIKA UTAMA (MAIN RENDER SWITCH)
-  // ---------------------------------------------------------
+  const renderLoading = () => (
+    <div className="flex items-center justify-center min-h-screen">
+      <Loader2 className="w-12 h-12 text-cyan-500 animate-spin" />
+    </div>
+  );
 
-  // 1. Jika belum input kode tim -> Tampilkan Gate
-  if (!hasJoinedTeam) {
-    return renderJoinGate();
+  // --- LOGIKA UTAMA (MAIN RENDER SWITCH) ---
+  switch (viewState) {
+    case 'LOADING':
+      return renderLoading();
+    case 'JOIN':
+      return renderJoinGate();
+    case 'FORM':
+      return renderWizard();
+    case 'DASHBOARD':
+      return <PlayerDashboardFull />;
+    default:
+      return renderLoading();
   }
-
-  // 2. Jika sudah kode tim tapi belum isi form -> Tampilkan Wizard
-  if (!isRegistrationComplete) {
-    return renderWizard();
-  }
-
-  // 3. Jika semua selesai -> Tampilkan Dashboard Lengkap (7 Fitur)
-  // Ini memanggil komponen yang kita buat di prompt sebelumnya
-  return <PlayerDashboardFull />;
 }
