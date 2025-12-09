@@ -1,9 +1,10 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
 import { 
   Gift, Sparkles, Trophy, Monitor, PartyPopper, 
-  Check, X, Crown, Box, AlertCircle 
+  Check, X, Crown, Box, AlertCircle, Maximize, Minimize 
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -39,8 +40,11 @@ export default function DoorprizePage() {
   const [displayCandidate, setDisplayCandidate] = useState("READY TO ROLL");
   const [winner, setWinner] = useState<string | null>(null);
   const [isWinnerModalOpen, setIsWinnerModalOpen] = useState(false);
+  
+  // State untuk Big Screen
+  const [isBigScreen, setIsBigScreen] = useState(false);
 
-  // FIX: Auto-select prize pertama saat load agar tombol aktif
+  // Auto-select prize pertama
   useEffect(() => {
     if (PRIZE_POOL.length > 0) {
         setSelectedPrize(PRIZE_POOL[0].id);
@@ -58,6 +62,17 @@ export default function DoorprizePage() {
     }
     return () => clearInterval(interval);
   }, [isSpinning]);
+
+  // Listener untuk tombol ESC agar keluar dari fullscreen
+  useEffect(() => {
+    const handleEsc = () => {
+      if (!document.fullscreenElement) {
+        setIsBigScreen(false);
+      }
+    };
+    document.addEventListener('fullscreenchange', handleEsc);
+    return () => document.removeEventListener('fullscreenchange', handleEsc);
+  }, []);
 
   const handleSpin = () => {
     if (!selectedPrize) return;
@@ -90,13 +105,27 @@ export default function DoorprizePage() {
     }, 250);
   };
 
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+      });
+      setIsBigScreen(true);
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+      setIsBigScreen(false);
+    }
+  };
+
   const activePrizeObj = PRIZE_POOL.find(p => p.id === selectedPrize);
 
   return (
     <div className="space-y-8 p-4 md:p-8 font-body pb-24 h-[calc(100vh-64px)] flex flex-col">
       
       {/* --- HEADER --- */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 shrink-0">
+      <div className={cn("flex flex-col md:flex-row justify-between items-start md:items-end gap-6 shrink-0 transition-all", isBigScreen ? "hidden" : "flex")}>
         <div>
             <div className="flex items-center gap-2 mb-2">
                 <Badge variant="outline" className="rounded-full px-3 py-1 border-pink-500 text-pink-500 bg-pink-500/10 backdrop-blur-md animate-pulse">
@@ -111,7 +140,12 @@ export default function DoorprizePage() {
             </p>
         </div>
 
-        <Button variant="outline" className="h-14 rounded-full border-zinc-700 text-zinc-300 hover:text-white hover:bg-zinc-800 font-bold">
+        {/* TOMBOL BIG SCREEN */}
+        <Button 
+            variant="outline" 
+            onClick={toggleFullScreen}
+            className="h-14 rounded-full border-zinc-700 text-zinc-300 hover:text-white hover:bg-zinc-800 font-bold"
+        >
             <Monitor className="mr-2 w-5 h-5"/> BIG SCREEN MODE
         </Button>
       </div>
@@ -119,8 +153,8 @@ export default function DoorprizePage() {
       {/* --- MAIN STAGE --- */}
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8 min-h-0">
          
-         {/* LEFT: PRIZE POOL (3 Columns) */}
-         <div className="lg:col-span-3 flex flex-col gap-6 h-full overflow-hidden">
+         {/* LEFT: PRIZE POOL (Hidden on Big Screen) */}
+         <div className={cn("flex flex-col gap-6 h-full overflow-hidden transition-all duration-500", isBigScreen ? "hidden" : "lg:col-span-3")}>
             <Card className="flex-1 bg-zinc-900 border border-zinc-800 rounded-[24px] overflow-hidden flex flex-col">
                 <div className="p-6 pb-2 border-b border-zinc-800 bg-zinc-950/50">
                     <h3 className="text-sm font-black text-zinc-500 uppercase tracking-widest flex items-center gap-2">
@@ -140,13 +174,11 @@ export default function DoorprizePage() {
                                         : "bg-zinc-950 border-zinc-800 hover:border-zinc-600"
                                 )}
                             >
-                                {/* Active Indicator */}
                                 {selectedPrize === prize.id && (
                                     <div className="absolute top-0 right-0 p-1.5 bg-pink-500 rounded-bl-xl text-black">
                                         <Check className="w-3 h-3 stroke-[4px]" />
                                     </div>
                                 )}
-
                                 <div className="flex justify-between items-start mb-2">
                                     <Badge variant="outline" className={cn("text-[9px] font-black border-none", prize.color)}>
                                         {prize.tier}
@@ -161,54 +193,81 @@ export default function DoorprizePage() {
             </Card>
          </div>
 
-         {/* CENTER: THE SPINNER (6 Columns) */}
-         <div className="lg:col-span-6 flex flex-col justify-center h-full">
+         {/* CENTER: THE SPINNER (Expands on Big Screen) */}
+         <div className={cn("flex flex-col justify-center h-full transition-all duration-500", isBigScreen ? "lg:col-span-12" : "lg:col-span-6")}>
             <Card className="bg-zinc-950 border-zinc-800 rounded-[40px] overflow-hidden relative shadow-2xl h-full flex flex-col">
                 
+                {/* Background FX */}
                 <div className="absolute inset-0 bg-[url('/images/grid-pattern.png')] opacity-10 pointer-events-none"></div>
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-600/20 rounded-full blur-[100px] pointer-events-none"></div>
 
-                <CardContent className="flex-1 flex flex-col items-center justify-center p-8 relative z-10 text-center space-y-8">
+                {/* EXIT BUTTON (Only Visible on Big Screen) */}
+                {isBigScreen && (
+                    <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={toggleFullScreen}
+                        className="absolute top-6 right-6 z-50 text-zinc-500 hover:text-white hover:bg-zinc-800 rounded-full"
+                    >
+                        <Minimize className="w-8 h-8" />
+                    </Button>
+                )}
+
+                <CardContent className="flex-1 flex flex-col items-center justify-center p-8 relative z-10 text-center space-y-10">
                     
                     {/* Active Prize Info */}
-                    <div className="space-y-2">
-                        <p className="text-sm font-bold text-zinc-500 uppercase tracking-[0.2em]">Current Prize</p>
+                    <div className="space-y-4">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900 border border-zinc-800 shadow-sm">
+                            <Box className="w-4 h-4 text-zinc-500" />
+                            <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Selected Prize</span>
+                        </div>
+                        
                         {activePrizeObj ? (
-                            <div className="animate-in fade-in zoom-in duration-300">
-                                <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight">{activePrizeObj.name}</h2>
-                                <Badge className={cn("mt-2 text-xs font-black", activePrizeObj.color)}>
+                            <div className="animate-in fade-in zoom-in duration-300 space-y-2">
+                                <h2 className={cn("font-black text-white uppercase tracking-tight leading-none drop-shadow-xl transition-all", isBigScreen ? "text-6xl md:text-8xl" : "text-3xl md:text-5xl")}>
+                                    {activePrizeObj.name}
+                                </h2>
+                                <Badge className={cn("text-xs font-black px-3 py-1", activePrizeObj.color)}>
                                     {activePrizeObj.tier} TIER
                                 </Badge>
                             </div>
                         ) : (
-                            <h2 className="text-2xl font-bold text-zinc-700 uppercase">Select a Prize to Start</h2>
+                            <div className="flex flex-col items-center gap-2 text-zinc-600 animate-pulse">
+                                <AlertCircle className="w-12 h-12"/>
+                                <h2 className="text-xl font-bold uppercase">Pilih Hadiah di Kiri</h2>
+                            </div>
                         )}
                     </div>
 
                     {/* THE ROLLING DISPLAY */}
-                    <div className="w-full h-48 bg-black/80 border-4 border-zinc-800 rounded-[32px] flex items-center justify-center overflow-hidden relative shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] group">
+                    <div className={cn(
+                        "bg-black/80 border-4 border-zinc-800 rounded-[32px] flex items-center justify-center overflow-hidden relative shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] group transition-all",
+                        isBigScreen ? "w-3/4 h-64 border-pink-500/30" : "w-full h-48"
+                    )}>
                         {/* Scanlines Effect */}
                         <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 pointer-events-none bg-[length:100%_2px,3px_100%]"></div>
                         
                         <h1 className={cn(
-                            "text-4xl md:text-6xl font-black uppercase transition-all z-20 text-center px-4",
+                            "font-black uppercase transition-all z-20 text-center px-4",
+                            isBigScreen ? "text-7xl md:text-9xl" : "text-4xl md:text-6xl",
                             isSpinning 
-                                ? "text-zinc-500 blur-[1px]" 
+                                ? "text-zinc-500 blur-[2px] scale-95" 
                                 : "text-transparent bg-clip-text bg-gradient-to-br from-white to-zinc-400 scale-110 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]"
                         )}>
                             {displayCandidate}
                         </h1>
                     </div>
 
-                    {/* SPIN BUTTON */}
+                    {/* SPIN ACTION */}
                     <Button 
                         disabled={!selectedPrize || isSpinning}
                         onClick={handleSpin}
                         className={cn(
-                            "w-64 h-20 rounded-full font-black text-2xl tracking-widest shadow-[0_0_40px_rgba(236,72,153,0.4)] transition-all transform active:scale-95",
+                            "rounded-full font-black tracking-widest shadow-[0_0_40px_rgba(236,72,153,0.4)] transition-all transform active:scale-95",
+                            isBigScreen ? "w-96 h-32 text-4xl" : "w-72 h-24 text-3xl",
                             isSpinning 
-                                ? "bg-zinc-800 text-zinc-600 cursor-not-allowed" 
-                                : "bg-gradient-to-r from-pink-600 to-purple-600 hover:scale-105 hover:shadow-[0_0_60px_rgba(236,72,153,0.6)] text-white"
+                                ? "bg-zinc-800 text-zinc-600 cursor-not-allowed border border-zinc-700" 
+                                : "bg-gradient-to-r from-pink-600 to-purple-600 hover:scale-105 hover:shadow-[0_0_80px_rgba(236,72,153,0.6)] text-white border-4 border-pink-400/20"
                         )}
                     >
                         {isSpinning ? "ROLLING..." : "SPIN NOW"}
@@ -218,8 +277,8 @@ export default function DoorprizePage() {
             </Card>
          </div>
 
-         {/* RIGHT: HISTORY (3 Columns) */}
-         <div className="lg:col-span-3 flex flex-col gap-6 h-full overflow-hidden">
+         {/* RIGHT: HISTORY (Hidden on Big Screen) */}
+         <div className={cn("flex flex-col gap-6 h-full overflow-hidden transition-all duration-500", isBigScreen ? "hidden" : "lg:col-span-3")}>
             <Card className="flex-1 bg-zinc-900 border border-zinc-800 rounded-[24px] flex flex-col overflow-hidden">
                 <div className="p-6 border-b border-zinc-800 bg-zinc-950/50">
                     <h3 className="text-sm font-black text-zinc-500 uppercase tracking-widest flex items-center gap-2">
@@ -227,7 +286,7 @@ export default function DoorprizePage() {
                     </h3>
                 </div>
                 <ScrollArea className="flex-1 p-4">
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                         {WINNERS_HISTORY.map((hist) => (
                             <div key={hist.id} className="flex items-start gap-3 p-3 rounded-xl bg-zinc-950 border border-zinc-800">
                                 <div className="mt-1">
@@ -245,6 +304,11 @@ export default function DoorprizePage() {
                         ))}
                     </div>
                 </ScrollArea>
+                <div className="p-4 border-t border-zinc-800">
+                    <Button variant="ghost" className="w-full text-zinc-500 text-xs uppercase font-bold hover:text-white">
+                        View All History
+                    </Button>
+                </div>
             </Card>
          </div>
 
@@ -252,39 +316,36 @@ export default function DoorprizePage() {
 
       {/* --- WINNER REVEAL MODAL --- */}
       <Dialog open={isWinnerModalOpen} onOpenChange={setIsWinnerModalOpen}>
-        <DialogContent className="bg-zinc-950 border-4 border-pink-500 text-white rounded-[40px] max-w-lg p-0 overflow-hidden shadow-[0_0_100px_rgba(236,72,153,0.5)]">
-            <DialogHeader className="sr-only">
-              <DialogTitle>Winner Announcement</DialogTitle>
-              <DialogDescription>The winner of the doorprize draw is revealed.</DialogDescription>
-            </DialogHeader>
-            <div className="h-56 bg-gradient-to-b from-pink-600 to-purple-900 relative flex items-center justify-center overflow-hidden">
+        <DialogContent className={cn(
+            "bg-zinc-950 border-4 border-pink-500 text-white rounded-[40px] overflow-hidden shadow-[0_0_100px_rgba(236,72,153,0.5)] transition-all",
+            isBigScreen ? "max-w-4xl p-0 scale-125" : "max-w-lg p-0"
+        )}>
+            
+            <div className={cn("bg-gradient-to-b from-pink-600 to-purple-900 relative flex items-center justify-center overflow-hidden", isBigScreen ? "h-96" : "h-56")}>
                 <div className="absolute inset-0 bg-[url('/images/noise.png')] opacity-30 mix-blend-overlay"></div>
-                
-                {/* Winner Crown Animation */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-white/10 rounded-full blur-[80px] animate-pulse"></div>
                 
                 <div className="relative z-10 flex flex-col items-center animate-in zoom-in slide-in-from-bottom-10 duration-500">
-                    <Crown className="w-20 h-20 text-yellow-400 mb-2 drop-shadow-[0_0_20px_rgba(250,204,21,0.8)] animate-bounce"/>
+                    <Crown className={cn("text-yellow-400 mb-2 drop-shadow-[0_0_20px_rgba(250,204,21,0.8)] animate-bounce", isBigScreen ? "w-32 h-32" : "w-20 h-20")}/>
                     <Sparkles className="absolute top-0 right-10 w-10 h-10 text-white animate-spin-slow"/>
-                    <h2 className="text-4xl font-black text-white uppercase tracking-tighter drop-shadow-md mt-2">WINNER!</h2>
+                    <h2 className={cn("font-black text-white uppercase tracking-tighter drop-shadow-md mt-2", isBigScreen ? "text-6xl" : "text-4xl")}>WINNER!</h2>
                 </div>
             </div>
 
-            <div className="p-10 text-center space-y-8 bg-zinc-900">
-                
+            <div className={cn("text-center bg-zinc-900", isBigScreen ? "p-16 space-y-12" : "p-10 space-y-8")}>
                 <div className="space-y-3">
                     <p className="text-xs font-bold text-zinc-500 uppercase tracking-[0.3em]">Congratulations To</p>
-                    <h1 className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-400 leading-tight">
+                    <h1 className={cn("font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-400 leading-tight", isBigScreen ? "text-7xl" : "text-4xl md:text-5xl")}>
                         {winner}
                     </h1>
-                    <Badge variant="outline" className="border-pink-500 text-pink-500 mt-2">
+                    <Badge variant="outline" className="border-pink-500 text-pink-500 mt-2 px-4 py-1">
                         ID: TICKET-LUCKY-88
                     </Badge>
                 </div>
 
                 <div className="bg-black/60 p-6 rounded-3xl border border-zinc-800 shadow-inner">
                     <p className="text-[10px] text-zinc-500 uppercase font-bold mb-2 tracking-widest">Prize Unlocked</p>
-                    <p className="text-2xl font-black text-yellow-400">{activePrizeObj?.name}</p>
+                    <p className={cn("font-bold text-yellow-400", isBigScreen ? "text-4xl" : "text-2xl")}>{activePrizeObj?.name}</p>
                 </div>
 
                 <div className="flex gap-4 pt-4">
