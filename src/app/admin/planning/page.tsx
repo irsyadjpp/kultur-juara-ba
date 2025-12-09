@@ -1,219 +1,278 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from 'react';
 import { 
-  ClipboardList, CheckCircle2, XCircle, AlertCircle, 
-  DollarSign, Calendar, Send, Edit3 
+  TrendingUp, TrendingDown, Calendar, Plus, 
+  Target, DollarSign, Wallet, PieChart, 
+  ArrowRight, CheckCircle2, Clock, AlertCircle, FileText
 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { getPrograms, submitProgram, reviewProgram, type ProgramProposal } from "./actions";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 
-// Simulasi Session (Nanti ambil dari real session)
-const USER_ROLE = 'DIRECTOR'; // Coba ganti jadi 'MEDIA' untuk mode pengaju
+// --- MOCK DATA ---
+const BUDGET_STATS = {
+  total: 450000000, // 450 Juta
+  used: 125000000,  // 125 Juta Terpakai
+  burnRate: 28,     // 28%
+  remaining: 325000000
+};
+
+const PROGRAMS = [
+  { id: 1, name: "Sewa Venue GOR KONI", division: "OPERATIONS", cost: 80000000, date: "Jun 2026", status: "APPROVED", progress: 100 },
+  { id: 2, name: "Produksi Jersey Panitia", division: "LOGISTICS", cost: 25000000, date: "May 2026", status: "IN_REVIEW", progress: 40 },
+  { id: 3, name: "Hadiah Uang Tunai (Prize Pool)", division: "FINANCE", cost: 150000000, date: "Jul 2026", status: "PLANNED", progress: 0 },
+  { id: 4, name: "Promosi Iklan Instagram", division: "MEDIA", cost: 15000000, date: "Apr 2026", status: "APPROVED", progress: 80 },
+];
 
 export default function PlanningPage() {
-  const { toast } = useToast();
-  const [programs, setPrograms] = useState<ProgramProposal[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // Form State (Pengajuan)
-  const [newProg, setNewProg] = useState({
-    title: "", objective: "", deadline: "", costEstimate: "", priority: "MUST" as 'MUST' | 'SHOULD' | 'COULD' | 'WONT'
-  });
-
-  // Review State
-  const [reviewNote, setReviewNote] = useState("");
-
-  useEffect(() => {
-    getPrograms().then(setPrograms);
-  }, []);
-
-  // --- LOGIC PENGAJUAN (BOTTOM-UP) ---
-  const handleSubmit = async () => {
-    if (!newProg.title || !newProg.costEstimate) return alert("Lengkapi data!");
-    
-    setIsSubmitting(true);
-    await submitProgram({
-        ...newProg,
-        division: USER_ROLE === 'DIRECTOR' ? 'SC' : USER_ROLE, // Otomatis deteksi divisi
-        costEstimate: Number(newProg.costEstimate)
-    });
-    setIsSubmitting(false);
-    toast({ title: "Terkirim", description: "Menunggu review Steering Committee." });
-    getPrograms().then(setPrograms);
-    setNewProg({ title: "", objective: "", deadline: "", costEstimate: "", priority: "MUST" }); // Reset
-  };
-
-  // --- LOGIC REVIEW (TOP-DOWN) ---
-  const handleReview = async (id: string, decision: 'APPROVED' | 'REVISION' | 'REJECTED') => {
-    await reviewProgram(id, decision, reviewNote);
-    toast({ 
-        title: decision === 'APPROVED' ? "Program Disetujui" : "Status Diperbarui", 
-        description: decision === 'APPROVED' ? "Budget otomatis dikunci & Masuk Kalender." : "Notifikasi dikirim ke pengaju.",
-        className: decision === 'APPROVED' ? "bg-green-600 text-white" : ""
-    });
-    setReviewNote("");
-    getPrograms().then(setPrograms);
-  };
+  const [isAddOpen, setIsAddOpen] = useState(false);
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-8 p-4 md:p-8 font-body pb-24">
+      
+      {/* --- HEADER --- */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
-            <h2 className="text-3xl font-bold font-headline text-primary">RKA & Program Kerja</h2>
-            <p className="text-muted-foreground">Perencanaan Terpusat & Kontrol Anggaran.</p>
+            <div className="flex items-center gap-2 mb-2">
+                <Badge variant="outline" className="rounded-full px-3 py-1 border-primary text-primary bg-primary/10 backdrop-blur-md">
+                    <Target className="w-3 h-3 mr-2 fill-primary" /> STRATEGIC PLANNING
+                </Badge>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-black font-headline uppercase tracking-tighter text-white">
+                Masterplan <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-500">& Budget</span>
+            </h1>
+            <p className="text-zinc-400 mt-2 max-w-xl text-lg">
+                Peta jalan strategis dan alokasi "amunisi" keuangan BCC 2026.
+            </p>
         </div>
+
+        <Button 
+            onClick={() => setIsAddOpen(true)}
+            className="h-14 rounded-full px-8 bg-white text-black hover:bg-zinc-200 font-bold text-lg shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+        >
+            <Plus className="mr-2 w-5 h-5"/> NEW PROGRAM
+        </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* KOLOM KIRI: FORM PENGAJUAN (RKA) */}
-        <Card className="lg:col-span-1 h-fit">
-            <CardHeader>
-                <CardTitle>Ajukan Program Baru</CardTitle>
-                <CardDescription>Isi detail aktivitas dan kebutuhan biaya.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                <div className="space-y-2">
-                    <label className="text-sm font-bold">Nama Program</label>
-                    <Input placeholder="Cth: Produksi Video Teaser" value={newProg.title} onChange={e => setNewProg({...newProg, title: e.target.value})} />
+      {/* --- BUDGET OVERVIEW (HERO CARD) --- */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+         
+         {/* WAR CHEST (Total Budget) */}
+         <Card className="lg:col-span-2 bg-gradient-to-br from-zinc-900 to-black border-zinc-800 rounded-[40px] relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[100px] group-hover:bg-primary/20 transition-all"></div>
+            <CardContent className="p-8 md:p-10 relative z-10 flex flex-col justify-between h-full">
+                <div className="flex justify-between items-start mb-8">
+                    <div>
+                        <p className="text-zinc-500 font-bold uppercase text-xs tracking-[0.2em] mb-2">Total War Chest (RAB)</p>
+                        <h2 className="text-5xl md:text-6xl font-black text-white tracking-tight">
+                            Rp {BUDGET_STATS.total.toLocaleString('id-ID', { notation: "compact" })}
+                        </h2>
+                    </div>
+                    <div className="bg-zinc-800/50 p-4 rounded-3xl border border-zinc-700/50 backdrop-blur-md">
+                        <Wallet className="w-8 h-8 text-primary"/>
+                    </div>
                 </div>
-                <div className="space-y-2">
-                    <label className="text-sm font-bold">Tujuan & Output</label>
-                    <Textarea placeholder="Kenapa ini penting?" value={newProg.objective} onChange={e => setNewProg({...newProg, objective: e.target.value})} />
+
+                <div className="space-y-4">
+                    <div className="flex justify-between items-end">
+                        <div>
+                            <span className="text-3xl font-black text-white">{BUDGET_STATS.burnRate}%</span>
+                            <span className="text-zinc-500 ml-2 font-bold text-sm uppercase">Burn Rate (Realized)</span>
+                        </div>
+                        <div className="text-right">
+                            <span className="text-zinc-400 text-xs font-bold uppercase block mb-1">Remaining</span>
+                            <span className="text-xl font-bold text-white font-mono">Rp {BUDGET_STATS.remaining.toLocaleString('id-ID')}</span>
+                        </div>
+                    </div>
+                    <Progress value={BUDGET_STATS.burnRate} className="h-4 bg-zinc-800 rounded-full" indicatorClassName="bg-gradient-to-r from-primary to-orange-500" />
                 </div>
+            </CardContent>
+         </Card>
+
+         {/* QUICK STATS */}
+         <div className="space-y-6">
+            <Card className="bg-zinc-900 border-zinc-800 rounded-[32px] flex-1">
+                <CardContent className="p-6 flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-500">
+                        <TrendingUp className="w-8 h-8" />
+                    </div>
+                    <div>
+                        <p className="text-zinc-500 text-xs font-bold uppercase">Funding Secured</p>
+                        <p className="text-2xl font-black text-white">85%</p>
+                    </div>
+                </CardContent>
+            </Card>
+            <Card className="bg-zinc-900 border-zinc-800 rounded-[32px] flex-1">
+                <CardContent className="p-6 flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500">
+                        <FileText className="w-8 h-8" />
+                    </div>
+                    <div>
+                        <p className="text-zinc-500 text-xs font-bold uppercase">Programs</p>
+                        <p className="text-2xl font-black text-white">{PROGRAMS.length} Items</p>
+                    </div>
+                </CardContent>
+            </Card>
+         </div>
+      </div>
+
+      {/* --- TABS SECTION --- */}
+      <Tabs defaultValue="roadmap" className="w-full">
+        <div className="flex justify-center mb-8">
+            <TabsList className="bg-zinc-900 p-1.5 rounded-full h-16 w-full max-w-lg border border-zinc-800">
+                <TabsTrigger value="roadmap" className="rounded-full h-full w-1/2 font-bold text-base data-[state=active]:bg-primary data-[state=active]:text-white">
+                    <Calendar className="w-4 h-4 mr-2"/> ROADMAP
+                </TabsTrigger>
+                <TabsTrigger value="budget" className="rounded-full h-full w-1/2 font-bold text-base data-[state=active]:bg-primary data-[state=active]:text-white">
+                    <DollarSign className="w-4 h-4 mr-2"/> BUDGET SHEET
+                </TabsTrigger>
+            </TabsList>
+        </div>
+
+        {/* TAB 1: ROADMAP (TIMELINE VIEW) */}
+        <TabsContent value="roadmap">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {PROGRAMS.map((prog) => (
+                    <Card key={prog.id} className="group bg-zinc-900 border-zinc-800 rounded-[32px] hover:border-zinc-600 transition-all hover:-translate-y-1">
+                        <CardHeader className="p-6 pb-2">
+                            <div className="flex justify-between items-start mb-4">
+                                <Badge variant="outline" className="border-zinc-700 text-zinc-400 text-[10px] font-bold uppercase tracking-widest px-3 py-1">
+                                    {prog.division}
+                                </Badge>
+                                {prog.status === 'APPROVED' ? <CheckCircle2 className="w-5 h-5 text-green-500"/> : <Clock className="w-5 h-5 text-yellow-500"/>}
+                            </div>
+                            <CardTitle className="text-xl font-black text-white leading-tight group-hover:text-primary transition-colors">
+                                {prog.name}
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-6 pt-4">
+                            <div className="bg-black/30 p-4 rounded-2xl border border-zinc-800 mb-4">
+                                <div className="text-xs text-zinc-500 font-bold uppercase mb-1">Est. Cost</div>
+                                <div className="text-lg font-mono font-bold text-white">Rp {prog.cost.toLocaleString('id-ID', {notation: 'compact'})}</div>
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <div className="flex justify-between text-xs font-bold text-zinc-500 uppercase">
+                                    <span>{prog.date}</span>
+                                    <span>{prog.progress}% Ready</span>
+                                </div>
+                                <Progress value={prog.progress} className="h-1.5 bg-zinc-800" indicatorClassName={cn(prog.progress === 100 ? "bg-green-500" : "bg-primary")}/>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ))}
+                
+                {/* Add New Placeholder */}
+                <button 
+                    onClick={() => setIsAddOpen(true)}
+                    className="group border-2 border-dashed border-zinc-800 rounded-[32px] flex flex-col items-center justify-center gap-4 hover:bg-zinc-900 hover:border-primary/50 transition-all h-[280px]"
+                >
+                    <div className="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center text-zinc-500 group-hover:bg-primary group-hover:text-white transition-colors">
+                        <Plus className="w-8 h-8"/>
+                    </div>
+                    <span className="text-zinc-500 font-bold uppercase tracking-widest text-sm group-hover:text-white">Add Program</span>
+                </button>
+            </div>
+        </TabsContent>
+
+        {/* TAB 2: BUDGET SHEET (TABLE VIEW) */}
+        <TabsContent value="budget">
+            <Card className="bg-zinc-900 border-zinc-800 rounded-[32px] overflow-hidden">
+                <CardHeader className="p-8 border-b border-zinc-800">
+                    <CardTitle className="text-2xl font-black uppercase">Detail Anggaran (RKA)</CardTitle>
+                    <CardDescription>Breakdown pengeluaran per divisi.</CardDescription>
+                </CardHeader>
+                <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left">
+                        <thead className="bg-zinc-950/50 text-zinc-400 uppercase font-bold text-xs">
+                            <tr>
+                                <th className="px-8 py-6">Program Item</th>
+                                <th className="px-6 py-6">Divisi</th>
+                                <th className="px-6 py-6 text-right">RAB (Plan)</th>
+                                <th className="px-6 py-6 text-center">Status</th>
+                                <th className="px-6 py-6 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-zinc-800">
+                            {PROGRAMS.map((prog) => (
+                                <tr key={prog.id} className="hover:bg-zinc-800/30 transition-colors">
+                                    <td className="px-8 py-5 font-bold text-white text-base">{prog.name}</td>
+                                    <td className="px-6 py-5"><Badge variant="secondary" className="bg-zinc-800 text-zinc-400 border-none">{prog.division}</Badge></td>
+                                    <td className="px-6 py-5 text-right font-mono font-bold text-zinc-300">Rp {prog.cost.toLocaleString('id-ID')}</td>
+                                    <td className="px-6 py-5 text-center">
+                                        <Badge className={cn("rounded-full", prog.status === 'APPROVED' ? "bg-green-500/20 text-green-500" : "bg-yellow-500/20 text-yellow-500")}>
+                                            {prog.status}
+                                        </Badge>
+                                    </td>
+                                    <td className="px-6 py-5 text-right">
+                                        <Button variant="ghost" size="sm" className="hover:text-white">Edit</Button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </Card>
+        </TabsContent>
+      </Tabs>
+
+      {/* --- ADD PROGRAM MODAL --- */}
+      <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+        <DialogContent className="bg-zinc-950 border-zinc-800 text-white rounded-[40px] max-w-lg p-0 overflow-hidden shadow-2xl">
+            <div className="p-8 border-b border-zinc-800 bg-zinc-900/50">
+                <DialogHeader>
+                    <DialogTitle className="text-2xl font-black font-headline uppercase flex items-center gap-2">
+                        <Plus className="w-6 h-6 text-primary"/> New Program
+                    </DialogTitle>
+                    <DialogDescription>Tambahkan rencana kerja baru ke dalam masterplan.</DialogDescription>
+                </DialogHeader>
+            </div>
+            
+            <div className="p-8 space-y-6">
+                <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase text-zinc-500 ml-1">Nama Program</label>
+                    <Input placeholder="Cth: Sewa Lighting Stage" className="bg-zinc-900 border-zinc-800 h-14 rounded-2xl text-lg font-bold" />
+                </div>
+
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                        <label className="text-sm font-bold">Deadline</label>
-                        <Input type="date" value={newProg.deadline} onChange={e => setNewProg({...newProg, deadline: e.target.value})} />
+                        <label className="text-xs font-bold uppercase text-zinc-500 ml-1">Divisi</label>
+                        <Select>
+                            <SelectTrigger className="bg-zinc-900 border-zinc-800 h-14 rounded-2xl"><SelectValue placeholder="Pilih" /></SelectTrigger>
+                            <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
+                                <SelectItem value="LOGISTICS">Logistics</SelectItem>
+                                <SelectItem value="MEDIA">Media & Creative</SelectItem>
+                                <SelectItem value="MATCH">Match Control</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <div className="space-y-2">
-                        <label className="text-sm font-bold">Estimasi Biaya</label>
-                        <div className="relative">
-                            <span className="absolute left-3 top-2.5 text-gray-500 text-sm">Rp</span>
-                            <Input type="number" className="pl-10" placeholder="0" value={newProg.costEstimate} onChange={e => setNewProg({...newProg, costEstimate: e.target.value})} />
-                        </div>
+                        <label className="text-xs font-bold uppercase text-zinc-500 ml-1">Estimasi Biaya</label>
+                        <Input type="number" placeholder="Rp 0" className="bg-zinc-900 border-zinc-800 h-14 rounded-2xl font-mono" />
                     </div>
                 </div>
+
                 <div className="space-y-2">
-                    <label className="text-sm font-bold">Prioritas (MoSCoW)</label>
-                    <Select onValueChange={(v : any) => setNewProg({...newProg, priority: v})} defaultValue="MUST">
-                        <SelectTrigger><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="MUST">Must Have (Wajib)</SelectItem>
-                            <SelectItem value="SHOULD">Should Have (Penting)</SelectItem>
-                            <SelectItem value="COULD">Could Have (Opsional)</SelectItem>
-                        </SelectContent>
-                    </Select>
+                    <label className="text-xs font-bold uppercase text-zinc-500 ml-1">Target Tanggal</label>
+                    <Input type="month" className="bg-zinc-900 border-zinc-800 h-14 rounded-2xl" />
                 </div>
-                <Button onClick={handleSubmit} disabled={isSubmitting} className="w-full bg-primary">
-                    <Send className="w-4 h-4 mr-2" /> Ajukan Rencana
+
+                <Button className="w-full h-16 rounded-full font-black text-lg bg-primary hover:bg-primary/90 text-primary-foreground mt-4 shadow-xl shadow-primary/20">
+                    SAVE TO MASTERPLAN
                 </Button>
-            </CardContent>
-        </Card>
+            </div>
+        </DialogContent>
+      </Dialog>
 
-        {/* KOLOM KANAN: LIST & REVIEW */}
-        <div className="lg:col-span-2 space-y-6">
-            <Tabs defaultValue="pending" className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="pending">Menunggu Review ({programs.filter(p => p.status === 'SUBMITTED').length})</TabsTrigger>
-                    <TabsTrigger value="approved">Disetujui ({programs.filter(p => p.status === 'APPROVED').length})</TabsTrigger>
-                    <TabsTrigger value="rejected">Revisi / Tolak</TabsTrigger>
-                </TabsList>
-
-                {/* TAB PENDING (AREA KERJA SC) */}
-                <TabsContent value="pending" className="space-y-4 mt-4">
-                    {programs.filter(p => p.status === 'SUBMITTED').map((prog) => (
-                        <Card key={prog.id} className="border-l-4 border-l-yellow-500 shadow-sm">
-                            <CardHeader className="pb-2">
-                                <div className="flex justify-between items-start">
-                                    <Badge variant="outline" className="mb-2">{prog.division}</Badge>
-                                    <Badge className={prog.priority === 'MUST' ? 'bg-red-600' : 'bg-blue-600'}>{prog.priority}</Badge>
-                                </div>
-                                <CardTitle className="text-lg">{prog.title}</CardTitle>
-                                <CardDescription>Deadline: {prog.deadline}</CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-3">
-                                <div className="bg-secondary/20 p-3 rounded text-sm">
-                                    <strong>Output:</strong> {prog.objective}
-                                </div>
-                                <div className="font-mono font-bold text-lg text-primary">
-                                    Rp {prog.costEstimate.toLocaleString('id-ID')}
-                                </div>
-                                
-                                {/* AREA KHUSUS DIRECTOR/FINANCE */}
-                                {['DIRECTOR', 'FINANCE'].includes(USER_ROLE) && (
-                                    <div className="pt-4 border-t space-y-3">
-                                        <Textarea 
-                                            placeholder="Catatan SC (Wajib diisi jika Revisi/Tolak)..." 
-                                            className="text-sm h-16"
-                                            onChange={e => setReviewNote(e.target.value)}
-                                        />
-                                        <div className="flex gap-2 justify-end">
-                                            <Button size="sm" variant="destructive" onClick={() => handleReview(prog.id, 'REJECTED')}>
-                                                <XCircle className="w-4 h-4 mr-1" /> Tolak
-                                            </Button>
-                                            <Button size="sm" variant="outline" className="border-yellow-500 text-yellow-600 hover:bg-yellow-50" onClick={() => handleReview(prog.id, 'REVISION')}>
-                                                <Edit3 className="w-4 h-4 mr-1" /> Revisi
-                                            </Button>
-                                            <Button size="sm" className="bg-green-600 hover:bg-green-700" onClick={() => handleReview(prog.id, 'APPROVED')}>
-                                                <CheckCircle2 className="w-4 h-4 mr-1" /> SETUJUI (ACC)
-                                            </Button>
-                                        </div>
-                                    </div>
-                                )}
-                            </CardContent>
-                        </Card>
-                    ))}
-                    {programs.filter(p => p.status === 'SUBMITTED').length === 0 && (
-                        <div className="text-center py-10 text-muted-foreground border-2 border-dashed rounded-lg">
-                            Tidak ada pengajuan baru.
-                        </div>
-                    )}
-                </TabsContent>
-
-                {/* TAB APPROVED (MONITORING) */}
-                <TabsContent value="approved" className="space-y-4 mt-4">
-                    {programs.filter(p => p.status === 'APPROVED').map((prog) => (
-                        <div key={prog.id} className="flex items-center justify-between p-4 bg-card border rounded-lg shadow-sm">
-                            <div>
-                                <div className="flex items-center gap-2 mb-1">
-                                    <Badge className="bg-green-600">ACC</Badge>
-                                    <span className="font-bold text-lg">{prog.title}</span>
-                                </div>
-                                <p className="text-sm text-muted-foreground">Rp {prog.costEstimate.toLocaleString('id-ID')} • {prog.division}</p>
-                            </div>
-                            <div className="flex items-center gap-4 text-sm text-gray-500">
-                                <span className="flex items-center gap-1"><Calendar className="w-4 h-4"/> {prog.deadline}</span>
-                            </div>
-                        </div>
-                    ))}
-                </TabsContent>
-
-                {/* TAB REJECTED */}
-                <TabsContent value="rejected" className="space-y-4 mt-4">
-                     {programs.filter(p => ['REJECTED', 'REVISION'].includes(p.status)).map((prog) => (
-                        <div key={prog.id} className="p-4 bg-gray-50 dark:bg-card border rounded-lg opacity-70 hover:opacity-100 transition-opacity">
-                            <div className="flex justify-between mb-2">
-                                <span className="font-bold line-through">{prog.title}</span>
-                                <Badge variant="outline">{prog.status}</Badge>
-                            </div>
-                            <p className="text-sm text-red-600 italic">" {prog.scNotes || "Tidak ada catatan"} "</p>
-                        </div>
-                    ))}
-                </TabsContent>
-            </Tabs>
-        </div>
-
-      </div>
     </div>
   );
 }
