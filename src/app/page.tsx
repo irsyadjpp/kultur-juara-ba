@@ -1,8 +1,9 @@
+
+'use client';
+
+import { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { Users, UserPlus } from 'lucide-react';
 
 // Section Utama
 import { HeroSection } from '@/components/sections/hero';
@@ -19,14 +20,31 @@ import { WhyJoinSection } from '@/components/sections/why-join';
 import { PrizesSection } from '@/components/sections/prizes';
 import { FaqSection } from '@/components/sections/faq';
 
+function ClientOnly({ children }: { children: React.ReactNode }) {
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  if (!hasMounted) {
+    return null;
+  }
+
+  return <>{children}</>;
+}
+
+
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
       
       <main className="flex-grow">
-        {/* 1. Hero: Judul Besar & Tombol Aksi */}
-        <HeroSection />
+        <ClientOnly>
+          {/* 1. Hero: Judul Besar & Tombol Aksi */}
+          <HeroSection />
+        </ClientOnly>
         
         {/* 2. Event Summary: The 4 Ws */}
         <EventSummarySection />
