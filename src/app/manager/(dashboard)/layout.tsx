@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { redirect, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { 
@@ -19,6 +19,11 @@ import { ThemeToggle } from '@/components/theme-toggle';
 
 export default function ManagerLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Nonaktifkan proteksi route sementara
   // const session = await getManagerSession();
@@ -140,7 +145,7 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
                 <Button variant="ghost" size="icon" asChild>
                   <Link href="/"><Home className="w-4 h-4" /></Link>
                 </Button>
-                <ThemeToggle />
+                {isMounted && <ThemeToggle />}
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
                         <span className="font-bold text-primary">M</span>
