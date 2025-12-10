@@ -55,7 +55,7 @@ export default function CommitteeDashboard() {
       const res = await clockIn("Main Gate");
       if (res.success) {
         setIsClockedIn(true);
-        setCheckInTime(res.timestamp);
+        setCheckInTime(new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }));
         toast({ 
           title: `Streak Hari ke-${res.streak}! 🔥`, 
           description: "Absensi berhasil dicatat.", 
@@ -296,3 +296,5 @@ export default function CommitteeDashboard() {
     </div>
   );
 }
+
+    

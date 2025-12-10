@@ -83,7 +83,7 @@ export default function WaiverPrintPage() {
                 </div>
             </div>
             <div className="w-1/3 text-center text-sm font-bold">
-                <div className="mb-2">Manajer Tim</div>
+                <div className="mb-2">Manajer Tim (Pelapor)</div>
                 <div className="h-20 border-b border-dashed border-gray-400 mt-10"></div>
                 <div className="mt-2 text-sm">( Tanda Tangan & Nama Jelas )</div>
             </div>
@@ -92,3 +92,5 @@ export default function WaiverPrintPage() {
     </div>
   );
 }
+
+    

@@ -86,7 +86,8 @@ export default function MasterRundownPage() {
   // Realtime Clock
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentTime(new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+        const now = new Date();
+        setCurrentTime(now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
     }, 1000);
     return () => clearInterval(timer);
   }, []);
@@ -268,3 +269,5 @@ export default function MasterRundownPage() {
     </div>
   );
 }
+
+    

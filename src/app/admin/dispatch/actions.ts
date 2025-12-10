@@ -57,7 +57,7 @@ export async function requestService(court: string, serviceType: 'MOP' | 'SHUTTL
         type: serviceType,
         location: `Court ${court}`,
         status: 'OPEN' as 'OPEN' | 'ASSIGNED',
-        time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+        time: new Date().toISOString(), // Use ISO string for consistency
         reportedBy: `Umpire C${court}`,
     };
 
@@ -66,5 +66,7 @@ export async function requestService(court: string, serviceType: 'MOP' | 'SHUTTL
 
     return { success: true, message: `Request for ${serviceType} on Court ${court} logged.` };
 }
+
+    
 
     

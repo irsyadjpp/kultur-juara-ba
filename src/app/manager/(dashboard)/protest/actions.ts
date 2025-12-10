@@ -65,3 +65,5 @@ export async function resolveProtest(id: string, decision: 'ACCEPTED' | 'REJECTE
     await new Promise(r => setTimeout(r, 1000));
     return { success: true, message: `Keputusan untuk ${id} telah disimpan.` };
 }
+
+    

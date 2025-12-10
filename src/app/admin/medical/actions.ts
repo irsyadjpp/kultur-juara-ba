@@ -47,10 +47,12 @@ export async function submitMedicalLog(data: any) {
   
   const newLog: MedicalLog = {
     id: `MED-${Date.now().toString().slice(-4)}`,
-    timestamp: new Date().toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}),
+    timestamp: new Date().toISOString(),
     ...data
   };
   
   MOCK_MEDICAL_LOGS.unshift(newLog);
   return { success: true, message: "Laporan medis berhasil dicatat." };
 }
+
+    

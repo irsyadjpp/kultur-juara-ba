@@ -30,10 +30,12 @@ export async function updateAgendaStatus(id: string, status: 'LIVE' | 'DONE') {
     // Jika set LIVE, matikan yang lain
     if (status === 'LIVE') {
         RUNDOWN.forEach(a => { if(a.status === 'LIVE') a.status = 'DONE'; });
-        RUNDOWN[idx].actualStartTime = new Date().toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
+        RUNDOWN[idx].actualStartTime = new Date().toISOString(); // Use ISO string
     }
     RUNDOWN[idx].status = status;
   }
   revalidatePath('/admin/event/rundown');
   return { success: true };
 }
+
+    
