@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { 
@@ -32,18 +32,43 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Users, User, ShieldCheck, CheckCircle2, Copy, ArrowRight } from "lucide-react";
+import { Users, User, ShieldCheck, CheckCircle2, Copy, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 
+function LabelCard({ htmlFor, title, code }: { htmlFor: string; title: string; code: string }) {
+  return (
+    <label
+      htmlFor={htmlFor}
+      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer h-full text-center transition-all"
+    >
+      <span className="text-2xl font-bold mb-2">{code}</span>
+      <span className="text-sm font-medium">{title}</span>
+    </label>
+  );
+}
+
+function getCategoryFullName(code: string) {
+  switch (code) {
+    case "MD": return "Ganda Putra";
+    case "WD": return "Ganda Putri";
+    case "XD": return "Ganda Campuran";
+    default: return code;
+  }
+}
+
 export default function RegisterTeamPage() {
-  // State untuk menangani UI Success
+  const [isClient, setIsClient] = useState(false);
   const [successData, setSuccessData] = useState<{
     code: string;
     name: string;
     type: string;
   } | null>(null);
-
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const form = useForm<TeamRegistrationFormValues>({
     resolver: zodResolver(teamRegistrationSchema),
@@ -62,11 +87,7 @@ export default function RegisterTeamPage() {
   async function onSubmit(data: TeamRegistrationFormValues) {
     setIsSubmitting(true);
     try {
-      // SIMULASI SERVER ACTION (Ganti ini dengan action asli Anda nanti)
-      // const result = await registerTeamAction(data);
-      
-      // Mock Response Sukses
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Delay simulasi
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       const mockGeneratedCode = `BCC-${data.registrations[0].category}-${Math.floor(1000 + Math.random() * 9000)}`;
       
       setSuccessData({
@@ -91,7 +112,6 @@ export default function RegisterTeamPage() {
     }
   }
 
-  // --- HELPERS UI ---
   const handleSingleCategoryChange = (category: "MD" | "WD" | "XD") => {
     form.setValue("registrations", [{ category, quantity: 1 }]);
   };
@@ -120,7 +140,10 @@ export default function RegisterTeamPage() {
     }
   };
 
-  // --- RENDER VIEW: SUCCESS STATE ---
+  if (!isClient) {
+    return null;
+  }
+
   if (successData) {
     return (
       <div className="container mx-auto py-10 max-w-xl animate-in fade-in zoom-in duration-500">
@@ -176,7 +199,7 @@ export default function RegisterTeamPage() {
               <Copy className="mr-2 h-4 w-4" /> Salin Kode Tim
             </Button>
             <Button className="w-full" asChild>
-              <Link href={`/manager/roster/new`}> {/* Nanti arahkan ke ID tim yg baru dibuat */}
+              <Link href={`/manager/roster/new`}>
                 Kelola Roster & Pemain <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -186,7 +209,6 @@ export default function RegisterTeamPage() {
     );
   }
 
-  // --- RENDER VIEW: FORM ---
   return (
     <div className="container mx-auto py-10 max-w-3xl">
       <Card className="mb-8">
@@ -200,7 +222,6 @@ export default function RegisterTeamPage() {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               
-              {/* Bagian 1: Identitas */}
               <div className="space-y-4">
                 <h3 className="text-lg font-medium">Identitas Pendaftar</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -261,7 +282,6 @@ export default function RegisterTeamPage() {
 
               <Separator />
 
-              {/* Bagian 2: Tipe Kepesertaan */}
               <div className="space-y-4">
                 <FormField
                   control={form.control}
@@ -325,7 +345,6 @@ export default function RegisterTeamPage() {
                 />
               </div>
 
-              {/* Bagian 3: Kategori */}
               <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-lg border">
                 <h3 className="text-md font-semibold mb-4 flex items-center gap-2">
                   <ShieldCheck className="h-4 w-4" /> Pilih Kategori Pertandingan
@@ -404,26 +423,4 @@ export default function RegisterTeamPage() {
       </Card>
     </div>
   );
-}
-
-// --- Component Helper (Sama seperti sebelumnya) ---
-function LabelCard({ htmlFor, title, code }: { htmlFor: string; title: string; code: string }) {
-  return (
-    <label
-      htmlFor={htmlFor}
-      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer h-full text-center transition-all"
-    >
-      <span className="text-2xl font-bold mb-2">{code}</span>
-      <span className="text-sm font-medium">{title}</span>
-    </label>
-  );
-}
-
-function getCategoryFullName(code: string) {
-  switch (code) {
-    case "MD": return "Ganda Putra";
-    case "WD": return "Ganda Putri";
-    case "XD": return "Ganda Campuran";
-    default: return code;
-  }
 }
