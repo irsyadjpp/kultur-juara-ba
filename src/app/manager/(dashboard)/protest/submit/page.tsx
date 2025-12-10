@@ -84,7 +84,7 @@ export default function ProtestSubmissionPage() {
 
                 <div className="border p-4 rounded-lg space-y-3 bg-red-50 border-red-200">
                     <h3 className="font-bold text-lg flex items-center gap-2 text-red-600">
-                        <CreditCard className="w-5 h-5"/> Wajib Deposit Rp 500.000,- Tunai
+                        <CreditCard className="w-5 h-5"/> Wajib Deposit Rp 100.000,- Tunai
                     </h3>
                     <p className="text-sm text-red-800">
                         Pengajuan baru akan diproses setelah uang jaminan diserahkan ke Panitia di Meja Sekretariat GOR KONI.
@@ -244,7 +244,7 @@ export default function ProtestSubmissionPage() {
                                 <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                             </FormControl>
                             <FormLabel className="font-normal cursor-pointer leading-snug text-sm text-red-800">
-                                Saya memahami dan menyetujui penyerahan <strong className="font-bold">UANG JAMINAN PROTES Rp 500.000,-</strong> secara tunai. Uang akan hangus jika protes ditolak, dan dikembalikan 100% jika diterima.
+                                Saya memahami dan menyetujui penyerahan <strong className="font-bold">UANG JAMINAN PROTES Rp 100.000,-</strong> secara tunai. Uang akan hangus jika protes ditolak, dan dikembalikan 100% jika diterima.
                             </FormLabel>
                         </FormItem>
                     )} />
@@ -287,7 +287,7 @@ export default function ProtestSubmissionPage() {
                         </li>
                          <li>
                             <span className="font-bold">Serahkan Berkas Fisik:</span>
-                            Bawa formulir cetak yang sudah ditandatangani dan bermaterai, beserta uang jaminan tunai <strong className="font-bold">Rp 500.000</strong> ke Meja Panitia.
+                            Bawa formulir cetak yang sudah ditandatangani dan bermaterai, beserta uang jaminan tunai <strong className="font-bold">Rp 100.000</strong> ke Meja Panitia.
                         </li>
                          <li>
                             <span className="font-bold">Tunggu Keputusan:</span>
