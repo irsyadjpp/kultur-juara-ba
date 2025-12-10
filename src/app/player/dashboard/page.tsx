@@ -6,7 +6,7 @@ import Link from "next/link";
 import { 
   Trophy, Users, Shield, QrCode, Activity, Calendar, 
   ArrowRight, LogOut, User, Upload, FileText, 
-  AlertTriangle, History, Info, ChevronRight, 
+  AlertTriangle, Instagram, History, Info, ChevronRight, 
   Camera, MessageCircle, Download, Gavel, Clock, 
   Share2, RotateCw, AlertOctagon, Send, Paperclip, 
   MoreVertical, CheckCircle2, Smile, Plus, Hash, XCircle,
@@ -364,6 +364,82 @@ function PlayerDashboardFull() {
   );
 }
 
+const WizardStepAgreement = ({ onCompletion }: { onCompletion: () => void }) => {
+    const [agreements, setAgreements] = useState({ data: false, health: false, rules: false, media: false });
+    const allAgreed = Object.values(agreements).every(v => v);
+
+    const handleCheck = (key: keyof typeof agreements) => {
+        setAgreements(prev => ({ ...prev, [key]: !prev[key] }));
+    };
+
+    return (
+        <div className="animate-in fade-in slide-in-from-right-8 duration-300">
+            <h3 className="text-white text-2xl font-black mb-2 uppercase">Step 1: Integrity Pact</h3>
+            <p className="text-zinc-500 text-sm max-w-sm mb-8">Sebelum lanjut, Anda wajib menyetujui poin-poin integritas berikut.</p>
+
+            <div className="bg-red-950/30 border border-red-500/30 p-5 rounded-2xl flex gap-4 text-red-200 text-sm mb-6">
+                <AlertTriangle className="w-6 h-6 shrink-0 text-red-500 mt-1"/>
+                <div>
+                    <p className="font-bold text-red-400 mb-1">DISCLAIMER PENTING</p>
+                    <p>Pemalsuan data (umur/skill) akan menyebabkan <strong>Tim Diskualifikasi</strong> dan <strong>Uang Pendaftaran Hangus</strong>.</p>
+                </div>
+            </div>
+            <div className="space-y-4">
+                {[
+                    { key: "data", text: "Saya menyatakan data yang diisi adalah BENAR & AKURAT." },
+                    { key: "health", text: "Saya dalam kondisi SEHAT jasmani & rohani untuk bertanding." },
+                    { key: "rules", text: "Saya bersedia mematuhi SELURUH REGULASI turnamen." },
+                    { key: "media", text: "Saya mengizinkan PUBLIKASI foto/video diri saya selama event." }
+                ].map((item) => (
+                    <div key={item.key} className="flex gap-4 items-start p-4 bg-black/40 rounded-2xl border border-zinc-800/50 hover:border-zinc-700 cursor-pointer transition-colors" onClick={() => handleCheck(item.key as keyof typeof agreements)}>
+                        <Checkbox id={`chk-${item.key}`} checked={agreements[item.key as keyof typeof agreements]} className="mt-1 border-zinc-600 data-[state=checked]:bg-cyan-500 data-[state=checked]:border-cyan-500"/>
+                        <Label htmlFor={`chk-${item.key}`} className="text-zinc-300 cursor-pointer leading-relaxed">{item.text}</Label>
+                    </div>
+                ))}
+            </div>
+            <Button onClick={onCompletion} disabled={!allAgreed} className="w-full h-14 rounded-xl text-lg font-bold mt-8 bg-white text-black hover:bg-zinc-200">
+                NEXT STEP <ChevronRight className="ml-2"/>
+            </Button>
+        </div>
+    );
+};
+
+const WizardStepProfile = ({ onProfileSubmit }: { onProfileSubmit: (data: FormData) => void }) => (
+    <form action={onProfileSubmit} className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300">
+         <h3 className="text-white text-2xl font-black mb-2 uppercase">Step 2: Athlete Profile</h3>
+        <p className="text-zinc-500 text-sm max-w-sm mb-8">Lengkapi data diri Anda sesuai KTP untuk verifikasi Tim Pencari Fakta (TPF).</p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+                <Label>NIK (Wajib)</Label>
+                <Input name="nik" placeholder="16 Digit Angka" required maxLength={16} className="bg-zinc-950 border-zinc-800 h-12"/>
+            </div>
+            <div className="space-y-2">
+                <Label>No. WhatsApp</Label>
+                <Input name="phone" placeholder="08..." required className="bg-zinc-950 border-zinc-800 h-12"/>
+            </div>
+        </div>
+        <div className="space-y-2">
+            <Label>Nama Komunitas Asal</Label>
+            <Input name="communityName" placeholder="Contoh: PB Barudak Well" required className="bg-zinc-950 border-zinc-800 h-12"/>
+        </div>
+        <div className="space-y-2">
+            <Label>Instagram (Untuk Verifikasi)</Label>
+            <Input name="instagram" placeholder="@username" required className="bg-zinc-950 border-zinc-800 h-12"/>
+        </div>
+        <div className="space-y-2">
+            <Label>Jenis Kelamin</Label>
+            <Select name="gender" required>
+                <SelectTrigger className="h-12 bg-zinc-950 border-zinc-800"><SelectValue placeholder="Pilih..." /></SelectTrigger>
+                <SelectContent><SelectItem value="MALE">Putra</SelectItem><SelectItem value="FEMALE">Putri</SelectItem></SelectContent>
+            </Select>
+        </div>
+        <Button type="submit" className="w-full h-14 rounded-xl text-lg font-bold mt-8 bg-white text-black hover:bg-zinc-200">
+            SAVE PROFILE & FINISH
+        </Button>
+    </form>
+);
+
 
 // =================================================================================================
 // MAIN PAGE COMPONENT (CONTROLLER)
@@ -373,26 +449,25 @@ export default function PlayerPage() {
     const [isMounted, setIsMounted] = useState(false);
     const [session, setSession] = useState<any>(null);
     const [teamCode, setTeamCode] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
   
     // --- Wizard States ---
     const [hasJoinedTeam, setHasJoinedTeam] = useState(false); 
-    const [isRegistrationComplete, setIsRegistrationComplete] = useState(false);
+    const [isProfileComplete, setIsProfileComplete] = useState(false);
     const [currentStep, setCurrentStep] = useState(1);
-    const [formData, setFormData] = useState({ agreements: { valid: false, health: false, rules: false, media: false }, skillLevel: "BEGINNER" });
-  
   
     useEffect(() => {
-      setIsMounted(true);
-      async function init() {
-        const sess = await getPlayerSession();
-        if (sess) {
-          setSession(sess);
-          if (sess.teamId) setHasJoinedTeam(true);
-          if (sess.isProfileComplete) setIsRegistrationComplete(true);
+        async function init() {
+            const sess = await getPlayerSession();
+            if (sess) {
+                setSession(sess);
+                if (sess.teamId) setHasJoinedTeam(true);
+                if (sess.isProfileComplete) setIsRegistrationComplete(true);
+            }
+            setIsLoading(false);
+            setIsMounted(true);
         }
-      }
-      init();
+        init();
     }, []);
   
     const handleVerifyCode = async () => {
@@ -424,52 +499,11 @@ export default function PlayerPage() {
       }
     };
   
-    const renderWizardContent = () => {
-      switch (currentStep) {
-          case 1: // Agreement
-              return <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300">
-                  <div className="bg-red-950/30 border border-red-500/30 p-5 rounded-2xl flex gap-4 text-red-200 text-sm">
-                      <AlertTriangle className="w-6 h-6 shrink-0 text-red-500 mt-1"/>
-                      <div>
-                          <p className="font-bold text-red-400 mb-1">DISCLAIMER PENTING</p>
-                          <p>Pemalsuan data (umur/skill) akan menyebabkan <strong>Tim Diskualifikasi</strong> dan <strong>Uang Pendaftaran Hangus</strong>.</p>
-                      </div>
-                  </div>
-                  <div className="space-y-4">
-                      {['Saya menyatakan data yang diisi adalah BENAR.', 'Saya dalam kondisi SEHAT jasmani & rohani.', 'Saya menyetujui REGULASI pertandingan.', 'Saya mengizinkan PUBLIKASI foto/video.'].map((text, i) => (
-                          <div key={i} className="flex gap-4 items-start p-4 bg-black/40 rounded-2xl border border-zinc-800/50 hover:border-zinc-700 cursor-pointer transition-colors" onClick={() => setFormData(p => ({...p, agreements: {...p.agreements, valid: true}}))}>
-                              <Checkbox id={`chk-${i}`} checked={formData.agreements.valid} className="mt-1 border-zinc-600 data-[state=checked]:bg-cyan-500 data-[state=checked]:border-cyan-500"/>
-                              <Label htmlFor={`chk-${i}`} className="text-zinc-300 cursor-pointer leading-relaxed">{text}</Label>
-                          </div>
-                      ))}
-                  </div>
-              </div>;
-          default:
-               return <div className="text-center py-16 animate-in fade-in zoom-in duration-300">
-                  <div className="w-20 h-20 bg-zinc-800 rounded-3xl mx-auto flex items-center justify-center mb-6 animate-pulse">
-                      <FileText className="w-10 h-10 text-zinc-600"/>
-                  </div>
-                  <h3 className="text-white text-2xl font-black mb-2 uppercase">Step {currentStep}: Form Placeholder</h3>
-                  <p className="text-zinc-500 text-sm max-w-sm mx-auto mb-8">
-                      Di tahap ini, form lengkap (Skill, Biodata, TPF, Pembayaran) akan muncul sesuai desain sebelumnya.
-                  </p>
-                  {currentStep === 5 && (
-                      <Button 
-                          onClick={() => setIsRegistrationComplete(true)} 
-                          className="h-16 px-10 rounded-2xl bg-green-600 hover:bg-green-700 text-white font-black text-xl shadow-[0_0_30px_rgba(22,163,74,0.4)] transition-transform hover:scale-105"
-                      >
-                          SUBMIT & FINISH <CheckCircle2 className="ml-3 w-6 h-6"/>
-                      </Button>
-                  )}
-              </div>;
-      }
-    };
-  
-    const handleNextStep = () => setCurrentStep(prev => Math.min(prev + 1, 5));
+    const handleNextStep = () => setCurrentStep(prev => Math.min(prev + 1, 2)); // Hanya ada 2 step sekarang
     const handlePrevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
     
   
-    if (!isMounted) {
+    if (!isMounted || isLoading) {
       return <div className="flex h-screen w-full items-center justify-center bg-zinc-950"><Loader2 className="w-10 h-10 animate-spin text-primary"/></div>;
     }
   
@@ -521,7 +555,7 @@ export default function PlayerPage() {
     }
   
     // --- RENDER VIEW 2: WIZARD FORM ---
-    if (!isRegistrationComplete) {
+    if (!isProfileComplete) {
        return (
         <div className="min-h-screen bg-zinc-950 font-body py-8 px-4 md:py-12">
           <div className="max-w-3xl mx-auto">
@@ -530,21 +564,19 @@ export default function PlayerPage() {
                   <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tight">Athlete Data</h1>
                   
                   <div className="w-full bg-zinc-900 rounded-full h-2 overflow-hidden mt-6">
-                      <div className="h-full bg-gradient-to-r from-cyan-500 to-indigo-600 transition-all duration-500 ease-out" style={{ width: `${(currentStep/5)*100}%` }}></div>
+                      <div className="h-full bg-gradient-to-r from-cyan-500 to-indigo-600 transition-all duration-500 ease-out" style={{ width: `${(currentStep/2)*100}%` }}></div>
                   </div>
                   <div className="flex justify-between text-[10px] font-bold text-zinc-500 uppercase tracking-widest mt-2 px-1">
                       <span>Agreement</span>
-                      <span>Skill</span>
-                      <span>Bio</span>
-                      <span>Contact</span>
-                      <span>Pay</span>
+                      <span>Profile</span>
                   </div>
               </div>
   
               <Card className="bg-zinc-900 border-zinc-800 rounded-[40px] p-8 md:p-10 min-h-[400px] shadow-2xl relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-[100px] pointer-events-none"></div>
                   <div className="relative z-10">
-                      {renderWizardContent()}
+                      {currentStep === 1 && <WizardStepAgreement onCompletion={handleNextStep} />}
+                      {currentStep === 2 && <WizardStepProfile onProfileSubmit={handleProfileSubmit} />}
                   </div>
               </Card>
   
@@ -552,12 +584,6 @@ export default function PlayerPage() {
                   <Button variant="ghost" onClick={handlePrevStep} disabled={currentStep===1 || isLoading} className="h-14 px-8 rounded-xl text-zinc-500 hover:text-white hover:bg-zinc-900">
                       <ChevronLeft className="w-5 h-5 mr-2"/> BACK
                   </Button>
-                  
-                  {currentStep < 5 && (
-                      <Button onClick={handleNextStep} disabled={isLoading} className="h-14 px-8 rounded-xl bg-white text-black hover:bg-zinc-200 font-bold text-lg shadow-lg">
-                          NEXT STEP <ChevronRight className="w-5 h-5 ml-2"/>
-                      </Button>
-                  )}
               </div>
           </div>
         </div>
@@ -595,4 +621,4 @@ export default function PlayerPage() {
     );
   }
 
-    
+      
