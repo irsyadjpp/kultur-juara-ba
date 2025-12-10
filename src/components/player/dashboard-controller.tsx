@@ -10,7 +10,7 @@ import {
   Camera, MessageCircle, Download, Gavel, Clock, 
   Share2, RotateCw, AlertOctagon, Send, Paperclip, 
   MoreHorizontal, CheckCheck, Smile, Plus, Heart, 
-  Wallet, Banknote, CreditCard, Sparkles, UserRound, Footprints, Save, CheckCircle2, RotateCw as RotateCwIcon, Label as LabelIcon
+  Wallet, Banknote, CreditCard, Sparkles, UserRound, Footprints, Save, CheckCircle2, RotateCw as RotateCwIcon, Label as LabelIcon, Hash
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -185,49 +185,6 @@ function WizardStepProfile({ formData, setFormData }: any) {
   );
 }
 
-function WizardStepDocuments({ formData, setFormData }: any) {
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, files } = e.target;
-    if (files && files.length > 0) {
-      setFormData((prev: any) => ({
-        ...prev,
-        documents: { ...prev.documents, [name]: files[0] }
-      }));
-    }
-  };
-
-  const FileInput = ({ name, label, icon }: { name: string, label: string, icon: React.ReactNode }) => (
-    <div className="space-y-2">
-      <Label className="font-bold flex items-center gap-2 text-zinc-300">{icon} {label}</Label>
-      <div className="flex items-center gap-3 bg-black/40 border border-zinc-800 p-3 rounded-2xl">
-        <Input 
-          name={name} 
-          type="file" 
-          accept="image/jpeg,image/png" 
-          onChange={handleFileChange} 
-          className="text-xs file:text-cyan-400 file:font-bold file:mr-4 file:bg-cyan-950/50 file:border-none file:px-3 file:py-1 file:rounded-full file:cursor-pointer"
-        />
-      </div>
-    </div>
-  );
-
-  return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300">
-      <div className="text-center mb-4">
-        <h3 className="text-white text-xl font-black mb-1 uppercase tracking-widest">Upload Dokumen</h3>
-        <p className="text-zinc-500 text-sm max-w-sm mx-auto">
-          Dokumen ini bersifat rahasia dan hanya digunakan untuk verifikasi.
-        </p>
-      </div>
-      <div className="space-y-4">
-        <FileInput name="ktp" label="Foto KTP" icon={<FileText className="w-5 h-5" />} />
-        <FileInput name="selfie" label="Foto Selfie" icon={<Camera className="w-5 h-5" />} />
-        <FileInput name="followProof" label="Screenshot Bukti Follow IG @bccbandung.id" icon={<Instagram className="w-5 h-5" />} />
-      </div>
-    </div>
-  );
-}
-
 export function PlayerDashboardController() {
   const [isMounted, setIsMounted] = useState(false);
   const [hasJoinedTeam, setHasJoinedTeam] = useState(false);
@@ -237,7 +194,6 @@ export function PlayerDashboardController() {
   const [joinCode, setJoinCode] = useState("");
   const [isJoining, setIsJoining] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'QRIS' | 'TRANSFER' | null>(null);
 
   const [formData, setFormData] = useState({
     agreements: { valid: false, health: false, rules: false, media: false },
@@ -334,7 +290,7 @@ export function PlayerDashboardController() {
 
   // --- RENDER VIEW 2: WIZARD FORM ---
   if (!isProfileComplete) {
-    const totalSteps = 5;
+    const totalSteps = 4;
     return (
       <div className="min-h-screen bg-zinc-950 font-body py-8 px-4 md:py-12">
         <div className="max-w-3xl mx-auto">
@@ -349,7 +305,6 @@ export function PlayerDashboardController() {
                     <span>Agreement</span>
                     <span>Skill</span>
                     <span>Bio</span>
-                    <span>Docs</span>
                     <span>Submit</span>
                 </div>
             </div>
@@ -360,8 +315,7 @@ export function PlayerDashboardController() {
                     {currentStep === 1 && <WizardStepAgreement formData={formData} setFormData={setFormData} />}
                     {currentStep === 2 && <WizardStepSkillLevel formData={formData} setFormData={setFormData} />}
                     {currentStep === 3 && <WizardStepProfile formData={formData} setFormData={setFormData} />}
-                    {currentStep === 4 && <WizardStepDocuments formData={formData} setFormData={setFormData} />}
-                    {currentStep === 5 && (
+                    {currentStep === 4 && (
                         <div className="text-center py-16 animate-in fade-in zoom-in duration-300">
                             <div className="w-20 h-20 bg-zinc-800 rounded-3xl mx-auto flex items-center justify-center mb-6 animate-pulse">
                                 <FileText className="w-10 h-10 text-zinc-600" />

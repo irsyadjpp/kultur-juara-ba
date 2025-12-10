@@ -35,7 +35,6 @@ export default function PlayerLayout({ children }: { children: React.ReactNode }
   return (
     <div className="relative flex flex-col min-h-screen bg-transparent overflow-hidden">
       <div className="fixed inset-0 -z-50 pointer-events-none">
-        {/* Use the new PlayerBackground instead of AdminBackground */}
         <PlayerBackground />
       </div>
       <main className="relative z-10 flex-1 overflow-auto scroll-smooth">

@@ -33,8 +33,6 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
 
   useEffect(() => {
     setIsMounted(true);
-    // In a real app with server-side sessions, you might redirect here if !session.
-    // For now, we assume the user is logged in if they reach this layout.
   }, []);
 
   const menuGroups = [
@@ -69,7 +67,6 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
   
   const handleLogout = async () => {
       await logoutManager();
-      // Redirect is handled by server action
   };
 
   const renderNavLinks = (isSheet: boolean = false) => menuGroups.map((group, groupIndex) => (
