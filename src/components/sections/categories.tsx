@@ -37,23 +37,19 @@ export function CategoriesSection() {
         </div>
         
         {/* Pairing Matrix */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {pairings.map((pair, index) => (
             <Card key={index} className={`bg-card border shadow-sm hover:shadow-lg transition-shadow hover:-translate-y-1 ${!pair.valid ? 'border-destructive/30 bg-destructive/5' : ''}`}>
-              <CardContent className="pt-6 flex items-center justify-between text-center gap-2">
-                <div className="flex flex-col items-center gap-1 flex-1 min-w-0">
-                  <div className="px-3 py-1 bg-secondary rounded-full text-sm font-semibold truncate">{pair.level1}</div>
-                </div>
-                <Plus className="w-5 h-5 text-muted-foreground flex-shrink-0"/>
-                <div className="flex flex-col items-center gap-1 flex-1 min-w-0">
-                   <div className="px-3 py-1 bg-secondary rounded-full text-sm font-semibold truncate">{pair.level2}</div>
-                </div>
-                <ArrowRight className="w-5 h-5 text-muted-foreground flex-shrink-0"/>
+              <CardContent className="pt-6 flex items-center justify-between text-center gap-1">
+                <div className="px-3 py-1 bg-secondary rounded-full text-xs font-semibold truncate">{pair.level1}</div>
+                <Plus className="w-4 h-4 text-muted-foreground flex-shrink-0"/>
+                <div className="px-3 py-1 bg-secondary rounded-full text-xs font-semibold truncate">{pair.level2}</div>
+                <ArrowRight className="w-4 h-4 text-muted-foreground flex-shrink-0"/>
                  <div className="flex flex-col items-center gap-1 flex-1 min-w-0">
                    {pair.valid ? (
-                       <div className={`px-4 py-2 rounded-full text-base font-bold border-2 truncate ${pair.color.replace('text-', 'border-')} ${pair.color.replace('text-', 'bg-')}/10`}>{pair.result}</div>
+                       <div className={`px-4 py-2 rounded-full text-sm font-bold border-2 truncate ${pair.color.replace('text-', 'border-')} ${pair.color.replace('text-', 'bg-')}/10`}>{pair.result}</div>
                    ) : (
-                       <div className={`px-3 py-2 rounded-full text-base font-bold border-2 flex items-center gap-2 truncate ${pair.color.replace('text-', 'border-')} ${pair.color.replace('text-', 'bg-')}/10`}>
+                       <div className={`px-3 py-2 rounded-full text-sm font-bold border-2 flex items-center gap-2 truncate ${pair.color.replace('text-', 'border-')} ${pair.color.replace('text-', 'bg-')}/10`}>
                            <XCircle className="w-4 h-4 shrink-0"/>
                            {pair.result}
                         </div>
