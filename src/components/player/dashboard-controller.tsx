@@ -9,7 +9,8 @@ import {
   AlertTriangle, Instagram, History, Info, ChevronRight, 
   Camera, MessageCircle, Download, Gavel, Clock, 
   Share2, RotateCw, AlertOctagon, Send, Paperclip, 
-  MoreVertical, CheckCheck, Smile, Plus, Hash, ChevronLeft, CheckCircle2
+  MoreVertical, CheckCheck, Smile, Plus, Hash, ChevronLeft, CheckCircle2,
+  Heart, Wallet, Banknote, CreditCard, Sparkles, UserRound, Footprints
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,9 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import PlayerDashboardFull from "@/components/player/dashboard-full";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
 
 // --- CONSTANTS & MOCK DATA ---
 const PRICES = {
@@ -84,21 +88,113 @@ function WizardStepAgreement({ formData, setFormData }: any) {
     );
 }
 
+function WizardStepSkillLevel({ formData, setFormData }: any) {
+  const levels = [
+    { id: 'BEGINNER', label: 'Beginner', desc: 'Pemula Komunitas (Grip Panci)', icon: <Smile className="w-8 h-8"/>, color: "green" },
+    { id: 'INTERMEDIATE', label: 'Intermediate', desc: 'Pemain Rutin (Teknik Dasar OK)', icon: <UserRound className="w-8 h-8"/>, color: "blue" },
+    { id: 'ADVANCE', label: 'Advance', desc: 'Skill di Atas Rata-rata', icon: <Footprints className="w-8 h-8"/>, color: "purple" },
+  ];
+  const selectedLevel = levels.find(l => l.id === formData.skillLevel);
 
-function FormPlaceholder({ step }: { step: number }) {
   return (
-    <div className="text-center py-16 animate-in fade-in zoom-in duration-300">
-      <div className="w-20 h-20 bg-zinc-800 rounded-3xl mx-auto flex items-center justify-center mb-6 animate-pulse">
-        <FileText className="w-10 h-10 text-zinc-600" />
+    <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300">
+      <div className="text-center">
+        <h3 className="text-white text-xl font-black mb-1 uppercase tracking-widest">Pilih Level Anda</h3>
+        <p className="text-zinc-500 text-sm max-w-sm mx-auto">
+          Pilih level yang paling sesuai dengan kemampuan Anda saat ini. Jujur ya!
+        </p>
       </div>
-      <h3 className="text-white text-2xl font-black mb-2 uppercase">Step {step}: Form Placeholder</h3>
-      <p className="text-zinc-500 text-sm max-w-sm mx-auto mb-8">
-        Di tahap ini, form lengkap (Skill, Biodata, TPF, Pembayaran) akan muncul sesuai desain sebelumnya.
-      </p>
+      <ToggleGroup 
+        type="single" 
+        defaultValue={formData.skillLevel} 
+        onValueChange={(value) => { if(value) setFormData((prev:any) => ({ ...prev, skillLevel: value }))}}
+        className="grid grid-cols-1 md:grid-cols-3 gap-4"
+      >
+        {levels.map((level) => (
+          <ToggleGroupItem 
+            key={level.id} 
+            value={level.id} 
+            className="h-auto p-6 rounded-3xl border-2 border-zinc-800 bg-zinc-900 data-[state=on]:border-cyan-500 data-[state=on]:bg-cyan-950/20 flex flex-col gap-4 text-left items-start transition-all hover:border-zinc-700"
+          >
+            <div className={`w-14 h-14 rounded-2xl bg-${level.color}-500/10 text-${level.color}-500 flex items-center justify-center`}>
+                {level.icon}
+            </div>
+            <div className="text-left">
+                <p className="font-bold text-lg text-white">{level.label}</p>
+                <p className="text-xs text-zinc-400 leading-snug">{level.desc}</p>
+            </div>
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
+      <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 text-center">
+        <p className="text-xs text-zinc-500 mb-1">Estimasi Biaya Pendaftaran per Kategori:</p>
+        <p className="font-mono text-2xl font-bold text-cyan-400">
+          Rp {PRICES[formData.skillLevel as keyof typeof PRICES].toLocaleString('id-ID')}
+        </p>
+      </div>
     </div>
   );
 }
 
+function WizardStepProfile({ formData, setFormData }: any) {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData((prev: any) => ({ ...prev, profile: { ...prev.profile, [e.target.name]: e.target.value }}));
+  };
+
+  return (
+    <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300">
+      <div className="text-center mb-4">
+        <h3 className="text-white text-xl font-black mb-1 uppercase tracking-widest">Lengkapi Profil</h3>
+        <p className="text-zinc-500 text-sm max-w-sm mx-auto">
+          Data ini akan digunakan oleh TPF untuk verifikasi & panitia untuk logistik.
+        </p>
+      </div>
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <Input name="nik" placeholder="NIK KTP (16 Digit)" onChange={handleInputChange} className="h-12 bg-black border-zinc-800"/>
+          <Input name="phone" placeholder="No. WhatsApp" onChange={handleInputChange} className="h-12 bg-black border-zinc-800"/>
+        </div>
+        <RadioGroup name="gender" onValueChange={(v) => setFormData((p:any) => ({...p, profile: {...p.profile, gender: v}}))} className="grid grid-cols-2 gap-4">
+            <Label className="flex items-center gap-3 p-3 bg-black border border-zinc-800 rounded-xl cursor-pointer hover:border-zinc-700">
+                <RadioGroupItem value="MALE"/> Putra
+            </Label>
+            <Label className="flex items-center gap-3 p-3 bg-black border border-zinc-800 rounded-xl cursor-pointer hover:border-zinc-700">
+                <RadioGroupItem value="FEMALE"/> Putri
+            </Label>
+        </RadioGroup>
+        <Input name="communityName" placeholder="Nama Komunitas/Klub Asal" onChange={handleInputChange} className="h-12 bg-black border-zinc-800"/>
+        <Input name="instagram" placeholder="@username Instagram" onChange={handleInputChange} className="h-12 bg-black border-zinc-800"/>
+        <Textarea name="history" placeholder="Sebutkan prestasi/turnamen terakhir yang diikuti..." onChange={handleInputChange} className="bg-black border-zinc-800 min-h-24"/>
+      </div>
+    </div>
+  );
+}
+
+function WizardStepPayment({ formData }: any) {
+  const finalPrice = PRICES[formData.skillLevel as keyof typeof PRICES];
+  return (
+    <div className="text-center py-8 animate-in fade-in zoom-in duration-300">
+        <div className="w-24 h-24 bg-green-950/50 rounded-full mx-auto flex items-center justify-center mb-6 border-4 border-green-500/20">
+            <Wallet className="w-12 h-12 text-green-500" />
+        </div>
+        <h3 className="text-white text-2xl font-black mb-2 uppercase">Step 4: Pembayaran</h3>
+        <p className="text-zinc-500 text-sm max-w-sm mx-auto mb-8">
+            Pilih metode pembayaran untuk biaya registrasi sebesar:
+        </p>
+        <div className="bg-black/40 p-5 rounded-3xl border border-zinc-800 inline-block mb-8 shadow-inner">
+            <p className="font-mono text-5xl font-bold text-green-400">Rp {finalPrice.toLocaleString('id-ID')}</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-md mx-auto">
+            <Button variant="outline" className="h-16 rounded-2xl text-lg font-bold bg-zinc-900 border-zinc-800 hover:bg-zinc-800">
+                <Banknote className="w-6 h-6 mr-3"/> Transfer Bank
+            </Button>
+            <Button variant="outline" className="h-16 rounded-2xl text-lg font-bold bg-zinc-900 border-zinc-800 hover:bg-zinc-800">
+                <CreditCard className="w-6 h-6 mr-3"/> Kartu Kredit
+            </Button>
+        </div>
+    </div>
+  );
+}
 
 export function PlayerDashboardController() {
   const [isMounted, setIsMounted] = useState(false);
@@ -111,7 +207,8 @@ export function PlayerDashboardController() {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     agreements: { valid: false, health: false, rules: false, media: false },
-    skillLevel: "BEGINNER"
+    skillLevel: "BEGINNER",
+    profile: {} // To store profile form data
   });
   
   useEffect(() => {
@@ -138,13 +235,6 @@ export function PlayerDashboardController() {
   
   const allAgreed = Object.values(formData.agreements).every(Boolean);
   
-  const renderDevToggle = () => (
-    <div className="absolute top-4 right-4 z-50 space-x-2">
-      <Button size="sm" variant="outline" onClick={() => setHasJoinedTeam(prev => !prev)}>Dev: Toggle Join</Button>
-      <Button size="sm" variant="outline" onClick={() => setIsProfileComplete(prev => !prev)}>Dev: Toggle Profile</Button>
-    </div>
-  );
-  
   if (!isMounted) {
     return (
         <div className="fixed inset-0 bg-zinc-950 flex items-center justify-center">
@@ -157,7 +247,6 @@ export function PlayerDashboardController() {
   if (!hasJoinedTeam) {
     return (
       <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-4 font-body relative overflow-hidden">
-        {renderDevToggle()}
         <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none"></div>
         <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-cyan-600/10 rounded-full blur-[120px] pointer-events-none"></div>
 
@@ -205,7 +294,6 @@ export function PlayerDashboardController() {
   if (!isProfileComplete) {
     return (
       <div className="min-h-screen bg-zinc-950 font-body py-8 px-4 md:py-12">
-        {renderDevToggle()}
         <div className="max-w-3xl mx-auto">
             <div className="mb-10 text-center space-y-4">
                 <Badge variant="outline" className="border-indigo-500 text-indigo-400 px-4 py-1 tracking-widest uppercase">Joining: PB TWINTON</Badge>
@@ -227,17 +315,17 @@ export function PlayerDashboardController() {
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-[100px] pointer-events-none"></div>
                 <div className="relative z-10">
                     {currentStep === 1 && <WizardStepAgreement formData={formData} setFormData={setFormData} />}
-                    {currentStep === 2 && <FormPlaceholder step={2} />}
-                    {currentStep === 3 && <FormPlaceholder step={3} />}
-                    {currentStep === 4 && <FormPlaceholder step={4} />}
+                    {currentStep === 2 && <WizardStepSkillLevel formData={formData} setFormData={setFormData} />}
+                    {currentStep === 3 && <WizardStepProfile formData={formData} setFormData={setFormData} />}
+                    {currentStep === 4 && <WizardStepPayment formData={formData} />}
                     {currentStep === 5 && (
                         <div className="text-center py-16 animate-in fade-in zoom-in duration-300">
                             <div className="w-20 h-20 bg-zinc-800 rounded-3xl mx-auto flex items-center justify-center mb-6 animate-pulse">
                                 <FileText className="w-10 h-10 text-zinc-600" />
                             </div>
-                            <h3 className="text-white text-2xl font-black mb-2 uppercase">Step {currentStep}: Payment</h3>
+                            <h3 className="text-white text-2xl font-black mb-2 uppercase">Final Step: Submit</h3>
                             <p className="text-zinc-500 text-sm max-w-sm mx-auto mb-8">
-                                Selesaikan pendaftaran dengan membayar biaya registrasi sesuai kategori yang Anda pilih.
+                                Pastikan semua data sudah benar sebelum mengirimkan formulir pendaftaran.
                             </p>
                             <Button 
                                 onClick={() => setIsProfileComplete(true)} 
@@ -250,13 +338,17 @@ export function PlayerDashboardController() {
                 </div>
             </Card>
 
-            <div className="flex justify-between mt-8 px-2">
-                <Button variant="ghost" onClick={handlePrevStep} disabled={currentStep===1} className="h-14 px-8 rounded-xl text-zinc-500 hover:text-white hover:bg-zinc-900">
+            <div className="flex justify-between items-center mt-8 px-2">
+                <Button variant="ghost" onClick={handlePrevStep} disabled={currentStep===1} className="h-14 px-6 rounded-xl text-zinc-500 hover:text-white hover:bg-zinc-900">
                     <ChevronLeft className="w-5 h-5 mr-2"/> BACK
+                </Button>
+
+                <Button variant="outline" className="h-14 rounded-xl font-bold bg-zinc-800 border-zinc-700 hover:bg-zinc-700">
+                    <Save className="w-4 h-4 mr-2"/> SAVE DRAFT
                 </Button>
                 
                 {currentStep < 5 && (
-                    <Button onClick={handleNextStep} disabled={!allAgreed && currentStep === 1} className="h-14 px-8 rounded-xl bg-white text-black hover:bg-zinc-200 font-bold text-lg shadow-lg disabled:bg-zinc-800 disabled:text-zinc-500">
+                    <Button onClick={handleNextStep} disabled={!allAgreed && currentStep === 1} className="h-14 px-6 rounded-xl bg-white text-black hover:bg-zinc-200 font-bold text-lg shadow-lg disabled:bg-zinc-800 disabled:text-zinc-500">
                         NEXT STEP <ChevronRight className="w-5 h-5 ml-2"/>
                     </Button>
                 )}
@@ -269,7 +361,6 @@ export function PlayerDashboardController() {
   // --- RENDER VIEW 3: FULL DASHBOARD ---
   return (
     <div className="min-h-screen bg-zinc-950 font-body pb-24">
-        {renderDevToggle()}
         <div className="sticky top-0 z-50 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800 px-4 md:px-8 py-4 flex justify-between items-center">
             <div className="flex items-center gap-2">
                 <div className="bg-cyan-500/20 p-2 rounded-lg"><Trophy className="w-5 h-5 text-cyan-500"/></div>
