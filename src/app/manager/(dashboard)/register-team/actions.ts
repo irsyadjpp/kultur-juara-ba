@@ -1,3 +1,4 @@
+
 'use server';
 
 import { revalidatePath } from "next/cache";
@@ -9,10 +10,11 @@ export async function registerTeamEntity(formData: FormData) {
   const teamName = formData.get('name') as string;
   const origin = formData.get('origin');
   
-  // GENERATE KODE UNIK (Contoh: BCC-8821)
-  // Logic: BCC + 4 digit random angka
-  const randomCode = Math.floor(1000 + Math.random() * 9000);
-  const teamCode = `BCC-${randomCode}`;
+  // LOGIC BARU: Generate Kode Tim dari Nama Tim
+  // Ambil 4 karakter pertama, ubah ke uppercase, hapus spasi, lalu tambahkan -2026
+  const teamCodePrefix = teamName.replace(/\s+/g, '').substring(0, 4).toUpperCase();
+  const teamCode = `${teamCodePrefix}-2026`;
+
 
   // Simpan ke Database Tim
   const newTeam = {
