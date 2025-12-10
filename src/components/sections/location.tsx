@@ -18,12 +18,12 @@ export function LocationSection() {
                     <MapPin className="w-6 h-6" />
                     <span className="font-bold tracking-wider uppercase">Official Venue</span>
                 </div>
-                <h2 className="text-3xl font-black font-headline mb-4">GOR KONI Bandung</h2>
+                <h2 className="text-3xl font-black font-headline mb-4">GOR Sutta Paberik Badjoe</h2>
                 <p className="text-muted-foreground mb-6">
-                    Jl. Jakarta No.18, Kebonwaru, Kec. Batununggal, Kota Bandung, Jawa Barat 40272
+                    Jl. A.H. Nasution No.105, Cicaheum, Kec. Kiaracondong, Kota Bandung, Jawa Barat 40282
                 </p>
                 <Button variant="outline" asChild className="w-full">
-                    <Link href="https://maps.app.goo.gl/tZ22aG6o2mZpA5p18" target="_blank">
+                    <Link href="https://maps.app.goo.gl/9qYd2QGj8rZkHq3f7" target="_blank">
                         Buka di Google Maps
                     </Link>
                 </Button>
@@ -32,7 +32,7 @@ export function LocationSection() {
             {/* Bagian Kanan: Map Embed */}
             <div className="w-full md:w-2/3 h-64 md:h-96 bg-muted relative">
                  <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.835376082724!2d107.63972231530936!3d-6.91027779500735!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e7b99c000001%3A0x1234567890abcdef!2sGor%20Koni%20Bandung!5e0!3m2!1sen!2sid!4v1624500000000"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.91612489163!2d107.65342467600181!3d-6.900350493098674!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e7ea6c564d99%3A0x1d5f658f16b251b3!2sSUTA%20PABERIK%20BADJOE!5e0!3m2!1sen!2sid!4v1719543164582!5m2!1sen!2sid"
                     width="100%" 
                     height="100%" 
                     style={{border:0}} 

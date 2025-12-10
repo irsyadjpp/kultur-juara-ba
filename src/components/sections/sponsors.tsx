@@ -1,34 +1,20 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from 'next/link';
 import Image from "next/image";
+import { CourtLines } from "../ui/court-lines";
 
 export function SponsorsSection() {
 
     return (
-        <section id="calling-for-sponsors" className="py-16 md:py-24 bg-secondary">
-            <div className="container mx-auto px-4 text-center">
-
-                <div className="mb-16">
-                    <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-6">
-                        Didukung Oleh
-                    </h3>
-                    <div className="flex justify-center items-center gap-8 opacity-90 hover:opacity-100 transition-opacity">
-                        <div className="flex flex-col items-center gap-2">
-                            <div className="relative w-24 h-24">
-                                <Image
-                                    src="/images/logo-pbsi.png"
-                                    alt="Logo PBSI Kota Bandung"
-                                    fill
-                                    className="object-contain"
-                                />
-                            </div>
-                            <span className="text-xs font-bold text-foreground">Pengkot PBSI Bandung</span>
-                        </div>
-                    </div>
-                </div>
+        <section id="calling-for-sponsors" className="py-16 md:py-24 bg-secondary relative overflow-hidden">
+             <div className="absolute inset-0 opacity-10">
+                <CourtLines />
+            </div>
+            <div className="container mx-auto px-4 text-center relative z-10">
 
                 <h2 className="text-3xl md:text-4xl font-bold font-headline text-foreground">
                     Jadilah Bagian dari Sejarah
