@@ -1,11 +1,16 @@
+
 import { MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { CourtLines } from "../ui/court-lines";
 
 export function LocationSection() {
   return (
-    <section id="venue" className="py-16 bg-background md:py-24">
-      <div className="container mx-auto px-4">
+    <section id="venue" className="py-16 bg-background md:py-24 relative overflow-hidden">
+      <div className="absolute inset-0 opacity-10">
+        <CourtLines />
+      </div>
+      <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col md:flex-row gap-0 items-center rounded-2xl overflow-hidden border bg-card shadow-sm">
             {/* Bagian Kiri: Info Teks */}
             <div className="w-full md:w-1/3 p-8">
