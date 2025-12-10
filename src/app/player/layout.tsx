@@ -2,7 +2,7 @@
 'use client';
 
 import { AdminBackground } from "@/components/admin/admin-background";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Home } from "lucide-react";
 import Link from "next/link";
