@@ -18,7 +18,6 @@ import { useState } from 'react';
 
 export default function ManagerLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
 
   const menuGroups = [
     {
@@ -77,7 +76,11 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
                     <span>{menu.name}</span>
                 </Link>
             );
-            return isSheet ? <SheetClose asChild>{NavLinkComponent}</SheetClose> : NavLinkComponent;
+            
+            if (isSheet) {
+                return <SheetClose asChild key={menu.href}>{NavLinkComponent}</SheetClose>;
+            }
+            return NavLinkComponent;
         })}
     </div>
   ));
@@ -109,7 +112,7 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
       <div className="flex-1 flex flex-col md:ml-64">
         <header className="h-16 bg-card/50 backdrop-blur-sm flex items-center justify-between px-6 sticky top-0 z-10 md:justify-end">
              <div className="md:hidden">
-              <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <Sheet>
                   <SheetTrigger asChild>
                       <Button variant="ghost" size="icon">
                           <Menu className="w-5 h-5"/>

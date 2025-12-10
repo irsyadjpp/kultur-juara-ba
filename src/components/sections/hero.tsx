@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -9,6 +10,11 @@ import { Countdown } from '@/components/countdown';
 import { CourtLines } from '@/components/ui/court-lines';
 
 export function HeroSection() {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   
   return (
     <section className="relative bg-black text-white overflow-hidden cursor-crosshair">
@@ -95,7 +101,7 @@ export function HeroSection() {
                 <div className="hidden md:block w-px h-12 bg-white/10"></div>
                 
                 <div className="flex-grow flex justify-center text-white">
-                    <Countdown targetDate="2026-01-01" />
+                    {isClient && <Countdown targetDate="2026-01-01" />}
                 </div>
 
                 <div className="hidden lg:block bg-yellow-500/10 border border-yellow-500/20 text-yellow-300 font-bold px-4 py-2 rounded-xl text-center">
