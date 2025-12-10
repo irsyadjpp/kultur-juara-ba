@@ -19,8 +19,8 @@ let PLAYERS_DB: any[] = [
 ];
 // Tim dengan Kode Unik
 const TEAMS_DB = [
-  { id: "TEAM-01", name: "PB Djarum", code: "BCC-8821", manager: "Budi" },
-  { id: "TEAM-02", name: "PB Jaya Raya", code: "BCC-9912", manager: "Susi" }
+  { id: "TEAM-01", name: "PB Barudak Well", code: "BCC-WELL", manager: "Irsyad" },
+  { id: "TEAM-02", name: "PB Tiento FC", code: "BCC-TINT", manager: "Rizal" }
 ];
 
 export async function loginPlayerManual(prevState: any, formData: FormData) {
@@ -71,23 +71,6 @@ export async function registerPlayer(data: any) {
   return { success: true };
 }
 
-export async function joinTeam(playerEmail: string, teamCode: string) {
-  const team = TEAMS_DB.find(t => t.code === teamCode);
-  if (!team) {
-    return { success: false, message: "Kode Tim tidak valid/tidak ditemukan." };
-  }
-  
-  const cookieStore = cookies();
-  const sessionStr = cookieStore.get('bcc_player_session')?.value;
-  if (sessionStr) {
-      const session = JSON.parse(sessionStr);
-      
-      const updatedSession = { ...session, teamId: team.id, teamName: team.name };
-      cookieStore.set('bcc_player_session', JSON.stringify(updatedSession), { httpOnly: true, path: '/' });
-  }
-
-  return { success: true, teamName: team.name };
-}
 
 // --- TAMBAHAN BARU: LOGIN GOOGLE BYPASS ---
 export async function loginPlayerGoogle() {
@@ -127,40 +110,76 @@ export async function getPlayerSession() {
 }
 
 export async function updatePlayerProfile(formData: FormData) {
-  // 1. Ambil Session
   const cookieStore = cookies();
   const sessionStr = cookieStore.get('bcc_player_session')?.value;
   if (!sessionStr) return { success: false, message: "Sesi habis, silakan login ulang." };
   
   const session = JSON.parse(sessionStr);
 
-  // 2. Parsing & Validasi Data
   const rawData = {
-    fullName: session.name, // Nama biasanya dari login awal (Google/Email), atau bisa diupdate
     nik: formData.get('nik'),
     phone: formData.get('phone'),
     gender: formData.get('gender'),
     communityName: formData.get('communityName'),
     instagram: formData.get('instagram'),
-    history: "Strip" // Default atau ambil dari form jika ada
+    history: formData.get('history'),
   };
 
   const validated = athleteProfileSchema.safeParse(rawData);
   
   if (!validated.success) {
     const errorMsg = Object.values(validated.error.flatten().fieldErrors)[0]?.[0];
-    return { success: false, message: errorMsg || "Data tidak valid" };
+    return { success: false, message: errorMsg || "Data tidak valid. Mohon periksa NIK, WA, dan IG Anda." };
   }
 
-  // 3. Simpan ke DB (Mocking Update)
-  // Di real app: await db.player.update({ where: { email: session.email }, data: validated.data })
+  // SIMULASI UPDATE DB DAN SESI
+  const updates = validated.data;
+  const updatedSession = { 
+    ...session, 
+    ...updates, 
+    isProfileComplete: true, 
+    tpfStatus: 'PENDING' // Status TPF default setelah data diisi
+  };
   
-  // Update Session Cookie agar UI langsung berubah
-  const updatedSession = { ...session, ...validated.data, isProfileComplete: true };
   cookieStore.set('bcc_player_session', JSON.stringify(updatedSession), {
     httpOnly: true, path: '/' 
   });
 
   revalidatePath('/player/dashboard');
-  return { success: true, message: "Profil berhasil diperbarui."};
+  return { success: true, message: "Profil berhasil diperbarui. Status TPF Anda segera diproses." };
+}
+
+
+export async function joinTeam(teamCode: string) {
+  const team = TEAMS_DB.find(t => t.code === teamCode);
+  if (!team) {
+    return { success: false, message: "Kode Tim tidak valid/tidak ditemukan." };
+  }
+
+  const cookieStore = cookies();
+  const sessionStr = cookieStore.get('bcc_player_session')?.value;
+  if (!sessionStr) return { success: false, message: "Sesi habis." };
+  
+  const session = JSON.parse(sessionStr);
+
+  // LOGIC: Atlet sudah diverifikasi (di real app cek status tpfStatus)
+  // Untuk simulasi, kita buat agar bisa join meskipun pending
+  if (session.tpfStatus !== 'VERIFIED' && session.role !== 'MANAGER' && session.tpfStatus !== 'PENDING') {
+    return { success: false, message: "Profil Anda masih menunggu verifikasi TPF." };
+  }
+
+  // SIMULASI UPDATE SESSION
+  const updatedSession = { 
+    ...session, 
+    teamId: team.id, 
+    teamName: team.name, 
+    isMember: true 
+  };
+  
+  cookieStore.set('bcc_player_session', JSON.stringify(updatedSession), {
+    httpOnly: true, path: '/' 
+  });
+  
+  revalidatePath('/player/dashboard');
+  return { success: true, teamName: team.name };
 }
