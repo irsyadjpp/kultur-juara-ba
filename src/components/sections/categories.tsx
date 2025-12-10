@@ -66,7 +66,7 @@ export function CategoriesSection() {
 
         {/* SIMULASI PERTANDINGAN */}
         <div className="mt-16">
-            <h3 className="text-2xl font-bold font-headline text-center mb-8">Simulasi Pertandingan (Tanpa Voor)</h3>
+            <h3 className="text-2xl font-bold font-headline text-center mb-8">Simulasi Pertandingan</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
 
                 {/* KASUS A */}
@@ -120,7 +120,7 @@ export function CategoriesSection() {
                 <div>
                     <h4 className="font-bold text-foreground">Saran Untuk Peserta Ganda Putri (WD)</h4>
                     <p className="text-sm text-muted-foreground mt-1">
-                        Untuk Road to BCC tanpa voor, sebaiknya Ganda Putri (WD) tidak disarankan mendaftar di kategori open gender, kecuali mereka sangat percaya diri ("Tomboy"/Atlet Pelatda) yang biasa main lawan cowok.
+                        Sangat disarankan bagi Ganda Putri (WD) untuk tidak mendaftar di kategori open gender, kecuali mereka sangat percaya diri ("Tomboy"/Atlet Pelatda) yang biasa bermain melawan pria.
                     </p>
                 </div>
             </div>
