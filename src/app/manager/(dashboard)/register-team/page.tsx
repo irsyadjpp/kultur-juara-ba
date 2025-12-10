@@ -32,8 +32,10 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle2, Copy, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { redirect, usePathname } from 'next/navigation';
 
-const CATEGORIES = ["Beginner", "Intermediate", "Advance"];
+
+const CATEGORIES = ["Beginner", "Intermediate", "Advance"] as const;
 
 export default function RegisterTeamPage() {
   const { toast } = useToast();
