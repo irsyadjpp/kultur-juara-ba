@@ -12,12 +12,16 @@ import { logoutManager } from '../actions';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { Separator } from '@/components/ui/separator';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function ManagerLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const menuGroups = [
     {
@@ -133,7 +137,7 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
                 <Button variant="ghost" size="icon" asChild>
                   <Link href="/"><Home className="w-4 h-4" /></Link>
                 </Button>
-                <ThemeToggle />
+                {isClient && <ThemeToggle />}
              </div>
         </header>
         
