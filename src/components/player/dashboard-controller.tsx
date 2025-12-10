@@ -34,9 +34,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 // --- CONSTANTS & MOCK DATA ---
 const PRICES = {
-  BEGINNER: 200000,
-  INTERMEDIATE: 250000,
-  ADVANCE: 300000
+  BEGINNER: 120000,
+  INTERMEDIATE: 145000,
+  ADVANCE: 145000
 };
 
 const ATHLETE_MOCK = {
@@ -542,7 +542,7 @@ export function PlayerDashboardController() {
                 </div>
                 <Avatar className="h-10 w-10 border-2 border-zinc-800 ring-2 ring-black">
                     <AvatarImage src={ATHLETE_MOCK.avatar} />
-                    <AvatarFallback>PL</AvatarFallback>
+                    <AvatarFallback>AT</AvatarFallback>
                 </Avatar>
                 <div className="h-8 w-[1px] bg-zinc-800 mx-2"></div>
                 <Link href="/" passHref>
