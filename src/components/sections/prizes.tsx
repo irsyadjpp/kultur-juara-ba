@@ -65,12 +65,6 @@ export function PrizesSection() {
           ))}
         </div>
         
-        <div className="text-center bg-card p-6 rounded-lg border">
-            <h3 className="font-bold flex items-center justify-center gap-2"><Gift className="w-5 h-5 text-primary"/> Doorprize & Golden Ticket</h3>
-            <p className="text-muted-foreground mt-2 text-sm max-w-2xl mx-auto">
-                Seluruh peserta berkesempatan memenangkan doorprize menarik dari sponsor. Juara 1 di setiap kategori juga akan mendapatkan <strong>Golden Ticket</strong> (Diskon & Slot Prioritas) untuk turnamen utama BCC 2026.
-            </p>
-        </div>
       </div>
     </section>
   );
