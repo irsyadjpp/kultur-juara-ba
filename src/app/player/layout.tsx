@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Home } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function PlayerLayout({ children }: { children: React.ReactNode }) {
   return (
