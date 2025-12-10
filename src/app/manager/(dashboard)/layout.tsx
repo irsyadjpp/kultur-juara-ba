@@ -14,6 +14,8 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { useState, useEffect } from 'react';
+
 
 // Mock session data - in a real app, this would come from a secure context or server call
 const MOCK_SESSION = {
@@ -25,6 +27,11 @@ const MOCK_SESSION = {
 
 export default function ManagerLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   
   // For this simulation, we'll use a mock session.
   const session = MOCK_SESSION; 
@@ -140,7 +147,7 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
                 <Button variant="ghost" size="icon" asChild>
                   <Link href="/"><Home className="w-4 h-4" /></Link>
                 </Button>
-                <ThemeToggle />
+                {isMounted && <ThemeToggle />}
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
                         <span className="font-bold text-primary">M</span>
