@@ -1,3 +1,4 @@
+
 // src/lib/bcc-team-rules.ts
 
 export type PlayerLevel = "BEGINNER" | "INTERMEDIATE" | "ADVANCE" | "3ON3";
@@ -42,7 +43,7 @@ export const BCC_RULES: Record<string, CategoryRule> = {
       { id: "wd_int_1", label: "Ganda Intermediate 1", level: "INTERMEDIATE", capacity: 2, required: true },
       { id: "wd_int_2", label: "Ganda Intermediate 2", level: "INTERMEDIATE", capacity: 2, required: true },
       { id: "wd_3on3_1", label: "Tim 3-on-3", level: "3ON3", capacity: 3, required: true },
-      // RESERVE SLOTS (Opsional)
+       // RESERVE SLOTS (Opsional)
       { id: "res_beg", label: "Cadangan Beginner", level: "BEGINNER", capacity: 2, required: false },
       { id: "res_int", label: "Cadangan Intermediate", level: "INTERMEDIATE", capacity: 2, required: false },
       { id: "res_3on3", label: "Cadangan 3-on-3", level: "3ON3", capacity: 3, required: false },

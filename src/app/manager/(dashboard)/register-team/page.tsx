@@ -34,6 +34,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Users, User, ShieldCheck, CheckCircle2, Copy, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { Label } from "@/components/ui/label";
 
 function LabelCard({ htmlFor, title, code }: { htmlFor: string; title: string; code: string }) {
   return (
@@ -57,14 +58,14 @@ function getCategoryFullName(code: string) {
 }
 
 export default function RegisterTeamPage() {
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const [successData, setSuccessData] = useState<{
     code: string;
     name: string;
     type: string;
   } | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
 
   useEffect(() => {
     setIsClient(true);
@@ -87,6 +88,7 @@ export default function RegisterTeamPage() {
   async function onSubmit(data: TeamRegistrationFormValues) {
     setIsSubmitting(true);
     try {
+      // SIMULASI SERVER ACTION
       await new Promise((resolve) => setTimeout(resolve, 1500));
       const mockGeneratedCode = `BCC-${data.registrations[0].category}-${Math.floor(1000 + Math.random() * 9000)}`;
       
