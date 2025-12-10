@@ -1,400 +1,207 @@
-
 'use client';
 
-import { useState } from "react";
+import * as React from "react"
+import Link from "next/link"
+import Image from "next/image" // Import Image dari Next.js
+import { usePathname } from "next/navigation"
 import { 
-  Handshake, TrendingUp, CheckCircle2, 
-  Megaphone, MoreHorizontal, Plus, 
-  Search, Phone, Mail, FileSignature, 
-  LayoutTemplate, ArrowUpRight, DollarSign 
-} from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from "@/components/ui/sheet";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
+  LayoutDashboard, User, Briefcase, CalendarRange, 
+  Activity, Users, Network, CheckSquare, 
+  PieChart, FileCheck, Stamp, Receipt, Store, Wallet, Coins, 
+  Trophy, CalendarDays, FileText, ShieldAlert, Mic2, LifeBuoy, ClipboardList, Gavel, MonitorPlay, ClipboardCheck, 
+  QrCode, Stethoscope, Package, Box, Database, Utensils, Gift, Upload, Layers, 
+  Timer, Navigation,
+  BarChart3, Megaphone,
+  Mail, FileSignature, Award, 
+  Tags, UserCog, Handshake, Newspaper, Settings, ChevronRight, LogOut, ShieldCheck as UserCheck
+} from "lucide-react"
 
-// --- MOCK DATA ---
-const PARTNERS = [
-  { 
-    id: "SP-01", 
-    name: "Bank BJB", 
-    tier: "PLATINUM", 
-    logo: "/logos/bjb.png",
-    status: "SIGNED", 
-    value: 250000000, 
-    pic: "Ibu Rina (Marketing)", 
-    contact: "0812-3344-5566",
-    deliverables: { total: 10, completed: 8 },
-    notes: "Main Sponsor. Wajib ad-libs setiap jeda set."
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarRail,
+} from "@/components/ui/sidebar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+
+// --- DATA MENU LENGKAP ---
+const data = {
+  user: {
+    name: "Irsyad Jamal",
+    role: "Project Director",
+    avatar: "/avatars/irsyad.jpg",
   },
-  { 
-    id: "SP-02", 
-    name: "Yonex Indonesia", 
-    tier: "GOLD", 
-    logo: "/logos/yonex.png",
-    status: "SIGNED", 
-    value: 150000000, 
-    pic: "Pak Dani", 
-    contact: "0811-2233-4455",
-    deliverables: { total: 8, completed: 4 },
-    notes: "Apparel Partner. Booth di pintu utama."
-  },
-  { 
-    id: "SP-03", 
-    name: "Pocari Sweat", 
-    tier: "SILVER", 
-    logo: "/logos/pocari.png",
-    status: "NEGOTIATION", 
-    value: 75000000, 
-    pic: "Kang Asep", 
-    contact: "0857-1122-3344",
-    deliverables: { total: 5, completed: 0 },
-    notes: "Menunggu approval budget pusat."
-  },
-  { 
-    id: "SP-04", 
-    name: "Kopi Kenangan", 
-    tier: "BRONZE", 
-    logo: "/logos/kopken.png",
-    status: "PROSPECT", 
-    value: 25000000, 
-    pic: "Mba Sarah", 
-    contact: "-",
-    deliverables: { total: 3, completed: 0 },
-    notes: "Baru kirim proposal kemarin."
-  },
-];
+  // 1. UTAMA
+  navMain: [
+    { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
+    { title: "Profil Saya", url: "/admin/profile", icon: User },
+    { title: "RKA & Planning", url: "/admin/planning", icon: CalendarRange },
+  ],
+  // 2. DIRECTOR'S OFFICE
+  navDirector: [
+    { title: "Live Monitor", url: "/admin/director/monitor", icon: Activity },
+    { title: "Master Roster Panitia", url: "/admin/director/roster", icon: Users },
+    { title: "Struktur & Penugasan", url: "/admin/director/committee", icon: Network },
+  ],
+  // 3. KEUANGAN
+  navFinance: [
+    { title: "Dashboard Keuangan", url: "/admin/finance", icon: PieChart },
+    { title: "Approval Reimbursement", url: "/admin/finance/reimbursement-approval", icon: Stamp },
+    { title: "Tagihan Sponsor", url: "/admin/finance/invoices", icon: Receipt },
+    { title: "Skema Honorarium", url: "/admin/finance/honorarium", icon: Wallet },
+    { title: "Kas Kecil (Petty Cash)", url: "/admin/finance/petty-cash", icon: Coins },
+  ],
+  // 4. PERTANDINGAN
+  navMatch: [
+    { title: "Arena Manager", url: "/admin/match-control", icon: Trophy },
+    { title: "Editor Jadwal", url: "/admin/match-control/schedule", icon: CalendarDays },
+    { title: "Generate Bagan", url: "/admin/match-control/bracket", icon: Network },
+    { title: "Verifikasi Hasil", url: "/admin/match-control/results", icon: FileText },
+    { title: "Verifikasi TPF", url: "/admin/tpf", icon: ShieldAlert },
+    { title: "Keputusan Protes", url: "/admin/protests", icon: Gavel },
+    { title: "Papan Skor Wasit", url: "/admin/referee/match/1", icon: MonitorPlay },
+  ],
+  // 5. OPERASIONAL
+  navOps: [
+    { title: "Gate Check-in", url: "/admin/gate", icon: QrCode },
+    { title: "Kontrol Shuttlecock", url: "/admin/logistics/shuttlecock", icon: Package },
+    { title: "Inventaris Umum", url: "/admin/logistics/inventory", icon: Box },
+    { title: "Dispatch Command", url: "/admin/logistics/dispatch", icon: Navigation },
+    { title: "Absensi & Konsumsi", url: "/admin/hr/meals", icon: Utensils },
+    { title: "Undian Doorprize", url: "/admin/operations/doorprize", icon: Gift },
+    { title: "Pengajuan Reimbursement", url: "/admin/reimbursement/submit", icon: Upload },
+    { title: "Logistik Habis Pakai", url: "/admin/logistics/consumables", icon: Layers },
+  ],
+  // 6. ACARA & PENUTUPAN
+  navEvent: [
+    { title: "Master Rundown", url: "/admin/event/rundown", icon: Timer },
+  ],
+  // 7. BISNIS & MEDIA
+  navBiz: [
+    { title: "Analisis Pengunjung", url: "/admin/business/visitors", icon: BarChart3 },
+    { title: "Laporan Sponsor", url: "/admin/business/reports", icon: BarChart3 },
+  ],
+  // 8. SEKRETARIAT
+  navSecretariat: [
+    { title: "Verifikasi Pendaftaran", url: "/admin/secretariat/verification", icon: UserCheck },
+    { title: "E-Mandate (Surat Tugas)", url: "/admin/secretary/assignments", icon: FileCheck },
+    { title: "Generator Sertifikat", url: "/admin/event/certificates", icon: Award },
+  ],
+  // 9. MASTER DATA & PARTISIPAN
+  navMaster: [
+    { title: "Database Klub", url: "/admin/participants/teams", icon: Users },
+    { title: "Master Kategori", url: "/admin/master/categories", icon: Tags },
+    { title: "Manajemen User", url: "/admin/settings/users", icon: UserCog },
+  ]
+}
 
-const DELIVERABLES_CHECKLIST = [
-  { id: 1, item: "Logo on Jersey", done: true },
-  { id: 2, item: "A-Board Court 1", done: true },
-  { id: 3, item: "Social Media Post (Feed)", done: true },
-  { id: 4, item: "MC Ad-libs (Opening)", done: false },
-  { id: 5, item: "Booth 3x3m Activation", done: false },
-];
-
-export default function SponsorshipCRMPage() {
-  const [selectedPartner, setSelectedPartner] = useState<typeof PARTNERS[0] | null>(null);
-  const [isAddOpen, setIsAddOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("pipeline");
-
-  // Stats
-  const totalValue = PARTNERS.reduce((acc, curr) => acc + curr.value, 0);
-  const signedValue = PARTNERS.filter(p => p.status === 'SIGNED').reduce((acc, curr) => acc + curr.value, 0);
-  const progress = Math.round((signedValue / totalValue) * 100) || 0;
-
-  const getTierColor = (tier: string) => {
-    switch(tier) {
-        case 'PLATINUM': return "text-cyan-400 border-cyan-500 bg-cyan-500/10";
-        case 'GOLD': return "text-yellow-400 border-yellow-500 bg-yellow-500/10";
-        case 'SILVER': return "text-zinc-300 border-zinc-400 bg-zinc-500/10";
-        default: return "text-orange-400 border-orange-500 bg-orange-500/10";
-    }
-  };
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname();
 
   return (
-    <div className="space-y-8 p-4 md:p-8 font-body pb-24">
+    <Sidebar collapsible="icon" {...props} className="border-r-0 bg-black">
       
-      {/* --- HEADER --- */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-        <div>
-            <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="rounded-full px-3 py-1 border-yellow-500 text-yellow-500 bg-yellow-500/10 backdrop-blur-md">
-                    <Handshake className="w-3 h-3 mr-2" /> COMMERCIAL DIVISION
-                </Badge>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-black font-headline uppercase tracking-tighter text-white">
-                Partnership <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600">Ecosystem</span>
-            </h1>
-            <p className="text-zinc-400 mt-2 max-w-xl text-lg">
-                Kelola pipeline sponsor, negosiasi, dan pemenuhan hak (deliverables).
-            </p>
+      {/* 1. HEADER (LOGO) */}
+      <SidebarHeader className="h-20 flex justify-center border-b border-white/5 bg-zinc-950/50">
+        <div className="flex items-center gap-3 px-2 group-data-[collapsible=icon]:justify-center">
+          
+          {/* LOGO IMAGE */}
+          <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-black/50 border border-white/10 shadow-[0_0_15px_rgba(220,38,38,0.3)] overflow-hidden p-1">
+            <Image 
+              src="/images/logo.png" 
+              alt="BCC 2026 Logo" 
+              width={40} 
+              height={40} 
+              className="w-full h-full object-contain"
+            />
+          </div>
+
+          <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+            <span className="truncate font-black font-headline text-lg tracking-tight text-white">BCC 2026</span>
+            <span className="truncate text-[10px] uppercase font-bold text-zinc-500 tracking-widest">Official Admin</span>
+          </div>
         </div>
+      </SidebarHeader>
 
-        <Button 
-            onClick={() => setIsAddOpen(true)}
-            className="h-14 rounded-full px-8 bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-black font-black text-lg shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-transform active:scale-95"
-        >
-            <Plus className="mr-2 w-6 h-6"/> ADD PARTNER
-        </Button>
-      </div>
+      {/* 2. CONTENT (MENU ITEMS) - Scrollable */}
+      <SidebarContent className="px-3 py-4 space-y-6 bg-zinc-950/50 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
+        
+        <NavGroup label="UTAMA" items={data.navMain} currentPath={pathname} />
+        <NavGroup label="DIRECTOR'S OFFICE" items={data.navDirector} currentPath={pathname} />
+        <NavGroup label="KEUANGAN" items={data.navFinance} currentPath={pathname} />
+        <NavGroup label="PERTANDINGAN" items={data.navMatch} currentPath={pathname} />
+        <NavGroup label="OPERASIONAL" items={data.navOps} currentPath={pathname} />
+        <NavGroup label="ACARA" items={data.navEvent} currentPath={pathname} />
+        <NavGroup label="BISNIS & MEDIA" items={data.navBiz} currentPath={pathname} />
+        <NavGroup label="SEKRETARIAT" items={data.navSecretariat} currentPath={pathname} />
+        <NavGroup label="PESERTA & MASTER" items={data.navMaster} currentPath={pathname} />
 
-      {/* --- REVENUE HERO --- */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-         <Card className="lg:col-span-2 bg-gradient-to-br from-zinc-900 to-zinc-950 border-zinc-800 rounded-[32px] p-8 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/10 rounded-full blur-[80px] group-hover:bg-yellow-500/20 transition-all"></div>
-            <div className="relative z-10 flex flex-col h-full justify-between">
-                <div className="flex justify-between items-start">
-                    <div>
-                        <p className="text-zinc-500 font-bold uppercase text-xs tracking-[0.2em]">Total Value Locked</p>
-                        <h2 className="text-5xl md:text-6xl font-black text-white tracking-tight font-mono mt-2">
-                            Rp {totalValue.toLocaleString('id-ID', { notation: "compact" })}
-                        </h2>
-                    </div>
-                    <div className="p-3 bg-yellow-500/10 rounded-2xl text-yellow-500 border border-yellow-500/20">
-                        <TrendingUp className="w-8 h-8"/>
-                    </div>
-                </div>
-                
-                <div className="space-y-2 mt-8">
-                    <div className="flex justify-between text-xs font-bold text-zinc-500 uppercase">
-                        <span>Secured (Signed)</span>
-                        <span className="text-white">{progress}% Goal</span>
-                    </div>
-                    <Progress value={progress} className="h-4 bg-zinc-800 rounded-full" indicatorClassName="bg-gradient-to-r from-yellow-500 to-amber-600" />
-                </div>
+      </SidebarContent>
+
+      {/* 3. FOOTER (USER PROFILE) */}
+      <SidebarFooter className="p-4 bg-zinc-950/80 border-t border-white/5">
+        <div className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center">
+            <Avatar className="h-10 w-10 rounded-xl border-2 border-zinc-800 cursor-pointer hover:border-primary transition-colors">
+                <AvatarImage src={data.user.avatar} />
+                <AvatarFallback className="bg-zinc-900 font-bold text-zinc-400">IJ</AvatarFallback>
+            </Avatar>
+            <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+                <span className="truncate font-bold text-white">{data.user.name}</span>
+                <span className="truncate text-xs text-zinc-500">{data.user.role}</span>
             </div>
-         </Card>
+            <Button size="icon" variant="ghost" className="h-8 w-8 text-zinc-500 hover:text-red-500 hover:bg-red-500/10 rounded-full group-data-[collapsible=icon]:hidden">
+                <LogOut className="h-4 w-4" />
+            </Button>
+        </div>
+      </SidebarFooter>
+      
+      <SidebarRail />
+    </Sidebar>
+  )
+}
 
-         {/* QUICK PIPELINE STATS */}
-         <div className="space-y-4">
-            <Card className="bg-zinc-900 border-zinc-800 rounded-[28px] p-5 flex items-center justify-between group hover:border-green-500/30 transition-colors">
-                <div>
-                    <p className="text-[10px] font-bold text-zinc-500 uppercase">Signed Deals</p>
-                    <p className="text-3xl font-black text-green-500">{PARTNERS.filter(p => p.status === 'SIGNED').length}</p>
-                </div>
-                <FileSignature className="w-8 h-8 text-green-500/50 group-hover:text-green-500 transition-colors"/>
-            </Card>
-            <Card className="bg-zinc-900 border-zinc-800 rounded-[28px] p-5 flex items-center justify-between group hover:border-blue-500/30 transition-colors">
-                <div>
-                    <p className="text-[10px] font-bold text-zinc-500 uppercase">Negotiating</p>
-                    <p className="text-3xl font-black text-blue-500">{PARTNERS.filter(p => p.status === 'NEGOTIATION').length}</p>
-                </div>
-                <LayoutTemplate className="w-8 h-8 text-blue-500/50 group-hover:text-blue-500 transition-colors"/>
-            </Card>
-         </div>
-      </div>
-
-      {/* --- PARTNER LIST (TABS) --- */}
-      <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-[40px] p-2 backdrop-blur-sm min-h-[500px] flex flex-col">
-        <Tabs defaultValue="pipeline" className="w-full flex-1 flex flex-col" onValueChange={setActiveTab}>
-            
-            <div className="flex flex-col md:flex-row items-center justify-between px-4 py-4 gap-4">
-                <TabsList className="bg-zinc-950 p-1 rounded-full h-14 border border-zinc-800">
-                    <TabsTrigger value="pipeline" className="rounded-full h-12 px-8 font-bold text-sm data-[state=active]:bg-yellow-600 data-[state=active]:text-black">
-                        DEAL PIPELINE
-                    </TabsTrigger>
-                    <TabsTrigger value="active" className="rounded-full h-12 px-8 font-bold text-sm data-[state=active]:bg-zinc-800 data-[state=active]:text-white">
-                        ACTIVE PARTNERS
-                    </TabsTrigger>
-                </TabsList>
-
-                <div className="relative w-full md:w-72">
-                    <Search className="absolute left-4 top-3.5 w-4 h-4 text-zinc-500" />
-                    <Input 
-                        placeholder="Search partner..." 
-                        className="h-12 bg-zinc-950 border-zinc-800 rounded-full pl-10 text-white focus:ring-yellow-500"
-                    />
-                </div>
-            </div>
-
-            <ScrollArea className="flex-1 px-4 pb-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {PARTNERS.filter(p => activeTab === 'pipeline' ? true : p.status === 'SIGNED').map((partner) => (
-                        <div 
-                            key={partner.id} 
-                            onClick={() => setSelectedPartner(partner)}
-                            className="group bg-zinc-900 border border-zinc-800 rounded-[28px] p-6 hover:border-yellow-500/50 transition-all cursor-pointer hover:-translate-y-1 relative overflow-hidden"
-                        >
-                            <div className="flex justify-between items-start mb-4">
-                                <div className="flex items-center gap-4">
-                                    <Avatar className="h-14 w-14 border-2 border-zinc-700 bg-white p-1">
-                                        <AvatarImage src={partner.logo} className="object-contain"/>
-                                        <AvatarFallback className="bg-zinc-800 font-bold text-zinc-500">{partner.name.charAt(0)}</AvatarFallback>
-                                    </Avatar>
-                                    <div>
-                                        <h4 className="font-bold text-white text-lg leading-tight">{partner.name}</h4>
-                                        <Badge variant="outline" className={cn("mt-1 text-[9px] font-black border", getTierColor(partner.tier))}>
-                                            {partner.tier}
-                                        </Badge>
-                                    </div>
-                                </div>
-                                <Button size="icon" variant="ghost" className="h-8 w-8 rounded-full text-zinc-500 hover:text-white">
-                                    <MoreHorizontal className="w-5 h-5"/>
-                                </Button>
-                            </div>
-
-                            <div className="space-y-3">
-                                <div className="flex justify-between items-center bg-zinc-950 p-3 rounded-xl border border-zinc-800">
-                                    <span className="text-xs font-bold text-zinc-500 uppercase">Valuation</span>
-                                    <span className="font-mono font-black text-white">Rp {partner.value.toLocaleString('id-ID', {notation: "compact"})}</span>
-                                </div>
-                                
-                                <div className="flex justify-between items-center">
-                                    <span className={cn("text-xs font-black uppercase tracking-wider", 
-                                        partner.status === 'SIGNED' ? "text-green-500" : 
-                                        partner.status === 'NEGOTIATION' ? "text-blue-500" : "text-zinc-500"
-                                    )}>
-                                        ● {partner.status}
-                                    </span>
-                                    
-                                    {/* Mini Progress for Deliverables */}
-                                    {partner.status === 'SIGNED' && (
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-[10px] font-bold text-zinc-500">Fulfilled</span>
-                                            <div className="h-2 w-16 bg-zinc-800 rounded-full overflow-hidden">
-                                                <div className="h-full bg-green-500" style={{ width: `${(partner.deliverables.completed / partner.deliverables.total) * 100}%` }}></div>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </ScrollArea>
-        </Tabs>
-      </div>
-
-      {/* --- PARTNER DOSSIER (DETAIL SHEET) --- */}
-      <Sheet open={!!selectedPartner} onOpenChange={() => setSelectedPartner(null)}>
-        <SheetContent className="w-full sm:max-w-md bg-zinc-950 border-l border-zinc-800 p-0 overflow-y-auto">
-            {selectedPartner && (
-                <div className="flex flex-col h-full">
+// --- SUB COMPONENT: NAV GROUP (MD3 STYLE) ---
+function NavGroup({ label, items, currentPath }: { label: string, items: any[], currentPath: string }) {
+    return (
+        <SidebarGroup>
+            <SidebarGroupLabel className="text-[10px] font-black tracking-[0.2em] text-zinc-600 uppercase mb-2 px-2 group-data-[collapsible=icon]:hidden">
+                {label}
+            </SidebarGroupLabel>
+            <SidebarMenu className="space-y-1">
+                {items.map((item) => {
+                    const isActive = currentPath === item.url;
                     
-                    {/* Header Cover */}
-                    <div className="h-48 bg-gradient-to-b from-yellow-900/40 to-zinc-900 relative p-8 flex flex-col justify-end">
-                        <div className="absolute inset-0 bg-[url('/images/noise.png')] opacity-10 mix-blend-overlay"></div>
-                        
-                        <div className="flex items-end gap-4 relative z-10">
-                            <Avatar className="h-20 w-20 border-4 border-zinc-900 bg-white p-1 shadow-2xl">
-                                <AvatarImage src={selectedPartner.logo} className="object-contain"/>
-                                <AvatarFallback>SP</AvatarFallback>
-                            </Avatar>
-                            <div className="mb-2">
-                                <Badge className={cn("mb-2 text-[10px] font-black border", getTierColor(selectedPartner.tier))}>
-                                    {selectedPartner.tier} PARTNER
-                                </Badge>
-                                <h2 className="text-2xl font-black text-white uppercase leading-none">{selectedPartner.name}</h2>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="p-8 space-y-8 flex-1">
-                        
-                        {/* PIC & Contact */}
-                        <div className="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 space-y-3">
-                            <div className="flex justify-between items-center">
-                                <span className="text-xs font-bold text-zinc-500 uppercase">PIC</span>
-                                <span className="text-sm font-bold text-white">{selectedPartner.pic}</span>
-                            </div>
-                            <div className="h-[1px] bg-zinc-800 w-full"></div>
-                            <div className="flex gap-2">
-                                <Button size="sm" variant="outline" className="flex-1 h-9 border-zinc-700 text-zinc-300 hover:text-white text-xs">
-                                    <Phone className="w-3 h-3 mr-2"/> Call
-                                </Button>
-                                <Button size="sm" variant="outline" className="flex-1 h-9 border-zinc-700 text-zinc-300 hover:text-white text-xs">
-                                    <Mail className="w-3 h-3 mr-2"/> Email
-                                </Button>
-                            </div>
-                        </div>
-
-                        {/* Deliverables Checklist (Crucial for CRM) */}
-                        <div>
-                            <h3 className="text-sm font-black text-zinc-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                                <Megaphone className="w-4 h-4 text-yellow-500"/> Deliverables
-                            </h3>
-                            <div className="space-y-3">
-                                {DELIVERABLES_CHECKLIST.map((item) => (
-                                    <div key={item.id} className="flex items-center space-x-3 bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-                                        <div className={cn(
-                                            "w-6 h-6 rounded-full flex items-center justify-center border-2 transition-colors cursor-pointer",
-                                            item.done ? "bg-green-500 border-green-500 text-black" : "border-zinc-600"
-                                        )}>
-                                            {item.done && <CheckCircle2 className="w-4 h-4"/>}
-                                        </div>
-                                        <span className={cn("text-sm font-bold", item.done ? "text-zinc-500 line-through" : "text-white")}>
-                                            {item.item}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Notes */}
-                        <div>
-                            <h3 className="text-sm font-black text-zinc-500 uppercase tracking-widest mb-2">Internal Notes</h3>
-                            <p className="text-sm text-zinc-400 italic bg-zinc-900 p-4 rounded-xl border border-zinc-800">
-                                "{selectedPartner.notes}"
-                            </p>
-                        </div>
-
-                    </div>
-
-                    {/* Footer Actions */}
-                    <div className="p-6 border-t border-zinc-800 bg-zinc-900/80 backdrop-blur-md grid grid-cols-2 gap-4">
-                        <Button variant="outline" className="h-14 rounded-2xl border-zinc-700 text-zinc-300 font-bold">
-                            EDIT DEAL
-                        </Button>
-                        <Button className="h-14 rounded-2xl bg-yellow-500 hover:bg-yellow-400 text-black font-bold shadow-lg shadow-yellow-900/20">
-                            UPDATE STATUS
-                        </Button>
-                    </div>
-                </div>
-            )}
-        </SheetContent>
-      </Sheet>
-
-      {/* --- ADD PARTNER MODAL --- */}
-      <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-        <DialogContent className="bg-zinc-950 border-zinc-800 text-white rounded-[40px] max-w-lg p-0 overflow-hidden shadow-2xl">
-            <div className="p-8 border-b border-zinc-800 bg-yellow-950/20">
-                <DialogHeader>
-                    <DialogTitle className="text-2xl font-black font-headline uppercase flex items-center gap-2 text-yellow-500">
-                        <Handshake className="w-6 h-6"/> New Partner
-                    </DialogTitle>
-                    <DialogDescription>Tambahkan calon sponsor ke dalam pipeline.</DialogDescription>
-                </DialogHeader>
-            </div>
-            
-            <div className="p-8 space-y-6">
-                
-                <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase text-zinc-500 ml-1">Nama Perusahaan</label>
-                    <Input placeholder="PT..." className="bg-zinc-900 border-zinc-800 h-14 rounded-2xl text-lg font-bold" />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                        <label className="text-xs font-bold uppercase text-zinc-500 ml-1">Potensi Nilai</label>
-                        <div className="relative">
-                            <span className="absolute left-4 top-4 text-zinc-500 font-bold">Rp</span>
-                            <Input type="number" className="bg-zinc-900 border-zinc-800 h-14 rounded-2xl pl-10 font-mono" />
-                        </div>
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-xs font-bold uppercase text-zinc-500 ml-1">Target Tier</label>
-                        <Select>
-                            <SelectTrigger className="bg-zinc-900 border-zinc-800 h-14 rounded-2xl"><SelectValue placeholder="Pilih..." /></SelectTrigger>
-                            <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
-                                <SelectItem value="PLATINUM">Platinum</SelectItem>
-                                <SelectItem value="GOLD">Gold</SelectItem>
-                                <SelectItem value="SILVER">Silver</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                </div>
-
-                <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase text-zinc-500 ml-1">Contact Person (PIC)</label>
-                    <Input placeholder="Nama & No. HP" className="bg-zinc-900 border-zinc-800 h-14 rounded-2xl" />
-                </div>
-
-                <Button className="w-full h-16 rounded-full font-black text-lg bg-yellow-500 hover:bg-yellow-600 text-black mt-4 shadow-xl shadow-yellow-900/20">
-                    ADD TO PIPELINE
-                </Button>
-            </div>
-        </DialogContent>
-      </Dialog>
-
-    </div>
-  );
+                    return (
+                        <SidebarMenuItem key={item.title}>
+                            <SidebarMenuButton asChild tooltip={item.title} 
+                                className={cn(
+                                    "h-10 rounded-full px-4 transition-all duration-300 font-medium text-sm group/btn relative overflow-hidden",
+                                    isActive 
+                                        ? "bg-primary text-primary-foreground shadow-[0_2px_10px_-5px_rgba(220,38,38,0.5)] font-bold hover:bg-primary" 
+                                        : "text-zinc-400 hover:text-white hover:bg-white/5"
+                                )}
+                            >
+                                <Link href={item.url} className="flex items-center w-full">
+                                    <item.icon className={cn("size-4 mr-3 transition-transform duration-300 group-hover/btn:scale-110", isActive && "animate-pulse-slow")} />
+                                    <span className="flex-1 truncate">{item.title}</span>
+                                    {isActive && <ChevronRight className="size-3 opacity-50 ml-auto" />}
+                                    
+                                    {/* Active Indicator Glow */}
+                                    {isActive && <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] animate-shimmer" />}
+                                </Link>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    )
+                })}
+            </SidebarMenu>
+        </SidebarGroup>
+    )
 }

@@ -1,312 +1,207 @@
 'use client';
 
-import { useState } from "react";
+import * as React from "react"
+import Link from "next/link"
+import Image from "next/image" // Import Image dari Next.js
+import { usePathname } from "next/navigation"
 import { 
-  Megaphone, Shirt, UserCheck, ArrowRight, 
-  Clock, AlertCircle, CheckCircle2, Shield, 
-  Mic2, Footprints, XCircle 
-} from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from "@/components/ui/sheet";
-import { Checkbox } from "@/components/ui/checkbox";
-import { cn } from "@/lib/utils";
+  LayoutDashboard, User, Briefcase, CalendarRange, 
+  Activity, Users, Network, CheckSquare, 
+  PieChart, FileCheck, Stamp, Receipt, Store, Wallet, Coins, 
+  Trophy, CalendarDays, FileText, ShieldAlert, Mic2, LifeBuoy, ClipboardList, Gavel, MonitorPlay, ClipboardCheck, 
+  QrCode, Stethoscope, Package, Box, Database, Utensils, Gift, Upload, Layers, 
+  Timer, Navigation,
+  BarChart3, Megaphone,
+  Mail, FileSignature, Award, 
+  Tags, UserCog, Handshake, Newspaper, Settings, ChevronRight, LogOut, ShieldCheck as UserCheck
+} from "lucide-react"
 
-// --- MOCK DATA: MATCH QUEUE ---
-const CALL_QUEUE = [
-  { 
-    id: "M-101", 
-    court: "C-1", 
-    time: "14:00", 
-    category: "MD OPEN", 
-    round: "SF",
-    teamA: { name: "Kevin / Marcus", club: "PB Jaya Raya", jersey: "Red", status: "PRESENT" },
-    teamB: { name: "Ahsan / Hendra", club: "PB Djarum", jersey: "Black", status: "ABSENT" },
-    status: "WAITING_OPPONENT" // READY, WAITING_OPPONENT, DEPLOYING
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarRail,
+} from "@/components/ui/sidebar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+
+// --- DATA MENU LENGKAP ---
+const data = {
+  user: {
+    name: "Irsyad Jamal",
+    role: "Project Director",
+    avatar: "/avatars/irsyad.jpg",
   },
-  { 
-    id: "M-102", 
-    court: "C-2", 
-    time: "14:15", 
-    category: "MS PRO", 
-    round: "QF",
-    teamA: { name: "Anthony Ginting", club: "SGS PLN", jersey: "White", status: "PRESENT" },
-    teamB: { name: "Jonatan Christie", club: "Tangkas", jersey: "Blue", status: "PRESENT" },
-    status: "READY_TO_CHECK" 
-  },
-  { 
-    id: "M-103", 
-    court: "C-3", 
-    time: "14:20", 
-    category: "WD OPEN", 
-    round: "R16",
-    teamA: { name: "Apri / Fadia", club: "Eng Hian Acad", jersey: "Yellow", status: "PRESENT" },
-    teamB: { name: "Ribka / Lanny", club: "PB Djarum", jersey: "Navy", status: "PRESENT" },
-    status: "CHECKED_IN" 
-  },
-];
+  // 1. UTAMA
+  navMain: [
+    { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
+    { title: "Profil Saya", url: "/admin/profile", icon: User },
+    { title: "RKA & Planning", url: "/admin/planning", icon: CalendarRange },
+  ],
+  // 2. DIRECTOR'S OFFICE
+  navDirector: [
+    { title: "Live Monitor", url: "/admin/director/monitor", icon: Activity },
+    { title: "Master Roster Panitia", url: "/admin/director/roster", icon: Users },
+    { title: "Struktur & Penugasan", url: "/admin/director/committee", icon: Network },
+  ],
+  // 3. KEUANGAN
+  navFinance: [
+    { title: "Dashboard Keuangan", url: "/admin/finance", icon: PieChart },
+    { title: "Approval Reimbursement", url: "/admin/finance/reimbursement-approval", icon: Stamp },
+    { title: "Tagihan Sponsor", url: "/admin/finance/invoices", icon: Receipt },
+    { title: "Skema Honorarium", url: "/admin/finance/honorarium", icon: Wallet },
+    { title: "Kas Kecil (Petty Cash)", url: "/admin/finance/petty-cash", icon: Coins },
+  ],
+  // 4. PERTANDINGAN
+  navMatch: [
+    { title: "Arena Manager", url: "/admin/match-control", icon: Trophy },
+    { title: "Editor Jadwal", url: "/admin/match-control/schedule", icon: CalendarDays },
+    { title: "Generate Bagan", url: "/admin/match-control/bracket", icon: Network },
+    { title: "Verifikasi Hasil", url: "/admin/match-control/results", icon: FileText },
+    { title: "Verifikasi TPF", url: "/admin/tpf", icon: ShieldAlert },
+    { title: "Keputusan Protes", url: "/admin/protests", icon: Gavel },
+    { title: "Papan Skor Wasit", url: "/admin/referee/match/1", icon: MonitorPlay },
+  ],
+  // 5. OPERASIONAL
+  navOps: [
+    { title: "Gate Check-in", url: "/admin/gate", icon: QrCode },
+    { title: "Kontrol Shuttlecock", url: "/admin/logistics/shuttlecock", icon: Package },
+    { title: "Inventaris Umum", url: "/admin/logistics/inventory", icon: Box },
+    { title: "Dispatch Command", url: "/admin/logistics/dispatch", icon: Navigation },
+    { title: "Absensi & Konsumsi", url: "/admin/hr/meals", icon: Utensils },
+    { title: "Undian Doorprize", url: "/admin/operations/doorprize", icon: Gift },
+    { title: "Pengajuan Reimbursement", url: "/admin/reimbursement/submit", icon: Upload },
+    { title: "Logistik Habis Pakai", url: "/admin/logistics/consumables", icon: Layers },
+  ],
+  // 6. ACARA & PENUTUPAN
+  navEvent: [
+    { title: "Master Rundown", url: "/admin/event/rundown", icon: Timer },
+  ],
+  // 7. BISNIS & MEDIA
+  navBiz: [
+    { title: "Analisis Pengunjung", url: "/admin/business/visitors", icon: BarChart3 },
+    { title: "Laporan Sponsor", url: "/admin/business/reports", icon: BarChart3 },
+  ],
+  // 8. SEKRETARIAT
+  navSecretariat: [
+    { title: "Verifikasi Pendaftaran", url: "/admin/secretariat/verification", icon: UserCheck },
+    { title: "E-Mandate (Surat Tugas)", url: "/admin/secretary/assignments", icon: FileCheck },
+    { title: "Generator Sertifikat", url: "/admin/event/certificates", icon: Award },
+  ],
+  // 9. MASTER DATA & PARTISIPAN
+  navMaster: [
+    { title: "Database Klub", url: "/admin/participants/teams", icon: Users },
+    { title: "Master Kategori", url: "/admin/master/categories", icon: Tags },
+    { title: "Manajemen User", url: "/admin/settings/users", icon: UserCog },
+  ]
+}
 
-export default function MLOCallRoomPage() {
-  const [selectedMatch, setSelectedMatch] = useState<typeof CALL_QUEUE[0] | null>(null);
-  const [isDeploying, setIsDeploying] = useState(false);
-
-  // Checkbox States for Inspection
-  const [checks, setChecks] = useState({
-    idCard: false,
-    jerseyColor: false,
-    equipment: false,
-    adsRegulation: false
-  });
-
-  const handleDeploy = () => {
-    setIsDeploying(true);
-    setTimeout(() => {
-        setIsDeploying(false);
-        setSelectedMatch(null);
-        // Logic update status ke Match Control
-    }, 1500);
-  };
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname();
 
   return (
-    <div className="space-y-6 p-4 md:p-6 font-body pb-24 h-[calc(100vh-64px)] flex flex-col">
+    <Sidebar collapsible="icon" {...props} className="border-r-0 bg-black">
       
-      {/* --- HEADER --- */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 shrink-0">
-        <div>
-            <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="rounded-full px-3 py-1 border-lime-500 text-lime-500 bg-lime-500/10 backdrop-blur-md animate-pulse">
-                    <Mic2 className="w-3 h-3 mr-2" /> CALL ROOM ACTIVE
-                </Badge>
-            </div>
-            <h1 className="text-3xl md:text-4xl font-black font-headline uppercase tracking-tighter text-white">
-                The <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-green-600">Tunnel</span>
-            </h1>
-            <p className="text-zinc-400 mt-2 max-w-xl text-lg">
-                Pintu terakhir sebelum arena. Pastikan atlet siap tempur.
-            </p>
+      {/* 1. HEADER (LOGO) */}
+      <SidebarHeader className="h-20 flex justify-center border-b border-white/5 bg-zinc-950/50">
+        <div className="flex items-center gap-3 px-2 group-data-[collapsible=icon]:justify-center">
+          
+          {/* LOGO IMAGE */}
+          <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-black/50 border border-white/10 shadow-[0_0_15px_rgba(220,38,38,0.3)] overflow-hidden p-1">
+            <Image 
+              src="/images/logo.png" 
+              alt="BCC 2026 Logo" 
+              width={40} 
+              height={40} 
+              className="w-full h-full object-contain"
+            />
+          </div>
+
+          <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+            <span className="truncate font-black font-headline text-lg tracking-tight text-white">BCC 2026</span>
+            <span className="truncate text-[10px] uppercase font-bold text-zinc-500 tracking-widest">Official Admin</span>
+          </div>
         </div>
+      </SidebarHeader>
 
-        {/* QUICK ANNOUNCE */}
-        <Button className="h-14 rounded-full px-8 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-white font-bold text-lg">
-            <Megaphone className="mr-2 w-5 h-5 text-lime-500"/> PANGGIL ATLET
-        </Button>
-      </div>
+      {/* 2. CONTENT (MENU ITEMS) - Scrollable */}
+      <SidebarContent className="px-3 py-4 space-y-6 bg-zinc-950/50 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
+        
+        <NavGroup label="UTAMA" items={data.navMain} currentPath={pathname} />
+        <NavGroup label="DIRECTOR'S OFFICE" items={data.navDirector} currentPath={pathname} />
+        <NavGroup label="KEUANGAN" items={data.navFinance} currentPath={pathname} />
+        <NavGroup label="PERTANDINGAN" items={data.navMatch} currentPath={pathname} />
+        <NavGroup label="OPERASIONAL" items={data.navOps} currentPath={pathname} />
+        <NavGroup label="ACARA" items={data.navEvent} currentPath={pathname} />
+        <NavGroup label="BISNIS & MEDIA" items={data.navBiz} currentPath={pathname} />
+        <NavGroup label="SEKRETARIAT" items={data.navSecretariat} currentPath={pathname} />
+        <NavGroup label="PESERTA & MASTER" items={data.navMaster} currentPath={pathname} />
 
-      {/* --- MAIN QUEUE --- */}
-      <div className="flex-1 bg-zinc-900/50 border border-zinc-800/50 rounded-[40px] p-2 backdrop-blur-sm overflow-hidden flex flex-col">
-        <Tabs defaultValue="queue" className="w-full h-full flex flex-col">
-            
-            <div className="px-4 py-4 shrink-0">
-                <TabsList className="bg-zinc-950 p-1 rounded-full h-14 border border-zinc-800 w-full md:w-auto">
-                    <TabsTrigger value="queue" className="rounded-full h-12 px-8 font-bold text-sm data-[state=active]:bg-lime-600 data-[state=active]:text-black">
-                        QUEUE LIST ({CALL_QUEUE.length})
-                    </TabsTrigger>
-                    <TabsTrigger value="deployed" className="rounded-full h-12 px-8 font-bold text-sm data-[state=active]:bg-zinc-800 data-[state=active]:text-white">
-                        DEPLOYED (ON COURT)
-                    </TabsTrigger>
-                </TabsList>
+      </SidebarContent>
+
+      {/* 3. FOOTER (USER PROFILE) */}
+      <SidebarFooter className="p-4 bg-zinc-950/80 border-t border-white/5">
+        <div className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center">
+            <Avatar className="h-10 w-10 rounded-xl border-2 border-zinc-800 cursor-pointer hover:border-primary transition-colors">
+                <AvatarImage src={data.user.avatar} />
+                <AvatarFallback className="bg-zinc-900 font-bold text-zinc-400">IJ</AvatarFallback>
+            </Avatar>
+            <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+                <span className="truncate font-bold text-white">{data.user.name}</span>
+                <span className="truncate text-xs text-zinc-500">{data.user.role}</span>
             </div>
+            <Button size="icon" variant="ghost" className="h-8 w-8 text-zinc-500 hover:text-red-500 hover:bg-red-500/10 rounded-full group-data-[collapsible=icon]:hidden">
+                <LogOut className="h-4 w-4" />
+            </Button>
+        </div>
+      </SidebarFooter>
+      
+      <SidebarRail />
+    </Sidebar>
+  )
+}
 
-            <TabsContent value="queue" className="flex-1 overflow-hidden p-2 mt-0">
-                <ScrollArea className="h-full">
-                    <div className="space-y-4 pb-20">
-                        {CALL_QUEUE.map((match) => (
-                            <div 
-                                key={match.id}
-                                onClick={() => setSelectedMatch(match)}
+// --- SUB COMPONENT: NAV GROUP (MD3 STYLE) ---
+function NavGroup({ label, items, currentPath }: { label: string, items: any[], currentPath: string }) {
+    return (
+        <SidebarGroup>
+            <SidebarGroupLabel className="text-[10px] font-black tracking-[0.2em] text-zinc-600 uppercase mb-2 px-2 group-data-[collapsible=icon]:hidden">
+                {label}
+            </SidebarGroupLabel>
+            <SidebarMenu className="space-y-1">
+                {items.map((item) => {
+                    const isActive = currentPath === item.url;
+                    
+                    return (
+                        <SidebarMenuItem key={item.title}>
+                            <SidebarMenuButton asChild tooltip={item.title} 
                                 className={cn(
-                                    "group relative flex flex-col md:flex-row items-center gap-6 p-6 rounded-[32px] border-2 transition-all cursor-pointer hover:scale-[1.01] active:scale-[0.99]",
-                                    match.status === 'READY_TO_CHECK' ? "bg-zinc-900 border-lime-500/50 shadow-[0_0_20px_rgba(132,204,22,0.1)]" : 
-                                    match.status === 'CHECKED_IN' ? "bg-lime-950/20 border-lime-500" :
-                                    "bg-zinc-950 border-zinc-800 hover:border-zinc-700"
+                                    "h-10 rounded-full px-4 transition-all duration-300 font-medium text-sm group/btn relative overflow-hidden",
+                                    isActive 
+                                        ? "bg-primary text-primary-foreground shadow-[0_2px_10px_-5px_rgba(220,38,38,0.5)] font-bold hover:bg-primary" 
+                                        : "text-zinc-400 hover:text-white hover:bg-white/5"
                                 )}
                             >
-                                {/* Court Info (Left) */}
-                                <div className="flex flex-col items-center justify-center w-24 shrink-0">
-                                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">COURT</span>
-                                    <span className="text-4xl font-black text-white font-mono">{match.court.split('-')[1]}</span>
-                                    <Badge variant="outline" className="mt-2 border-zinc-700 text-zinc-400 text-[10px]">{match.time}</Badge>
-                                </div>
-
-                                {/* Matchup (Center) */}
-                                <div className="flex-1 w-full text-center md:text-left">
-                                    <div className="flex justify-center md:justify-start items-center gap-3 mb-2">
-                                        <Badge className="bg-zinc-800 text-white hover:bg-zinc-700">{match.category}</Badge>
-                                        <span className="text-xs font-bold text-zinc-500">{match.round} • {match.id}</span>
-                                    </div>
+                                <Link href={item.url} className="flex items-center w-full">
+                                    <item.icon className={cn("size-4 mr-3 transition-transform duration-300 group-hover/btn:scale-110", isActive && "animate-pulse-slow")} />
+                                    <span className="flex-1 truncate">{item.title}</span>
+                                    {isActive && <ChevronRight className="size-3 opacity-50 ml-auto" />}
                                     
-                                    <div className="flex flex-col gap-2">
-                                        {/* Team A */}
-                                        <div className="flex items-center justify-between bg-black/40 p-3 rounded-xl border border-zinc-800/50">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-1 h-8 bg-blue-500 rounded-full"></div>
-                                                <div className="text-left">
-                                                    <p className="font-bold text-white text-sm leading-none">{match.teamA.name}</p>
-                                                    <p className="text-[10px] text-zinc-500 uppercase mt-1">{match.teamA.club}</p>
-                                                </div>
-                                            </div>
-                                            {match.teamA.status === 'PRESENT' ? (
-                                                <Badge className="bg-green-500/20 text-green-500 border-none">HADIR</Badge>
-                                            ) : (
-                                                <Badge className="bg-red-500/20 text-red-500 border-none animate-pulse">BELUM</Badge>
-                                            )}
-                                        </div>
-
-                                        {/* Team B */}
-                                        <div className="flex items-center justify-between bg-black/40 p-3 rounded-xl border border-zinc-800/50">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-1 h-8 bg-red-500 rounded-full"></div>
-                                                <div className="text-left">
-                                                    <p className="font-bold text-white text-sm leading-none">{match.teamB.name}</p>
-                                                    <p className="text-[10px] text-zinc-500 uppercase mt-1">{match.teamB.club}</p>
-                                                </div>
-                                            </div>
-                                            {match.teamB.status === 'PRESENT' ? (
-                                                <Badge className="bg-green-500/20 text-green-500 border-none">HADIR</Badge>
-                                            ) : (
-                                                <Badge className="bg-red-500/20 text-red-500 border-none animate-pulse">BELUM</Badge>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Action (Right) */}
-                                <div className="w-full md:w-auto flex flex-col gap-2">
-                                    {match.status === 'CHECKED_IN' ? (
-                                        <Button className="h-14 w-full md:w-32 rounded-2xl bg-lime-500 hover:bg-lime-400 text-black font-black text-lg shadow-lg shadow-lime-500/20">
-                                            DEPLOY <ArrowRight className="ml-2 w-5 h-5"/>
-                                        </Button>
-                                    ) : (
-                                        <Button variant="outline" className="h-14 w-full md:w-32 rounded-2xl border-zinc-700 bg-zinc-900 hover:bg-zinc-800 text-white font-bold group-hover:border-lime-500/50 transition-colors">
-                                            <UserCheck className="mr-2 w-5 h-5"/> INSPECT
-                                        </Button>
-                                    )}
-                                </div>
-
-                            </div>
-                        ))}
-                    </div>
-                </ScrollArea>
-            </TabsContent>
-        </Tabs>
-      </div>
-
-      {/* --- INSPECTION SHEET (THE TUNNEL CHECK) --- */}
-      <Sheet open={!!selectedMatch} onOpenChange={() => setSelectedMatch(null)}>
-        <SheetContent className="w-full sm:max-w-md bg-zinc-950 border-l border-zinc-800 p-0 overflow-y-auto">
-            {selectedMatch && (
-                <div className="flex flex-col h-full">
-                    
-                    {/* Header: Match Info */}
-                    <div className="bg-zinc-900 p-8 border-b border-zinc-800">
-                        <div className="flex justify-between items-start mb-4">
-                            <Badge variant="outline" className="border-lime-500 text-lime-500 font-mono bg-lime-500/10">
-                                {selectedMatch.id}
-                            </Badge>
-                            <span className="text-2xl font-black text-white">COURT {selectedMatch.court.split('-')[1]}</span>
-                        </div>
-                        <h2 className="text-lg font-bold text-white leading-tight mb-1">{selectedMatch.teamA.name}</h2>
-                        <div className="text-xs font-black text-zinc-600 uppercase mb-1">VS</div>
-                        <h2 className="text-lg font-bold text-white leading-tight">{selectedMatch.teamB.name}</h2>
-                    </div>
-
-                    <div className="p-8 space-y-8 flex-1">
-                        
-                        {/* 1. PRESENCE CHECK */}
-                        <div>
-                            <h4 className="text-xs font-bold text-zinc-500 uppercase mb-4 tracking-widest flex items-center gap-2">
-                                <UserCheck className="w-4 h-4 text-lime-500"/> Kehadiran Atlet
-                            </h4>
-                            <div className="grid grid-cols-2 gap-4">
-                                <Button 
-                                    variant={selectedMatch.teamA.status === 'PRESENT' ? "default" : "outline"}
-                                    className={cn("h-12 rounded-xl font-bold", selectedMatch.teamA.status === 'PRESENT' ? "bg-green-600 hover:bg-green-700" : "border-zinc-700 text-zinc-400")}
-                                >
-                                    Team A {selectedMatch.teamA.status === 'PRESENT' && <CheckCircle2 className="ml-2 w-4 h-4"/>}
-                                </Button>
-                                <Button 
-                                    variant={selectedMatch.teamB.status === 'PRESENT' ? "default" : "outline"}
-                                    className={cn("h-12 rounded-xl font-bold", selectedMatch.teamB.status === 'PRESENT' ? "bg-green-600 hover:bg-green-700" : "border-zinc-700 text-zinc-400")}
-                                >
-                                    Team B {selectedMatch.teamB.status === 'PRESENT' && <CheckCircle2 className="ml-2 w-4 h-4"/>}
-                                </Button>
-                            </div>
-                            {selectedMatch.status === 'WAITING_OPPONENT' && (
-                                <div className="mt-3 p-3 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3 text-red-400 text-xs font-bold">
-                                    <AlertCircle className="w-5 h-5"/>
-                                    Lawan belum hadir di Call Room!
-                                    <Button size="sm" variant="link" className="text-red-400 underline ml-auto h-auto p-0">Call Out</Button>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* 2. GEAR INSPECTION (SOP: 235) */}
-                        <div>
-                            <h4 className="text-xs font-bold text-zinc-500 uppercase mb-4 tracking-widest flex items-center gap-2">
-                                <Shield className="w-4 h-4 text-lime-500"/> Gear Inspection
-                            </h4>
-                            <div className="space-y-3">
-                                <div className="flex items-center space-x-3 bg-zinc-900 p-4 rounded-xl border border-zinc-800">
-                                    <Checkbox id="c1" className="w-6 h-6 border-zinc-600 data-[state=checked]:bg-lime-500 data-[state=checked]:text-black" />
-                                    <div className="grid gap-1.5 leading-none">
-                                        <label htmlFor="c1" className="text-sm font-bold text-white peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                            ID Card / Akreditasi
-                                        </label>
-                                        <p className="text-xs text-zinc-500">Sesuai dengan nama di bagan.</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center space-x-3 bg-zinc-900 p-4 rounded-xl border border-zinc-800">
-                                    <Checkbox id="c2" className="w-6 h-6 border-zinc-600 data-[state=checked]:bg-lime-500 data-[state=checked]:text-black" />
-                                    <div className="grid gap-1.5 leading-none">
-                                        <label htmlFor="c2" className="text-sm font-bold text-white peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                            Jersey Regulation (Warna)
-                                        </label>
-                                        <p className="text-xs text-zinc-500">
-                                            A: <span className="text-white font-bold">{selectedMatch.teamA.jersey}</span> vs B: <span className="text-white font-bold">{selectedMatch.teamB.jersey}</span> (Kontras OK)
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center space-x-3 bg-zinc-900 p-4 rounded-xl border border-zinc-800">
-                                    <Checkbox id="c3" className="w-6 h-6 border-zinc-600 data-[state=checked]:bg-lime-500 data-[state=checked]:text-black" />
-                                    <div className="grid gap-1.5 leading-none">
-                                        <label htmlFor="c3" className="text-sm font-bold text-white peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                            Equipment Check
-                                        </label>
-                                        <p className="text-xs text-zinc-500">Raket, sepatu, dan tas aman.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    {/* Footer Actions */}
-                    <div className="p-6 border-t border-zinc-800 bg-zinc-900/80 backdrop-blur-md">
-                        {isDeploying ? (
-                            <Button disabled className="w-full h-16 rounded-2xl bg-lime-600 text-black font-black text-lg animate-pulse">
-                                DEPLOYING TO ARENA...
-                            </Button>
-                        ) : (
-                            <div className="grid grid-cols-4 gap-3">
-                                <Button variant="outline" className="col-span-1 h-16 rounded-2xl border-red-900/50 text-red-500 hover:bg-red-950 flex flex-col gap-1">
-                                    <XCircle className="w-6 h-6"/>
-                                    <span className="text-[10px] font-bold">WO</span>
-                                </Button>
-                                <Button onClick={handleDeploy} className="col-span-3 h-16 rounded-2xl bg-lime-500 hover:bg-lime-400 text-black font-black text-lg shadow-lg shadow-lime-900/20">
-                                    DEPLOY TO COURT <Footprints className="ml-2 w-6 h-6"/>
-                                </Button>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            )}
-        </SheetContent>
-      </Sheet>
-
-    </div>
-  );
+                                    {/* Active Indicator Glow */}
+                                    {isActive && <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] animate-shimmer" />}
+                                </Link>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    )
+                })}
+            </SidebarMenu>
+        </SidebarGroup>
+    )
 }

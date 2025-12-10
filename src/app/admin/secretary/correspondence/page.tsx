@@ -1,361 +1,207 @@
-
 'use client';
 
-import { useState } from "react";
+import * as React from "react"
+import Link from "next/link"
+import Image from "next/image" // Import Image dari Next.js
+import { usePathname } from "next/navigation"
 import { 
-  Mail, Send, FileText, PenTool, 
-  Search, Paperclip, CheckCircle2, AlertCircle, 
-  Archive, MoreHorizontal, FileSignature, ArrowRight, 
-  Inbox, Printer, Download
-} from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
+  LayoutDashboard, User, Briefcase, CalendarRange, 
+  Activity, Users, Network, CheckSquare, 
+  PieChart, FileCheck, Stamp, Receipt, Store, Wallet, Coins, 
+  Trophy, CalendarDays, FileText, ShieldAlert, Mic2, LifeBuoy, ClipboardList, Gavel, MonitorPlay, ClipboardCheck, 
+  QrCode, Stethoscope, Package, Box, Database, Utensils, Gift, Upload, Layers, 
+  Timer, Navigation,
+  BarChart3, Megaphone,
+  Mail, FileSignature, Award, 
+  Tags, UserCog, Handshake, Newspaper, Settings, ChevronRight, LogOut, ShieldCheck as UserCheck
+} from "lucide-react"
 
-// --- MOCK DATA ---
-const EMAILS = [
-  { 
-    id: "SURAT-001", 
-    type: "INBOX", 
-    sender: "Polrestabes Bandung", 
-    subject: "Balasan Izin Keramaian Event BCC 2026", 
-    preview: "Berdasarkan surat permohonan nomor 005/EXT/BCC... izin prinsip disetujui dengan syarat...",
-    date: "10:30 AM", 
-    status: "URGENT", 
-    read: false,
-    attachment: "SK_Izin_Polisi.pdf"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarRail,
+} from "@/components/ui/sidebar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+
+// --- DATA MENU LENGKAP ---
+const data = {
+  user: {
+    name: "Irsyad Jamal",
+    role: "Project Director",
+    avatar: "/avatars/irsyad.jpg",
   },
-  { 
-    id: "SURAT-002", 
-    type: "OUTBOX", 
-    recipient: "Bank BJB (Pusat)", 
-    subject: "Proposal Sponsorship Termin 1", 
-    preview: "Mengirimkan invoice dan dokumen pendukung pencairan termin pertama sebesar...",
-    date: "Yesterday", 
-    status: "SENT", 
-    read: true,
-    attachment: "Invoice_BJB_01.pdf"
-  },
-  { 
-    id: "SURAT-003", 
-    type: "DRAFT", 
-    recipient: "PBSI Pengprov Jabar", 
-    subject: "Permohonan Referee Nasional", 
-    preview: "Kami memohon penugasan 2 orang Referee berlisensi Nasional untuk memimpin...",
-    date: "Drafted 2h ago", 
-    status: "WAITING_SIGN", 
-    read: true,
-    attachment: null
-  },
-  { 
-    id: "SURAT-004", 
-    type: "INBOX", 
-    sender: "PB Djarum", 
-    subject: "Konfirmasi Keikutsertaan Tim", 
-    preview: "Kami mengonfirmasi akan mengirimkan 15 atlet untuk kategori U-17 dan Dewasa...",
-    date: "2 days ago", 
-    status: "NORMAL", 
-    read: true,
-    attachment: "Entry_Form_Djarum.xlsx"
-  },
-];
+  // 1. UTAMA
+  navMain: [
+    { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
+    { title: "Profil Saya", url: "/admin/profile", icon: User },
+    { title: "RKA & Planning", url: "/admin/planning", icon: CalendarRange },
+  ],
+  // 2. DIRECTOR'S OFFICE
+  navDirector: [
+    { title: "Live Monitor", url: "/admin/director/monitor", icon: Activity },
+    { title: "Master Roster Panitia", url: "/admin/director/roster", icon: Users },
+    { title: "Struktur & Penugasan", url: "/admin/director/committee", icon: Network },
+  ],
+  // 3. KEUANGAN
+  navFinance: [
+    { title: "Dashboard Keuangan", url: "/admin/finance", icon: PieChart },
+    { title: "Approval Reimbursement", url: "/admin/finance/reimbursement-approval", icon: Stamp },
+    { title: "Tagihan Sponsor", url: "/admin/finance/invoices", icon: Receipt },
+    { title: "Skema Honorarium", url: "/admin/finance/honorarium", icon: Wallet },
+    { title: "Kas Kecil (Petty Cash)", url: "/admin/finance/petty-cash", icon: Coins },
+  ],
+  // 4. PERTANDINGAN
+  navMatch: [
+    { title: "Arena Manager", url: "/admin/match-control", icon: Trophy },
+    { title: "Editor Jadwal", url: "/admin/match-control/schedule", icon: CalendarDays },
+    { title: "Generate Bagan", url: "/admin/match-control/bracket", icon: Network },
+    { title: "Verifikasi Hasil", url: "/admin/match-control/results", icon: FileText },
+    { title: "Verifikasi TPF", url: "/admin/tpf", icon: ShieldAlert },
+    { title: "Keputusan Protes", url: "/admin/protests", icon: Gavel },
+    { title: "Papan Skor Wasit", url: "/admin/referee/match/1", icon: MonitorPlay },
+  ],
+  // 5. OPERASIONAL
+  navOps: [
+    { title: "Gate Check-in", url: "/admin/gate", icon: QrCode },
+    { title: "Kontrol Shuttlecock", url: "/admin/logistics/shuttlecock", icon: Package },
+    { title: "Inventaris Umum", url: "/admin/logistics/inventory", icon: Box },
+    { title: "Dispatch Command", url: "/admin/logistics/dispatch", icon: Navigation },
+    { title: "Absensi & Konsumsi", url: "/admin/hr/meals", icon: Utensils },
+    { title: "Undian Doorprize", url: "/admin/operations/doorprize", icon: Gift },
+    { title: "Pengajuan Reimbursement", url: "/admin/reimbursement/submit", icon: Upload },
+    { title: "Logistik Habis Pakai", url: "/admin/logistics/consumables", icon: Layers },
+  ],
+  // 6. ACARA & PENUTUPAN
+  navEvent: [
+    { title: "Master Rundown", url: "/admin/event/rundown", icon: Timer },
+  ],
+  // 7. BISNIS & MEDIA
+  navBiz: [
+    { title: "Analisis Pengunjung", url: "/admin/business/visitors", icon: BarChart3 },
+    { title: "Laporan Sponsor", url: "/admin/business/reports", icon: BarChart3 },
+  ],
+  // 8. SEKRETARIAT
+  navSecretariat: [
+    { title: "Verifikasi Pendaftaran", url: "/admin/secretariat/verification", icon: UserCheck },
+    { title: "E-Mandate (Surat Tugas)", url: "/admin/secretary/assignments", icon: FileCheck },
+    { title: "Generator Sertifikat", url: "/admin/event/certificates", icon: Award },
+  ],
+  // 9. MASTER DATA & PARTISIPAN
+  navMaster: [
+    { title: "Database Klub", url: "/admin/participants/teams", icon: Users },
+    { title: "Master Kategori", url: "/admin/master/categories", icon: Tags },
+    { title: "Manajemen User", url: "/admin/settings/users", icon: UserCog },
+  ]
+}
 
-const TEMPLATES = [
-  { id: "SK", label: "Surat Keputusan (SK)" },
-  { id: "INV", label: "Surat Undangan Resmi" },
-  { id: "PERMIT", label: "Surat Izin / Peminjaman" },
-  { id: "MOU", label: "MoU Kerjasama" },
-];
-
-export default function CorrespondencePage() {
-  const [activeTab, setActiveTab] = useState("INBOX");
-  const [selectedMail, setSelectedMail] = useState<typeof EMAILS[0] | null>(null);
-  const [isComposeOpen, setIsComposeOpen] = useState(false);
-
-  const filteredMails = EMAILS.filter(m => activeTab === 'ALL' || m.type === activeTab);
-
-  const getStatusColor = (s: string) => {
-    switch(s) {
-        case 'URGENT': return "bg-red-500/10 text-red-500 border-red-500/20 animate-pulse";
-        case 'WAITING_SIGN': return "bg-yellow-500/10 text-yellow-500 border-yellow-500/20";
-        case 'SENT': return "bg-blue-500/10 text-blue-500 border-blue-500/20";
-        default: return "bg-zinc-800 text-zinc-400 border-zinc-700";
-    }
-  };
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname();
 
   return (
-    <div className="space-y-8 p-4 md:p-8 font-body pb-24 h-[calc(100vh-64px)] flex flex-col">
+    <Sidebar collapsible="icon" {...props} className="border-r-0 bg-black">
       
-      {/* --- HEADER --- */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 shrink-0">
-        <div>
-            <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="rounded-full px-3 py-1 border-cyan-500 text-cyan-500 bg-cyan-500/10 backdrop-blur-md">
-                    <FileSignature className="w-3 h-3 mr-2" /> E-OFFICE SYSTEM
-                </Badge>
-            </div>
-            <h1 className="text-3xl md:text-4xl font-black font-headline uppercase tracking-tighter text-white">
-                Digital <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">Correspondence</span>
-            </h1>
-            <p className="text-zinc-400 mt-2 max-w-xl text-lg">
-                Sentralisasi surat masuk, keluar, dan disposisi digital.
-            </p>
+      {/* 1. HEADER (LOGO) */}
+      <SidebarHeader className="h-20 flex justify-center border-b border-white/5 bg-zinc-950/50">
+        <div className="flex items-center gap-3 px-2 group-data-[collapsible=icon]:justify-center">
+          
+          {/* LOGO IMAGE */}
+          <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-black/50 border border-white/10 shadow-[0_0_15px_rgba(220,38,38,0.3)] overflow-hidden p-1">
+            <Image 
+              src="/images/logo.png" 
+              alt="BCC 2026 Logo" 
+              width={40} 
+              height={40} 
+              className="w-full h-full object-contain"
+            />
+          </div>
+
+          <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+            <span className="truncate font-black font-headline text-lg tracking-tight text-white">BCC 2026</span>
+            <span className="truncate text-[10px] uppercase font-bold text-zinc-500 tracking-widest">Official Admin</span>
+          </div>
         </div>
+      </SidebarHeader>
 
-        <Button 
-            onClick={() => setIsComposeOpen(true)}
-            className="h-14 rounded-full px-8 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-lg shadow-[0_0_25px_rgba(8,145,178,0.4)] transition-all hover:scale-105"
-        >
-            <PenTool className="mr-2 w-5 h-5"/> COMPOSE NEW
-        </Button>
-      </div>
+      {/* 2. CONTENT (MENU ITEMS) - Scrollable */}
+      <SidebarContent className="px-3 py-4 space-y-6 bg-zinc-950/50 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
+        
+        <NavGroup label="UTAMA" items={data.navMain} currentPath={pathname} />
+        <NavGroup label="DIRECTOR'S OFFICE" items={data.navDirector} currentPath={pathname} />
+        <NavGroup label="KEUANGAN" items={data.navFinance} currentPath={pathname} />
+        <NavGroup label="PERTANDINGAN" items={data.navMatch} currentPath={pathname} />
+        <NavGroup label="OPERASIONAL" items={data.navOps} currentPath={pathname} />
+        <NavGroup label="ACARA" items={data.navEvent} currentPath={pathname} />
+        <NavGroup label="BISNIS & MEDIA" items={data.navBiz} currentPath={pathname} />
+        <NavGroup label="SEKRETARIAT" items={data.navSecretariat} currentPath={pathname} />
+        <NavGroup label="PESERTA & MASTER" items={data.navMaster} currentPath={pathname} />
 
-      {/* --- MAIN WORKSPACE --- */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0">
-         
-         {/* LEFT: NAVIGATION (2 Cols) */}
-         <Card className="lg:col-span-2 bg-zinc-900 border-zinc-800 rounded-[32px] p-4 hidden lg:flex flex-col gap-2">
-            <Button 
-                variant={activeTab === 'INBOX' ? "default" : "ghost"} 
-                onClick={() => setActiveTab('INBOX')}
-                className={cn("justify-start h-12 rounded-xl font-bold", activeTab === 'INBOX' ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-white")}
-            >
-                <Inbox className="w-5 h-5 mr-3"/> Inbox
-                <Badge className="ml-auto bg-cyan-600 text-white">2</Badge>
-            </Button>
-            <Button 
-                variant={activeTab === 'OUTBOX' ? "default" : "ghost"} 
-                onClick={() => setActiveTab('OUTBOX')}
-                className={cn("justify-start h-12 rounded-xl font-bold", activeTab === 'OUTBOX' ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-white")}
-            >
-                <Send className="w-5 h-5 mr-3"/> Sent
-            </Button>
-            <Button 
-                variant={activeTab === 'DRAFT' ? "default" : "ghost"} 
-                onClick={() => setActiveTab('DRAFT')}
-                className={cn("justify-start h-12 rounded-xl font-bold", activeTab === 'DRAFT' ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-white")}
-            >
-                <FileText className="w-5 h-5 mr-3"/> Drafts
-                <Badge variant="outline" className="ml-auto border-zinc-700 text-zinc-500">1</Badge>
-            </Button>
-            <Button variant="ghost" className="justify-start h-12 rounded-xl font-bold text-zinc-400 hover:text-white mt-auto">
-                <Archive className="w-5 h-5 mr-3"/> Archives
-            </Button>
-         </Card>
+      </SidebarContent>
 
-         {/* CENTER: MAIL LIST (4 Cols) */}
-         <Card className="lg:col-span-4 bg-zinc-900/50 border border-zinc-800/50 rounded-[32px] flex flex-col overflow-hidden backdrop-blur-sm">
-            <div className="p-4 border-b border-zinc-800">
-                <div className="relative">
-                    <Search className="absolute left-4 top-3.5 w-4 h-4 text-zinc-500" />
-                    <Input placeholder="Search subject or ID..." className="h-12 bg-zinc-900 border-zinc-800 rounded-xl pl-10 text-white focus:ring-cyan-500" />
-                </div>
+      {/* 3. FOOTER (USER PROFILE) */}
+      <SidebarFooter className="p-4 bg-zinc-950/80 border-t border-white/5">
+        <div className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center">
+            <Avatar className="h-10 w-10 rounded-xl border-2 border-zinc-800 cursor-pointer hover:border-primary transition-colors">
+                <AvatarImage src={data.user.avatar} />
+                <AvatarFallback className="bg-zinc-900 font-bold text-zinc-400">IJ</AvatarFallback>
+            </Avatar>
+            <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+                <span className="truncate font-bold text-white">{data.user.name}</span>
+                <span className="truncate text-xs text-zinc-500">{data.user.role}</span>
             </div>
-            <ScrollArea className="flex-1 p-3">
-                <div className="space-y-2">
-                    {filteredMails.map((mail) => (
-                        <div 
-                            key={mail.id} 
-                            onClick={() => setSelectedMail(mail)}
-                            className={cn(
-                                "group relative p-4 rounded-[20px] border cursor-pointer transition-all hover:scale-[1.02]",
-                                selectedMail?.id === mail.id 
-                                    ? "bg-zinc-800 border-cyan-500/50 shadow-lg" 
-                                    : "bg-zinc-950 border-zinc-800 hover:border-zinc-700",
-                                !mail.read && "border-l-4 border-l-cyan-500"
-                            )}
-                        >
-                            <div className="flex justify-between items-start mb-2">
-                                <div className="flex items-center gap-2">
-                                    <Avatar className="w-6 h-6 border border-zinc-700">
-                                        <AvatarFallback className="text-[9px] bg-zinc-900 text-zinc-400">
-                                            {(mail.sender || mail.recipient)?.charAt(0)}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    <span className="text-xs font-bold text-white truncate max-w-[120px]">
-                                        {mail.sender || `To: ${mail.recipient}`}
-                                    </span>
-                                </div>
-                                <span className="text-[10px] text-zinc-500 font-mono">{mail.date}</span>
-                            </div>
-                            
-                            <h4 className={cn("text-sm mb-1 line-clamp-1 group-hover:text-cyan-400 transition-colors", !mail.read ? "font-black text-white" : "font-medium text-zinc-300")}>
-                                {mail.subject}
-                            </h4>
-                            <p className="text-xs text-zinc-500 line-clamp-2 mb-3">
-                                {mail.preview}
-                            </p>
+            <Button size="icon" variant="ghost" className="h-8 w-8 text-zinc-500 hover:text-red-500 hover:bg-red-500/10 rounded-full group-data-[collapsible=icon]:hidden">
+                <LogOut className="h-4 w-4" />
+            </Button>
+        </div>
+      </SidebarFooter>
+      
+      <SidebarRail />
+    </Sidebar>
+  )
+}
 
-                            <div className="flex items-center gap-2">
-                                <Badge variant="outline" className={cn("text-[9px] h-5 px-1.5 border font-bold", getStatusColor(mail.status))}>
-                                    {mail.status.replace('_', ' ')}
-                                </Badge>
-                                {mail.attachment && (
-                                    <Badge variant="secondary" className="text-[9px] h-5 px-1.5 bg-zinc-900 text-zinc-400 border-zinc-800">
-                                        <Paperclip className="w-3 h-3 mr-1"/> PDF
-                                    </Badge>
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </ScrollArea>
-         </Card>
-
-         {/* RIGHT: READING PANE (6 Cols) */}
-         <div className="lg:col-span-6 h-full">
-            {selectedMail ? (
-                <Card className="bg-zinc-950 border-zinc-800 rounded-[32px] h-full flex flex-col overflow-hidden shadow-2xl relative">
+// --- SUB COMPONENT: NAV GROUP (MD3 STYLE) ---
+function NavGroup({ label, items, currentPath }: { label: string, items: any[], currentPath: string }) {
+    return (
+        <SidebarGroup>
+            <SidebarGroupLabel className="text-[10px] font-black tracking-[0.2em] text-zinc-600 uppercase mb-2 px-2 group-data-[collapsible=icon]:hidden">
+                {label}
+            </SidebarGroupLabel>
+            <SidebarMenu className="space-y-1">
+                {items.map((item) => {
+                    const isActive = currentPath === item.url;
                     
-                    {/* Mail Header */}
-                    <div className="p-8 border-b border-zinc-800 bg-zinc-900/30">
-                        <div className="flex justify-between items-start mb-4">
-                            <Badge variant="outline" className="border-zinc-700 text-zinc-400 font-mono">
-                                REF: {selectedMail.id}
-                            </Badge>
-                            <div className="flex gap-2">
-                                <Button size="icon" variant="ghost" className="h-8 w-8 rounded-full text-zinc-400 hover:text-white"><Printer className="w-4 h-4"/></Button>
-                                <Button size="icon" variant="ghost" className="h-8 w-8 rounded-full text-zinc-400 hover:text-white"><MoreHorizontal className="w-4 h-4"/></Button>
-                            </div>
-                        </div>
-                        <h2 className="text-2xl font-black text-white leading-tight mb-4">
-                            {selectedMail.subject}
-                        </h2>
-                        <div className="flex items-center gap-3">
-                            <Avatar className="w-10 h-10 border border-zinc-700">
-                                <AvatarFallback className="bg-cyan-900 text-cyan-200 font-bold">
-                                    {(selectedMail.sender || selectedMail.recipient)?.charAt(0)}
-                                </AvatarFallback>
-                            </Avatar>
-                            <div>
-                                <p className="text-sm font-bold text-white">
-                                    {selectedMail.sender || `To: ${selectedMail.recipient}`}
-                                </p>
-                                <p className="text-xs text-zinc-500">{selectedMail.date}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Mail Body */}
-                    <ScrollArea className="flex-1 bg-zinc-950/50">
-                        <div className="p-8 text-sm text-zinc-300 leading-relaxed space-y-4 font-serif">
-                            <p>Yth. Project Director,</p>
-                            <p>{selectedMail.preview}</p>
-                            <p>Demikian surat ini kami sampaikan. Atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
-                            <br/>
-                            <div className="border-l-2 border-zinc-800 pl-4 py-2 my-4">
-                                <p className="text-xs font-bold text-zinc-500 uppercase mb-2">Lampiran Dokumen</p>
-                                {selectedMail.attachment ? (
-                                    <div className="flex items-center gap-3 bg-zinc-900 p-3 rounded-xl border border-zinc-800 w-fit cursor-pointer hover:border-cyan-500/50 transition-colors">
-                                        <div className="p-2 bg-red-500/10 rounded-lg text-red-500"><FileText className="w-5 h-5"/></div>
-                                        <div>
-                                            <p className="text-xs font-bold text-white">{selectedMail.attachment}</p>
-                                            <p className="text-[10px] text-zinc-500">2.4 MB • PDF</p>
-                                        </div>
-                                        <Download className="w-4 h-4 text-zinc-500 ml-2"/>
-                                    </div>
-                                ) : (
-                                    <p className="text-xs text-zinc-600 italic">Tidak ada lampiran.</p>
+                    return (
+                        <SidebarMenuItem key={item.title}>
+                            <SidebarMenuButton asChild tooltip={item.title} 
+                                className={cn(
+                                    "h-10 rounded-full px-4 transition-all duration-300 font-medium text-sm group/btn relative overflow-hidden",
+                                    isActive 
+                                        ? "bg-primary text-primary-foreground shadow-[0_2px_10px_-5px_rgba(220,38,38,0.5)] font-bold hover:bg-primary" 
+                                        : "text-zinc-400 hover:text-white hover:bg-white/5"
                                 )}
-                            </div>
-                        </div>
-                    </ScrollArea>
-
-                    {/* Action Bar (Sticky) */}
-                    <div className="p-6 border-t border-zinc-800 bg-zinc-900/80 backdrop-blur-md">
-                        {selectedMail.type === 'DRAFT' ? (
-                            <div className="flex gap-4">
-                                <Button className="flex-1 h-12 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold shadow-lg shadow-cyan-900/20">
-                                    <FileSignature className="w-4 h-4 mr-2"/> DIGITAL SIGN & SEND
-                                </Button>
-                                <Button variant="outline" className="h-12 rounded-xl border-zinc-700 text-zinc-300 hover:text-white">
-                                    Edit Draft
-                                </Button>
-                            </div>
-                        ) : (
-                            <div className="flex gap-4">
-                                <Button className="flex-1 h-12 rounded-xl bg-white text-black hover:bg-zinc-200 font-bold">
-                                    <ArrowRight className="w-4 h-4 mr-2"/> REPLY
-                                </Button>
-                                <Button variant="outline" className="h-12 rounded-xl border-zinc-700 text-zinc-300 hover:text-white">
-                                    Forward
-                                </Button>
-                            </div>
-                        )}
-                    </div>
-
-                </Card>
-            ) : (
-                <div className="h-full flex flex-col items-center justify-center text-zinc-600 bg-zinc-900/50 rounded-[32px] border border-zinc-800 border-dashed">
-                    <Mail className="w-20 h-20 mb-4 opacity-20 animate-pulse"/>
-                    <p className="font-bold uppercase tracking-widest text-lg">Select Message</p>
-                </div>
-            )}
-         </div>
-
-      </div>
-
-      {/* --- COMPOSE MODAL --- */}
-      <Dialog open={isComposeOpen} onOpenChange={setIsComposeOpen}>
-        <DialogContent className="bg-zinc-950 border-zinc-800 text-white rounded-[40px] max-w-2xl p-0 overflow-hidden shadow-2xl">
-            <div className="p-8 border-b border-zinc-800 bg-cyan-950/20">
-                <DialogHeader>
-                    <DialogTitle className="text-2xl font-black font-headline uppercase flex items-center gap-2 text-cyan-500">
-                        <PenTool className="w-6 h-6"/> Compose Letter
-                    </DialogTitle>
-                    <DialogDescription>Buat surat resmi baru menggunakan template.</DialogDescription>
-                </DialogHeader>
-            </div>
-            
-            <div className="p-8 space-y-6">
-                
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                        <label className="text-xs font-bold uppercase text-zinc-500 ml-1">Jenis Surat (Template)</label>
-                        <Select>
-                            <SelectTrigger className="bg-zinc-900 border-zinc-800 h-14 rounded-2xl"><SelectValue placeholder="Pilih..." /></SelectTrigger>
-                            <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
-                                {TEMPLATES.map(t => <SelectItem key={t.id} value={t.id}>{t.label}</SelectItem>)}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-xs font-bold uppercase text-zinc-500 ml-1">Nomor Surat (Auto)</label>
-                        <Input value="006/BCC/EXT/VI/2026" disabled className="bg-zinc-900 border-zinc-800 h-14 rounded-2xl font-mono text-zinc-400" />
-                    </div>
-                </div>
-
-                <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase text-zinc-500 ml-1">Kepada (Penerima)</label>
-                    <Input placeholder="Instansi / Nama..." className="bg-zinc-900 border-zinc-800 h-14 rounded-2xl" />
-                </div>
-
-                <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase text-zinc-500 ml-1">Perihal</label>
-                    <Input placeholder="Judul Surat..." className="bg-zinc-900 border-zinc-800 h-14 rounded-2xl font-bold" />
-                </div>
-
-                <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase text-zinc-500 ml-1">Isi Surat</label>
-                    <Textarea placeholder="Ketik isi surat di sini..." className="bg-zinc-900 border-zinc-800 rounded-2xl min-h-[150px] font-serif p-4" />
-                </div>
-
-                <Button className="w-full h-16 rounded-full font-black text-lg bg-cyan-600 hover:bg-cyan-700 text-white mt-4 shadow-xl shadow-cyan-900/20">
-                    SAVE DRAFT & PREVIEW
-                </Button>
-            </div>
-        </DialogContent>
-      </Dialog>
-
-    </div>
-  );
+                            >
+                                <Link href={item.url} className="flex items-center w-full">
+                                    <item.icon className={cn("size-4 mr-3 transition-transform duration-300 group-hover/btn:scale-110", isActive && "animate-pulse-slow")} />
+                                    <span className="flex-1 truncate">{item.title}</span>
+                                    {isActive && <ChevronRight className="size-3 opacity-50 ml-auto" />}
+                                    
+                                    {/* Active Indicator Glow */}
+                                    {isActive && <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] animate-shimmer" />}
+                                </Link>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    )
+                })}
+            </SidebarMenu>
+        </SidebarGroup>
+    )
 }

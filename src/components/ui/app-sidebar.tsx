@@ -44,7 +44,6 @@ const data = {
   navMain: [
     { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
     { title: "Profil Saya", url: "/admin/profile", icon: User },
-    { title: "Workspace", url: "/admin/workspace", icon: Briefcase },
     { title: "RKA & Planning", url: "/admin/planning", icon: CalendarRange },
   ],
   // 2. DIRECTOR'S OFFICE
@@ -68,21 +67,15 @@ const data = {
     { title: "Generate Bagan", url: "/admin/match-control/bracket", icon: Network },
     { title: "Verifikasi Hasil", url: "/admin/match-control/results", icon: FileText },
     { title: "Verifikasi TPF", url: "/admin/tpf", icon: ShieldAlert },
-    { title: "MLO: Call Room", url: "/admin/mlo/dashboard", icon: Mic2 },
-    { title: "MLO: Helpdesk", url: "/admin/mlo/helpdesk", icon: LifeBuoy },
-    { title: "MLO: Verifikasi Line-Up", url: "/admin/mlo/lineups", icon: ClipboardList },
     { title: "Keputusan Protes", url: "/admin/protests", icon: Gavel },
     { title: "Papan Skor Wasit", url: "/admin/referee/match/1", icon: MonitorPlay },
-    { title: "Checklist Venue", url: "/admin/match-control/venue-check", icon: ClipboardCheck },
   ],
   // 5. OPERASIONAL
   navOps: [
     { title: "Gate Check-in", url: "/admin/gate", icon: QrCode },
-    { title: "Log Medis", url: "/admin/medical", icon: Stethoscope },
     { title: "Kontrol Shuttlecock", url: "/admin/logistics/shuttlecock", icon: Package },
     { title: "Inventaris Umum", url: "/admin/logistics/inventory", icon: Box },
     { title: "Dispatch Command", url: "/admin/logistics/dispatch", icon: Navigation },
-    { title: "Database Volunteer", url: "/admin/hr/volunteers", icon: Database },
     { title: "Absensi & Konsumsi", url: "/admin/hr/meals", icon: Utensils },
     { title: "Undian Doorprize", url: "/admin/operations/doorprize", icon: Gift },
     { title: "Pengajuan Reimbursement", url: "/admin/reimbursement/submit", icon: Upload },
@@ -95,16 +88,12 @@ const data = {
   // 7. BISNIS & MEDIA
   navBiz: [
     { title: "Analisis Pengunjung", url: "/admin/business/visitors", icon: BarChart3 },
-    { title: "Sponsorship CRM", url: "/admin/business/partners", icon: Handshake },
     { title: "Laporan Sponsor", url: "/admin/business/reports", icon: BarChart3 },
-    { title: "Manajemen Berita", url: "/admin/master/news", icon: Newspaper },
   ],
   // 8. SEKRETARIAT
   navSecretariat: [
     { title: "Verifikasi Pendaftaran", url: "/admin/secretariat/verification", icon: UserCheck },
-    { title: "E-Office / Surat", url: "/admin/secretary/correspondence", icon: Mail },
     { title: "E-Mandate (Surat Tugas)", url: "/admin/secretary/assignments", icon: FileCheck },
-    { title: "Notulensi Rapat", url: "/admin/secretary/minutes", icon: FileSignature },
     { title: "Generator Sertifikat", url: "/admin/event/certificates", icon: Award },
   ],
   // 9. MASTER DATA & PARTISIPAN
