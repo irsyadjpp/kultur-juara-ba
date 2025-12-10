@@ -16,15 +16,6 @@ import { Separator } from '@/components/ui/separator';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { useState, useEffect } from 'react';
 
-
-// Mock session data - in a real app, this would come from a secure context or server call
-const MOCK_SESSION = {
-    email: 'demo@bcc.com',
-    name: 'Manager',
-    role: 'manager',
-    isLoggedIn: true
-};
-
 export default function ManagerLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
@@ -32,9 +23,6 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
   useEffect(() => {
     setIsMounted(true);
   }, []);
-  
-  // For this simulation, we'll use a mock session.
-  const session = MOCK_SESSION; 
 
   const menuGroups = [
     {
@@ -98,7 +86,6 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
     </div>
   ));
 
-
   return (
     <div className="flex min-h-screen bg-background text-foreground">
       {/* Sidebar */}
@@ -148,15 +135,6 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
                   <Link href="/"><Home className="w-4 h-4" /></Link>
                 </Button>
                 {isMounted && <ThemeToggle />}
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-                        <span className="font-bold text-primary">M</span>
-                    </div>
-                    <div className="text-sm hidden sm:block">
-                        <p className="font-bold">{session?.name || 'Manager'}</p>
-                        <p className="text-xs text-muted-foreground">{session?.email || 'demo@bcc.com'}</p>
-                    </div>
-                </div>
              </div>
         </header>
         
