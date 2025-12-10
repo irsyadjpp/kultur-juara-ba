@@ -14,15 +14,11 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export default function ManagerLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const [isOpen, setIsOpen] = useState(false);
 
   const menuGroups = [
     {
@@ -113,7 +109,7 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
       <div className="flex-1 flex flex-col md:ml-64">
         <header className="h-16 bg-card/50 backdrop-blur-sm flex items-center justify-between px-6 sticky top-0 z-10 md:justify-end">
              <div className="md:hidden">
-              <Sheet>
+              <Sheet open={isOpen} onOpenChange={setIsOpen}>
                   <SheetTrigger asChild>
                       <Button variant="ghost" size="icon">
                           <Menu className="w-5 h-5"/>
@@ -134,7 +130,7 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
                 <Button variant="ghost" size="icon" asChild>
                   <Link href="/"><Home className="w-4 h-4" /></Link>
                 </Button>
-                {isMounted && <ThemeToggle />}
+                <ThemeToggle />
              </div>
         </header>
         
