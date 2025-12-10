@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -34,7 +35,7 @@ export default function RecruitmentPage() {
     },
   });
 
-  // Logic: Select All Dates
+  // Logic Khusus: "SAYA SIAP SEMUA TANGGAL"
   const handleAvailabilityChange = (checked: boolean, value: string, field: any) => {
     const allDates = ["Week 1 (13-14 Juni)", "Week 2 (20-21 Juni)", "Week 3 (27-28 Juni)", "Grand Final (5 Juli) - WAJIB"];
     let newValues = [...(field.value || [])];
@@ -66,7 +67,7 @@ export default function RecruitmentPage() {
     field.onChange(newValues);
   };
 
-  async function onSubmit(data: RecruitmentFormValues) {
+  async function onSubmit(data: VolunteerFormValues) {
     setIsSubmitting(true);
     console.log("Committee Data:", data); // Debug
     await new Promise((resolve) => setTimeout(resolve, 2500)); // Simulasi agak lama biar "serius"
@@ -128,11 +129,11 @@ export default function RecruitmentPage() {
       {/* BACKGROUND: Beda dengan Volunteer, disini pakai nuansa lebih gelap/cyber */}
       <main className="relative flex-grow py-12 px-4 md:px-8 bg-grid-sporty overflow-hidden">
         
-        {/* Dekorasi: Glow Merah (Kiri Atas) */}
-        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] pointer-events-none mix-blend-multiply dark:mix-blend-screen animate-pulse-slow" />
+        {/* 1. Dekorasi Glow Merah (Kiri Atas) */}
+        <div className="absolute top-0 left-[-10%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] pointer-events-none mix-blend-multiply dark:mix-blend-screen animate-pulse-slow" />
         
         {/* 2. Dekorasi Glow Biru/Gelap (Kanan Bawah) */}
-        <div className="absolute bottom-[10%] right-[-10%] w-[600px] h-[600px] bg-blue-900/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 right-[-10%] w-[600px] h-[600px] bg-blue-900/10 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="relative z-10 max-w-5xl mx-auto space-y-10">
           
@@ -193,7 +194,7 @@ export default function RecruitmentPage() {
                                 )} />
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <FormField control={form.control} name="whatsapp" render={({ field }) => (
+                               <FormField control={form.control} name="whatsapp" render={({ field }) => (
                                     <FormItem><FormLabel>WhatsApp</FormLabel><FormControl><Input type="tel" {...field} className="rounded-md h-11" /></FormControl><FormMessage /></FormItem>
                                 )} />
                                 <FormField control={form.control} name="email" render={({ field }) => (
@@ -347,10 +348,10 @@ export default function RecruitmentPage() {
                             <CardTitle className="font-headline text-lg uppercase flex items-center gap-2"><Calendar className="w-5 h-5"/> Komitmen</CardTitle>
                         </CardHeader>
                         <CardContent className="p-6 space-y-6">
-                             <FormField control={form.control} name="availability" render={() => (
+                             <FormField control={form.control} name="availability" render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-gray-300">Jadwal Bertugas (Wajib)</FormLabel>
-                                    <div className="space-y-2 mt-2">
+                                    <FormLabel className="text-gray-300">Ketersediaan Waktu (Wajib Hadir Full Day)</FormLabel>
+                                    <div className="space-y-3 mt-2">
                                         {["Week 1 (13-14 Juni)", "Week 2 (20-21 Juni)", "Week 3 (27-28 Juni)", "Grand Final (5 Juli) - WAJIB", "ALL"].map((item) => (
                                             <FormField key={item} control={form.control} name="availability" render={({ field }) => (
                                                 <FormItem className={`flex flex-row items-center space-x-3 space-y-0 p-4 rounded-xl border-2 transition-all 

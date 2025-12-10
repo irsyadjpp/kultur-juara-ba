@@ -20,7 +20,7 @@ export function HeroSection() {
         <div className="relative h-full w-full animate-zoom-slow">
             <Image
             src="/images/gor-koni.jpg"
-            alt="GOR KONI Bandung"
+            alt="GOR Sutta Bandung"
             fill
             priority
             className="object-cover opacity-50" 
