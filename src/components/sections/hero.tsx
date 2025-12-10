@@ -45,14 +45,12 @@ export function HeroSection() {
             
             {/* Judul Besar */}
             <h1 className="text-5xl md:text-[80px] leading-[0.9] font-black font-headline text-white mb-6 animate-fade-in-up tracking-tighter drop-shadow-2xl">
-              INTEGRITAS.<br/>
-              SOLIDARITAS.<br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-600">SPORTIVITAS.</span>
+              Road to BCC 2026: <br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-600">The Digital Prologue</span>
             </h1>
             
             <p className="text-lg md:text-2xl text-gray-300 max-w-2xl mb-10 font-body animate-fade-in-up leading-relaxed" style={{ animationDelay: '0.3s' }}>
-              Turnamen bulutangkis antar komunitas terbesar di Bandung. <br/>
-              <span className="text-white font-semibold">13 Juni - 5 Juli 2026 | GOR KONI Bandung</span>
+              Rasakan sensasi turnamen badminton dengan sistem digital terintegrasi pertama. Format Mabar, Atmosfer Juara.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 mt-8 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
@@ -60,14 +58,14 @@ export function HeroSection() {
                {/* Tombol Utama: Manajer */}
                <Button asChild size="lg" className="h-14 px-8 text-lg font-bold bg-white text-black hover:bg-zinc-200">
                   <Link href="/manager/login">
-                     <Users className="mr-2 h-5 w-5"/> DAFTARKAN TIM
+                     <Users className="mr-2 h-5 w-5"/> DAFTAR SEKARANG
                   </Link>
                </Button>
 
                {/* Tombol Sekunder: Atlet */}
                <Button asChild size="lg" variant="outline" className="h-14 px-8 text-lg font-bold border-white/30 text-white hover:bg-white/10 backdrop-blur-sm">
                   <Link href="/player/login">
-                     <UserPlus className="mr-2 h-5 w-5"/> SAYA ATLET (GABUNG)
+                     <UserPlus className="mr-2 h-5 w-5"/> LOGIN ATLIT
                   </Link>
                </Button>
 
@@ -89,15 +87,19 @@ export function HeroSection() {
                         <CalendarClock className="h-8 w-8 text-primary" />
                      </div>
                     <div>
-                        <h3 className="font-headline text-sm font-semibold text-gray-400 uppercase tracking-widest">Kick-off Pendaftaran</h3>
+                        <h3 className="font-headline text-sm font-semibold text-gray-400 uppercase tracking-widest">Pendaftaran Ditutup Dalam</h3>
                         <p className="text-white font-bold">1 Januari 2026</p>
                     </div>
                 </div>
                 {/* Garis Pemisah Visual */}
                 <div className="hidden md:block w-px h-12 bg-white/10"></div>
                 
-                <div className="flex-grow flex justify-center md:justify-end text-white">
+                <div className="flex-grow flex justify-center text-white">
                     <Countdown targetDate="2026-01-01" />
+                </div>
+
+                <div className="hidden lg:block bg-yellow-500/10 border border-yellow-500/20 text-yellow-300 font-bold px-4 py-2 rounded-xl text-center">
+                    Kuota Terbatas: Hanya 32 Pasang!
                 </div>
               </div>
         </div>
