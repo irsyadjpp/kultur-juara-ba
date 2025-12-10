@@ -11,7 +11,7 @@ import {
   Share2, RotateCw, AlertOctagon, Send, Paperclip,
   MoreHorizontal, CheckCheck, Smile, Plus, Heart,
   Wallet, Banknote, CreditCard, Sparkles, UserRound, Footprints, Save,
-  RotateCw as RotateCwIcon
+  RotateCw as RotateCwIcon, Label as LabelIcon
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -86,7 +86,7 @@ export default function PlayerDashboardFull() {
                         <Trophy className="w-5 h-5 text-yellow-500"/>
                     </div>
                     
-                    <div className="relative mb-6">
+                    <div className="relative mb-4">
                         <div className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 blur-md opacity-50"></div>
                         <Avatar className="w-32 h-32 border-4 border-zinc-950 relative">
                             <AvatarImage src={ATHLETE_MOCK.avatar} className="object-cover"/>
@@ -94,8 +94,10 @@ export default function PlayerDashboardFull() {
                         </Avatar>
                     </div>
 
-                    <h2 className="text-3xl font-black text-white text-center uppercase leading-none mb-2">{ATHLETE_MOCK.name}</h2>
-                    <p className="text-sm font-bold text-zinc-400 mb-6">{ATHLETE_MOCK.team}</p>
+                    <div className="text-center mb-6">
+                        <h2 className="text-3xl font-black text-white uppercase leading-none mb-2">{ATHLETE_MOCK.name}</h2>
+                        <p className="text-sm font-bold text-zinc-400">{ATHLETE_MOCK.team}</p>
+                    </div>
                     
                     <div className="grid grid-cols-2 gap-2 w-full mb-auto">
                         <Badge variant="secondary" className="bg-zinc-900/50 border-zinc-700 justify-center py-1.5">Mens Singles</Badge>
