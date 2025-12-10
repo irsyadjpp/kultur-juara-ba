@@ -97,7 +97,7 @@ const data = {
     { title: "Analisis Pengunjung", url: "/admin/business/visitors", icon: BarChart3 },
     { title: "Sponsorship CRM", url: "/admin/business/partners", icon: Handshake },
     { title: "Laporan Sponsor", url: "/admin/business/reports", icon: BarChart3 },
-    { title: "Manajemen Media", url: "/admin/media", icon: Megaphone },
+    { title: "Manajemen Berita", url: "/admin/master/news", icon: Newspaper },
   ],
   // 8. SEKRETARIAT
   navSecretariat: [
@@ -111,7 +111,6 @@ const data = {
   navMaster: [
     { title: "Database Klub", url: "/admin/participants/teams", icon: Users },
     { title: "Master Kategori", url: "/admin/master/categories", icon: Tags },
-    { title: "Manajemen Berita", url: "/admin/master/news", icon: Newspaper },
     { title: "Manajemen User", url: "/admin/settings/users", icon: UserCog },
   ]
 }
