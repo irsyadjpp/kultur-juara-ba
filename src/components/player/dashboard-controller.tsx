@@ -9,7 +9,7 @@ import {
   AlertTriangle, Instagram, History, Info, ChevronRight, 
   Camera, MessageCircle, Download, Gavel, Clock, 
   Share2, RotateCw, AlertOctagon, Send, Paperclip, 
-  MoreVertical, CheckCheck, Smile, Plus, Hash, ChevronLeft
+  MoreVertical, CheckCheck, Smile, Plus, Hash, ChevronLeft, CheckCircle2
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -233,7 +233,7 @@ export function PlayerDashboardController() {
                     {currentStep === 5 && (
                         <div className="text-center py-16 animate-in fade-in zoom-in duration-300">
                             <div className="w-20 h-20 bg-zinc-800 rounded-3xl mx-auto flex items-center justify-center mb-6 animate-pulse">
-                                <FileText className="w-10 h-10 text-zinc-600"/>
+                                <FileText className="w-10 h-10 text-zinc-600" />
                             </div>
                             <h3 className="text-white text-2xl font-black mb-2 uppercase">Step {currentStep}: Payment</h3>
                             <p className="text-zinc-500 text-sm max-w-sm mx-auto mb-8">
