@@ -6,6 +6,7 @@ import { Users, UserPlus } from 'lucide-react';
 
 // Section Utama
 import { HeroSection } from '@/components/sections/hero';
+import { EventSummarySection } from '@/components/sections/event-summary';
 
 // Section Informasi Teknis (Dari Handbook)
 import { LevelingGuideSection } from '@/components/sections/leveling-guide';
@@ -24,18 +25,21 @@ export default function Home() {
         {/* 1. Hero: Judul Besar & Tombol Aksi */}
         <HeroSection />
         
-        {/* 2. Kategori: Siapa saja yang bisa ikut? */}
+        {/* 2. Event Summary: The 4 Ws */}
+        <EventSummarySection />
+        
+        {/* 3. Kategori: Siapa saja yang bisa ikut? */}
         <CategoriesSection />
 
-        {/* 3. Syarat Level: Filter peserta agar tidak salah daftar */}
+        {/* 4. Syarat Level: Filter peserta agar tidak salah daftar */}
         <div id="levels">
           <LevelingGuideSection /> 
         </div>
 
-        {/* 4. Sponsor: Undangan kerjasama */}
+        {/* 5. Sponsor: Undangan kerjasama */}
         <SponsorsSection />
 
-        {/* 5. Lokasi: Peta GOR KONI */}
+        {/* 6. Lokasi: Peta GOR KONI */}
         <div id="venue">
           <LocationSection />
         </div>
