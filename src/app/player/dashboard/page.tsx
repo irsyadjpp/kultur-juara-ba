@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { 
   Trophy, Users, Shield, QrCode, Activity, Calendar, 
@@ -462,7 +462,7 @@ export default function PlayerPage() {
             if (sess) {
                 setSession(sess);
                 if (sess.teamId) setHasJoinedTeam(true);
-                if (sess.isProfileComplete) setIsRegistrationComplete(true);
+                if (sess.isProfileComplete) setIsProfileComplete(true);
             }
             setIsLoading(false);
             setIsMounted(true);
@@ -493,7 +493,7 @@ export default function PlayerPage() {
       setIsLoading(false);
       if (result.success) {
         toast({ title: "Profil Disimpan!", description: "Selamat! Pendaftaran Anda selesai." });
-        setIsRegistrationComplete(true); // Finish registration
+        setIsProfileComplete(true); // Finish registration
       } else {
         toast({ title: "Gagal Menyimpan", description: result.message, variant: "destructive" });
       }
@@ -620,5 +620,3 @@ export default function PlayerPage() {
       </div>
     );
   }
-
-      
