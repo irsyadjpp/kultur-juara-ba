@@ -49,7 +49,7 @@ export function HeroSection() {
             </div>
 
             <p className="text-lg md:text-xl text-primary font-bold mb-2 font-body tracking-widest uppercase animate-fade-in-up">
-              Bandung Community Championship 2026
+              Road to BCC 2026
             </p>
             
             {/* Judul Besar */}

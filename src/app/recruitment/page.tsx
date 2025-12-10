@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -30,26 +29,39 @@ export default function RecruitmentPage() {
     resolver: zodResolver(recruitmentSchema),
     defaultValues: {
       skills: [],
-      equipment: [],
       availability: [],
+      agreeData: undefined, // Harus undefined/false agar checkbox validation jalan
     },
   });
 
   // Logic: Select All Dates
   const handleAvailabilityChange = (checked: boolean, value: string, field: any) => {
-    const allDates = ["Week 1 (13-14 Juni)", "Week 2 (20-21 Juni)", "Week 3 (27-28 Juni)", "Grand Final (5 Juli)"];
+    const allDates = ["Week 1 (13-14 Juni)", "Week 2 (20-21 Juni)", "Week 3 (27-28 Juni)", "Grand Final (5 Juli) - WAJIB"];
     let newValues = [...(field.value || [])];
 
     if (value === "ALL") {
-      newValues = checked ? [...allDates, "ALL"] : [];
+      if (checked) {
+        newValues = [...allDates, "ALL"];
+      } else {
+        newValues = [];
+      }
     } else {
-      if (checked) newValues.push(value);
-      else newValues = newValues.filter((v) => v !== value);
+      if (checked) {
+        newValues.push(value);
+      } else {
+        newValues = newValues.filter((v) => v !== value);
+      }
+      
+      // Uncheck "ALL" if any date is unchecked
+      if (newValues.includes("ALL") && !allDates.every(date => newValues.includes(date))) {
+         newValues = newValues.filter((v) => v !== "ALL");
+      }
 
-      // Smart Check/Uncheck ALL
-      const isAllDatesSelected = allDates.every(d => newValues.includes(d));
-      if (newValues.includes("ALL") && !isAllDatesSelected) newValues = newValues.filter(v => v !== "ALL");
-      if (isAllDatesSelected && !newValues.includes("ALL")) newValues.push("ALL");
+      // Check "ALL" if all other dates are checked
+      const isAllDatesSelected = allDates.every(date => newValues.includes(date));
+      if (isAllDatesSelected && !newValues.includes("ALL")) {
+          newValues.push("ALL");
+      }
     }
     field.onChange(newValues);
   };
@@ -78,9 +90,15 @@ export default function RecruitmentPage() {
   // Error Toast
   useEffect(() => {
     if (Object.keys(form.formState.errors).length > 0) {
-        toast({ variant: "destructive", title: "Incomplete Data", description: "Mohon lengkapi semua data wajib." });
+        console.log("Form Errors:", form.formState.errors);
+        toast({
+            variant: "destructive",
+            title: "Incomplete Data",
+            description: "Mohon lengkapi semua data wajib.",
+        });
     }
   }, [form.formState.errors, toast]);
+
 
   if (isSuccess) {
     return (
@@ -91,7 +109,7 @@ export default function RecruitmentPage() {
             <ShieldCheck className="w-24 h-24 text-primary mx-auto mb-6 animate-bounce" />
             <h1 className="text-4xl font-black font-headline text-primary mb-4 uppercase">Aplikasi Diterima</h1>
             <p className="text-lg text-muted-foreground mb-8 font-medium">
-              Data Anda telah masuk ke sistem rekrutmen inti BCC 2026.<br/>
+              Data Anda telah masuk ke sistem rekrutmen inti Road to BCC 2026.<br/>
               Harap stand-by di WhatsApp untuk jadwal <strong>Interview Tahap 1</strong>.
             </p>
             <Button asChild className="rounded-none font-bold tracking-widest px-8">
@@ -110,20 +128,21 @@ export default function RecruitmentPage() {
       {/* BACKGROUND: Beda dengan Volunteer, disini pakai nuansa lebih gelap/cyber */}
       <main className="relative flex-grow py-12 px-4 md:px-8 bg-grid-sporty overflow-hidden">
         
-        {/* Dekorasi: Glow Biru Gelap (Strategic) + Merah */}
-        <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-[10%] left-[-10%] w-[500px] h-[500px] bg-slate-800/20 rounded-full blur-[100px] pointer-events-none" />
+        {/* Dekorasi: Glow Merah (Kiri Atas) */}
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] pointer-events-none mix-blend-multiply dark:mix-blend-screen animate-pulse-slow" />
+        
+        {/* 2. Dekorasi Glow Biru/Gelap (Kanan Bawah) */}
+        <div className="absolute bottom-[10%] right-[-10%] w-[600px] h-[600px] bg-blue-900/10 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="relative z-10 max-w-5xl mx-auto space-y-10">
           
-          {/* HEADER: Lebih Formal & Tegas */}
-          <div className="text-center space-y-4 mb-12">
-            <div className="inline-flex items-center gap-2 border border-primary/30 bg-primary/5 px-4 py-2 rounded-sm mb-4 backdrop-blur-sm">
-                <Target className="w-4 h-4 text-primary" />
-                <span className="text-sm font-bold tracking-widest uppercase text-primary">Core Team Recruitment</span>
-            </div>
+          {/* HEADER SECTION */}
+          <div className="text-center space-y-4 mb-12 animate-fade-in-down">
+             <Badge variant="outline" className="border-primary text-primary px-4 py-1 text-sm mb-2 font-bold tracking-widest uppercase bg-primary/5">
+              Open Recruitment Phase 1
+            </Badge>
             <h1 className="text-4xl md:text-6xl font-black font-headline text-foreground uppercase tracking-tight">
-              PANITIA <span className="text-primary underline decoration-4 decoration-primary/30 underline-offset-8">INTI</span> BCC 2026
+              PANITIA <span className="text-primary underline decoration-4 decoration-primary/30 underline-offset-8">INTI</span> Road to BCC 2026
             </h1>
             <p className="text-xl font-medium text-muted-foreground max-w-2xl mx-auto">
               Bukan sekadar relawan. Ini adalah panggilan untuk para perancang strategi dan eksekutor lapangan.
@@ -183,6 +202,9 @@ export default function RecruitmentPage() {
                             </div>
                              <FormField control={form.control} name="address" render={({ field }) => (
                                 <FormItem><FormLabel>Alamat Domisili</FormLabel><FormControl><Textarea {...field} rows={2} className="rounded-md resize-none" /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="instagram" render={({ field }) => (
+                                <FormItem><FormLabel>Username Instagram</FormLabel><FormControl><Input placeholder="@username (Jangan diprivate)" className="rounded-md h-11" {...field} /></FormControl><FormMessage /></FormItem>
                             )} />
                         </CardContent>
                     </Card>
@@ -329,11 +351,22 @@ export default function RecruitmentPage() {
                                 <FormItem>
                                     <FormLabel className="text-gray-300">Jadwal Bertugas (Wajib)</FormLabel>
                                     <div className="space-y-2 mt-2">
-                                        {["Week 1 (13-14 Juni)", "Week 2 (20-21 Juni)", "Week 3 (27-28 Juni)", "Grand Final (5 Juli)", "ALL"].map((item) => (
+                                        {["Week 1 (13-14 Juni)", "Week 2 (20-21 Juni)", "Week 3 (27-28 Juni)", "Grand Final (5 Juli) - WAJIB", "ALL"].map((item) => (
                                             <FormField key={item} control={form.control} name="availability" render={({ field }) => (
-                                                <FormItem className="flex flex-row items-center space-x-3 space-y-0">
-                                                    <FormControl><Checkbox className="border-white/50 data-[state=checked]:bg-primary data-[state=checked]:border-primary" checked={field.value?.includes(item)} onCheckedChange={(c) => handleAvailabilityChange(!!c, item, field)} /></FormControl>
-                                                    <FormLabel className={`font-normal cursor-pointer text-sm ${item === "ALL" ? "font-bold text-primary" : "text-gray-300"}`}>{item === "ALL" ? "SIAP SEMUA TANGGAL" : item}</FormLabel>
+                                                <FormItem className={`flex flex-row items-center space-x-3 space-y-0 p-4 rounded-xl border-2 transition-all 
+                                            ${item === "ALL" ? "bg-primary text-white border-primary hover:bg-primary/90" : "bg-card hover:border-primary/50"}
+                                            ${field.value?.includes(item) && item !== "ALL" ? "border-primary bg-primary/5" : ""}
+                                            `}>
+                                                    <FormControl>
+                                                        <Checkbox 
+                                                            className={item === "ALL" ? "border-white data-[state=checked]:bg-white data-[state=checked]:text-primary" : ""}
+                                                            checked={item === 'ALL' ? field.value?.length === 5 : field.value?.includes(item)}
+                                                            onCheckedChange={(checked) => handleAvailabilityChange(!!checked, item, field)} 
+                                                        />
+                                                    </FormControl>
+                                                    <FormLabel className={`font-bold cursor-pointer w-full text-base ${item === "ALL" ? "text-white" : ""}`}>
+                                                        {item === "ALL" ? "🔥 SAYA SIAP SEMUA TANGGAL (Prioritas)" : item}
+                                                    </FormLabel>
                                                 </FormItem>
                                             )} />
                                         ))}
@@ -377,9 +410,9 @@ export default function RecruitmentPage() {
                                     <FormItem className="flex items-start space-x-2 space-y-0">
                                         <FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl>
                                         <FormLabel className="font-normal text-xs text-muted-foreground">
-                                           {index === 0 && "Saya menyatakan data di atas adalah benar."}
-                                           {index === 1 && "Saya bersedia mematuhi SOP panitia."}
-                                           {index === 2 && "Saya memahami seleksi ini kompetitif."}
+                                           {index === 0 && "Saya menyatakan data yang diisi adalah benar, jujur, dan dapat dipertanggungjawabkan."}
+                                           {index === 1 && "Saya bersedia mematuhi SOP panitia dan menjaga nama baik BCC 2026."}
+                                           {index === 2 && "Saya memahami seleksi ini bersifat kompetitif, keputusan panitia mutlak dan tidak dapat diganggu gugat."}
                                         </FormLabel>
                                     </FormItem>
                                 )} />

@@ -8,7 +8,7 @@ import { Calendar, User } from "lucide-react";
 // Mock Data Berita
 const NEWS = [
   { id: 1, title: "Technical Meeting Ditunda, Ini Jadwal Barunya", category: "PENGUMUMAN", date: "07 Des 2025", author: "Panitia", img: "/images/gor-koni.jpg", excerpt: "Dikarenakan kendala teknis di venue utama, TM diundur menjadi..." },
-  { id: 2, title: "Bank BJB Resmi Jadi Sponsor Utama BCC 2026", category: "SPONSOR", date: "05 Des 2025", author: "Media", img: "/images/gor-koni.jpg", excerpt: "Kerjasama strategis ini diharapkan dapat meningkatkan kualitas..." },
+  { id: 2, title: "Bank BJB Resmi Jadi Sponsor Utama Road to BCC 2026", category: "SPONSOR", date: "05 Des 2025", author: "Media", img: "/images/gor-koni.jpg", excerpt: "Kerjasama strategis ini diharapkan dapat meningkatkan kualitas..." },
   { id: 3, title: "Tutorial Cara Daftar Tim via Website", category: "TUTORIAL", date: "01 Des 2025", author: "IT Support", img: "/images/gor-koni.jpg", excerpt: "Bingung cara daftar? Simak panduan lengkap langkah demi langkah..." },
 ];
 
@@ -27,7 +27,7 @@ export default function NewsPage() {
                     Berita & Update <br/>Terbaru
                 </h1>
                 <p className="text-gray-300 max-w-xl mx-auto text-lg">
-                    Ikuti perkembangan terkini seputar persiapan dan pelaksanaan Bandung Community Championship 2026.
+                    Ikuti perkembangan terkini seputar persiapan dan pelaksanaan Road to BCC 2026.
                 </p>
             </div>
         </section>

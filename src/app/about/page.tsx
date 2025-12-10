@@ -11,7 +11,7 @@ export default function AboutPage() {
       <main className="flex-grow">
         {/* Hero About */}
         <section className="py-20 bg-primary text-primary-foreground text-center px-4">
-            <h1 className="text-4xl md:text-5xl font-black font-headline mb-4">Tentang BCC 2026</h1>
+            <h1 className="text-4xl md:text-5xl font-black font-headline mb-4">Tentang Road to BCC 2026</h1>
             <p className="text-xl max-w-2xl mx-auto opacity-90">
                 Wadah kompetisi komunitas bulutangkis terbesar di Bandung dengan standar profesional.
             </p>
@@ -41,7 +41,7 @@ export default function AboutPage() {
                 <div>
                     <h2 className="text-3xl font-bold font-headline mb-6 text-primary">Visi Kami</h2>
                     <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                        BCC 2026 hadir untuk menjawab kerinduan komunitas akan turnamen yang <strong>adil (fair)</strong> dan <strong>bergengsi</strong>. Kami menolak praktik "Sandbagging" (memalsukan level) demi menjaga sportivitas.
+                        Road to BCC 2026 hadir untuk menjawab kerinduan komunitas akan turnamen yang <strong>adil (fair)</strong> dan <strong>bergengsi</strong>. Kami menolak praktik "Sandbagging" (memalsukan level) demi menjaga sportivitas.
                     </p>
                     <ul className="space-y-4">
                         <li className="flex gap-3">

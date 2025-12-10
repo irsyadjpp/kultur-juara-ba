@@ -36,8 +36,8 @@ export function Header() {
           {/* LOGO */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2">
-                <Image src="/images/logo.png" alt="BCC 2026 Logo" width={32} height={32} />
-                <span className="font-black font-headline text-xl tracking-tighter whitespace-nowrap">BCC 2026</span>
+                <Image src="/images/logo.png" alt="Road to BCC 2026 Logo" width={32} height={32} />
+                <span className="font-black font-headline text-xl tracking-tighter whitespace-nowrap">Road to BCC 2026</span>
             </Link>
           </div>
 

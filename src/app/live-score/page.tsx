@@ -41,7 +41,7 @@ export default function PublicLiveScorePage() {
                     <Activity className="w-6 h-6" />
                 </div>
                 <h1 className="text-4xl font-black font-headline mb-2">Live Score</h1>
-                <p className="text-muted-foreground">Pantau hasil pertandingan BCC 2026 secara langsung.</p>
+                <p className="text-muted-foreground">Pantau hasil pertandingan Road to BCC 2026 secara langsung.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">

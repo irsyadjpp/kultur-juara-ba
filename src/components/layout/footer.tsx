@@ -64,12 +64,12 @@ export function Footer() {
            <div className="md:col-span-1">
              <h3 className="font-headline text-lg font-bold mb-4 text-primary">Komitmen Integritas</h3>
             <p className="text-sm text-muted-foreground [&_a]:text-primary [&_a:hover]:underline">
-                BCC 2026 menjunjung tinggi nilai sportivitas. Setiap pelanggaran terhadap integritas kompetisi akan ditindak sesuai aturan yang berlaku.
+                Road to BCC 2026 menjunjung tinggi nilai sportivitas. Setiap pelanggaran terhadap integritas kompetisi akan ditindak sesuai aturan yang berlaku.
             </p>
           </div>
         </div>
         <div className="mt-8 pt-6 text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Bandung Community Championship. All Rights Reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Road to BCC 2026. All Rights Reserved.</p>
           <p className="mt-2">Diselenggarakan oleh Komunitas Dayminton</p>
         </div>
       </div>
