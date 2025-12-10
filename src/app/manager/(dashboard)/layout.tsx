@@ -15,13 +15,23 @@ import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { useState, useEffect } from 'react';
 
-export default function ManagerLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const [isClient, setIsClient] = useState(false);
+function ClientOnly({ children }: { children: React.ReactNode }) {
+  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
+    setHasMounted(true);
   }, []);
+
+  if (!hasMounted) {
+    return null;
+  }
+
+  return <>{children}</>;
+}
+
+
+export default function ManagerLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
 
   const menuGroups = [
     {
@@ -137,7 +147,9 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
                 <Button variant="ghost" size="icon" asChild>
                   <Link href="/"><Home className="w-4 h-4" /></Link>
                 </Button>
-                {isClient && <ThemeToggle />}
+                <ClientOnly>
+                  <ThemeToggle />
+                </ClientOnly>
              </div>
         </header>
         
