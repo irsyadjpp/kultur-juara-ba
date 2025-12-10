@@ -3,18 +3,18 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, ArrowRight, XCircle, Info } from "lucide-react";
+import { Plus, ArrowRight, XCircle, Info, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 
 // Matriks Logika Pasangan
 const pairings = [
-  { level1: "Beginner", level2: "Beginner", result: "Beginner", color: "text-green-500", valid: true },
-  { level1: "Beginner", level2: "Intermediate", result: "Intermediate", color: "text-blue-500", valid: true },
-  { level1: "Intermediate", level2: "Intermediate", result: "Intermediate", color: "text-blue-500", valid: true },
-  { level1: "Intermediate", level2: "Advance", result: "Advance", color: "text-purple-500", valid: true },
-  { level1: "Advance", level2: "Advance", result: "Advance", color: "text-purple-500", valid: true },
-  { level1: "Beginner", level2: "Advance", result: "DILARANG", color: "text-destructive", valid: false },
+  { level1: "Beginner", level2: "Beginner", result: "Beginner", color: "text-green-500", valid: true, quota: 32 },
+  { level1: "Beginner", level2: "Intermediate", result: "Intermediate", color: "text-blue-500", valid: true, quota: 16 },
+  { level1: "Intermediate", level2: "Intermediate", result: "Intermediate", color: "text-blue-500", valid: true, quota: 16 },
+  { level1: "Intermediate", level2: "Advance", result: "Advance", color: "text-purple-500", valid: true, quota: 16 },
+  { level1: "Advance", level2: "Advance", result: "Advance", color: "text-purple-500", valid: true, quota: 16 },
+  { level1: "Beginner", level2: "Advance", result: "DILARANG", color: "text-destructive", valid: false, quota: 0 },
 ];
 
 export function CategoriesSection() {
@@ -43,16 +43,24 @@ export function CategoriesSection() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {pairings.map((pair, index) => (
             <Card key={index} className={`bg-card border shadow-sm hover:shadow-lg transition-shadow hover:-translate-y-1 ${!pair.valid ? 'border-destructive/30 bg-destructive/5' : ''}`}>
-              <CardContent className="pt-6 flex flex-col sm:flex-row items-center justify-between text-center gap-2">
-                <Badge variant="outline" className="px-3 py-1 text-xs font-semibold truncate">{pair.level1}</Badge>
-                <Plus className="w-4 h-4 text-muted-foreground flex-shrink-0"/>
-                <Badge variant="outline" className="px-3 py-1 text-xs font-semibold truncate">{pair.level2}</Badge>
-                <ArrowRight className="w-4 h-4 text-muted-foreground flex-shrink-0 hidden sm:block"/>
-                <div className="flex flex-col items-center gap-1 flex-1 min-w-0 mt-2 sm:mt-0">
+              <CardContent className="pt-6 flex flex-col items-center justify-between text-center gap-2">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="px-3 py-1 text-xs font-semibold truncate">{pair.level1}</Badge>
+                  <Plus className="w-4 h-4 text-muted-foreground flex-shrink-0"/>
+                  <Badge variant="outline" className="px-3 py-1 text-xs font-semibold truncate">{pair.level2}</Badge>
+                </div>
+                <ArrowRight className="w-4 h-4 text-muted-foreground flex-shrink-0 my-2 sm:my-0 sm:rotate-0 rotate-90"/>
+                <div className="flex flex-col items-center gap-2 flex-1 min-w-0">
                    {pair.valid ? (
-                       <Badge variant="outline" className={cn("px-4 py-2 text-sm font-bold border-2 truncate", pair.color, pair.color.replace('text-', 'border-'))}>
-                         {pair.result}
-                       </Badge>
+                      <>
+                        <Badge variant="outline" className={cn("px-4 py-2 text-sm font-bold border-2 truncate", pair.color, pair.color.replace('text-', 'border-'))}>
+                          {pair.result}
+                        </Badge>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground font-semibold">
+                          <Users className="w-3 h-3"/>
+                          <span>Kuota: {pair.quota} Pasang</span>
+                        </div>
+                      </>
                    ) : (
                        <Badge variant="destructive" className="px-3 py-2 text-sm font-bold flex items-center gap-2 truncate">
                            <XCircle className="w-4 h-4 shrink-0"/>
