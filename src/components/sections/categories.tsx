@@ -127,7 +127,7 @@ export function CategoriesSection() {
                 <div>
                     <h4 className="font-bold text-foreground">Saran Untuk Peserta Ganda Putri (WD)</h4>
                     <p className="text-sm text-muted-foreground mt-1">
-                        Sangat disarankan bagi Ganda Putri (WD) untuk tidak mendaftar di kategori open gender, kecuali mereka sangat percaya diri ("Tomboy"/Atlet Pelatda) yang biasa bermain melawan pria.
+                        Sangat disarankan bagi Ganda Putri (WD) untuk tidak mendaftar di kategori open gender, kecuali mereka sangat percaya diri dan biasa bermain melawan pria.
                     </p>
                 </div>
             </div>
