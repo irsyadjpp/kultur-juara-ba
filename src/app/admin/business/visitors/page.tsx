@@ -217,10 +217,10 @@ export default function VisitorDataPage() {
                                             <h4 className="font-bold text-white text-base">{v.name}</h4>
                                             {v.type === 'VVIP' && <Crown className="w-3 h-3 text-yellow-500 fill-yellow-500"/>}
                                         </div>
-                                        <p className="text-xs text-zinc-500 mt-0.5 flex items-center gap-2">
+                                        <div className="text-xs text-zinc-500 mt-0.5 flex items-center gap-2">
                                             <Badge variant="secondary" className="h-5 px-1.5 text-[9px] bg-zinc-950 border-zinc-800 text-zinc-400">{v.type}</Badge>
                                             <span>• {v.zone}</span>
-                                        </p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="text-right">
