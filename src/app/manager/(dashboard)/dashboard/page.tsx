@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, AlertCircle, CheckCircle2, Users, FileText, BarChart2 } from "lucide-react";
@@ -6,16 +7,16 @@ import { Badge } from "@/components/ui/badge";
 
 export default function DashboardPage() {
   const myTeams = [
-     { id: 1, name: "PB Juara", category: "Beregu PUTRA", status: "VERIFIED", payment: "PAID" },
-     { id: 2, name: "Srikandi Smash", category: "Beregu PUTRI", status: "PENDING", payment: "PAID" },
-     { id: 3, name: "Mix Max", category: "Beregu CAMPURAN", status: "ACTION_NEEDED", payment: "PENDING" }
+     { id: 1, name: "The Smashers", category: "Beginner", status: "VERIFIED", payment: "PAID" },
+     { id: 2, name: "Shuttle Masters", category: "Intermediate", status: "PENDING", payment: "PAID" },
+     { id: 3, name: "Court Kings", category: "Advance", status: "ACTION_NEEDED", payment: "PENDING" }
   ];
   
   // const myTeams: any[] = [];
 
   const getStatusInfo = (status: string) => {
     switch (status) {
-        case "VERIFIED": return { icon: <CheckCircle2 className="w-4 h-4 text-green-400"/>, text: "Semua Pemain Lolos", color: "bg-green-500/10 text-green-400 border-green-500/20" };
+        case "VERIFIED": return { icon: <CheckCircle2 className="w-4 h-4 text-green-400"/>, text: "Lolos Verifikasi", color: "bg-green-500/10 text-green-400 border-green-500/20" };
         case "PENDING": return { icon: <AlertCircle className="w-4 h-4 text-yellow-400"/>, text: "Menunggu Verifikasi", color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" };
         case "ACTION_NEEDED": return { icon: <AlertCircle className="w-4 h-4 text-red-400"/>, text: "Perlu Tindakan", color: "bg-red-500/10 text-red-400 border-red-500/20" };
         default: return { icon: <AlertCircle className="w-4 h-4 text-gray-400"/>, text: "Draft", color: "bg-secondary" };
@@ -90,7 +91,7 @@ export default function DashboardPage() {
                         <div className="flex-1 p-6">
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <Badge variant="outline" className="mb-2">{team.category.replace('Beregu ', '')}</Badge>
+                                    <Badge variant="outline" className="mb-2">{team.category}</Badge>
                                     <h3 className="text-2xl font-bold font-headline">{team.name}</h3>
                                 </div>
                                 <div className="flex gap-2">
@@ -104,7 +105,7 @@ export default function DashboardPage() {
                         </div>
                         <div className="bg-secondary/50 p-6 sm:w-48 flex flex-col justify-center items-center gap-2 border-t sm:border-t-0 sm:border-l">
                             <Button asChild className="w-full">
-                                <Link href={`/manager/status/${team.id}`}>Detail & Aksi</Link>
+                                <Link href={`/manager/roster/${team.id}`}>Detail & Aksi</Link>
                             </Button>
                             <Button variant="outline" className="w-full">
                                 <FileText className="w-4 h-4 mr-2"/> Roster
