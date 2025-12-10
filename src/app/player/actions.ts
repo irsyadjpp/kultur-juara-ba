@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from 'zod';
+import { athleteProfileSchema } from "@/lib/schemas/player-profile";
 
 const authSchema = z.object({
   email: z.string().email(),
@@ -71,16 +72,20 @@ export async function registerPlayer(data: any) {
 }
 
 export async function joinTeam(playerEmail: string, teamCode: string) {
-  // 1. Cari Tim berdasarkan Kode
   const team = TEAMS_DB.find(t => t.code === teamCode);
   if (!team) {
     return { success: false, message: "Kode Tim tidak valid/tidak ditemukan." };
   }
-
-  // 2. Cari Pemain (Mock: anggap email valid)
-  // Di real app, update kolom teamId di table Player
   
-  // Simulasi sukses
+  const cookieStore = cookies();
+  const sessionStr = cookieStore.get('bcc_player_session')?.value;
+  if (sessionStr) {
+      const session = JSON.parse(sessionStr);
+      
+      const updatedSession = { ...session, teamId: team.id, teamName: team.name };
+      cookieStore.set('bcc_player_session', JSON.stringify(updatedSession), { httpOnly: true, path: '/' });
+  }
+
   return { success: true, teamName: team.name };
 }
 
@@ -122,29 +127,40 @@ export async function getPlayerSession() {
 }
 
 export async function updatePlayerProfile(formData: FormData) {
-  await new Promise(r => setTimeout(r, 1000));
-  // In a real app, you would find the user by session ID and update their data in the database.
-  
-  const updates = {
-    nickname: formData.get('nickname'),
-    phone: formData.get('phone'),
-    address: formData.get('address'),
-  };
-
-  console.log("Updating player profile with:", updates);
-  
+  // 1. Ambil Session
   const cookieStore = cookies();
   const sessionStr = cookieStore.get('bcc_player_session')?.value;
+  if (!sessionStr) return { success: false, message: "Sesi habis, silakan login ulang." };
   
-  if (sessionStr) {
-    const session = JSON.parse(sessionStr);
-    const updatedSession = { ...session, ...updates };
-    cookieStore.set('bcc_player_session', JSON.stringify(updatedSession), {
-      httpOnly: true, 
-      path: '/' 
-    });
+  const session = JSON.parse(sessionStr);
+
+  // 2. Parsing & Validasi Data
+  const rawData = {
+    fullName: session.name, // Nama biasanya dari login awal (Google/Email), atau bisa diupdate
+    nik: formData.get('nik'),
+    phone: formData.get('phone'),
+    gender: formData.get('gender'),
+    communityName: formData.get('communityName'),
+    instagram: formData.get('instagram'),
+    history: "Strip" // Default atau ambil dari form jika ada
+  };
+
+  const validated = athleteProfileSchema.safeParse(rawData);
+  
+  if (!validated.success) {
+    const errorMsg = Object.values(validated.error.flatten().fieldErrors)[0]?.[0];
+    return { success: false, message: errorMsg || "Data tidak valid" };
   }
 
+  // 3. Simpan ke DB (Mocking Update)
+  // Di real app: await db.player.update({ where: { email: session.email }, data: validated.data })
+  
+  // Update Session Cookie agar UI langsung berubah
+  const updatedSession = { ...session, ...validated.data, isProfileComplete: true };
+  cookieStore.set('bcc_player_session', JSON.stringify(updatedSession), {
+    httpOnly: true, path: '/' 
+  });
+
   revalidatePath('/player/dashboard');
-  return { success: true, message: "Profil berhasil diperbarui." };
+  return { success: true, message: "Profil berhasil diperbarui."};
 }
