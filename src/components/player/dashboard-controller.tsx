@@ -10,7 +10,8 @@ import {
   Camera, MessageCircle, Download, Gavel, Clock, 
   Share2, RotateCw, AlertOctagon, Send, Paperclip, 
   MoreVertical, CheckCheck, Smile, Plus, Hash, ChevronLeft, CheckCircle2,
-  Heart, Wallet, Banknote, CreditCard, Sparkles, UserRound, Footprints
+  Heart, Wallet, Banknote, CreditCard, Sparkles, UserRound, Footprints,
+  Save
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -387,14 +388,3 @@ export function PlayerDashboardController() {
     </div>
   );
 }
-
-// Dummy data for the full dashboard view
-const ATHLETE_MOCK = {
-    id: "ATL-8821",
-    name: "Jonathan Christie",
-    team: "PB Djarum Official",
-    rank: "PRO",
-    points: 8500,
-    winRate: 78,
-    avatar: "https://github.com/shadcn.png",
-};
