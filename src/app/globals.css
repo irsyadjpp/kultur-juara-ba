@@ -4,132 +4,99 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 224 71.4% 4.1%;
+    /* Material 3 Light Scheme - Sporty Red */
+    --background: 0 0% 98%;
+    --foreground: 0 0% 10%;
+    
     --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
+    --card-foreground: 0 0% 10%;
+    
     --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
-    --primary: 357 71% 36%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 220 13% 91%;
-    --secondary-foreground: 224 71.4% 4.1%;
-    --muted: 220 9% 96%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 220 13% 91%;
-    --accent-foreground: 224 71.4% 4.1%;
+    --popover-foreground: 0 0% 10%;
+    
+    --primary: 354 70% 50%; /* Sporty Red */
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 0 0% 92%; /* Surface Container Low */
+    --secondary-foreground: 0 0% 10%;
+    
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
+    
+    --accent: 354 100% 92%; /* Primary Container */
+    --accent-foreground: 354 70% 30%; /* On Primary Container */
+    
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 13% 89%;
-    --input: 220 13% 89%;
-    --ring: 357 71% 36%;
-    --chart-1: 210 90% 50%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 354 70% 50%;
+    
+    --radius: 1.5rem; /* Material 3 Large Radius */
   }
 
   .dark {
-    --background: 0 0% 5%;
-    --foreground: 210 20% 98%;
-    --card: 357 10% 8%;
-    --card-foreground: 210 20% 98%;
-    --popover: 357 10% 8%;
-    --popover-foreground: 210 20% 98%;
-    --primary: 357 85% 55%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 210 20% 98%;
-    --muted: 0 0% 12%;
-    --muted-foreground: 218 11% 65%;
-    --accent: 0 0% 12%;
-    --accent-foreground: 210 20% 98%;
+    /* Material 3 Dark Scheme - Cyber Sport */
+    --background: 240 10% 4%; /* Deep Graphite */
+    --foreground: 0 0% 98%;
+    
+    --card: 240 10% 8%; /* Surface Container */
+    --card-foreground: 0 0% 98%;
+    
+    --popover: 240 10% 8%;
+    --popover-foreground: 0 0% 98%;
+    
+    --primary: 354 85% 60%; /* Neon Red */
+    --primary-foreground: 0 0% 0%;
+    
+    --secondary: 240 6% 15%; /* Surface Container High */
+    --secondary-foreground: 0 0% 98%;
+    
+    --muted: 240 6% 12%;
+    --muted-foreground: 240 5% 65%;
+    
+    --accent: 354 30% 20%; /* Primary Container Dark */
+    --accent-foreground: 354 85% 90%; /* On Primary Container Dark */
+    
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 357 85% 55%;
-    --chart-1: 210 90% 50%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 240 6% 20%;
+    --input: 240 6% 20%;
+    --ring: 354 85% 60%;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
   body {
-    @apply bg-background text-foreground bg-noise;
+    @apply bg-background text-foreground selection:bg-primary/30 selection:text-primary font-body;
   }
-}
-
-/* Efek Spotlight: Saat parent di-hover, semua child meredup kecuali yang di-hover */
-.group:hover .group-hover\:opacity-100 {
-  opacity: 1;
-}
-
-.hover-spotlight:hover > .card-item {
-  opacity: 0.4;
-  transform: scale(0.98);
-}
-
-.hover-spotlight > .card-item:hover {
-  opacity: 1;
-  transform: scale(1.02);
-  box-shadow: 0 0 80px -20px hsla(var(--primary), 0.5);
-  border-color: hsl(var(--primary));
-  z-index: 10;
-}
-
-.card-item {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @layer utilities {
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
-}
-
-@keyframes glitch-skew {
-  0% { transform: skew(0deg); }
-  20% { transform: skew(-20deg); }
-  40% { transform: skew(20deg); }
-  60% { transform: skew(-5deg); }
-  80% { transform: skew(5deg); }
-  100% { transform: skew(0deg); }
-}
-
-.animate-glitch {
-  animation: glitch-skew 3s infinite linear alternate-reverse;
-  display: inline-block;
-  text-shadow: 2px 0 #9e1d24, -2px 0 cyan;
-}
-
-@layer utilities {
-  .bg-grid-sporty {
-    /* Pola Grid Halus */
-    background-size: 40px 40px;
-    background-image: 
-      linear-gradient(to right, rgba(158, 29, 36, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(158, 29, 36, 0.05) 1px, transparent 1px);
-    background-color: var(--background);
-    /* Supaya grid tetap diam saat di-scroll (Efek Premium) */
-    background-attachment: fixed; 
+  .text-balance {
+    text-wrap: balance;
   }
 
-  /* Support Dark Mode */
-  .dark .bg-grid-sporty {
-    background-image: 
-      linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  /* Material 3 Elevation */
+  .shadow-m3-1 {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  }
+  .shadow-m3-3 {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+  }
+
+  /* Gen Z / Sporty Gradients */
+  .bg-gradient-sport {
+    @apply bg-gradient-to-br from-primary via-red-500 to-orange-600;
+  }
+  
+  .text-outline {
+    -webkit-text-stroke: 1px currentColor;
+    color: transparent;
   }
 }

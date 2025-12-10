@@ -1,111 +1,110 @@
-
 'use client';
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { CalendarClock, Users, UserPlus } from 'lucide-react';
+import { ArrowRight, Trophy, Zap } from 'lucide-react';
 import { Countdown } from '@/components/countdown';
-import { CourtLines } from '@/components/ui/court-lines';
 import { ClientOnly } from '../client-only';
 
 export function HeroSection() {
-  
   return (
-    <section className="relative bg-black text-white overflow-hidden cursor-crosshair">
+    <section className="relative min-h-screen flex flex-col pt-24 pb-12 overflow-hidden bg-background">
       
-      {/* BACKGROUND IMAGE & ANIMATION */}
-      <div className="absolute inset-0 z-0">
-        {/* Latar Belakang Gambar Stadion */}
-        <div className="relative h-full w-full animate-zoom-slow">
-            <Image
-            src="/images/gor-koni.jpg"
-            alt="GOR Sutta Bandung"
-            fill
-            priority
-            className="object-cover opacity-50" 
-            />
-        </div>
+      {/* BACKGROUND ELEMENTS */}
+      <div className="absolute top-0 right-0 w-[50vw] h-[50vh] bg-primary/20 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[40vw] h-[40vh] bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
+      
+      <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 flex-grow items-center relative z-10">
         
-        {/* Overlay Gradasi Hitam */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/40" />
-        
-        {/* Animasi Garis Lapangan & Shuttlecock */}
-        <CourtLines />
+        {/* LEFT CONTENT */}
+        <div className="lg:col-span-7 flex flex-col justify-center text-center lg:text-left">
+           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/50 border border-accent text-accent-foreground font-bold text-sm w-fit mx-auto lg:mx-0 mb-6 animate-fade-in-up">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+              </span>
+              Road to BCC 2026: Digital Prologue
+           </div>
 
-        {/* Efek Partikel/Debu Stadion */}
-        <div className="absolute inset-0 bg-[url('/images/noise.png')] opacity-20 mix-blend-overlay"></div>
-      </div>
-      
-      <div className="relative z-10 flex min-h-[90vh] items-center pt-20 md:min-h-[75vh] md:pt-0">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl">
-            <p className="text-lg md:text-xl text-primary font-bold mb-2 font-body tracking-widest uppercase animate-fade-in-up">
-              Road to BCC 2026
-            </p>
-            
-            {/* Judul Besar */}
-            <h1 className="text-5xl md:text-[80px] leading-[0.9] font-black font-headline text-white mb-6 animate-fade-in-up tracking-tighter drop-shadow-2xl">
-              Road to BCC 2026: <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-600">The Digital Prologue</span>
-            </h1>
-            
-            <p className="text-lg md:text-2xl text-gray-300 max-w-2xl mb-10 font-body animate-fade-in-up leading-relaxed" style={{ animationDelay: '0.3s' }}>
-              Rasakan sensasi turnamen badminton dengan sistem digital terintegrasi pertama. Format Mabar, Atmosfer Juara.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 mt-8 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
-               
-               {/* Tombol Utama: Manajer */}
-               <Button asChild size="lg" className="h-14 px-8 text-lg font-bold bg-white text-black hover:bg-zinc-200">
-                  <Link href="/manager/login">
-                     <Users className="mr-2 h-5 w-5"/> DAFTAR SEKARANG
-                  </Link>
-               </Button>
+           <h1 className="text-6xl sm:text-7xl md:text-8xl font-black font-headline tracking-tighter leading-[0.9] mb-6">
+              SMASH <br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-500">YOUR LIMITS.</span>
+           </h1>
 
-               {/* Tombol Sekunder: Atlet */}
-               <Button asChild size="lg" variant="outline" className="h-14 px-8 text-lg font-bold border-white/30 text-white hover:bg-white/10 backdrop-blur-sm">
-                  <Link href="/player/login">
-                     <UserPlus className="mr-2 h-5 w-5"/> LOGIN ATLIT
-                  </Link>
-               </Button>
+           <p className="text-lg md:text-xl text-muted-foreground font-medium max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
+              Turnamen badminton digital pertama dengan integrasi Live Score & Statistik Real-time. Rasakan atmosfer profesional di level komunitas.
+           </p>
 
-            </div>
-            
-            <p className="mt-4 text-sm text-zinc-400 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-               *Atlet wajib membuat akun sendiri untuk bergabung ke dalam Tim.
-            </p>
-          </div>
+           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <Button asChild size="lg" className="h-16 px-8 rounded-full text-lg font-bold shadow-lg shadow-primary/25 hover:scale-105 transition-transform">
+                 <Link href="/manager/login">
+                    Daftar Sekarang <ArrowRight className="ml-2 w-5 h-5" />
+                 </Link>
+              </Button>
+              <Button asChild variant="secondary" size="lg" className="h-16 px-8 rounded-full text-lg font-bold hover:bg-secondary/80">
+                 <Link href="/live-score">
+                    Lihat Jadwal
+                 </Link>
+              </Button>
+           </div>
+           
+           <div className="mt-12 flex items-center justify-center lg:justify-start gap-8 opacity-70 grayscale hover:grayscale-0 transition-all">
+                <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Supported By</p>
+                {/* Ganti dengan Logo Image jika ada */}
+                <span className="font-headline font-black text-xl">VICTOR</span>
+                <span className="font-headline font-black text-xl">YONEX</span>
+           </div>
         </div>
-      </div>
-      
-      {/* Widget Countdown (Bagian Bawah) */}
-      <div className="relative z-20 bg-black/80 backdrop-blur-md border-t border-white/10">
-        <div className="container mx-auto px-4 py-6">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                <div className="flex items-center gap-4">
-                     <div className="p-3 bg-primary/20 rounded-full animate-pulse-slow">
-                        <CalendarClock className="h-8 w-8 text-primary" />
-                     </div>
-                    <div>
-                        <h3 className="font-headline text-sm font-semibold text-gray-400 uppercase tracking-widest">Pendaftaran Ditutup Dalam</h3>
-                        <p className="text-white font-bold">1 Januari 2026</p>
+
+        {/* RIGHT CONTENT - VISUAL CARD */}
+        <div className="lg:col-span-5 relative">
+            <div className="relative aspect-[4/5] w-full max-w-md mx-auto">
+                {/* Card Container with Material 3 Elevation */}
+                <div className="absolute inset-0 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 rounded-[2.5rem] shadow-2xl rotate-3 border border-white/10 overflow-hidden">
+                    <Image 
+                        src="/images/gor-koni.jpg" 
+                        alt="Arena" 
+                        fill 
+                        className="object-cover opacity-80 hover:scale-110 transition-transform duration-700" 
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                    
+                    <div className="absolute bottom-8 left-8 right-8 text-white">
+                        <div className="flex items-center gap-2 mb-2 text-yellow-400">
+                             <Trophy className="w-5 h-5 fill-current" />
+                             <span className="font-bold tracking-wider">PRIZE POOL</span>
+                        </div>
+                        <p className="text-4xl font-black font-headline">RP 25 JUTA++</p>
+                        
+                        <div className="mt-6 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20">
+                           <ClientOnly>
+                              <div className="text-center">
+                                 <p className="text-xs uppercase tracking-widest text-gray-300 mb-1">Pendaftaran Ditutup</p>
+                                 <Countdown targetDate="2026-01-01" />
+                              </div>
+                           </ClientOnly>
+                        </div>
                     </div>
                 </div>
-                {/* Garis Pemisah Visual */}
-                <div className="hidden md:block w-px h-12 bg-white/10"></div>
-                
-                <div className="flex-grow flex justify-center text-white">
-                  <ClientOnly>
-                    <Countdown targetDate="2026-01-01" />
-                  </ClientOnly>
-                </div>
 
-                <div className="hidden lg:block bg-yellow-500/10 border border-yellow-500/20 text-yellow-300 font-bold px-4 py-2 rounded-xl text-center">
-                    Kuota Terbatas: Hanya 32 Pasang!
+                {/* Floating Elements */}
+                <div className="absolute -top-6 -right-6 bg-primary text-primary-foreground p-4 rounded-3xl shadow-xl animate-float-slow">
+                    <Zap className="w-8 h-8 fill-current" />
                 </div>
-              </div>
+            </div>
         </div>
+      </div>
+      
+      {/* MARQUEE TEXT */}
+      <div className="absolute bottom-0 left-0 w-full bg-primary text-primary-foreground py-3 overflow-hidden rotate-1 scale-105 origin-bottom-left">
+         <div className="flex whitespace-nowrap animate-marquee">
+            {[1,2,3,4,5].map(i => (
+                <span key={i} className="text-2xl font-black font-headline mx-8 uppercase tracking-widest">
+                   • ROAD TO BCC 2026 • THE DIGITAL PROLOGUE • LEVEL UP YOUR GAME
+                </span>
+            ))}
+         </div>
       </div>
     </section>
   );
