@@ -287,7 +287,11 @@ export default function StructurePage() {
 
       {/* --- DETAIL SHEET (SLIDE OVER) --- */}
       <Sheet open={!!selectedDiv} onOpenChange={() => setSelectedDiv(null)}>
-         <SheetContent className="w-full sm:max-w-md md:max-w-lg bg-zinc-950 border-l border-zinc-800 p-0 overflow-y-auto">
+        <SheetContent className="w-full sm:max-w-md md:max-w-lg bg-zinc-950 border-l border-zinc-800 p-0 overflow-y-auto">
+            <SheetHeader className="sr-only">
+                <SheetTitle>Division Details</SheetTitle>
+                <SheetDescription>Details and actions for the selected division.</SheetDescription>
+            </SheetHeader>
             {selectedDiv && (
                <>
                   <div className={cn("h-48 relative p-8 flex flex-col justify-end overflow-hidden", selectedDiv.bg)}>
@@ -295,9 +299,9 @@ export default function StructurePage() {
                      <selectedDiv.icon className={cn("absolute -right-6 -top-6 w-48 h-48 opacity-10 rotate-12", selectedDiv.color)} />
                      <div className="relative z-10">
                         <Badge className="bg-black/50 backdrop-blur text-white border-none mb-2">{selectedDiv.alias}</Badge>
-                        <SheetTitle className="text-3xl font-black font-headline uppercase text-white leading-none">
+                        <h2 className="text-3xl font-black font-headline uppercase text-white leading-none">
                            {selectedDiv.name}
-                        </SheetTitle>
+                        </h2>
                      </div>
                   </div>
                   <div className="p-6 space-y-8">
