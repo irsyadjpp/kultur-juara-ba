@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -48,8 +47,6 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
     {
         title: "OPERASIONAL PERTANDINGAN",
         items: [
-            { name: "Susunan Pemain", href: "/manager/lineup", icon: Swords },
-            { name: "Persetujuan Hasil", href: "/manager/result-approval", icon: FilePenLine },
             { name: "Ajukan Protes", href: "/manager/protest/submit", icon: AlertCircle },
             { name: "Tagihan & Denda", href: "/manager/billing", icon: CreditCard },
         ]
