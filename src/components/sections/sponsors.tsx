@@ -16,9 +16,6 @@ export function SponsorsSection() {
             </div>
             <div className="container mx-auto px-4 text-center relative z-10">
 
-                <h2 className="text-3xl md:text-4xl font-bold font-headline text-foreground">
-                    Jadilah Bagian dari Sejarah
-                </h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
                     Bandung Community Championship 2026 membuka kesempatan bagi brand Anda untuk terhubung dengan ribuan pegiat dan penggemar bulutangkis. Jadilah mitra kami dalam menyukseskan perhelatan akbar ini.
                 </p>
