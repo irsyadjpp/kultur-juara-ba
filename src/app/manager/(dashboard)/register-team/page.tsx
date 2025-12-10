@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { 
@@ -29,11 +29,12 @@ import {
 } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/hooks/use-toast"; // Sesuaikan path import toast Anda
+import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Users, User, ShieldCheck } from "lucide-react";
 
 export default function RegisterTeamPage() {
+  const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Inisialisasi Form
@@ -52,16 +53,24 @@ export default function RegisterTeamPage() {
   // Watch tipe pendaftaran untuk conditional rendering
   const registrationType = form.watch("type");
 
+  useEffect(() => {
+      // Reset categories when registration type changes
+      form.setValue("registrations", []);
+  }, [registrationType, form]);
+
   async function onSubmit(data: TeamRegistrationFormValues) {
     setIsSubmitting(true);
     try {
       // TODO: Panggil Server Action di sini (misal: registerTeamAction(data))
       console.log("Data Submitted:", data);
       
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
       toast({
         title: "Pendaftaran Berhasil",
         description: `Berhasil mendaftar sebagai ${ data.type === 'SINGLE_TEAM' ? 'Tim' : 'Komunitas' } `,
       });
+      form.reset();
     } catch (error) {
       toast({
         title: "Error",
@@ -191,10 +200,7 @@ export default function RegisterTeamPage() {
                       <FormLabel className="text-lg font-medium">Tipe Pendaftaran</FormLabel>
                       <FormControl>
                         <RadioGroup
-                          onValueChange={(val) => {
-                            field.onChange(val);
-                            form.setValue("registrations", []); // Reset kategori saat ganti tipe
-                          }}
+                          onValueChange={field.onChange}
                           defaultValue={field.value}
                           className="grid grid-cols-1 md:grid-cols-2 gap-4"
                         >
