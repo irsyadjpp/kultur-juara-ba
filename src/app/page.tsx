@@ -14,7 +14,6 @@ import { LocationSection } from '@/components/sections/location';
 
 // Section Kompetisi & Bisnis
 import { CategoriesSection } from '@/components/sections/categories';
-import { PrizesSection } from '@/components/sections/prizes';
 import { SponsorsSection } from '@/components/sections/sponsors';
 
 export default function Home() {
@@ -26,26 +25,23 @@ export default function Home() {
         {/* 1. Hero: Judul Besar & Tombol Aksi */}
         <HeroSection />
         
-        {/* 2. Hadiah: Motivasi utama peserta */}
-        <PrizesSection />
-
-        {/* 3. Kategori: Siapa saja yang bisa ikut? */}
+        {/* 2. Kategori: Siapa saja yang bisa ikut? */}
         <CategoriesSection />
 
-        {/* 4. Syarat Level: Filter peserta agar tidak salah daftar */}
+        {/* 3. Syarat Level: Filter peserta agar tidak salah daftar */}
         <div id="levels">
           <LevelingGuideSection /> 
         </div>
 
-        {/* 5. Cara Daftar: Langkah-langkah teknis */}
+        {/* 4. Cara Daftar: Langkah-langkah teknis */}
         <div id="registration">
           <RegistrationInfoSection />
         </div>
 
-        {/* 6. Sponsor: Undangan kerjasama */}
+        {/* 5. Sponsor: Undangan kerjasama */}
         <SponsorsSection />
 
-        {/* 7. Lokasi: Peta GOR KONI */}
+        {/* 6. Lokasi: Peta GOR KONI */}
         <div id="venue">
           <LocationSection />
         </div>
