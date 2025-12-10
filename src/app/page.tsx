@@ -16,6 +16,8 @@ import { LocationSection } from '@/components/sections/location';
 import { CategoriesSection } from '@/components/sections/categories';
 import { SponsorsSection } from '@/components/sections/sponsors';
 import { WhyJoinSection } from '@/components/sections/why-join';
+import { PrizesSection } from '@/components/sections/prizes';
+import { FaqSection } from '@/components/sections/faq';
 
 export default function Home() {
   return (
@@ -40,13 +42,19 @@ export default function Home() {
           <LevelingGuideSection /> 
         </div>
 
-        {/* 6. Sponsor: Undangan kerjasama */}
+        {/* 6. Hadiah */}
+        <PrizesSection />
+
+        {/* 7. Sponsor: Undangan kerjasama */}
         <SponsorsSection />
 
-        {/* 7. Lokasi: Peta GOR KONI */}
+        {/* 8. Lokasi: Peta GOR KONI */}
         <div id="venue">
           <LocationSection />
         </div>
+
+        {/* 9. FAQ */}
+        <FaqSection />
         
       </main>
 
