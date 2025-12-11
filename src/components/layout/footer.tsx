@@ -42,7 +42,7 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t text-center">
             <h4 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-widest">Didukung Oleh</h4>
             <div className="flex justify-center items-center gap-8 opacity-50">
-                 <Image src="/images/logo-tiento.png" alt="Tiento" width={120} height={40} className="filter grayscale contrast-0 brightness-200" />
+                 <Image src="https://tiento.co.id/cdn/shop/files/Asset-3-2_result_420x.webp" alt="Tiento" width={120} height={40} className="filter grayscale contrast-0 brightness-200" />
             </div>
             <p className="mt-8 text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Road to BCC 2026. All Rights Reserved.</p>
         </div>
