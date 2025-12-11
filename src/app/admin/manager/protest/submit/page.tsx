@@ -16,7 +16,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { submitProtest } from '../../(dashboard)/protest/actions';
+import { submitProtest } from '@/app/manager/(dashboard)/protest/actions';
 
 // Mock Data - Biasanya dari Session/DB
 const MOCK_SESSION_MANAGER = { name: "Rizki Karami", team: "PB Super", wa: "081119522228" };
@@ -311,3 +311,5 @@ export default function ProtestSubmissionPage() {
     </div>
   );
 }
+
+    
