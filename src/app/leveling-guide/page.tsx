@@ -1,10 +1,16 @@
+
 'use client';
 
 import { useState } from 'react';
-import { Trophy, Swords, Dumbbell, ShieldAlert, CheckCircle2, XCircle, ChevronDown, Check, ArrowRight } from "lucide-react";
+import { 
+  Trophy, Swords, Dumbbell, ShieldAlert, CheckCircle2, Scale, 
+  BookOpen, Target, Users, AlertTriangle, XCircle 
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CourtLines } from '@/components/ui/court-lines';
 import { cn } from "@/lib/utils";
 import { Header } from '@/components/layout/header';
@@ -12,227 +18,271 @@ import { Footer } from '@/components/layout/footer';
 
 export default function LevelingGuidePage() {
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-background selection:bg-primary/20">
       <Header />
       
       <main className="flex-grow pt-24 pb-20 relative overflow-hidden">
         
         {/* Background FX */}
         <div className="fixed inset-0 pointer-events-none opacity-5"><CourtLines /></div>
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 blur-[150px] rounded-full pointer-events-none" />
 
         {/* --- HERO SECTION --- */}
-        <div className="container mx-auto px-4 mb-16 relative z-10 text-center">
-           <Badge variant="outline" className="mb-4 px-4 py-1 border-primary text-primary font-bold tracking-widest uppercase bg-primary/5">Official Guide</Badge>
-           <h1 className="text-5xl md:text-7xl font-black font-headline uppercase tracking-tighter mb-6">
-              Level & <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-yellow-500">Tier Matrix</span>
+        <div className="container mx-auto px-4 mb-12 relative z-10 text-center">
+           <Badge variant="outline" className="mb-4 px-4 py-1 border-primary text-primary font-bold tracking-widest uppercase bg-primary/5">
+              Official Rulebook v2.0
+           </Badge>
+           <h1 className="text-4xl md:text-6xl font-black font-headline uppercase tracking-tighter mb-4 text-foreground">
+              Matrix <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-500">Level & Tier</span>
            </h1>
-           <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-medium">
-              Panduan lengkap klasifikasi skill dan aturan kombinasi pasangan Road to BCC 2026.
+           <p className="text-lg text-muted-foreground max-w-3xl mx-auto font-medium leading-relaxed">
+              Regulasi resmi pembagian kategori pertandingan berdasarkan kombinasi <strong>Level (Beginner/Int/Adv)</strong> dan <strong>Tier (Bawah/Menengah/Atas)</strong> untuk kompetisi yang adil dan seimbang.
            </p>
         </div>
 
-        {/* --- 1. DEFINISI LEVEL (Cards) --- */}
-        <div className="container mx-auto px-4 mb-20">
-           <h2 className="text-3xl font-black font-headline mb-8 text-center uppercase">Definisi Level</h2>
-           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <LevelCard 
-                 theme="green" title="Beginner" subtitle="Fun & Social" icon={<Dumbbell className="w-6 h-6" />}
-                 desc="Pemain hobi 'tepok bulu'. Teknik belum sempurna, backhand lemah, belum paham rotasi."
-                 stats={[{l:"Power",v:30}, {l:"Tech",v:20}, {l:"Footwork",v:10}]}
-              />
-              <LevelCard 
-                 theme="blue" title="Intermediate" subtitle="Competitive" icon={<Swords className="w-6 h-6" />}
-                 desc="Pemain rutin komunitas. Teknik solid, bisa smash/drive, paham rotasi ganda."
-                 recommended
-                 stats={[{l:"Power",v:70}, {l:"Tech",v:65}, {l:"Footwork",v:60}]}
-              />
-              <LevelCard 
-                 theme="red" title="Advance" subtitle="Elite / Semi-Pro" icon={<Trophy className="w-6 h-6" />}
-                 desc="Skill di atas rata-rata. Power besar, akurasi tinggi, variasi pukulan mematikan."
-                 stats={[{l:"Power",v:95}, {l:"Tech",v:90}, {l:"Footwork",v:90}]}
-              />
-           </div>
-        </div>
+        <div className="container mx-auto px-4 space-y-16 relative z-10">
+            
+            {/* 1. DEFINISI & TUJUAN */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <Card className="bg-surface-variant/30 border border-white/10 rounded-[2rem] p-6">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="flex items-center gap-3 text-xl font-bold">
+                            <Target className="w-6 h-6 text-primary" /> Tujuan Regulasi
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3 pt-4">
+                        <li className="flex gap-3 text-sm font-medium opacity-80">
+                            <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
+                            Menjamin pertandingan adil & seimbang (No Mismatch).
+                        </li>
+                        <li className="flex gap-3 text-sm font-medium opacity-80">
+                            <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
+                            Menghindari pertemuan Beginner Bawah vs Beginner Atas di fase grup.
+                        </li>
+                        <li className="flex gap-3 text-sm font-medium opacity-80">
+                            <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
+                            Struktur seeding yang konsisten & objektif berbasis data TPF.
+                        </li>
+                    </CardContent>
+                </Card>
 
-        {/* --- 2. DETAILED TIER MATRIX (New Section) --- */}
-        <div className="container mx-auto px-4 mb-20">
-           <div className="bg-secondary/30 border border-white/5 rounded-[3rem] p-8 md:p-12 relative overflow-hidden shadow-xl">
-              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-500 via-blue-500 to-primary" />
-              
-              <div className="text-center mb-12">
-                 <h2 className="text-4xl md:text-5xl font-black font-headline uppercase mb-4">Matrix Penentuan Kategori</h2>
-                 <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
-                    Detail penentuan kategori berdasarkan kombinasi <strong>Level + Tier (Bawah/Menengah/Atas)</strong>.
-                 </p>
-              </div>
+                <Card className="bg-surface-variant/30 border border-white/10 rounded-[2rem] p-6">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="flex items-center gap-3 text-xl font-bold">
+                            <BookOpen className="w-6 h-6 text-blue-500" /> Definisi Kunci
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="grid gap-4 pt-4">
+                        <div className="flex gap-3">
+                            <Badge variant="outline" className="h-fit">Level</Badge>
+                            <p className="text-sm text-muted-foreground">Kategori besar peserta (Beginner, Intermediate, Advance).</p>
+                        </div>
+                        <div className="flex gap-3">
+                            <Badge variant="outline" className="h-fit border-blue-500 text-blue-500">Tier</Badge>
+                            <p className="text-sm text-muted-foreground">Klasifikasi kekuatan detail dalam level yang sama (Bawah, Menengah, Atas).</p>
+                        </div>
+                        <div className="flex gap-3">
+                            <Badge variant="outline" className="h-fit border-yellow-500 text-yellow-500">TPF</Badge>
+                            <p className="text-sm text-muted-foreground">Tim Penilai Federatif yang memverifikasi skill & tier pemain.</p>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                 
-                 {/* BEGINNER COMBOS */}
-                 <MatrixCard title="Beginner + Beginner" color="green">
-                    <ComboRow p1="Bawah" p2="Bawah" res="Beginner" />
-                    <ComboRow p1="Bawah" p2="Menengah" res="Beginner" />
-                    <ComboRow p1="Menengah" p2="Menengah" res="Beginner" note="Tier Menengah" />
-                    <ComboRow p1="Menengah" p2="Atas" res="Beginner" note="Tier Atas" />
-                    <ComboRow p1="Atas" p2="Atas" res="Beginner" note="SEED CANDIDATE" highlight />
-                 </MatrixCard>
+            {/* 2. MATRIX DETAIL (TABS) */}
+            <div className="space-y-6">
+                <div className="text-center">
+                    <h2 className="text-3xl font-black font-headline uppercase mb-2">Matrix Kategori Final</h2>
+                    <p className="text-muted-foreground">Klasifikasi detail berdasarkan kombinasi Tier Pemain.</p>
+                </div>
 
-                 {/* BEGINNER + INTERMEDIATE */}
-                 <MatrixCard title="Beginner + Intermediate" color="blue">
-                    <ComboRow p1="Beg (All)" p2="Int (Bawah)" res="Intermediate" note="Tier Bawah" />
-                    <ComboRow p1="Beg (Atas)" p2="Int (Bawah)" res="Intermediate" note="Tier Menengah" />
-                    <ComboRow p1="Beg (Menengah)" p2="Int (Men/Atas)" res="Intermediate" note="Tier Men/Atas" />
-                    <ComboRow p1="Beg (Atas)" p2="Int (Atas)" res="Intermediate" note="TIER KUAT" highlight />
-                 </MatrixCard>
-
-                 {/* INTERMEDIATE + INTERMEDIATE */}
-                 <MatrixCard title="Inter + Intermediate" color="blue">
-                    <ComboRow p1="Bawah" p2="Bawah" res="Intermediate" note="Tier Bawah" />
-                    <ComboRow p1="Bawah" p2="Menengah" res="Intermediate" note="Tier Menengah" />
-                    <ComboRow p1="Menengah" p2="Atas" res="Intermediate" note="Tier Men/Atas" />
-                    <ComboRow p1="Atas" p2="Atas" res="Intermediate" note="SEED CANDIDATE" highlight />
-                 </MatrixCard>
-
-                 {/* INTERMEDIATE + ADVANCE */}
-                 <MatrixCard title="Inter + Advance" color="purple">
-                    <ComboRow p1="Int (Bawah)" p2="Adv (Bawah)" res="Advance" note="Tier Bawah" />
-                    <ComboRow p1="Int (Menengah)" p2="Adv (Bawah)" res="Advance" note="Tier Menengah" />
-                    <ComboRow p1="Int (Bawah)" p2="Adv (Men/Atas)" res="Advance" note="Tier Men/Atas" />
-                    <ComboRow p1="Int (Menengah)" p2="Adv (Menengah)" res="Advance" note="TIER KUAT" highlight />
-                    <ComboRow p1="Int (All)" p2="Adv (Atas)" res="Advance" note="SEED CANDIDATE" highlight />
-                 </MatrixCard>
-
-                 {/* ADVANCE + ADVANCE */}
-                 <MatrixCard title="Advance + Advance" color="purple">
-                    <ComboRow p1="Bawah" p2="Bawah" res="Advance" note="Tier Bawah" />
-                    <ComboRow p1="Menengah" p2="Menengah" res="Advance" note="Tier Menengah" />
-                    <ComboRow p1="Atas" p2="Atas" res="Advance" note="SEED CANDIDATE" highlight />
-                 </MatrixCard>
-
-                 {/* FORBIDDEN */}
-                 <Card className="bg-red-950/20 border-2 border-red-900/50 p-6 flex flex-col justify-center items-center text-center">
-                    <div className="bg-red-500/20 p-4 rounded-full mb-4">
-                       <XCircle className="w-8 h-8 text-red-500" />
+                <Tabs defaultValue="beginner" className="w-full">
+                    <div className="flex justify-center mb-8">
+                        <TabsList className="bg-secondary/50 p-1 rounded-full border border-white/10">
+                            <TabsTrigger value="beginner" className="rounded-full px-6 py-2 font-bold data-[state=active]:bg-green-500 data-[state=active]:text-white">Beginner</TabsTrigger>
+                            <TabsTrigger value="intermediate" className="rounded-full px-6 py-2 font-bold data-[state=active]:bg-blue-500 data-[state=active]:text-white">Intermediate</TabsTrigger>
+                            <TabsTrigger value="advance" className="rounded-full px-6 py-2 font-bold data-[state=active]:bg-purple-500 data-[state=active]:text-white">Advance</TabsTrigger>
+                        </TabsList>
                     </div>
-                    <h4 className="font-black text-xl text-red-500 uppercase mb-2">DILARANG KERAS</h4>
-                    <p className="font-bold text-foreground mb-2">Beginner + Advance</p>
-                    <p className="text-sm text-red-300 leading-snug">
-                       Gap skill terlalu jauh. Berisiko cedera dan tidak kompetitif.
-                    </p>
-                 </Card>
 
-              </div>
-           </div>
-        </div>
+                    {/* BEGINNER TAB */}
+                    <TabsContent value="beginner">
+                        <MatrixTable 
+                            theme="green"
+                            title="Kategori Beginner"
+                            desc="Pasangan Beginner dibagi menjadi Low, Mid, dan High untuk fase grup yang seimbang."
+                            data={[
+                                { p1: "Bawah", p2: "Bawah", res: "Beginner - Low" },
+                                { p1: "Bawah", p2: "Menengah", res: "Beginner - Low" },
+                                { p1: "Menengah", p2: "Menengah", res: "Beginner - Mid" },
+                                { p1: "Bawah", p2: "Atas", res: "Beginner - Mid" },
+                                { p1: "Menengah", p2: "Atas", res: "Beginner - High" },
+                                { p1: "Atas", p2: "Atas", res: "Beginner - High (Unggulan)", highlight: true },
+                            ]}
+                        />
+                    </TabsContent>
 
-        {/* --- 3. ANTI SANDBAGGING (Checklist) --- */}
-        <div className="container mx-auto px-4">
-           <div className="bg-zinc-900 text-zinc-100 rounded-[2.5rem] p-8 md:p-12 shadow-xl border border-white/5">
-              <div className="flex flex-col md:flex-row gap-8">
-                 <div className="md:w-1/3">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 text-red-500 text-xs font-bold uppercase tracking-widest mb-4">
-                       <ShieldAlert className="w-4 h-4" /> Integrity Check
+                    {/* INTERMEDIATE TAB */}
+                    <TabsContent value="intermediate">
+                        <MatrixTable 
+                            theme="blue"
+                            title="Kategori Intermediate"
+                            desc="Kombinasi Beginner Atas & Intermediate."
+                            data={[
+                                { p1: "Beg (Atas)", p2: "Int (Bawah)", res: "Intermediate - Low" },
+                                { p1: "Int (Bawah)", p2: "Int (Bawah)", res: "Intermediate - Low" },
+                                { p1: "Int (Bawah)", p2: "Int (Menengah)", res: "Intermediate - Mid" },
+                                { p1: "Int (Menengah)", p2: "Int (Menengah)", res: "Intermediate - Mid" },
+                                { p1: "Int (Menengah)", p2: "Int (Atas)", res: "Intermediate - High" },
+                                { p1: "Int (Atas)", p2: "Int (Atas)", res: "Intermediate - High (Unggulan)", highlight: true },
+                            ]}
+                        />
+                    </TabsContent>
+
+                    {/* ADVANCE TAB */}
+                    <TabsContent value="advance">
+                        <MatrixTable 
+                            theme="purple"
+                            title="Kategori Advance"
+                            desc="Level tertinggi. Kombinasi Intermediate Atas & Advance."
+                            data={[
+                                { p1: "Int (Bawah)", p2: "Adv (Bawah)", res: "Advance - Low" },
+                                { p1: "Adv (Bawah)", p2: "Adv (Bawah)", res: "Advance - Low" },
+                                { p1: "Int (Menengah)", p2: "Adv (Bawah)", res: "Advance - Mid" },
+                                { p1: "Adv (Menengah)", p2: "Adv (Menengah)", res: "Advance - Mid" },
+                                { p1: "Int (Atas)", p2: "Adv (Atas)", res: "Advance - High" },
+                                { p1: "Adv (Atas)", p2: "Adv (Atas)", res: "Advance - High (Unggulan)", highlight: true },
+                            ]}
+                        />
+                    </TabsContent>
+                </Tabs>
+
+                {/* FORBIDDEN COMBO */}
+                <div className="mt-8 p-6 bg-red-950/30 border border-red-500/30 rounded-[2rem] flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+                    <div className="bg-red-500/20 p-4 rounded-full text-red-500 animate-pulse">
+                        <XCircle className="w-10 h-10" />
                     </div>
-                    <h3 className="text-3xl md:text-4xl font-black font-headline uppercase mb-4">Anti-Sandbagging</h3>
-                    <p className="text-zinc-400 leading-relaxed">
-                       Jawab jujur. Jika Anda menjawab <strong>YA</strong> pada salah satu poin ini, Anda <strong className="text-red-400">BUKAN Beginner</strong>.
-                    </p>
-                 </div>
-                 <div className="md:w-2/3 space-y-3">
-                    {[
-                       "Bisa melakukan Backhand Clear dari baseline ke baseline?",
-                       "Pernah juara turnamen Open atau Semi-Open?",
-                       "Paham rotasi otomatis saat menyerang (depan-belakang) & bertahan (side-by-side)?",
-                       "Pernah latihan intensif di PB/Klub > 2 tahun?"
-                    ].map((q, i) => (
-                       <div key={i} className="flex gap-4 p-4 bg-black/20 rounded-2xl border border-white/5 items-center hover:bg-black/30 transition-colors">
-                          <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center shrink-0 font-bold text-zinc-500">?</div>
-                          <p className="font-medium text-zinc-200">{q}</p>
-                       </div>
-                    ))}
-                 </div>
-              </div>
-           </div>
-        </div>
+                    <div>
+                        <h4 className="text-xl font-black text-red-500 uppercase tracking-widest mb-1">DILARANG KERAS</h4>
+                        <p className="text-red-200 font-bold text-lg mb-1">Beginner (Semua Tier) + Advance (Semua Tier)</p>
+                        <p className="text-sm text-red-300/80">
+                            Gap kemampuan terlalu besar. Berisiko membahayakan pemain Beginner dan merusak keseimbangan kompetisi.
+                        </p>
+                    </div>
+                </div>
+            </div>
 
+            {/* 3. PENERAPAN DI TURNAMEN */}
+            <div className="bg-zinc-900 text-zinc-100 rounded-[3rem] p-8 md:p-12 border border-white/5 shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/10 rounded-full blur-[100px] pointer-events-none" />
+                
+                <div className="text-center mb-10 relative z-10">
+                    <h2 className="text-3xl font-black font-headline uppercase mb-4">Penerapan di Lapangan</h2>
+                    <p className="text-zinc-400 max-w-2xl mx-auto">
+                        Bagaimana Matrix ini mempengaruhi pembagian grup dan penentuan juara?
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                    {/* Grouping Rule */}
+                    <div className="bg-white/5 p-6 rounded-[2rem] border border-white/5 hover:bg-white/10 transition-colors">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="bg-primary/20 p-3 rounded-xl text-primary"><Users className="w-6 h-6" /></div>
+                            <h3 className="text-xl font-bold">1. Pembagian Grup (Tier-Based)</h3>
+                        </div>
+                        <p className="text-sm text-zinc-300 leading-relaxed mb-4">
+                            Pemain <strong>HANYA</strong> akan ditempatkan di grup yang tier-nya selevel. Tidak ada "Grup Neraka" di mana Low bertemu High di awal.
+                        </p>
+                        <div className="space-y-2 text-xs font-mono bg-black/40 p-4 rounded-xl border border-white/5">
+                            <div className="flex justify-between border-b border-white/10 pb-2">
+                                <span>Grup A</span>
+                                <span className="text-green-400">Beginner Low vs Beginner Low</span>
+                            </div>
+                            <div className="flex justify-between border-b border-white/10 pb-2">
+                                <span>Grup C</span>
+                                <span className="text-yellow-400">Beginner Mid vs Beginner Mid</span>
+                            </div>
+                            <div className="flex justify-between pt-1">
+                                <span>Grup E</span>
+                                <span className="text-red-400">Beginner High vs Beginner High</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Seeding Rule */}
+                    <div className="bg-white/5 p-6 rounded-[2rem] border border-white/5 hover:bg-white/10 transition-colors">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="bg-yellow-500/20 p-3 rounded-xl text-yellow-500"><Trophy className="w-6 h-6" /></div>
+                            <h3 className="text-xl font-bold">2. Penentuan Seeding</h3>
+                        </div>
+                        <p className="text-sm text-zinc-300 leading-relaxed mb-4">
+                            Status <strong>Unggulan (Seed)</strong> hanya diberikan kepada pasangan dalam <strong>Tier Atas</strong> di masing-masing level.
+                        </p>
+                        <div className="bg-black/40 p-4 rounded-xl border border-white/5">
+                            <p className="text-xs text-zinc-500 font-bold uppercase mb-2">Prioritas Penentuan Seed:</p>
+                            <ol className="list-decimal pl-4 space-y-1 text-xs text-zinc-300">
+                                <li>Total Skor Utama TPF</li>
+                                <li>Skor Performa Tambahan</li>
+                                <li>Head-to-Head (Jika ada)</li>
+                                <li>Video Terbaru</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
       </main>
-      
       <Footer />
     </div>
   );
 }
 
-// --- SUB COMPONENTS ---
+// --- COMPONENTS ---
 
-function LevelCard({ theme, title, subtitle, icon, desc, stats, recommended }: any) {
-   const themes = {
-      green: { bg: "bg-emerald-500", text: "text-emerald-500", border: "border-emerald-500/20" },
-      blue: { bg: "bg-blue-500", text: "text-blue-500", border: "border-blue-500/20" },
-      red: { bg: "bg-primary", text: "text-primary", border: "border-primary/20" },
-   };
-   const t = themes[theme as keyof typeof themes];
-
-   return (
-      <Card className={cn(
-         "relative overflow-hidden border-2 rounded-[2.5rem] flex flex-col h-full transition-all duration-300 hover:-translate-y-2 bg-card",
-         t.border,
-         recommended ? "ring-4 ring-yellow-500/20 shadow-xl" : "shadow-md"
-      )}>
-         {recommended && <div className="absolute top-0 right-0 bg-yellow-500 text-black text-[10px] font-black px-4 py-1 rounded-bl-xl uppercase tracking-widest">Popular</div>}
-         <div className="p-8 pb-4">
-            <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center mb-4 text-white shadow-lg", t.bg)}>{icon}</div>
-            <h3 className={cn("text-3xl font-black font-headline uppercase", t.text)}>{title}</h3>
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{subtitle}</p>
-            <p className="mt-4 text-sm font-medium opacity-80 leading-relaxed min-h-[3rem]">{desc}</p>
-         </div>
-         <div className="px-8 pb-8 space-y-3 mt-auto">
-            {stats.map((s: any, i: number) => (
-               <div key={i} className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-wider">
-                  <span className="w-16 text-muted-foreground">{s.l}</span>
-                  <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
-                     <div className={cn("h-full rounded-full", t.bg)} style={{ width: `${s.v}%` }} />
-                  </div>
-               </div>
-            ))}
-         </div>
-      </Card>
-   )
-}
-
-function MatrixCard({ title, color, children }: any) {
+function MatrixTable({ theme, title, desc, data }: { theme: string, title: string, desc: string, data: any[] }) {
     const colors = {
-        green: "border-green-500/20 bg-green-500/5",
-        blue: "border-blue-500/20 bg-blue-500/5",
-        purple: "border-purple-500/20 bg-purple-500/5"
-    }
+        green: "bg-green-500/10 border-green-500/20 text-green-500",
+        blue: "bg-blue-500/10 border-blue-500/20 text-blue-500",
+        purple: "bg-purple-500/10 border-purple-500/20 text-purple-500",
+    };
+    const highlightColors = {
+        green: "bg-green-500/20 text-green-400 border-green-500/50",
+        blue: "bg-blue-500/20 text-blue-400 border-blue-500/50",
+        purple: "bg-purple-500/20 text-purple-400 border-purple-500/50",
+    };
+    const t = colors[theme as keyof typeof colors];
+    const h = highlightColors[theme as keyof typeof highlightColors];
+
     return (
-        <Card className={cn("border-2 rounded-[2rem] overflow-hidden bg-card/80 backdrop-blur-sm", colors[color as keyof typeof colors])}>
-            <div className="p-4 border-b border-black/5 dark:border-white/5 bg-black/5 dark:bg-white/5">
-                <h4 className="font-bold text-center uppercase tracking-tight text-sm md:text-base">{title}</h4>
+        <Card className="border-none shadow-xl bg-card/50 backdrop-blur-sm overflow-hidden rounded-[2.5rem]">
+            <div className={cn("p-6 border-b", t)}>
+                <h3 className="text-2xl font-black font-headline uppercase">{title}</h3>
+                <p className="text-sm opacity-80 mt-1 font-medium">{desc}</p>
             </div>
-            <div className="p-4 space-y-1">
-                {children}
+            <div className="p-0">
+                <Table>
+                    <TableHeader className="bg-black/20">
+                        <TableRow className="border-none hover:bg-transparent">
+                            <TableHead className="font-bold text-muted-foreground w-[30%] pl-6">Tier Pemain A</TableHead>
+                            <TableHead className="font-bold text-muted-foreground w-[30%]">Tier Pemain B</TableHead>
+                            <TableHead className="font-bold text-muted-foreground text-right pr-6">Hasil Kategori</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {data.map((row, i) => (
+                            <TableRow key={i} className={cn("border-b border-white/5 hover:bg-white/5 transition-colors", row.highlight ? h : "")}>
+                                <TableCell className="font-medium pl-6">{row.p1}</TableCell>
+                                <TableCell className="font-medium">{row.p2}</TableCell>
+                                <TableCell className="text-right font-bold uppercase pr-6">
+                                    {row.highlight && <span className="mr-2 text-[10px] bg-white/20 px-2 py-0.5 rounded-sm">SEED</span>}
+                                    {row.res}
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
             </div>
         </Card>
-    )
-}
-
-function ComboRow({ p1, p2, res, note, highlight }: any) {
-    return (
-        <div className={cn(
-            "flex justify-between items-center text-xs py-2 px-3 rounded-lg transition-colors",
-            highlight ? "bg-primary/10 font-bold border border-primary/20" : "hover:bg-black/5 dark:hover:bg-white/5"
-        )}>
-            <div className="flex items-center gap-1 text-muted-foreground">
-                <span>{p1}</span>
-                <span className="text-[8px] opacity-50 mx-1">+</span>
-                <span>{p2}</span>
-            </div>
-            <div className="text-right">
-                <span className={cn("block", highlight ? "text-primary" : "text-foreground")}>{res}</span>
-                {note && <span className="block text-[9px] uppercase tracking-wider font-bold opacity-70 mt-0.5">{note}</span>}
-            </div>
-        </div>
-    )
+    );
 }
