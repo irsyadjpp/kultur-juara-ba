@@ -134,7 +134,7 @@ const DrawingContent = () => (
                 <div className="space-y-2">
                 <h4 className="font-semibold">2. Kondisi Pengecualian</h4>
                 <p className="text-sm opacity-90">
-                    Aturan ini mungkin tidak berlaku jika jumlah tim dari satu klub terlalu banyak, sehingga penempatan terpisah tidak memungkinkan secara matematis tanpa melanggar aturan lain.
+                    Aturan ini mungkin tidak berlaku jika jumlah wakilnya banyak, sehingga penempatan terpisah tidak memungkinkan secara matematis tanpa melanggar aturan lain.
                 </p>
                 </div>
             </CardContent>
@@ -284,14 +284,15 @@ const SeedingContent = () => (
         </SectionWrapper>
 
         <SectionWrapper title="Mekanisme Penentuan Seeding (Tier Atas)" icon={Gavel}>
-             <p className="text-muted-foreground mb-4 -mt-4">
-                Jika beberapa pasangan sama kuat, kriteria berikut digunakan untuk seeding objektif.
-             </p>
+            <p className="text-muted-foreground mb-4 -mt-4">
+                Jika beberapa pasangan yang sama kuat, kriteria berikut digunakan untuk seeding objektif.
+            </p>
+            <h4 className="font-bold text-foreground mb-2">Urutan Penentuan Seeding</h4>
             <ol className="list-decimal pl-5 space-y-3 text-sm text-muted-foreground">
-                <li><strong className="text-foreground">Total Skor TPF:</strong> Jumlah skor individu pemain dalam satu tim.</li>
-                <li><strong className="text-foreground">Skor Performa:</strong> Nilai tambahan pada aspek Power, Stamina, dll.</li>
-                <li><strong className="text-foreground">Video Terbaru:</strong> Pengamatan video paling relevan.</li>
-                <li><strong className="text-foreground">Undian Terkontrol:</strong> Langkah terakhir jika masih identik.</li>
+                <li><strong className="text-foreground">Total Skor Tier (TPF):</strong> Jumlah skor individu pemain dalam satu tim.</li>
+                <li><strong className="text-foreground">Skor Aspek Performa Khusus:</strong> Nilai pada aspek Power, Stamina, dll.</li>
+                <li><strong className="text-foreground">Pengamatan Video Terbaru:</strong> Performa paling stabil di video terakhir lebih diutamakan.</li>
+                <li><strong className="text-foreground">Undian Terkontrol:</strong> Langkah terakhir jika semua kriteria masih identik, disaksikan TPF.</li>
             </ol>
         </SectionWrapper>
       </div>
@@ -299,11 +300,11 @@ const SeedingContent = () => (
       <div className="space-y-6">
          <SectionWrapper title="Aturan Khusus & Transparansi" icon={FileText}>
              <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-3">
-                 <li><strong>Peserta Satu Klub:</strong> Hanya pasangan dengan nilai TPF tertinggi dari satu klub yang bisa menjadi seed.</li>
-                 <li><strong>Penilaian Ganda:</strong> Penilaian dilakukan per PASANGAN, bukan per individu.</li>
-                 <li><strong>Data Video Tidak Lengkap:</strong> Peserta otomatis masuk kelompok non-seed.</li>
-                 <li><strong>Kerahasiaan Data:</strong> Semua video bersifat rahasia dan hanya digunakan untuk kebutuhan internal TPF.</li>
-                 <li><strong>Ketentuan Perubahan Aturan:</strong> Panitia berhak memperbarui atau menyesuaikan aturan seeding.</li>
+                 <li><strong className="text-foreground">Peserta Satu Klub:</strong> Hanya pasangan dengan nilai TPF tertinggi dari satu klub yang bisa menjadi seed.</li>
+                 <li><strong className="text-foreground">Penilaian Ganda:</strong> Penilaian ada 2 yaitu penilaian individu dan penilaian sebagai pasangan.</li>
+                 <li><strong className="text-foreground">Data Video Tidak Lengkap:</strong> Jika peserta tidak mengirim video yang memadai, penilaian akan menggunakan data visual yang tersedia dan peserta otomatis masuk kelompok non-seed.</li>
+                 <li><strong className="text-foreground">Kerahasiaan Data:</strong> Semua video peserta bersifat rahasia dan hanya digunakan untuk kebutuhan penilaian TPF.</li>
+                 <li><strong className="text-foreground">Ketentuan Perubahan Aturan:</strong> Panitia berhak memperbarui atau menyesuaikan aturan seeding dengan pemberitahuan kepada peserta.</li>
              </ul>
          </SectionWrapper>
       </div>
@@ -362,5 +363,3 @@ export default function RulesPage() {
     </div>
   );
 }
-
-    
