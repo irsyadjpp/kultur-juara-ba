@@ -1,3 +1,4 @@
+
 "use client";
 
 import { MapPin, Navigation } from "lucide-react";
@@ -29,7 +30,7 @@ export function LocationSection() {
                         </p>
                     </div>
                     <Button asChild size="lg" className="rounded-full h-14 px-8 text-lg font-bold bg-primary hover:bg-primary/90 w-full sm:w-auto">
-                        <Link href="https://maps.app.goo.gl/9qYd2QGj8rZkHq3f7" target="_blank">
+                        <Link href="https://maps.app.goo.gl/u9z7ERpEjuQSk5oE6" target="_blank">
                             <Navigation className="w-5 h-5 mr-2" /> Petunjuk Arah
                         </Link>
                     </Button>
