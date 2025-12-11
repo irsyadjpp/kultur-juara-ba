@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Header } from '@/components/layout/header';
@@ -204,7 +205,7 @@ const SchedulingContent = () => (
             <CardContent className="space-y-4">
                    <CaseExample title="Saat Babak Grup (Group Stage)" desc="Jadwal antar pertandingan dibuat lebih renggang.">
                       <ul className="list-disc pl-5 text-muted-foreground text-sm space-y-2">
-                          <li><strong>Minimal jeda 1 match</strong> jika kategori berbeda berada di lapangan yang berbeda.</li>
+                          <li><strong>Minimal jeda 1 match</strong> jika kategori berbeda dimainkan di lapangan yang berbeda.</li>
                           <li><strong>Minimal jeda 2 match</strong> jika semua kategori dimainkan di lapangan yang sama.</li>
                       </ul>
                   </CaseExample>
@@ -301,7 +302,7 @@ const SeedingContent = () => (
       <div className="lg:col-span-2 space-y-6">
         <SectionWrapper title="Pengertian & Penentu Seeding" icon={Info}>
           <p className="text-muted-foreground mb-4">
-            Seeding adalah proses penetapan peringkat awal untuk distribusi kekuatan yang merata. Karena ini turnamen komunitas, TPF menentukan seeding berdasarkan observasi video dan parameter teknis, bukan ranking PBSI.
+            Seeding adalah proses penetapan peringkat awal untuk distribusi kekuatan yang merata. Karena ini turnamen komunitas, TPF menentukan seeding berdasarkan observasi video dan parameter teknis, bukan ranking PBSI/BWF.
           </p>
           <div className="grid grid-cols-2 gap-4">
             <CaseExample title="A. Observasi Video" desc="Sumber data penilaian.">
@@ -321,6 +322,53 @@ const SeedingContent = () => (
             </CaseExample>
           </div>
         </SectionWrapper>
+
+        <SectionWrapper title="Mekanisme Penentuan Seeding Jika Banyak Pasangan Tier Atas" icon={Gavel}>
+             <p className="text-muted-foreground mb-4">
+                Jika ada beberapa pasangan yang semuanya sama-sama “tier atas”, maka penentuan seeding harus menggunakan kriteria lanjutan untuk menjaga objektivitas.
+             </p>
+             <div className="space-y-4">
+                <h4 className="font-bold">1. Gunakan Skor Penilaian Tier (Total Skor Individu)</h4>
+                <p className="text-sm text-muted-foreground">Setiap pemain memiliki skor penilaian TPF. Total skor pasangan (Pemain A + Pemain B) menjadi penentu utama. Pasangan dengan total skor tertinggi mendapat seeding lebih tinggi.</p>
+                <div className="overflow-x-auto">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Pasangan</TableHead>
+                                <TableHead>Skor A</TableHead>
+                                <TableHead>Skor B</TableHead>
+                                <TableHead>Total</TableHead>
+                                <TableHead>Ranking</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell>P1</TableCell><TableCell>19</TableCell><TableCell>18</TableCell><TableCell className="font-bold">37</TableCell><TableCell>#1</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>P2</TableCell><TableCell>18</TableCell><TableCell>18</TableCell><TableCell className="font-bold">36</TableCell><TableCell>#2</TableCell>
+                            </TableRow>
+                             <TableRow>
+                                <TableCell>P3</TableCell><TableCell>17</TableCell><TableCell>19</TableCell><TableCell className="font-bold">36</TableCell><TableCell>#3 (tie)</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </div>
+                
+                <h4 className="font-bold pt-4 border-t">2. Jika Total Skor Sama → Gunakan “Skor Performa”</h4>
+                <p className="text-sm text-muted-foreground">TPF dapat memberikan nilai tambahan pada aspek performa khusus (Power, Stamina, Defense, dll). Pasangan dengan rerata performa khusus lebih tinggi mendapat seeding lebih baik.</p>
+                
+                 <h4 className="font-bold pt-4 border-t">Urutan Penentuan Seeding</h4>
+                <ol className="list-decimal pl-5 space-y-2 text-sm text-muted-foreground">
+                    <li>Total skor tier (skor penilaian TPF).</li>
+                    <li>Skor aspek performa khusus.</li>
+                    <li>Head-to-head (jika ada data pertemuan sebelumnya).</li>
+                    <li>Pengamatan video terbaru (lebih relevan).</li>
+                    <li>Undian terkontrol (sebagai langkah terakhir).</li>
+                </ol>
+             </div>
+        </SectionWrapper>
+
 
         <SectionWrapper title="Aturan Penempatan & Khusus" icon={FileText}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -345,9 +393,10 @@ const SeedingContent = () => (
          <SectionWrapper title="Aturan Khusus & Transparansi" icon={Calendar}>
              <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-3">
                  <li><strong>Peserta Satu Klub:</strong> Hanya pasangan dengan nilai TPF tertinggi dari satu klub yang bisa menjadi seed. Pasangan lain akan dipisah di babak gugur jika memungkinkan.</li>
-                 <li><strong>Penilaian Ganda:</strong> Penilaian TPF dilakukan per PASANGAN, bukan per individu.</li>
-                 <li><strong>Data Video Tidak Lengkap:</strong> Peserta tanpa video yang memadai otomatis menjadi non-seed.</li>
+                 <li><strong>Penilaian Ganda:</strong> Penilaian dilakukan per PASANGAN, bukan per individu.</li>
+                 <li><strong>Data Video Tidak Lengkap:</strong> Jika peserta tidak mengirim video yang memadai, penilaian akan menggunakan data visual yang tersedia dan otomatis masuk kelompok non-seed.</li>
                  <li><strong>Kerahasiaan Data:</strong> Semua video bersifat rahasia dan hanya digunakan untuk kebutuhan internal TPF.</li>
+                 <li><strong>Ketentuan Perubahan Aturan:</strong> Panitia berhak memperbarui aturan seeding sesuai kebutuhan teknis, dengan pemberitahuan sebelum pertandingan dimulai.</li>
              </ul>
          </SectionWrapper>
       </div>
@@ -399,3 +448,4 @@ export default function RulesPage() {
   );
 }
 
+    
