@@ -21,10 +21,7 @@ export function Header() {
 
   const navItems = [
     { name: 'Beranda', href: '/' },
-    { name: 'Tentang', href: '/about' },
-    { name: 'Bagan', href: '/live-score' },
-    { name: 'Panduan Level', href: '/leveling-guide' },
-    { name: 'Aturan Main', href: '/rules/drawing'},
+    { name: 'Live', href: '/live-score' },
   ];
 
   return (
