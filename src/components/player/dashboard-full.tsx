@@ -20,7 +20,7 @@ import {
   Swords
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { DigitalPlayerCard } from "./digital-player-card"; // Pastikan komponen ini ada (dari chat sebelumnya)
+import { DigitalPlayerCard } from "./digital-player-card";
 import { CourtLines } from "@/components/ui/court-lines";
 import { cn } from "@/lib/utils";
 
@@ -123,13 +123,15 @@ export function DashboardClient({ session }: { session: any }) {
                {!session.teamId ? (
                    <Card className="border-2 border-dashed border-primary/20 bg-surface-variant/30 rounded-[2rem] overflow-hidden">
                       <Tabs defaultValue="partner" className="w-full">
-                         <div className="bg-surface-variant/50 p-2 m-2 rounded-[1.5rem] flex gap-2">
-                            <TabsTrigger value="partner" className="w-1/2 rounded-3xl font-bold py-3 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-md transition-all">
-                               Cari Pasangan
-                            </TabsTrigger>
-                            <TabsTrigger value="community" className="w-1/2 rounded-3xl font-bold py-3 data-[state=active]:bg-zinc-900 data-[state=active]:text-white transition-all">
-                               Gabung Klub
-                            </TabsTrigger>
+                         <div className="p-2">
+                            <TabsList className="bg-surface-variant/50 p-2 m-2 rounded-[1.5rem] flex gap-2 w-full h-auto">
+                               <TabsTrigger value="partner" className="w-1/2 rounded-3xl font-bold py-3 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-md transition-all">
+                                  Cari Pasangan
+                               </TabsTrigger>
+                               <TabsTrigger value="community" className="w-1/2 rounded-3xl font-bold py-3 data-[state=active]:bg-zinc-900 data-[state=active]:text-white transition-all">
+                                  Gabung Klub
+                               </TabsTrigger>
+                            </TabsList>
                          </div>
 
                          <div className="p-6 pt-2">
