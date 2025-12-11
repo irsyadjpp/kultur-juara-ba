@@ -22,7 +22,6 @@ export function Footer() {
               <li><Link href="/about" className="hover:text-primary transition-colors">Tentang Kami</Link></li>
               <li><Link href="/leveling-guide" className="hover:text-primary transition-colors">Panduan Level</Link></li>
               <li><Link href="/rules/drawing" className="hover:text-primary transition-colors">Aturan Main</Link></li>
-              <li><Link href="/faq" className="hover:text-primary transition-colors">FAQ</Link></li>
             </ul>
           </div>
            {/* Kolom 3: Kontak */}
