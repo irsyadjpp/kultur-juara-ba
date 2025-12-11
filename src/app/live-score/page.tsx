@@ -1,118 +1,192 @@
+
+'use client';
+
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Activity } from "lucide-react";
+import { Trophy, Swords, Crown } from "lucide-react";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 
-// Di real app, data ini di-fetch dari database (server component)
-const liveMatches = [
-  { 
-    id: 1, 
-    court: "Lapangan 1", 
-    category: "Beregu PUTRA", 
-    teamA: "PB Djarum KW", 
-    teamB: "PB Jaya Raya", 
-    scoreA: [21, 18, 5], 
-    scoreB: [19, 21, 2], 
-    status: "LIVE",
-    currentSet: 3 
-  },
-  { 
-    id: 3, 
-    court: "Lapangan 3", 
-    category: "Beregu CAMPURAN", 
-    teamA: "PB Tangkas", 
-    teamB: "PB Mutiara", 
-    scoreA: [30], 
-    scoreB: [28], 
-    status: "FINISHED", 
-    winner: "PB Tangkas"
-  },
-];
+// --- MOCK DATA ---
+const BRACKET_DATA = {
+  quarterFinals: [
+    { id: "Q1", pA: "Kevin / Marcus", pB: "Chia / Soh", sA: 2, sB: 0, status: "DONE", winner: "A" },
+    { id: "Q2", pA: "Fajar / Rian", pB: "Rankireddy / Shetty", sA: 1, sB: 2, status: "DONE", winner: "B" },
+    { id: "Q3", pA: "Ahsan / Hendra", pB: "Liu / Ou", sA: 2, sB: 1, status: "DONE", winner: "A" },
+    { id: "Q4", pA: "Leo / Daniel", pB: "Alfian / Ardianto", sA: 0, sB: 0, status: "LIVE", winner: null },
+  ],
+  semiFinals: [
+    { id: "S1", pA: "Kevin / Marcus", pB: "Rankireddy / Shetty", sA: 0, sB: 0, status: "SCHEDULED", winner: null },
+    { id: "S2", pA: "Ahsan / Hendra", pB: "TBD", sA: 0, sB: 0, status: "SCHEDULED", winner: null },
+  ],
+  final: [
+    { id: "F1", pA: "TBD", pB: "TBD", sA: 0, sB: 0, status: "SCHEDULED", winner: null },
+  ],
+  champion: null
+};
 
-export default function PublicLiveScorePage() {
+export default function BracketPage() {
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
-      <main className="flex-grow py-12 bg-secondary/5">
-        <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
-                <div className="inline-flex items-center justify-center p-3 bg-red-100 text-red-600 rounded-full mb-4 animate-pulse">
-                    <Activity className="w-6 h-6" />
-                </div>
-                <h1 className="text-4xl font-black font-headline mb-2">Live Score</h1>
-                <p className="text-muted-foreground">Pantau hasil pertandingan Road to BCC 2026 secara langsung.</p>
-            </div>
+      <main className="flex-grow py-16 md:py-24 bg-secondary/30 relative">
+        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-                {liveMatches.map((match) => (
-                    <Card key={match.id} className="overflow-hidden border-2 border-transparent hover:border-primary/20 transition-colors">
-                        {/* Header Status */}
-                        <div className={`h-2 w-full ${match.status === 'LIVE' ? 'bg-red-500 animate-pulse' : 'bg-slate-300'}`} />
-                        
-                        <CardContent className="p-6">
-                            <div className="flex justify-between items-start mb-6">
-                                <Badge variant="outline">{match.court}</Badge>
-                                {match.status === 'LIVE' ? (
-                                    <Badge className="bg-red-500 hover:bg-red-600 animate-pulse">LIVE</Badge>
-                                ) : (
-                                    <Badge variant="secondary">SELESAI</Badge>
-                                )}
-                            </div>
+        <div className="container mx-auto px-4 text-center mb-16 relative z-10">
+          <div className="inline-flex items-center justify-center p-3 bg-primary/10 rounded-full mb-4 ring-4 ring-primary/5">
+            <Swords className="w-8 h-8 text-primary" />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-black font-headline text-foreground mb-4 uppercase">
+            Bagan Pertandingan
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Ikuti perjalanan para juara di babak knockout Road to BCC 2026.
+          </p>
+        </div>
+        
+        {/* --- BRACKET CANVAS --- */}
+        <div className="relative z-10">
+           <ScrollArea className="w-full h-full pb-8">
+              <div 
+                  className="min-w-max flex items-center justify-center py-10 px-4 md:px-20"
+              >
+                  <div className="flex gap-8 md:gap-16 items-center">
+                      
+                      {/* COLUMN 1: QUARTER FINALS */}
+                      <div className="flex flex-col gap-12 justify-center">
+                          <BracketHeader title="Quarter Final" />
+                          <div className="flex flex-col gap-16">
+                              <div className="flex flex-col gap-6">
+                                  <BracketMatch data={BRACKET_DATA.quarterFinals[0]} />
+                                  <BracketMatch data={BRACKET_DATA.quarterFinals[1]} />
+                              </div>
+                              <div className="flex flex-col gap-6">
+                                  <BracketMatch data={BRACKET_DATA.quarterFinals[2]} />
+                                  <BracketMatch data={BRACKET_DATA.quarterFinals[3]} />
+                              </div>
+                          </div>
+                      </div>
 
-                            <div className="flex justify-between items-center gap-4 mb-6">
-                                {/* Team A */}
-                                <div className="text-left flex-1">
-                                    <div className="font-black text-lg leading-tight mb-1">{match.teamA}</div>
-                                    <div className="text-xs text-muted-foreground uppercase tracking-wider">Tim A</div>
-                                </div>
+                      {/* CONNECTORS 1 */}
+                      <BracketConnector type="quarter" />
 
-                                {/* VS */}
-                                <div className="text-xs font-bold text-muted-foreground">VS</div>
+                      {/* COLUMN 2: SEMI FINALS */}
+                      <div className="flex flex-col gap-12 justify-center mt-8">
+                          <BracketHeader title="Semi Final" />
+                          <div className="flex flex-col gap-[280px]">
+                              <BracketMatch data={BRACKET_DATA.semiFinals[0]} isSemi />
+                              <BracketMatch data={BRACKET_DATA.semiFinals[1]} isSemi />
+                          </div>
+                      </div>
 
-                                {/* Team B */}
-                                <div className="text-right flex-1">
-                                    <div className="font-black text-lg leading-tight mb-1">{match.teamB}</div>
-                                    <div className="text-xs text-muted-foreground uppercase tracking-wider">Tim B</div>
-                                </div>
-                            </div>
+                      {/* CONNECTORS 2 */}
+                      <BracketConnector type="semi" />
 
-                            {/* Skor Besar */}
-                            <div className="bg-secondary/30 rounded-lg p-4 flex justify-between items-center font-mono text-2xl font-bold">
-                                <div className={match.status === 'LIVE' ? 'text-primary' : ''}>
-                                    {match.scoreA[match.currentSet ? match.currentSet - 1 : 0]}
-                                </div>
-                                <div className="text-sm text-muted-foreground font-sans font-normal">
-                                    {match.status === 'LIVE' ? `Set ${match.currentSet}` : 'Skor Akhir'}
-                                </div>
-                                <div className={match.status === 'LIVE' ? 'text-primary' : ''}>
-                                    {match.scoreB[match.currentSet ? match.currentSet - 1 : 0]}
-                                </div>
-                            </div>
-
-                            {/* Detail Set (Kecil) */}
-                            <div className="flex justify-center gap-4 mt-3 text-xs text-muted-foreground">
-                                {match.scoreA.map((s, i) => (
-                                    // Hanya tampilkan set yang sudah ada skornya
-                                    (s > 0 || match.scoreB[i] > 0) && (
-                                        <span key={i}>S{i+1}: {s}-{match.scoreB[i]}</span>
-                                    )
-                                ))}
-                            </div>
-
-                            {match.winner && (
-                                <div className="mt-4 pt-4 border-t flex items-center justify-center gap-2 text-green-600 font-bold">
-                                    <Trophy className="w-4 h-4" />
-                                    Pemenang: {match.winner}
-                                </div>
-                            )}
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
+                      {/* COLUMN 3: FINAL */}
+                      <div className="flex flex-col gap-12 justify-center mt-8">
+                          <div className="flex flex-col items-center gap-6">
+                              <Trophy className="w-16 h-16 text-yellow-500 drop-shadow-[0_0_15px_rgba(234,179,8,0.5)] animate-pulse-slow" />
+                              <BracketHeader title="Grand Final" isFinal />
+                              <BracketMatch data={BRACKET_DATA.final[0]} isFinal />
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <ScrollBar orientation="horizontal" />
+           </ScrollArea>
         </div>
       </main>
       <Footer />
     </div>
   );
 }
+
+// --- SUB COMPONENTS ---
+
+function BracketHeader({ title, isFinal }: { title: string, isFinal?: boolean }) {
+    return (
+        <div className={cn(
+            "text-center mb-4 uppercase tracking-widest font-black text-sm",
+            isFinal ? "text-yellow-500" : "text-zinc-500"
+        )}>
+            {title}
+        </div>
+    )
+}
+
+function BracketMatch({ data, isSemi, isFinal }: { data: any, isSemi?: boolean, isFinal?: boolean }) {
+    return (
+        <div className={cn(
+            "relative w-[250px] sm:w-[280px] bg-card rounded-[20px] border transition-all duration-300 group hover:scale-105 hover:z-10",
+            data.status === 'LIVE' ? "border-primary/50 shadow-[0_0_20px_rgba(220,38,38,0.2)]" : 
+            isFinal ? "border-yellow-500/50 bg-gradient-to-b from-card to-black/20" :
+            "border-border hover:border-zinc-300 dark:hover:border-zinc-700"
+        )}>
+            <div className="flex justify-between items-center px-4 py-2 border-b bg-secondary/20 rounded-t-[20px]">
+                <span className="text-[10px] font-bold text-muted-foreground">{data.id}</span>
+                {data.status === 'LIVE' ? (
+                    <span className="text-[9px] font-black text-primary uppercase tracking-wider animate-pulse">● LIVE</span>
+                ) : (
+                    <span className="text-[9px] font-bold text-muted-foreground uppercase">{data.status}</span>
+                )}
+            </div>
+
+            <div className="p-4 space-y-3">
+                <div className={cn("flex justify-between items-center p-2 rounded-lg transition-colors", data.winner === 'A' ? "bg-primary/10" : "")}>
+                    <div className="flex items-center gap-3 overflow-hidden">
+                        {data.winner === 'A' && <Crown className="w-3 h-3 text-yellow-500 shrink-0" />}
+                        <span className={cn("text-sm font-bold truncate", data.winner === 'A' ? "text-primary" : "text-foreground")}>
+                            {data.pA}
+                        </span>
+                    </div>
+                    <span className={cn("font-mono font-black text-lg", data.winner === 'A' ? "text-primary" : "text-muted-foreground")}>
+                        {data.sA}
+                    </span>
+                </div>
+
+                <div className={cn("flex justify-between items-center p-2 rounded-lg transition-colors", data.winner === 'B' ? "bg-primary/10" : "")}>
+                    <div className="flex items-center gap-3 overflow-hidden">
+                        {data.winner === 'B' && <Crown className="w-3 h-3 text-yellow-500 shrink-0" />}
+                        <span className={cn("text-sm font-bold truncate", data.winner === 'B' ? "text-primary" : "text-foreground")}>
+                            {data.pB}
+                        </span>
+                    </div>
+                    <span className="font-mono font-black text-lg text-muted-foreground">
+                        {data.sB}
+                    </span>
+                </div>
+            </div>
+            {isFinal && <div className="absolute inset-0 border-2 border-yellow-500/20 rounded-[20px] pointer-events-none"></div>}
+        </div>
+    )
+}
+
+function BracketConnector({ type }: { type: 'quarter' | 'semi' }) {
+    if (type === 'quarter') {
+        return (
+            <div className="flex flex-col gap-16 py-12">
+               <div className="flex flex-col justify-center h-[280px]">
+                   <div className="w-8 border-y-2 border-r-2 border-border h-[50%] rounded-r-2xl translate-y-[25%] opacity-30"></div>
+                   <div className="w-8 h-[2px] bg-border self-end opacity-30"></div>
+               </div>
+               <div className="flex flex-col justify-center h-[280px]">
+                   <div className="w-8 border-y-2 border-r-2 border-border h-[50%] rounded-r-2xl translate-y-[25%] opacity-30"></div>
+                   <div className="w-8 h-[2px] bg-border self-end opacity-30"></div>
+               </div>
+            </div>
+        )
+    }
+    
+    return (
+        <div className="flex flex-col justify-center h-[500px]">
+             <div className="w-8 border-y-2 border-r-2 border-border h-[50%] rounded-r-2xl translate-y-[25%] opacity-30"></div>
+             <div className="w-8 h-[2px] bg-border self-end opacity-30"></div>
+        </div>
+    )
+}
+
+
+    
