@@ -64,11 +64,11 @@ export default function LevelingGuidePage() {
                     <Scale className="w-8 h-8" />
                  </div>
                  <div className="text-center md:text-left">
-                    <h3 className="text-2xl font-black font-headline uppercase mb-2">Rule #1: Open Gender</h3>
-                    <p className="font-medium text-lg leading-relaxed opacity-90">
-                       Turnamen ini menggunakan standar <strong>Ganda Putra Umum</strong>. 
-                       Peserta Putri wajib mengukur kemampuan saat melawan Putra.
-                    </p>
+                  <h3 className="text-2xl font-black font-headline uppercase mb-2">Rule #1: Open Gender</h3>
+                  <p className="font-medium text-lg leading-relaxed opacity-90">
+                     Turnamen ini menggunakan standar <strong>Ganda Putra Umum</strong>. 
+                     Peserta Putri wajib mengukur kemampuan saat melawan Putra.
+                  </p>
                  </div>
               </div>
               {/* Pattern */}
@@ -125,7 +125,7 @@ export default function LevelingGuidePage() {
               <LevelCard 
                  theme="red"
                  title="Advance"
-                 subtitle="Competitive / Ex-Athlete"
+                 subtitle="Elite Community"
                  icon={<Trophy className="w-6 h-6" />}
                  desc="Pemain dengan teknik matang & pengalaman turnamen. Memiliki pukulan mematikan dan footwork yang efisien."
                  stats={[
@@ -136,7 +136,7 @@ export default function LevelingGuidePage() {
                  checklist={[
                     "Akurasi & penempatan bola sangat baik",
                     "Backhand clear & drop shot konsisten",
-                    "Pernah mengikuti turnamen resmi (Porda/Kejurda)",
+                    "Sering juara di level komunitas/open",
                     "Memiliki pengalaman latih tanding dengan atlet"
                  ]}
               />
@@ -173,9 +173,7 @@ export default function LevelingGuidePage() {
                        <h4 className="font-bold uppercase tracking-wider">TPF Protocol</h4>
                     </div>
                     <p className="text-sm leading-relaxed opacity-80">
-                       Panitia memiliki database rekam jejak pemain. 
-                       Ketidaksesuaian level (Sandbagging) saat pertandingan akan dikenakan sanksi 
-                       <span className="text-white font-black"> DISKUALIFIKASI TANPA REFUND</span>.
+                       Tim Pencari Fakta (TPF) akan memantau seluruh pertandingan. Jika terdeteksi adanya manipulasi level (sandbagging), pertandingan akan dihentikan dan pemain dikenakan sanksi <span className="text-white font-black">DISKUALIFIKASI TANPA REFUND</span>.
                     </p>
                  </div>
 
@@ -268,7 +266,7 @@ function LevelCard({ theme, title, subtitle, icon, desc, stats, checklist, recom
 
 function PairRow({ p1, p2, res, valid, note }: any) {
   const themes = {
-      Beginner: "bg-emerald-500",
+      Beginner: "bg-green-500",
       Intermediate: "bg-blue-500",
       Advance: "bg-purple-500",
    };
