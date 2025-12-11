@@ -12,6 +12,7 @@ import { CourtLines } from '@/components/ui/court-lines';
 import { cn } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from 'next/image';
+import { ClientOnly } from '@/components/client-only';
 
 // --- UPDATED MOCK DATA ---
 const SCHEDULE_DATA = [
@@ -85,11 +86,13 @@ const ScheduleView = ({ searchTerm }: { searchTerm: string }) => {
       let classB = "text-white";
 
       if (isLiveSet) {
-        if (sA > sB) classB = "text-zinc-500";
-        if (sB > sA) classA = "text-zinc-500";
+        // For live sets, only dim the losing score
+        if (sA > sB) classB = "text-zinc-400";
+        if (sB > sA) classA = "text-zinc-400";
       } else {
-        if (sA > sB) classB = "text-zinc-500";
-        else classA = "text-zinc-500";
+         // For finished sets, always dim the loser
+        if (sA > sB) classB = "text-zinc-400";
+        else classA = "text-zinc-400";
       }
 
       return (
@@ -203,37 +206,39 @@ export default function SchedulePage() {
              </h1>
           </div>
           
-          <Tabs defaultValue="schedule" className="w-full">
-            <div className="flex justify-center mb-8">
-              <TabsList className="bg-secondary/50 p-2 rounded-full h-auto border border-border/20 backdrop-blur-sm">
-                <TabsTrigger value="schedule" className="text-sm font-bold rounded-full px-6 py-3 data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-md">
-                  Jadwal Pertandingan
-                </TabsTrigger>
-                <TabsTrigger value="podium" className="text-sm font-bold rounded-full px-6 py-3 data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-md">
-                  Podium Juara
-                </TabsTrigger>
-              </TabsList>
-            </div>
-
-            <TabsContent value="schedule">
-              <div className="sticky top-20 z-20 mb-8 p-2 bg-background/80 backdrop-blur-md rounded-full border border-border/50 max-w-lg mx-auto">
-                <div className="relative">
-                  <Search className="absolute left-4 top-3.5 w-5 h-5 text-muted-foreground" />
-                  <Input
-                    placeholder="Cari nama pemain, klub, atau kategori..."
-                    className="w-full h-12 pl-12 rounded-full border-none bg-transparent focus-visible:ring-2 focus-visible:ring-primary"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
+          <ClientOnly>
+            <Tabs defaultValue="schedule" className="w-full">
+              <div className="flex justify-center mb-8">
+                <TabsList className="bg-secondary/50 p-2 rounded-full h-auto border border-border/20 backdrop-blur-sm">
+                  <TabsTrigger value="schedule" className="text-sm font-bold rounded-full px-6 py-3 data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-md">
+                    Jadwal Pertandingan
+                  </TabsTrigger>
+                  <TabsTrigger value="podium" className="text-sm font-bold rounded-full px-6 py-3 data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-md">
+                    Podium Juara
+                  </TabsTrigger>
+                </TabsList>
               </div>
-              <ScheduleView searchTerm={searchTerm} />
-            </TabsContent>
 
-            <TabsContent value="podium">
-              <PodiumView />
-            </TabsContent>
-          </Tabs>
+              <TabsContent value="schedule">
+                <div className="sticky top-20 z-20 mb-8 p-2 bg-background/80 backdrop-blur-md rounded-full border border-border/50 max-w-lg mx-auto">
+                  <div className="relative">
+                    <Search className="absolute left-4 top-3.5 w-5 h-5 text-muted-foreground" />
+                    <Input
+                      placeholder="Cari nama pemain, klub, atau kategori..."
+                      className="w-full h-12 pl-12 rounded-full border-none bg-transparent focus-visible:ring-2 focus-visible:ring-primary"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <ScheduleView searchTerm={searchTerm} />
+              </TabsContent>
+
+              <TabsContent value="podium">
+                <PodiumView />
+              </TabsContent>
+            </Tabs>
+          </ClientOnly>
         </div>
       </main>
       <Footer />
