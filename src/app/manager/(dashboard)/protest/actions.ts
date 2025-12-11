@@ -1,69 +1,92 @@
+'use client';
 
-'use server';
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Menu, User, Zap } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { ThemeToggle } from '@/components/theme-toggle';
+import { cn } from '@/lib/utils';
+import { ClientOnly } from '../client-only';
 
-import { protestFormSchema, type ProtestFormValues } from '@/lib/schemas/protest';
+export function Header() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-// MOCK Database Protes
-const MOCK_PROTESTS: any[] = [];
-let protestCounter = 0;
+  const navItems = [
+    { name: 'Beranda', href: '/' },
+    { name: 'Bagan', href: '/bagan' },
+    { name: 'Jadwal', href: '/schedule' },
+    { name: 'Players', href: '/players' },
+  ];
 
-function generateProtestId() {
-  protestCounter++;
-  const number = String(protestCounter).padStart(3, '0');
-  const month = new Date().getMonth() + 1;
-  const year = new Date().getFullYear().toString().slice(-2);
-  return `PRT/${number}/${month}/${year}`;
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 px-4 pointer-events-none">
+      <div className={cn(
+        "flex items-center justify-between px-2 py-2 transition-all duration-300 pointer-events-auto",
+        "bg-background/80 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-lg",
+        isScrolled ? "w-full max-w-5xl rounded-full" : "w-full max-w-7xl rounded-3xl"
+      )}>
+        
+        {/* LOGO */}
+        <Link href="/" className="flex items-center gap-3 px-4 group">
+            <div className="relative w-8 h-8 md:w-10 md:h-10 transition-transform group-hover:scale-110">
+                <Image src="/images/logo.png" alt="Logo" fill className="object-contain" />
+            </div>
+            <span className={cn("font-headline font-black tracking-tighter uppercase hidden md:block transition-all", isScrolled ? "text-lg" : "text-xl")}>
+              BCC<span className="text-primary">2026</span>
+            </span>
+        </Link>
+
+        {/* DESKTOP NAV - Pills */}
+        <nav className="hidden md:flex items-center gap-1 bg-secondary/50 rounded-full p-1 mx-4">
+            {navItems.map((item) => (
+               <Button key={item.name} variant="ghost" className="rounded-full hover:bg-background hover:shadow-sm text-muted-foreground hover:text-foreground font-bold transition-all text-xs" asChild>
+                  <Link href={item.href}>{item.name}</Link>
+               </Button>
+            ))}
+        </nav>
+
+        {/* ACTIONS */}
+        <div className="flex items-center gap-2 pr-1">
+             <ClientOnly>
+               <div className="hidden sm:block">
+                  <ThemeToggle />
+               </div>
+             </ClientOnly>
+             
+             <Button asChild className="rounded-full font-bold bg-primary text-primary-foreground hover:brightness-110 shadow-lg shadow-primary/20 px-6 hidden sm:flex">
+                <Link href="/admin/login">
+                    <User className="w-4 h-4 mr-2"/> Masuk
+                </Link>
+             </Button>
+            
+            {/* MOBILE TRIGGER */}
+            <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon" className="rounded-full md:hidden w-10 h-10 border-none bg-secondary">
+                    <Menu className="h-5 w-5"/>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="top" className="rounded-b-[2.5rem] pt-16">
+                   <div className="flex flex-col gap-4 items-center">
+                      {navItems.map(item => (
+                         <Link key={item.href} href={item.href} className="text-2xl font-black font-headline uppercase text-muted-foreground data-[active=true]:text-foreground">{item.name}</Link>
+                      ))}
+                      <div className="flex flex-col w-full gap-3 mt-8">
+                         <Button asChild size="lg" className="w-full rounded-full text-lg font-bold bg-primary"><Link href="/admin/login">Login Admin</Link></Button>
+                      </div>
+                   </div>
+                </SheetContent>
+            </Sheet>
+        </div>
+      </div>
+    </header>
+  );
 }
-
-export async function submitProtest(formData: ProtestFormValues) {
-  const validation = protestFormSchema.safeParse(formData);
-  if (!validation.success) { 
-    console.error(validation.error.errors);
-    return { success: false, message: "Data tidak valid. Periksa kembali isian Anda." } 
-  }
-
-  const protestId = generateProtestId();
-  const newProtest = {
-    id: protestId,
-    ...formData,
-    status: 'PENDING_DEPOSIT', // STATUS AWAL
-    submissionDate: new Date().toISOString(),
-  };
-
-  MOCK_PROTESTS.push(newProtest);
-
-  await new Promise(r => setTimeout(r, 1500)); // Simulasi Delay
-
-  return { 
-    success: true, 
-    protestId, 
-    teamName: newProtest.teamName,
-    message: "Protes telah dicatat di sistem. Silakan lanjutkan ke pembayaran deposit."
-  };
-}
-
-export async function getProtests() {
-    await new Promise(r => setTimeout(r, 500));
-    return MOCK_PROTESTS;
-}
-
-export async function confirmDeposit(protestId: string) {
-    const protest = MOCK_PROTESTS.find(p => p.id === protestId);
-    if (protest) {
-        protest.status = 'PENDING_REVIEW';
-    }
-    await new Promise(r => setTimeout(r, 800));
-    return { success: true, message: `Deposit untuk ${protestId} telah dikonfirmasi.` };
-}
-
-export async function resolveProtest(id: string, decision: 'ACCEPTED' | 'REJECTED', verdict: string) {
-    const protest = MOCK_PROTESTS.find(p => p.id === id);
-    if (protest) {
-        protest.status = decision === 'ACCEPTED' ? 'ACCEPTED' : 'REJECTED';
-        protest.verdict = verdict;
-    }
-    await new Promise(r => setTimeout(r, 1000));
-    return { success: true, message: `Keputusan untuk ${id} telah disimpan.` };
-}
-
-    

@@ -1,160 +1,92 @@
-
 'use client';
 
-import { useActionState } from "react"; 
-import { useFormStatus } from "react-dom";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search, Loader2, CheckCircle, XCircle, AlertCircle, Download, FileText, CreditCard, UserCheck } from "lucide-react";
-import { checkRegistrationStatus } from "../../../status/actions";
-import { useToast } from "@/hooks/use-toast";
-import { useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Menu, User, Zap } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { ThemeToggle } from '@/components/theme-toggle';
+import { cn } from '@/lib/utils';
+import { ClientOnly } from '../client-only';
 
-const initialState = {
-  success: false,
-  message: "",
-  data: null as any,
-};
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
+export function Header() {
+  const [isScrolled, setIsScrolled] = useState(false);
   
-  return (
-    <Button type="submit" size="lg" className="h-12 px-8" disabled={pending}>
-      {pending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Search className="w-4 h-4 mr-2" />}
-      {pending ? "Mencari..." : "Cari Data"}
-    </Button>
-  );
-}
-
-export default function StatusPage() {
-  const [state, formAction] = useActionState(checkRegistrationStatus, initialState);
-  const { toast } = useToast();
-
   useEffect(() => {
-    if (state.message && !state.success) {
-      toast({
-        title: "Pencarian Gagal",
-        description: state.message,
-        variant: "destructive",
-      });
-    }
-  }, [state, toast]);
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-  // Simulasi Download ID Card
-  const handleDownload = (docName: string) => {
-    toast({
-      title: "Mengunduh...",
-      description: `Sedang menyiapkan dokumen ${docName}.`,
-    });
-    setTimeout(() => {
-        toast({
-            title: "Berhasil!",
-            description: "Dokumen telah disimpan di perangkat Anda.",
-            className: "bg-green-600 text-white border-none"
-        });
-    }, 1500);
-  };
+  const navItems = [
+    { name: 'Beranda', href: '/' },
+    { name: 'Bagan', href: '/bagan' },
+    { name: 'Jadwal', href: '/schedule' },
+    { name: 'Players', href: '/players' },
+  ];
 
   return (
-    <div className="space-y-6">
-        <div>
-            <h1 className="text-3xl font-bold font-headline">Status & Verifikasi</h1>
-            <p className="text-muted-foreground">Pantau status pembayaran dan hasil verifikasi TPF pemain Anda.</p>
-        </div>
+    <header className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 px-4 pointer-events-none">
+      <div className={cn(
+        "flex items-center justify-between px-2 py-2 transition-all duration-300 pointer-events-auto",
+        "bg-background/80 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-lg",
+        isScrolled ? "w-full max-w-5xl rounded-full" : "w-full max-w-7xl rounded-3xl"
+      )}>
+        
+        {/* LOGO */}
+        <Link href="/" className="flex items-center gap-3 px-4 group">
+            <div className="relative w-8 h-8 md:w-10 md:h-10 transition-transform group-hover:scale-110">
+                <Image src="/images/logo.png" alt="Logo" fill className="object-contain" />
+            </div>
+            <span className={cn("font-headline font-black tracking-tighter uppercase hidden md:block transition-all", isScrolled ? "text-lg" : "text-xl")}>
+              BCC<span className="text-primary">2026</span>
+            </span>
+        </Link>
 
-      {/* HASIL PENCARIAN */}
-      {state.success && state.data && (
-        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6">
+        {/* DESKTOP NAV - Pills */}
+        <nav className="hidden md:flex items-center gap-1 bg-secondary/50 rounded-full p-1 mx-4">
+            {navItems.map((item) => (
+               <Button key={item.name} variant="ghost" className="rounded-full hover:bg-background hover:shadow-sm text-muted-foreground hover:text-foreground font-bold transition-all text-xs" asChild>
+                  <Link href={item.href}>{item.name}</Link>
+               </Button>
+            ))}
+        </nav>
+
+        {/* ACTIONS */}
+        <div className="flex items-center gap-2 pr-1">
+             <ClientOnly>
+               <div className="hidden sm:block">
+                  <ThemeToggle />
+               </div>
+             </ClientOnly>
+             
+             <Button asChild className="rounded-full font-bold bg-primary text-primary-foreground hover:brightness-110 shadow-lg shadow-primary/20 px-6 hidden sm:flex">
+                <Link href="/admin/login">
+                    <User className="w-4 h-4 mr-2"/> Masuk
+                </Link>
+             </Button>
             
-            {/* 1. STATUS TIM & PEMBAYARAN */}
-            <Card className="overflow-hidden border-t-4 border-t-primary">
-                <CardHeader className="bg-secondary/20 pb-4">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <div>
-                            <CardTitle className="text-2xl font-bold font-headline text-primary">{state.data.teamName}</CardTitle>
-                            <CardDescription className="flex items-center gap-2 mt-1">
-                                <UserCheck className="w-4 h-4" /> {state.data.manager} ({state.data.category})
-                            </CardDescription>
-                        </div>
-                        <div className="text-right">
-                            <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Status Pembayaran</div>
-                            {state.data.paymentStatus === 'PAID' && 
-                                <Badge className="bg-green-600 text-base px-4 py-1 hover:bg-green-700"><CheckCircle className="w-4 h-4 mr-2"/> LUNAS</Badge>}
-                            {state.data.paymentStatus === 'PENDING' && 
-                                <Badge className="bg-yellow-500 text-base px-4 py-1 hover:bg-yellow-600 text-yellow-950"><AlertCircle className="w-4 h-4 mr-2"/> MENUNGGU KONFIRMASI</Badge>}
-                            {state.data.paymentStatus === 'REJECTED' && 
-                                <Badge variant="destructive" className="text-base px-4 py-1"><XCircle className="w-4 h-4 mr-2"/> DITOLAK</Badge>}
-                        </div>
-                    </div>
-                </CardHeader>
-                
-                {/* Tombol Download Dokumen (Hanya muncul jika sudah Lunas) */}
-                {state.data.paymentStatus === 'PAID' && (
-                    <div className="p-4 bg-blue-50 border-b border-blue-100 flex flex-wrap gap-3">
-                        <Button size="sm" variant="outline" onClick={() => handleDownload("ID Card Tim")} className="bg-white text-blue-700 border-blue-200 hover:bg-blue-100">
-                            <Download className="w-4 h-4 mr-2" /> Unduh ID Card Tim
-                        </Button>
-                        <Button size="sm" variant="outline" onClick={() => handleDownload("Formulir Waiver")} className="bg-white text-blue-700 border-blue-200 hover:bg-blue-100">
-                            <FileText className="w-4 h-4 mr-2" /> Unduh Lembar Pernyataan (Waiver)
-                        </Button>
-                         <Button size="sm" variant="outline" onClick={() => handleDownload("Kwitansi")} className="bg-white text-blue-700 border-blue-200 hover:bg-blue-100">
-                            <CreditCard className="w-4 h-4 mr-2" /> Unduh Kwitansi
-                        </Button>
-                    </div>
-                )}
-            </Card>
-
-            {/* 2. STATUS PEMAIN (TPF) */}
-            <Card>
-                <CardHeader>
-                    <CardTitle className="text-xl">Status Verifikasi Pemain (TPF)</CardTitle>
-                    <CardDescription>
-                        Pastikan seluruh pemain berstatus <strong>APPROVED</strong> sebelum Technical Meeting.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="rounded-md border">
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Nama Pemain</TableHead>
-                                    <TableHead>NIK</TableHead>
-                                    <TableHead>Status TPF</TableHead>
-                                    <TableHead>Catatan</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {state.data.players.map((player: any, idx: number) => (
-                                    <TableRow key={idx}>
-                                        <TableCell className="font-medium">{player.name}</TableCell>
-                                        <TableCell className="text-muted-foreground font-mono text-xs">{player.nik}</TableCell>
-                                        <TableCell>
-                                            {player.status === 'APPROVED' && <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50">Lolos</Badge>}
-                                            {player.status === 'PENDING' && <Badge variant="outline" className="text-yellow-600 border-yellow-200 bg-yellow-50">Sedang Dicek</Badge>}
-                                            {player.status === 'REJECTED' && <Badge variant="destructive">Ditolak</Badge>}
-                                            {player.status === 'UPGRADE REQUIRED' && <Badge className="bg-blue-600 hover:bg-blue-700">Wajib Naik Level</Badge>}
-                                        </TableCell>
-                                        <TableCell className="text-sm text-muted-foreground italic">
-                                            {player.note !== '-' ? player.note : ''}
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </div>
-                </CardContent>
-                <CardFooter className="bg-secondary/10 p-4 text-xs text-muted-foreground">
-                    *Keputusan Tim Pencari Fakta (TPF) bersifat mutlak. Jika status "Ditolak" atau "Naik Level", silakan hubungi panitia untuk revisi roster sebelum batas waktu.
-                </CardFooter>
-            </Card>
+            {/* MOBILE TRIGGER */}
+            <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon" className="rounded-full md:hidden w-10 h-10 border-none bg-secondary">
+                    <Menu className="h-5 w-5"/>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="top" className="rounded-b-[2.5rem] pt-16">
+                   <div className="flex flex-col gap-4 items-center">
+                      {navItems.map(item => (
+                         <Link key={item.href} href={item.href} className="text-2xl font-black font-headline uppercase text-muted-foreground data-[active=true]:text-foreground">{item.name}</Link>
+                      ))}
+                      <div className="flex flex-col w-full gap-3 mt-8">
+                         <Button asChild size="lg" className="w-full rounded-full text-lg font-bold bg-primary"><Link href="/admin/login">Login Admin</Link></Button>
+                      </div>
+                   </div>
+                </SheetContent>
+            </Sheet>
         </div>
-      )}
-    </div>
+      </div>
+    </header>
   );
 }

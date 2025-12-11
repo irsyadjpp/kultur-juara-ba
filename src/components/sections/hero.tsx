@@ -38,7 +38,7 @@ export function HeroSection() {
 
            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Button asChild size="lg" className="h-16 px-8 rounded-full text-lg font-bold shadow-xl shadow-primary/20 hover:scale-105 transition-transform bg-primary text-white hover:bg-primary/90">
-                 <Link href="/manager/login">
+                 <Link href="/#register">
                     Daftar Sekarang <ArrowRight className="ml-2 w-5 h-5" />
                  </Link>
               </Button>
@@ -65,7 +65,7 @@ export function HeroSection() {
                     <div className="absolute bottom-8 left-8 right-8 text-white">
                         <div className="flex items-center gap-2 mb-2 text-yellow-400">
                              <Trophy className="w-5 h-5 fill-current" />
-                             <span className="font-bold tracking-wider">PRIZE POOL</span>
+                             <span className="font-bold tracking-wider">TOTAL PRIZE POOL RP 19 JUTA</span>
                         </div>
                         <p className="text-4xl font-black font-headline">RP 19 JUTA</p>
                         
