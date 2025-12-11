@@ -12,6 +12,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { ClientOnly } from "@/components/client-only";
 
 function GoogleLoginButton() {
   const { pending } = useFormStatus();
@@ -138,50 +139,50 @@ export default function PlayerLoginPage() {
                 <h2 className="text-3xl font-black font-headline mb-2">Welcome Back, Champ!</h2>
                 <p className="text-zinc-400">Masuk untuk mengakses dashboard atlet.</p>
             </div>
+            <ClientOnly>
+              <div className="space-y-4">
+                  <form action={googleAction}>
+                      <GoogleLoginButton />
+                  </form>
 
-            <div className="space-y-4">
-                <form action={googleAction}>
-                    <GoogleLoginButton />
-                </form>
+                  <div className="relative flex py-2 items-center">
+                      <div className="flex-grow border-t border-zinc-800"></div>
+                      <span className="flex-shrink-0 mx-4 text-xs text-zinc-500 uppercase font-bold tracking-wider">Atau Manual</span>
+                      <div className="flex-grow border-t border-zinc-800"></div>
+                  </div>
 
-                <div className="relative flex py-2 items-center">
-                    <div className="flex-grow border-t border-zinc-800"></div>
-                    <span className="flex-shrink-0 mx-4 text-xs text-zinc-500 uppercase font-bold tracking-wider">Atau Manual</span>
-                    <div className="flex-grow border-t border-zinc-800"></div>
-                </div>
-
-                <form action={manualAction} className="space-y-4">
-                    <div className="space-y-2">
-                        <Label className="text-xs font-bold uppercase text-zinc-500 tracking-wider">Email</Label>
-                        <div className="relative">
-                            <Mail className="absolute left-3 top-3 h-5 w-5 text-zinc-500" />
-                            <Input 
-                                name="email" 
-                                type="email" 
-                                placeholder="atlet@email.com" 
-                                className="pl-10 bg-zinc-900 border-zinc-800 text-white h-12 rounded-lg focus:ring-primary focus:border-primary transition-all placeholder:text-zinc-600" 
-                                required
-                            />
-                        </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                        <div className="flex justify-between">
-                            <Label className="text-xs font-bold uppercase text-zinc-500 tracking-wider">Password</Label>
-                            <Link href="#" className="text-xs text-primary hover:underline">Lupa Password?</Link>
-                        </div>
-                        <Input 
-                            name="password" 
-                            type="password" 
-                            placeholder="••••••••"
-                            className="bg-zinc-900 border-zinc-800 text-white h-12 rounded-lg focus:ring-primary focus:border-primary transition-all placeholder:text-zinc-600" 
-                            required
-                        />
-                    </div>
-                    <ManualLoginButton />
-                </form>
-            </div>
-
+                  <form action={manualAction} className="space-y-4">
+                      <div className="space-y-2">
+                          <Label className="text-xs font-bold uppercase text-zinc-500 tracking-wider">Email</Label>
+                          <div className="relative">
+                              <Mail className="absolute left-3 top-3 h-5 w-5 text-zinc-500" />
+                              <Input 
+                                  name="email" 
+                                  type="email" 
+                                  placeholder="atlet@email.com" 
+                                  className="pl-10 bg-zinc-900 border-zinc-800 text-white h-12 rounded-lg focus:ring-primary focus:border-primary transition-all placeholder:text-zinc-600" 
+                                  required
+                              />
+                          </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                          <div className="flex justify-between">
+                              <Label className="text-xs font-bold uppercase text-zinc-500 tracking-wider">Password</Label>
+                              <Link href="#" className="text-xs text-primary hover:underline">Lupa Password?</Link>
+                          </div>
+                          <Input 
+                              name="password" 
+                              type="password" 
+                              placeholder="••••••••"
+                              className="bg-zinc-900 border-zinc-800 text-white h-12 rounded-lg focus:ring-primary focus:border-primary transition-all placeholder:text-zinc-600" 
+                              required
+                          />
+                      </div>
+                      <ManualLoginButton />
+                  </form>
+              </div>
+            </ClientOnly>
             <p className="text-center text-sm text-zinc-500 pt-6">
                 Belum punya akun? <Link href="/player/register" className="text-primary font-bold hover:underline">Daftar sebagai Atlet</Link>
             </p>
