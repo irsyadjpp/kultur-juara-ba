@@ -85,14 +85,9 @@ const ScheduleView = ({ searchTerm }: { searchTerm: string }) => {
       let classA = "text-white";
       let classB = "text-white";
 
-      if (isLiveSet) {
-        // For live sets, only dim the losing score
-        if (sA > sB) classB = "text-zinc-400";
-        if (sB > sA) classA = "text-zinc-400";
-      } else {
-         // For finished sets, always dim the loser
-        if (sA > sB) classB = "text-zinc-400";
-        else classA = "text-zinc-400";
+      if (isFinished) {
+          if (sA > sB) classB = "text-zinc-400";
+          else classA = "text-zinc-400";
       }
 
       return (
@@ -120,15 +115,20 @@ const ScheduleView = ({ searchTerm }: { searchTerm: string }) => {
           <div className="space-y-4">
             {filteredSchedule.filter(m => m.court === courtName).length > 0 ? (
               filteredSchedule.filter(m => m.court === courtName).map(match => (
-                <Card key={match.id} className={cn("p-4 rounded-2xl transition-all shadow-lg", getStatusStyle(match.status))}>
-                   <div className="flex justify-between items-start text-xs mb-3">
-                        <Badge variant="outline" className="font-mono bg-background/30 text-foreground/70">{match.round} - Match {match.matchOrder}</Badge>
-                        {match.status === 'LIVE' && <div className="flex items-center gap-1.5 text-red-500 font-bold animate-pulse"><div className="w-2 h-2 bg-red-500 rounded-full"/>LIVE</div>}
-                        {match.status === 'FINISHED' && <div className="flex items-center gap-1.5 text-zinc-500 font-bold"><Clock className="w-3 h-3"/>{match.duration}</div>}
-                        {match.status === 'UPCOMING' && <div className="flex items-center gap-1.5 text-zinc-500 font-bold"><Clock className="w-3 h-3"/>{match.time}</div>}
+                <Card key={match.id} className={cn("p-4 rounded-2xl transition-all shadow-lg flex flex-col h-[280px]", getStatusStyle(match.status))}>
+                   <div className="flex-none">
+                       <div className="flex justify-between items-start text-xs mb-2">
+                            <Badge variant="outline" className="font-mono bg-background/30 text-foreground/70">{match.round} - Match {match.matchOrder}</Badge>
+                            {match.status === 'LIVE' && <div className="flex items-center gap-1.5 text-red-500 font-bold animate-pulse"><div className="w-2 h-2 bg-red-500 rounded-full"/>LIVE</div>}
+                            {match.status === 'FINISHED' && <div className="flex items-center gap-1.5 text-zinc-500 font-bold"><Clock className="w-3 h-3"/>{match.duration}</div>}
+                            {match.status === 'UPCOMING' && <div className="flex items-center gap-1.5 text-zinc-500 font-bold"><Clock className="w-3 h-3"/>{match.time}</div>}
+                       </div>
+                       <div className="text-center my-1">
+                          <Badge variant="secondary" className="text-[10px] uppercase font-bold tracking-wider">{match.category}</Badge>
+                       </div>
                    </div>
                    
-                   <div className="space-y-2 mb-4">
+                   <div className="flex-grow flex flex-col justify-center space-y-2">
                         <div className={cn("flex items-center gap-2", match.winner === 'A' && match.status === 'FINISHED' ? 'font-black text-white' : 'font-bold text-foreground')}>
                             <span className="w-1.5 h-4 rounded-full bg-blue-500" />
                             <p className="truncate">{match.pA}</p>
@@ -139,14 +139,18 @@ const ScheduleView = ({ searchTerm }: { searchTerm: string }) => {
                         </div>
                     </div>
                     
-                    {match.score && (
-                      <ScoreDisplay score={match.score} status={match.status} winner={match.winner} />
-                    )}
+                    <div className="flex-none h-[68px] flex items-center justify-center">
+                        {match.score ? (
+                          <ScoreDisplay score={match.score} status={match.status} winner={match.winner} />
+                        ) : (
+                          <p className="text-zinc-600 text-xs font-bold">Waiting for match</p>
+                        )}
+                    </div>
 
                 </Card>
               ))
             ) : (
-              <div className="text-center py-10 text-muted-foreground text-sm border-2 border-dashed rounded-2xl">
+              <div className="text-center py-10 text-muted-foreground text-sm border-2 border-dashed rounded-2xl h-[280px] flex items-center justify-center">
                 Tidak ada jadwal.
               </div>
             )}
