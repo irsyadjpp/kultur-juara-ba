@@ -24,6 +24,7 @@ export function Header() {
     { name: 'Tentang', href: '/about' },
     { name: 'Bagan', href: '/live-score' },
     { name: 'Panduan Level', href: '/leveling-guide' },
+    { name: 'Aturan Main', href: '/rules/drawing'},
   ];
 
   return (
@@ -31,7 +32,7 @@ export function Header() {
       <div className={cn(
         "flex items-center justify-between px-2 py-2 transition-all duration-300 pointer-events-auto",
         "bg-background/80 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-lg",
-        isScrolled ? "w-full max-w-4xl rounded-full" : "w-full max-w-7xl rounded-3xl"
+        isScrolled ? "w-full max-w-5xl rounded-full" : "w-full max-w-7xl rounded-3xl"
       )}>
         
         {/* LOGO */}
@@ -47,7 +48,7 @@ export function Header() {
         {/* DESKTOP NAV - Pills */}
         <nav className="hidden md:flex items-center gap-1 bg-secondary/50 rounded-full p-1 mx-4">
             {navItems.map((item) => (
-               <Button key={item.name} variant="ghost" className="rounded-full hover:bg-background hover:shadow-sm text-muted-foreground hover:text-foreground font-bold transition-all" asChild>
+               <Button key={item.name} variant="ghost" className="rounded-full hover:bg-background hover:shadow-sm text-muted-foreground hover:text-foreground font-bold transition-all text-xs" asChild>
                   <Link href={item.href}>{item.name}</Link>
                </Button>
             ))}
@@ -74,9 +75,9 @@ export function Header() {
                 </SheetTrigger>
                 <SheetContent side="top" className="rounded-b-[2.5rem] pt-16">
                    <div className="flex flex-col gap-4 items-center">
-                      <Link href="/" className="text-2xl font-black font-headline uppercase">Beranda</Link>
-                      <Link href="/live-score" className="text-2xl font-black font-headline uppercase text-muted-foreground">Bagan</Link>
-                      <Link href="/leveling-guide" className="text-2xl font-black font-headline uppercase text-muted-foreground">Panduan Level</Link>
+                      {navItems.map(item => (
+                         <Link key={item.href} href={item.href} className="text-2xl font-black font-headline uppercase text-muted-foreground data-[active=true]:text-foreground">{item.name}</Link>
+                      ))}
                       <div className="flex flex-col w-full gap-3 mt-8">
                          <Button asChild size="lg" className="w-full rounded-full text-lg font-bold bg-primary"><Link href="/player/login">Login Atlet</Link></Button>
                          <Button asChild size="lg" variant="secondary" className="w-full rounded-full text-lg font-bold"><Link href="/manager/login">Login Manajer</Link></Button>
