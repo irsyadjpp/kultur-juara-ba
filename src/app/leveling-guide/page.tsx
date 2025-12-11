@@ -121,19 +121,19 @@ export default function LevelingGuidePage() {
             <LevelCard 
                theme="red"
                title="Advance"
-               subtitle="Elite / Semi-Pro"
+               subtitle="Kompetitif"
                icon={<Trophy className="w-6 h-6" />}
-               desc="Skill di atas rata-rata. Power besar, akurasi tinggi, fisik prima."
+               desc="Pemain dengan teknik matang & pengalaman turnamen. Memiliki pukulan mematikan dan footwork yang efisien."
                stats={[
-                  { label: "Power", val: 95 },
-                  { label: "Technique", val: 90 },
-                  { label: "Footwork", val: 90 },
+                  { label: "Power", val: 90 },
+                  { label: "Technique", val: 85 },
+                  { label: "Footwork", val: 85 },
                ]}
                checklist={[
-                  "Akurasi tinggi (sudut sulit/tipuan)",
-                  "Backhand Clear baseline mudah",
-                  "Eks Pelatda / Porprov / Sirnas",
-                  "Sering juara turnamen Open"
+                  "Akurasi & penempatan bola sangat baik",
+                  "Backhand clear & drop shot konsisten",
+                  "Penguasaan tempo & strategi permainan",
+                  "Sering juara di level komunitas/lokal"
                ]}
             />
          </div>
@@ -144,7 +144,7 @@ export default function LevelingGuidePage() {
          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
             {/* Pairing Matrix */}
-            <div className="bg-secondary/30 border border-border rounded-[2.5rem] p-8">
+            <div className="bg-surface-variant/30 border border-white/5 rounded-[2.5rem] p-8">
                <h3 className="text-2xl font-black font-headline uppercase mb-6 flex items-center gap-2">
                   <div className="w-3 h-8 bg-primary rounded-full" />
                   Pairing Matrix
@@ -216,7 +216,7 @@ function LevelCard({ theme, title, subtitle, icon, desc, stats, checklist, recom
       <Card className={cn(
          "relative overflow-hidden border-2 rounded-[2.5rem] flex flex-col h-full transition-all duration-300 hover:-translate-y-2",
          t.border,
-         recommended ? "shadow-2xl ring-2 ring-primary shadow-primary/20 scale-[1.02]" : "shadow-lg bg-card"
+         recommended ? "shadow-2xl ring-2 ring-primary shadow-primary/20 scale-[1.02]" : "shadow-lg bg-surface-variant/20"
       )}>
          {recommended && (
             <div className="absolute top-0 right-0 bg-primary text-white text-[10px] font-black px-3 py-1.5 rounded-bl-2xl uppercase tracking-widest">
@@ -238,7 +238,7 @@ function LevelCard({ theme, title, subtitle, icon, desc, stats, checklist, recom
             {stats.map((s: any, i: number) => (
                <div key={i} className="flex items-center gap-3 text-xs font-bold uppercase tracking-wider">
                   <span className="w-20 text-muted-foreground">{s.label}</span>
-                  <div className="flex-1 h-2 bg-secondary rounded-full overflow-hidden">
+                  <div className="flex-1 h-2 bg-secondary/20 rounded-full overflow-hidden">
                      <div className={cn("h-full rounded-full", t.bg)} style={{ width: `${s.val}%` }} />
                   </div>
                </div>
@@ -264,7 +264,7 @@ function PairRow({ p1, p2, res, valid, note }: any) {
    return (
       <div className={cn(
          "flex items-center justify-between p-4 rounded-2xl border transition-all hover:scale-[1.01]",
-         valid ? "bg-background border-border hover:border-primary/20" : "bg-red-950/10 border-red-900/30"
+         valid ? "bg-background border-white/5 hover:border-primary/20" : "bg-red-950/10 border-red-900/30"
       )}>
          <div className="flex items-center gap-2 text-sm font-bold">
             <Badge variant="outline" className="bg-transparent">{p1}</Badge>
