@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -79,7 +80,7 @@ export function HeroSection() {
                            <ClientOnly>
                               <div className="text-center">
                                  <p className="text-xs uppercase tracking-widest text-zinc-300 mb-1">Pendaftaran Ditutup</p>
-                                 <Countdown targetDate="2026-01-01" />
+                                 <Countdown targetDate="2026-02-06" />
                               </div>
                            </ClientOnly>
                         </div>
