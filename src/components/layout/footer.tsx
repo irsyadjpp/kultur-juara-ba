@@ -17,7 +17,7 @@ export function Footer() {
             <h3 className="font-headline text-lg font-bold mb-4 text-primary">Tautan Penting</h3>
             <ul className="space-y-2 text-muted-foreground">
               <li><Link href="/about" className="hover:text-primary transition-colors">Tentang Kami</Link></li>
-              <li><Link href="/#levels" className="hover:text-primary transition-colors">Panduan Level</Link></li>
+              <li><Link href="/leveling-guide" className="hover:text-primary transition-colors">Panduan Level</Link></li>
               <li><Link href="/faq" className="hover:text-primary transition-colors">FAQ</Link></li>
             </ul>
           </div>
