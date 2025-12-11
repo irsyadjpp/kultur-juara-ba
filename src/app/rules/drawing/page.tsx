@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Header } from '@/components/layout/header';
@@ -6,7 +5,7 @@ import { Footer } from '@/components/layout/footer';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { FileText, Users, Network, ShieldAlert, Clock, ArrowDown, Target } from 'lucide-react';
+import { FileText, Users, Network, ShieldAlert, Clock, ArrowDown, Target, CheckCircle, Info, Calendar } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -44,7 +43,7 @@ const tiebreakExample = [
 ];
 
 const tiebreakRules = [
-    { step: 1, name: "Jumlah Menang (W-L)", desc: "Peserta dengan kemenangan terbanyak." },
+    { step: 1, name: "Jumlah Kemenangan (Win Count)", desc: "Peserta dengan kemenangan terbanyak." },
     { step: 2, name: "Head-to-head (jika 2 peserta)", desc: "Pemenang pertemuan langsung antar keduanya." },
     { step: 3, name: "Game Difference (selisih game)", desc: "Total game menang dikurangi total game kalah." },
     { step: 4, name: "Game Won (jumlah game menang)", desc: "Total game yang berhasil dimenangkan." },
@@ -53,6 +52,19 @@ const tiebreakRules = [
     { step: 7, name: "Drawing (undi)", desc: "Langkah terakhir jika semua kriteria masih sama." }
 ];
 
+const SectionWrapper = ({ title, icon: Icon, children }: { title: string, icon: React.ElementType, children: React.ReactNode }) => (
+  <Card className="bg-card/50">
+    <CardHeader>
+      <CardTitle className="flex items-center gap-3 text-xl">
+        <div className="bg-primary/10 text-primary p-3 rounded-xl"><Icon className="w-5 h-5"/></div>
+        <span>{title}</span>
+      </CardTitle>
+    </CardHeader>
+    <CardContent className="space-y-4">
+      {children}
+    </CardContent>
+  </Card>
+);
 
 const DrawingContent = () => (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
@@ -192,7 +204,7 @@ const SchedulingContent = () => (
             <CardContent className="space-y-4">
                    <CaseExample title="Saat Babak Grup (Group Stage)" desc="Jadwal antar pertandingan dibuat lebih renggang.">
                       <ul className="list-disc pl-5 text-muted-foreground text-sm space-y-2">
-                          <li><strong>Minimal jeda 1 match</strong> jika kategori berbeda dimainkan di lapangan yang berbeda.</li>
+                          <li><strong>Minimal jeda 1 match</strong> jika kategori berbeda berada di lapangan yang berbeda.</li>
                           <li><strong>Minimal jeda 2 match</strong> jika semua kategori dimainkan di lapangan yang sama.</li>
                       </ul>
                   </CaseExample>
@@ -284,6 +296,65 @@ const RankingContent = () => (
     </div>
 );
 
+const SeedingContent = () => (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+      <div className="lg:col-span-2 space-y-6">
+        <SectionWrapper title="Pengertian & Penentu Seeding" icon={Info}>
+          <p className="text-muted-foreground mb-4">
+            Seeding adalah proses penetapan peringkat awal untuk distribusi kekuatan yang merata. Karena ini turnamen komunitas, TPF menentukan seeding berdasarkan observasi video dan parameter teknis, bukan ranking PBSI.
+          </p>
+          <div className="grid grid-cols-2 gap-4">
+            <CaseExample title="A. Observasi Video" desc="Sumber data penilaian.">
+              <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
+                <li>Video pertandingan/sparring</li>
+                <li>Video kiriman pendaftaran</li>
+                <li>Rekaman turnamen lampau</li>
+              </ul>
+            </CaseExample>
+            <CaseExample title="B. Parameter TPF" desc="Aspek yang dinilai (skor 1-10).">
+              <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
+                <li>Teknik & Biomekanik</li>
+                <li>Tempo & Kecepatan</li>
+                <li>Konsistensi & Kesalahan</li>
+                <li>Pengalaman (Visual)</li>
+              </ul>
+            </CaseExample>
+          </div>
+        </SectionWrapper>
+
+        <SectionWrapper title="Aturan Penempatan & Khusus" icon={FileText}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                    <h4 className="font-bold">Penempatan Seed</h4>
+                    <ul className="list-decimal pl-5 text-sm text-muted-foreground space-y-2">
+                        <li><strong>Satu Seed per Grup:</strong> Tidak boleh ada 2 seed dalam satu grup.</li>
+                        <li><strong>Penyebaran Merata:</strong> Seed 1 di Grup A, Seed 2 di Grup B, dst.</li>
+                        <li><strong>Pisah di Gugur:</strong> Seed 1 & 2 ditempatkan di paruh bracket berlawanan agar potensi bertemu di final.</li>
+                    </ul>
+                </div>
+                 <div className="space-y-4">
+                    <h4 className="font-bold">Peserta Non-Seed</h4>
+                    <p className="text-sm text-muted-foreground">Peserta lain akan ditempatkan melalui undian terbuka atau pengelompokan berdasarkan nilai TPF.</p>
+                     <h4 className="font-bold mt-4">Klarifikasi</h4>
+                    <p className="text-sm text-muted-foreground">Keberatan atas seeding diterima maks. 24 jam setelah pengumuman untuk review video ulang. Keputusan TPF final.</p>
+                </div>
+            </div>
+        </SectionWrapper>
+      </div>
+      <div className="space-y-6">
+         <SectionWrapper title="Aturan Khusus & Transparansi" icon={Calendar}>
+             <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-3">
+                 <li><strong>Peserta Satu Klub:</strong> Hanya pasangan dengan nilai TPF tertinggi dari satu klub yang bisa menjadi seed. Pasangan lain akan dipisah di babak gugur jika memungkinkan.</li>
+                 <li><strong>Penilaian Ganda:</strong> Penilaian TPF dilakukan per PASANGAN, bukan per individu.</li>
+                 <li><strong>Data Video Tidak Lengkap:</strong> Peserta tanpa video yang memadai otomatis menjadi non-seed.</li>
+                 <li><strong>Kerahasiaan Data:</strong> Semua video bersifat rahasia dan hanya digunakan untuk kebutuhan internal TPF.</li>
+             </ul>
+         </SectionWrapper>
+      </div>
+    </div>
+);
+
+
 export default function RulesPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -303,13 +374,17 @@ export default function RulesPage() {
         </div>
 
         <Tabs defaultValue="drawing" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 max-w-2xl mx-auto h-14 p-1 rounded-2xl">
+            <TabsList className="grid w-full grid-cols-4 max-w-3xl mx-auto h-14 p-1 rounded-2xl">
                 <TabsTrigger value="drawing" className="h-full rounded-xl text-base">Drawing</TabsTrigger>
+                <TabsTrigger value="seeding" className="h-full rounded-xl text-base">Seeding</TabsTrigger>
                 <TabsTrigger value="ranking" className="h-full rounded-xl text-base">Peringkat</TabsTrigger>
                 <TabsTrigger value="scheduling" className="h-full rounded-xl text-base">Jadwal</TabsTrigger>
             </TabsList>
             <TabsContent value="drawing">
                 <DrawingContent />
+            </TabsContent>
+            <TabsContent value="seeding">
+                <SeedingContent />
             </TabsContent>
              <TabsContent value="ranking">
                 <RankingContent />
@@ -323,3 +398,4 @@ export default function RulesPage() {
     </div>
   );
 }
+
