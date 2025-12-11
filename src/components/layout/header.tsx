@@ -22,7 +22,7 @@ export function Header() {
   const navItems = [
     { name: 'Beranda', href: '/' },
     { name: 'Tentang', href: '/about' },
-    { name: 'Jadwal', href: '/live-score' },
+    { name: 'Bagan', href: '/live-score' },
     { name: 'Panduan Level', href: '/leveling-guide' },
   ];
 
@@ -75,7 +75,7 @@ export function Header() {
                 <SheetContent side="top" className="rounded-b-[2.5rem] pt-16">
                    <div className="flex flex-col gap-4 items-center">
                       <Link href="/" className="text-2xl font-black font-headline uppercase">Beranda</Link>
-                      <Link href="/live-score" className="text-2xl font-black font-headline uppercase text-muted-foreground">Jadwal</Link>
+                      <Link href="/live-score" className="text-2xl font-black font-headline uppercase text-muted-foreground">Bagan</Link>
                       <Link href="/leveling-guide" className="text-2xl font-black font-headline uppercase text-muted-foreground">Panduan Level</Link>
                       <div className="flex flex-col w-full gap-3 mt-8">
                          <Button asChild size="lg" className="w-full rounded-full text-lg font-bold bg-primary"><Link href="/player/login">Login Atlet</Link></Button>
