@@ -13,8 +13,6 @@ import { Search, SlidersHorizontal, ShieldCheck, User, Users } from 'lucide-reac
 import { cn } from '@/lib/utils';
 import { CourtLines } from '@/components/ui/court-lines';
 import { ClientOnly } from '@/components/client-only';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
 
 // MOCK DATA
 const PLAYERS = [
@@ -71,8 +69,8 @@ export default function PlayersPage() {
           <ClientOnly>
             {/* Filter Controls */}
             <Card className="p-4 mb-8 bg-card/50 backdrop-blur-sm border-border/30 rounded-3xl shadow-lg sticky top-24 z-20">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-center">
-                <div className="relative">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                <div className="relative lg:col-span-4">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <Input
                     placeholder="Cari nama atau komunitas..."
@@ -81,27 +79,23 @@ export default function PlayersPage() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4 lg:col-span-2">
-                  <Select value={stageFilter} onValueChange={setStageFilter}>
-                    <SelectTrigger className="w-full h-14 rounded-2xl bg-background/50 text-base">
-                      <SelectValue placeholder="Filter Stage..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {STAGES.map(stage => (
-                        <SelectItem key={stage} value={stage}>{stage}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                     <SelectTrigger className="w-full h-14 rounded-2xl bg-background/50 text-base">
-                      <SelectValue placeholder="Filter Kategori..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {CATEGORIES.map(cat => (
-                        <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                <div className="lg:col-span-8 flex flex-col sm:flex-row gap-4">
+                  <div className="flex-1 space-y-1">
+                      <label className="text-xs font-bold text-muted-foreground px-2">Stage</label>
+                      <div className="bg-background/50 rounded-2xl p-1 flex gap-1">
+                          {STAGES.map(stage => (
+                              <Button key={stage} size="sm" variant={stageFilter === stage ? "secondary" : "ghost"} onClick={() => setStageFilter(stage)} className="flex-1 rounded-xl h-10 font-bold">{stage}</Button>
+                          ))}
+                      </div>
+                  </div>
+                   <div className="flex-1 space-y-1">
+                      <label className="text-xs font-bold text-muted-foreground px-2">Kategori</label>
+                      <div className="bg-background/50 rounded-2xl p-1 flex gap-1">
+                          {CATEGORIES.map(cat => (
+                              <Button key={cat} size="sm" variant={categoryFilter === cat ? "secondary" : "ghost"} onClick={() => setCategoryFilter(cat)} className="flex-1 rounded-xl h-10 font-bold">{cat}</Button>
+                          ))}
+                      </div>
+                  </div>
                 </div>
               </div>
             </Card>
