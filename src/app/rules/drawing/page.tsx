@@ -4,8 +4,10 @@
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { FileText, Users, Network, ShieldAlert } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export default function DrawingMechanismPage() {
 
@@ -49,7 +51,7 @@ export default function DrawingMechanismPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-xl">
                     <div className="bg-primary/10 text-primary p-3 rounded-xl"><Network className="w-5 h-5"/></div>
-                    <span>Beginner - Babak 16 Besar</span>
+                    <span>Beginner – Babak 16 Besar</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -79,7 +81,7 @@ export default function DrawingMechanismPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-xl">
                     <div className="bg-primary/10 text-primary p-3 rounded-xl"><Network className="w-5 h-5"/></div>
-                    <span>Intermediate & Advance - 8 Besar</span>
+                    <span>Intermediate & Advance – 8 Besar</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -125,7 +127,7 @@ export default function DrawingMechanismPage() {
                    <div className="space-y-2">
                     <h4 className="font-semibold">2. Kondisi Pengecualian</h4>
                     <p className="text-sm opacity-80">
-                        Aturan ini mungkin tidak berlaku jika jumlah tim dari satu klub terlalu banyak, sehingga penempatan terpisah tidak memungkinkan secara matematis tanpa melanggar aturan lainnya (misal: juara vs runner-up grup).
+                        Aturan ini mungkin tidak berlaku jika jumlah tim dari satu klub terlalu banyak, sehingga penempatan terpisah tidak memungkinkan secara matematis tanpa melanggar aturan lain (misal: juara vs runner-up grup).
                     </p>
                   </div>
               </CardContent>
@@ -144,4 +146,3 @@ export default function DrawingMechanismPage() {
     </div>
   );
 }
-
