@@ -6,6 +6,7 @@ import { ShieldCheck, XCircle, Smartphone, Trophy, Database, Target, Users, Scal
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { CourtLines } from '@/components/ui/court-lines';
+import { Badge } from '@/components/ui/badge';
 
 export default function AboutPage() {
   const pillars = [
