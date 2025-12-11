@@ -25,7 +25,6 @@ export function Header() {
     { name: 'Bagan', href: '/live-score' },
     { name: 'Panduan Level', href: '/leveling-guide' },
     { name: 'Aturan Main', href: '/rules/drawing'},
-    { name: 'Penjadwalan', href: '/rules/scheduling'},
   ];
 
   return (
