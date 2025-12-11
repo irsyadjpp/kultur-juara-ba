@@ -1,8 +1,7 @@
-
 'use server'
 
 import { validatePairingAndGetPrice } from "@/lib/game-logic";
-// import db from "@/lib/db" // Asumsi ada database
+import { cookies } from "next/headers";
 
 export async function pairAthleteAction(currentUserCode: string, partnerCode: string) {
     // 1. Fetch User & Partner dari DB
@@ -52,4 +51,18 @@ export async function pairAthleteAction(currentUserCode: string, partnerCode: st
             partnerName: partner.name
         }
     };
+}
+
+export async function loginPlayerGoogle() {
+  await new Promise(r => setTimeout(r, 1000));
+  return { success: true };
+}
+
+export async function loginPlayerManual(prevState: any, formData: FormData) {
+  await new Promise(r => setTimeout(r, 1000));
+  const email = formData.get('email');
+  if (email === 'test@example.com') {
+    return { success: true };
+  }
+  return { success: false, message: 'Invalid credentials' };
 }
