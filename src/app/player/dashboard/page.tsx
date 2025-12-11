@@ -1,3 +1,4 @@
+
 import { redirect } from 'next/navigation';
 import { getPlayerSession } from "../actions";
 import { DashboardClient } from "@/components/player/dashboard-full"; 
@@ -18,3 +19,4 @@ export default async function PlayerDashboardPage() {
     <DashboardClient session={session} />
   );
 }
+
