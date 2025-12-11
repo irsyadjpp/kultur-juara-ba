@@ -7,13 +7,15 @@ export function Footer() {
   return (
     <footer id="contact" className="bg-background text-foreground border-t">
       <div className="container mx-auto px-4 py-8 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left">
-          <div className="md:col-span-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+          {/* Kolom 1: Deskripsi */}
+          <div>
             <h3 className="font-headline text-lg font-bold mb-4 text-primary">Bandung Community Championship</h3>
             <p className="text-muted-foreground mb-4">
               Didedikasikan untuk para pecinta bulutangkis sejati. Kami berkomitmen untuk menyajikan turnamen yang adil, kompetitif, dan berkesan dengan standar profesional.
             </p>
           </div>
+          {/* Kolom 2: Tautan Penting */}
           <div>
             <h3 className="font-headline text-lg font-bold mb-4 text-primary">Tautan Penting</h3>
             <ul className="space-y-2 text-muted-foreground">
@@ -23,6 +25,7 @@ export function Footer() {
               <li><Link href="/faq" className="hover:text-primary transition-colors">FAQ</Link></li>
             </ul>
           </div>
+           {/* Kolom 3: Kontak */}
            <div>
              <h3 className="font-headline text-lg font-bold mb-4 text-primary">Hubungi Admin</h3>
             <ul className="space-y-2 text-muted-foreground">
