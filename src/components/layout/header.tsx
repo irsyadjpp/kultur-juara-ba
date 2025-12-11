@@ -24,6 +24,7 @@ export function Header() {
     { name: 'Beranda', href: '/' },
     { name: 'Bagan', href: '/bagan' },
     { name: 'Jadwal', href: '/schedule' },
+    { name: 'Player', href: '/player' },
   ];
 
   return (
