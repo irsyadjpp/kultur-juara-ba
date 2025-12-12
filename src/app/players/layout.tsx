@@ -9,7 +9,7 @@ import {
   Menu, LogOut, Trophy, ChevronRight 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 
@@ -104,6 +104,12 @@ export default function PlayerWebLayout({ children }: { children: React.ReactNod
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="p-0 w-72 border-none">
+                  <SheetHeader className="sr-only">
+                    <SheetTitle>Main Menu</SheetTitle>
+                    <SheetDescription>
+                      Player navigation panel for accessing all features.
+                    </SheetDescription>
+                  </SheetHeader>
                   <NavigationContent />
                 </SheetContent>
               </Sheet>
