@@ -17,7 +17,7 @@ import { ClientOnly } from "@/components/client-only";
 // Menu Navigasi
 const NAV_ITEMS = [
   { icon: Home, label: "Dashboard", href: "/players/dashboard" },
-  { icon: PlayersIcon, label: "Participants", href: "/participants" },
+  { icon: PlayersIcon, label: "Participants", href: "/players/participants" },
   { icon: Trophy, label: "Turnamen", href: "/players/tournament/register" },
   { icon: Calendar, label: "Jadwal & Bagan", href: "/players/schedule" },
   { icon: User, label: "Profil & TPF", href: "/players/profile" },
