@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
   Home, Calendar, QrCode, User, Bell, Settings, 
-  Menu, LogOut, Trophy, ChevronRight 
+  Menu, LogOut, Trophy, ChevronRight, Users as PlayersIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
@@ -17,6 +17,7 @@ import { ClientOnly } from "@/components/client-only";
 // Menu Navigasi
 const NAV_ITEMS = [
   { icon: Home, label: "Dashboard", href: "/players/dashboard" },
+  { icon: PlayersIcon, label: "Players", href: "/players" },
   { icon: Trophy, label: "Turnamen", href: "/players/tournament/register" },
   { icon: Calendar, label: "Jadwal & Bagan", href: "/players/schedule" },
   { icon: User, label: "Profil & TPF", href: "/players/profile" },
@@ -45,7 +46,7 @@ export default function PlayerWebLayout({ children }: { children: React.ReactNod
       {/* MENU ITEMS */}
       <nav className="flex-1 space-y-1">
         {NAV_ITEMS.map((item) => {
-          const isActive = pathname.startsWith(item.href);
+          const isActive = pathname === item.href;
           return (
             <Link key={item.href} href={item.href} onClick={() => setIsMobileOpen(false)}>
               <div 
@@ -115,7 +116,7 @@ export default function PlayerWebLayout({ children }: { children: React.ReactNod
 
               {/* Breadcrumbs / Page Title */}
               <h2 className="font-headline text-lg hidden md:block uppercase tracking-tight text-primary">
-                 {NAV_ITEMS.find(n => pathname.startsWith(n.href))?.label || "Dashboard"}
+                 {NAV_ITEMS.find(n => pathname === n.href)?.label || "Player"}
               </h2>
            </div>
 
