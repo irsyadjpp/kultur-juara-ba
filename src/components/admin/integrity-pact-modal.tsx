@@ -36,7 +36,7 @@ export function IntegrityPactModal({ isOpen, onComplete, userName }: { isOpen: b
           <div className="mx-auto bg-primary/10 p-3 rounded-full w-fit mb-2">
             <ShieldCheck className="w-8 h-8 text-primary" />
           </div>
-          <DialogTitle className="text-center text-2xl font-headline">PAKTA INTEGRITAS BCC 2026</DialogTitle>
+          <DialogTitle className="text-center text-2xl font-headline">PAKTA INTEGRITAS BADMINTOUR #1</DialogTitle>
           <DialogDescription className="text-center">
             Halo <strong>{userName}</strong>. Sebelum memulai tugas, mohon pahami dan setujui kode etik panitia berikut.
           </DialogDescription>

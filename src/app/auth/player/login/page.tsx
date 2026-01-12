@@ -17,7 +17,7 @@ export default function PlayerLoginPage() {
          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/40 blur-[120px] rounded-full translate-x-1/2 -translate-y-1/2"></div>
          
          <div className="relative z-10">
-           <h1 className="font-headline text-4xl">BADMINTOUR OPEN #1</h1>
+           <h1 className="font-headline text-4xl">Badmintour Open #1</h1>
          </div>
          <div className="relative z-10">
            <blockquote className="font-headline text-3xl leading-tight max-w-md">

@@ -68,7 +68,7 @@ export default function DigitalMandatePage() {
   // Create Form State
   const [selectedRole, setSelectedRole] = useState<string>("");
   const [selectedStaff, setSelectedStaff] = useState<string[]>([]);
-  const [letterNo, setLetterNo] = useState("003/SPT-XXX/BCC/VI/2026");
+  const [letterNo, setLetterNo] = useState("003/SPT-XXX/BTOUR/VI/2026");
 
   const activeRoleData = selectedRole ? ROLE_DEFINITIONS[selectedRole as keyof typeof ROLE_DEFINITIONS] : null;
 

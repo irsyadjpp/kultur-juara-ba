@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, CheckCircle2, Briefcase, Calendar, Shirt, BrainCircuit, User, ShieldCheck, Target } from "lucide-react";
+import { Loader2, HeartHandshake, CheckCircle2, Briefcase, Calendar, Shirt, BrainCircuit, User, ShieldCheck, Target, FileSignature, CalendarCheck } from "lucide-react";
 import { useState, useEffect } from "react";
 import confetti from 'canvas-confetti';
 import Link from "next/link";
@@ -147,7 +147,7 @@ export default function VolunteerPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background font-body">
       <Header />
-      
+      {/* BACKGROUND: Beda dengan Volunteer, disini pakai nuansa lebih gelap/cyber */}
       <main className="relative flex-grow py-12 px-4 md:px-8 bg-grid-sporty overflow-hidden">
         
         {/* 1. Dekorasi Glow Merah (Kiri Atas) */}
@@ -465,7 +465,7 @@ export default function VolunteerPage() {
                         <FormField control={form.control} name="caseStudy2" render={({ field }) => (
                             <FormItem>
                                 <FormLabel className="font-bold text-lg leading-snug block mb-2">Kasus 2: <span className="font-normal text-base">Ada peserta VIP marah-marah karena dilarang masuk ke area lapangan (steril) karena tidak memakai ID Card. Bagaimana cara kamu menanganinya?</span></FormLabel>
-                                <FormControl><Textarea {...field} className="rounded-xl bg-secondary/20 border-2 focus:border-primary" placeholder="Solusi saya..." rows={3} /></FormControl>
+                                <FormControl><Textarea {...field} className="rounded-xl bg-secondary/20 border-2 focus:border-primary" placeholder="Solusi konkret Anda..." rows={3} /></FormControl>
                                 <FormMessage />
                             </FormItem>
                         )} />
@@ -481,7 +481,7 @@ export default function VolunteerPage() {
                      </div>
                     {[
                         { id: "agreeData", label: "Saya menyatakan bahwa data yang diisi adalah benar, jujur, dan dapat dipertanggungjawabkan." },
-                        { id: "agreeRules", label: "Saya bersedia mematuhi segala peraturan panitia (SOP) dan menjaga nama baik Badmintour Open #1." },
+                        { id: "agreeRules", label: "Saya bersedia mematuhi SOP panitia dan menjaga nama baik Badmintour Open #1." },
                         { id: "agreeCompetitive", label: "Saya memahami seleksi ini bersifat kompetitif, keputusan panitia mutlak dan tidak dapat diganggu gugat." }
                     ].map((item) => (
                         <FormField key={item.id} control={form.control} name={item.id as any} render={({ field }) => (

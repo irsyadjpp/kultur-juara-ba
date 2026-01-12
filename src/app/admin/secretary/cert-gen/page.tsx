@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -112,13 +113,13 @@ export default function CertificateGeneratorPage() {
         // Draw to temp canvas (Synchronous logic simulation)
         // Note: In real production, image loading is async. 
         // For simplicity here, we reuse the logic assuming image is cached/loaded.
-        drawCertificate(name, "Peserta BCC 2026", tempCanvas); 
+        drawCertificate(name, "Peserta Badmintour Open #1", tempCanvas); 
         
         const imgData = tempCanvas.toDataURL('image/jpeg', 0.9);
         doc.addImage(imgData, 'JPEG', 0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight());
     });
 
-    doc.save("BCC2026-Certificates.pdf");
+    doc.save("Badmintour-Certificates.pdf");
   };
 
   return (

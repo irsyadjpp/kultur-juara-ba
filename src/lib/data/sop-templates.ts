@@ -2,7 +2,7 @@
 export const SOP_TEMPLATES = {
   TPF: {
     roleName: "Tim Pencari Fakta (TPF) & Verifikasi",
-    menimbang: "Bahwa untuk menjamin integritas kompetisi, penerapan asas Fair Play, dan pencegahan manipulasi level kemampuan (sandbagging) dalam turnamen BCC 2026, dipandang perlu untuk menugaskan Tim Verifikasi yang kompeten dan independen.",
+    menimbang: "Bahwa untuk menjamin integritas kompetisi, penerapan asas Fair Play, dan pencegahan manipulasi level kemampuan (sandbagging) dalam turnamen Badmintour Open #1, dipandang perlu untuk menugaskan Tim Verifikasi yang kompeten dan independen.",
     tugas: [
       "Melakukan audit teknis terhadap video gameplay peserta (Verifikasi Pra-Event).",
       "Melakukan pengawasan lapangan (Spot Check) untuk identifikasi manipulasi level.",
@@ -13,7 +13,7 @@ export const SOP_TEMPLATES = {
   },
   MEDIS: {
     roleName: "Tim Medis & Kesehatan",
-    menimbang: "Bahwa untuk menjamin keselamatan jiwa, penanganan cedera cepat (response time <30 detik), dan penerapan protokol kesehatan selama berlangsungnya kegiatan BCC 2026.",
+    menimbang: "Bahwa untuk menjamin keselamatan jiwa, penanganan cedera cepat (response time <30 detik), dan penerapan protokol kesehatan selama berlangsungnya kegiatan Badmintour Open #1.",
     tugas: [
       "Memberikan pertolongan pertama (First Aid/CPR) kepada atlet dan panitia.",
       "Mengelola posko kesehatan dan jalur evakuasi darurat (Ambulans).",
@@ -33,7 +33,7 @@ export const SOP_TEMPLATES = {
   },
   UMPIRE: {
     roleName: "Wasit (Umpire) & Hakim Garis",
-    menimbang: "Bahwa untuk memastikan jalannya pertandingan yang adil, objektif, dan sesuai dengan peraturan BWF (Laws of Badminton) serta regulasi teknis BCC 2026.",
+    menimbang: "Bahwa untuk memastikan jalannya pertandingan yang adil, objektif, dan sesuai dengan peraturan BWF (Laws of Badminton) serta regulasi teknis Badmintour Open #1.",
     tugas: [
       "Memimpin jalannya pertandingan di lapangan sesuai jadwal.",
       "Mengambil keputusan mutlak atas poin, fault, dan let.",

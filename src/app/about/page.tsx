@@ -87,7 +87,7 @@ export default function AboutPage() {
                      <div className="mx-auto bg-card p-4 rounded-full w-fit mb-6 border-2 border-primary/30 shadow-2xl shadow-primary/20">
                         <Trophy className="w-12 h-12 text-primary" />
                      </div>
-                     <p className="text-3xl font-black text-white leading-tight">Road to Badmintour #2</p>
+                     <p className="text-3xl font-black text-white leading-tight">Badmintour Open #1</p>
                      <p className="text-sm text-primary font-bold mt-1 tracking-widest uppercase">Fair Play Powered by Data</p>
                    </div>
                 </div>
