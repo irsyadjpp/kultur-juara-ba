@@ -93,19 +93,8 @@ export default function LevelingGuidePage() {
             <div className="space-y-6">
                 <div className="text-center">
                     <h2 className="text-3xl font-black font-headline uppercase mb-2">Matrix Kategori Beginner</h2>
-                    <p className="text-muted-foreground">Pasangan Beginner dibagi menjadi Low, Mid, dan High untuk fase grup yang seimbang.</p>
+                    <p className="text-muted-foreground">Pemain Beginner akan dikelompokkan ke dalam Tier Low, Mid, dan High untuk fase grup yang seimbang.</p>
                 </div>
-                <MatrixTable 
-                    theme="green"
-                    data={[
-                        { p1: "Bawah", p2: "Bawah", res: "Beginner - Low" },
-                        { p1: "Bawah", p2: "Menengah", res: "Beginner - Low" },
-                        { p1: "Menengah", p2: "Menengah", res: "Beginner - Mid" },
-                        { p1: "Bawah", p2: "Atas", res: "Beginner - Mid" },
-                        { p1: "Menengah", p2: "Atas", res: "Beginner - High" },
-                        { p1: "Atas", p2: "Atas", res: "Beginner - High (Unggulan)", highlight: true },
-                    ]}
-                />
             </div>
             
             {/* 4. KRITERIA PENILAIAN TPF (NEW SECTION) */}
@@ -186,45 +175,4 @@ export default function LevelingGuidePage() {
       <Footer />
     </div>
   );
-}
-
-// --- COMPONENTS ---
-
-function MatrixTable({ theme, data }: { theme: string, data: any[] }) {
-    const colors = {
-        green: "bg-green-500/10 border-green-500/20 text-green-500",
-    };
-    const highlightColors = {
-        green: "bg-green-500/20 text-green-400 border-green-500/50",
-    };
-    const t = colors[theme as keyof typeof colors];
-    const h = highlightColors[theme as keyof typeof highlightColors];
-
-    return (
-        <Card className="border-none shadow-xl bg-card/50 backdrop-blur-sm overflow-hidden rounded-[2.5rem]">
-            <div className="p-0">
-                <Table>
-                    <TableHeader className="bg-black/20">
-                        <TableRow className="border-none hover:bg-transparent">
-                            <TableHead className="font-bold text-muted-foreground w-[30%] pl-6">Tier Pemain A</TableHead>
-                            <TableHead className="font-bold text-muted-foreground w-[30%]">Tier Pemain B</TableHead>
-                            <TableHead className="font-bold text-muted-foreground text-right pr-6">Hasil Kategori</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {data.map((row, i) => (
-                            <TableRow key={i} className={cn("border-b border-white/5 hover:bg-white/5 transition-colors", row.highlight ? h : "")}>
-                                <TableCell className="font-medium pl-6">{row.p1}</TableCell>
-                                <TableCell className="font-medium">{row.p2}</TableCell>
-                                <TableCell className="text-right font-bold uppercase pr-6">
-                                    {row.highlight && <span className="mr-2 text-[10px] bg-white/20 px-2 py-0.5 rounded-sm">SEED</span>}
-                                    {row.res}
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </div>
-        </Card>
-    );
 }

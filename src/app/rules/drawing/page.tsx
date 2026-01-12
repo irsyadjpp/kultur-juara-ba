@@ -74,8 +74,8 @@ const DrawingContent = () => (
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <div className="flex items-center gap-2 mb-3 text-primary font-bold uppercase tracking-wider text-xs">
-                            <Trophy className="w-4 h-4" /> Beginner Tier
+                        <div className="flex items-center gap-2 mb-3 text-purple-500 font-bold uppercase tracking-wider text-xs">
+                            <Target className="w-4 h-4" /> Contoh Bracket
                         </div>
                         <BracketViz
                             title="Bracket 16 Besar" 
@@ -88,8 +88,8 @@ const DrawingContent = () => (
                         />
                     </div>
                     <div>
-                        <div className="flex items-center gap-2 mb-3 text-purple-500 font-bold uppercase tracking-wider text-xs">
-                            <Target className="w-4 h-4" /> Pro Tier
+                         <div className="flex items-center gap-2 mb-3 text-purple-500 font-bold uppercase tracking-wider text-xs">
+                            <Target className="w-4 h-4" /> Contoh Bracket
                         </div>
                         <BracketViz
                             title="Bracket 8 Besar" 
@@ -119,14 +119,14 @@ const DrawingContent = () => (
                         <ShieldAlert className="w-8 h-8"/> Anti-Clash
                     </CardTitle>
                     <CardDescription className="text-blue-100 font-medium opacity-90">
-                        Protokol pemisahan tim satu klub.
+                        Protokol pemisahan pemain satu klub.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6 relative z-10">
                     <div className="bg-black/20 p-5 rounded-2xl backdrop-blur-md">
                         <h4 className="font-bold mb-1">1. Separasi Bracket</h4>
                         <p className="text-sm opacity-80 leading-relaxed">
-                            Jika 2 tim dari klub sama lolos, sistem memprioritaskan mereka di <strong>Top Half & Bottom Half</strong> yang berbeda agar tidak bertemu sebelum Final.
+                            Jika 2 pemain dari klub sama lolos, sistem memprioritaskan mereka di <strong>Top Half & Bottom Half</strong> yang berbeda agar tidak bertemu sebelum Final.
                         </p>
                     </div>
                     <div className="bg-black/20 p-5 rounded-2xl backdrop-blur-md">
@@ -150,7 +150,7 @@ const SchedulingContent = () => (
         <div className="lg:col-span-2 space-y-8">
             <RuleCard title="Priority Scheduling" icon={ArrowDown}>
                 <p className="text-lg mb-6">
-                    Pemain yang bermain di <span className="font-bold text-primary">Multiple Category</span> dilindungi oleh aturan prioritas untuk mencegah kelelahan ekstrem.
+                    Pemain yang bermain rangkap dilindungi oleh aturan prioritas untuk mencegah kelelahan ekstrem.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <CaseStudy title="Scenario: Double Agent" desc="Atlet bermain di Beginner & Intermediate.">
@@ -175,11 +175,11 @@ const SchedulingContent = () => (
             <RuleCard title="Recovery Protocol" icon={Clock}>
                 <div className="space-y-4">
                     <div className="flex items-center justify-between p-4 bg-secondary/30 rounded-2xl">
-                        <span className="font-bold text-muted-foreground">Jeda Group Stage</span>
+                        <span className="font-bold text-muted-foreground">Jeda Fase Grup</span>
                         <Badge variant="outline" className="text-lg px-4 py-1 border-primary text-primary">Min. 1 Match</Badge>
                     </div>
                     <div className="flex items-center justify-between p-4 bg-secondary/30 rounded-2xl">
-                        <span className="font-bold text-muted-foreground">Jeda Knockout</span>
+                        <span className="font-bold text-muted-foreground">Jeda Fase Gugur</span>
                         <Badge variant="outline" className="text-lg px-4 py-1 border-primary text-primary">Min. 2 Match</Badge>
                     </div>
                 </div>
@@ -189,8 +189,8 @@ const SchedulingContent = () => (
         <div className="space-y-8">
              <Card className="bg-zinc-900 text-zinc-100 border-none rounded-[2.5rem] p-8 shadow-xl">
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-3 text-xl font-bold">
-                        <Target className="w-6 h-6 text-yellow-500"/> Why This Rule?
+                    <CardTitle className="flex items-center gap-3 text-xl font-bold text-yellow-500">
+                        <Target className="w-6 h-6"/> Why This Rule?
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -228,12 +228,12 @@ const RankingContent = () => (
                         { name: "Coin Toss", desc: "Undian manual (Ultima Ratio)" },
                     ].map((rule, i) => (
                         <div key={i} className="flex items-center gap-4 p-4 bg-background/50 rounded-2xl border border-border/50 hover:border-primary/30 transition-colors group">
-                            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-secondary font-black text-xl text-muted-foreground group-hover:bg-primary group-hover:text-white transition-colors">
+                            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-secondary font-black text-xl text-muted-foreground group-hover:bg-primary group-hover:text-white transition-colors shrink-0 mt-1">
                                 {i + 1}
                             </div>
                             <div>
                                 <p className="font-bold text-foreground text-lg">{rule.name}</p>
-                                <p className="text-xs text-muted-foreground">{rule.desc}</p>
+                                <p className="text-xs text-muted-foreground mt-1">{rule.desc}</p>
                             </div>
                         </div>
                     ))}
@@ -292,8 +292,8 @@ const SeedingContent = () => {
       { title: "Pengumpulan Data", desc: "TPF menerima form penilaian, video, dan data head-to-head (jika ada) maksimal H-14." },
       { title: "Penilaian Individual", desc: "Setiap TPF memberikan skor mandiri. Skor final adalah rata-rata untuk menentukan kategori dan tier." },
       { title: "Penyusunan Ranking Internal", desc: "Ranking disusun berdasarkan: 1. Skor Utama, 2. Skor Tambahan, 3. Observasi Video, 4. Head-to-Head." },
-      { title: "Penentuan Jumlah Seed", desc: "Beginner (32 pasang) → 8 seed. Intermediate/Advance (16 pasang) → 4 seed." },
-      { title: "Pemilihan & Penyebaran", desc: "Pasangan tier atas diprioritaskan. Seed disebar ke grup berbeda untuk mencegah pertemuan dini." },
+      { title: "Penentuan Jumlah Seed", desc: "Beginner (32 pemain) → 8 seed." },
+      { title: "Pemilihan & Penyebaran", desc: "Pemain tier atas diprioritaskan. Seed disebar ke grup berbeda untuk mencegah pertemuan dini." },
       { title: "Validasi & Pengesahan", desc: "Draft dari TPF divalidasi Koordinator dan disahkan oleh Technical Delegate (TD). Hasil dirilis H-7." }
     ];
 
@@ -303,7 +303,7 @@ const SeedingContent = () => {
             <div className="lg:col-span-7 space-y-6">
                 <RuleCard title="S.O.P. Penentuan Seeding" icon={Gavel}>
                     <p className="mb-6 text-lg">
-                        Menetapkan standar penilaian yang konsisten dan objektif dalam menentukan <span className="font-bold text-primary">pasangan unggulan (seed)</span> pada setiap kategori.
+                        Menetapkan standar penilaian yang konsisten dan objektif dalam menentukan <span className="font-bold text-primary">pemain unggulan (seed)</span> pada setiap kategori.
                     </p>
                     <div className="space-y-4">
                         {process.map((item, index) => (
@@ -350,15 +350,15 @@ const SeedingContent = () => {
                 <Card className="bg-zinc-900 text-zinc-100 border-none rounded-[2.5rem] p-6 shadow-xl">
                      <CardHeader className="p-0 mb-4">
                         <CardTitle className="flex items-center gap-3 text-xl font-bold text-yellow-500">
-                            <Users className="w-6 h-6"/> Aturan Multi-Tim
+                            <Users className="w-6 h-6"/> Aturan Multi-Pemain
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="p-0 space-y-3 text-sm text-zinc-300">
-                        <p>Jika 1 klub mengirim banyak pasangan:</p>
+                        <p>Jika 1 klub mengirim banyak pemain:</p>
                         <ul className="list-disc pl-5 space-y-2 text-zinc-400">
-                            <li>Pasangan <span className="font-bold text-white">ber-seed</span> tetap di grupnya.</li>
-                            <li>Pasangan lain dari klub yang sama akan dihindarkan dari grup yang sama <span className="font-bold text-white">(jika memungkinkan)</span>.</li>
-                            <li>Jika slot terbatas, tim dari klub yang sama boleh berada dalam satu grup.</li>
+                            <li>Pemain <span className="font-bold text-white">ber-seed</span> tetap di grupnya.</li>
+                            <li>Pemain lain dari klub yang sama akan dihindarkan dari grup yang sama <span className="font-bold text-white">(jika memungkinkan)</span>.</li>
+                            <li>Jika slot terbatas, pemain dari klub yang sama boleh berada dalam satu grup.</li>
                         </ul>
                     </CardContent>
                 </Card>

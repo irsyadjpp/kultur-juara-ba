@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -40,9 +42,9 @@ export default function ManagerDashboard() {
         {/* 2. REGISTRATION FUNNEL STATS */}
         <div className="md:col-span-2 grid grid-cols-2 gap-4">
            {[
-             { label: "Siap Pairing", val: 30, total: 42, color: "bg-blue-500", icon: UserCheck, desc: "Selesai dinilai TPF" },
-             { label: "Sudah Pairing", val: 12, total: 42, color: "bg-orange-500", icon: Users, desc: "Menunggu pembayaran" },
-             { label: "Siap Tanding", val: 8, total: 42, color: "bg-green-500", icon: Trophy, desc: "Pembayaran Lunas" },
+             { label: "Siap Tanding", val: 30, total: 42, color: "bg-blue-500", icon: UserCheck, desc: "Selesai dinilai TPF" },
+             { label: "Menunggu Pembayaran", val: 12, total: 42, color: "bg-orange-500", icon: Users, desc: "Menunggu pembayaran" },
+             { label: "Pembayaran Lunas", val: 8, total: 42, color: "bg-green-500", icon: Trophy, desc: "Pembayaran Lunas" },
              { label: "Masalah Data", val: 2, total: 42, color: "bg-red-500", icon: AlertCircle, desc: "Profil belum lengkap" }
            ].map((stat, i) => (
              <Card key={i} className="rounded-[2rem] shadow-sm border-none bg-card hover:shadow-md transition-all">
@@ -75,7 +77,7 @@ export default function ManagerDashboard() {
                   <div>
                      <h4 className="font-bold text-sm text-yellow-800 dark:text-yellow-500">Deadline Pendaftaran H-3</h4>
                      <p className="text-xs text-yellow-700 dark:text-yellow-600 mt-1">
-                        Segera selesaikan pembayaran untuk 12 pasangan yang masih pending sebelum tanggal 24 Des.
+                        Segera selesaikan pembayaran untuk 12 pemain yang masih pending sebelum tanggal 24 Des.
                      </p>
                   </div>
                   <Button size="sm" variant="outline" className="ml-auto bg-transparent border-yellow-600 text-yellow-700 hover:bg-yellow-100">
@@ -88,8 +90,8 @@ export default function ManagerDashboard() {
                   <div className="flex items-center gap-3">
                      <div className="h-2 w-2 bg-primary rounded-full"></div>
                      <div>
-                        <p className="text-sm font-bold">Revisi Pasangan Diperlukan</p>
-                        <p className="text-xs text-muted-foreground">Pasangan "Kevin/Gideon" tidak valid secara matriks.</p>
+                        <p className="text-sm font-bold">Revisi Pendaftaran Diperlukan</p>
+                        <p className="text-xs text-muted-foreground">Pemain "Kevin" tidak valid secara matriks.</p>
                      </div>
                   </div>
                   <span className="text-[10px] text-muted-foreground">2 jam lalu</span>
@@ -100,10 +102,10 @@ export default function ManagerDashboard() {
          {/* QUICK ACTIONS */}
          <div className="space-y-4">
             <Button className="w-full h-16 rounded-[1.5rem] bg-primary text-white font-headline text-lg shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform justify-between px-6">
-               KELOLA ATLET <ArrowRight />
+               KELOLA PEMAIN <ArrowRight />
             </Button>
             <Button variant="outline" className="w-full h-16 rounded-[1.5rem] border-2 font-headline text-lg hover:bg-secondary justify-between px-6">
-               BUAT PAIRING <Users />
+               DAFTARKAN PEMAIN <Users />
             </Button>
             <Button variant="secondary" className="w-full h-16 rounded-[1.5rem] font-headline text-lg hover:bg-secondary/80 justify-between px-6">
                BROADCAST <Megaphone />

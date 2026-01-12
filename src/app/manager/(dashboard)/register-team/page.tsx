@@ -40,7 +40,7 @@ const initialState = {
   teamCode: null,
 };
 
-const CATEGORIES = ["Beginner", "Intermediate", "Advance"] as const;
+const CATEGORIES = ["Beginner"] as const;
 
 export default function RegisterTeamPage() {
   const { toast } = useToast();
@@ -68,7 +68,7 @@ export default function RegisterTeamPage() {
 
       toast({
         title: "Registrasi Berhasil!",
-        description: "Tim telah dibuat. Silakan bagikan kode akses ke pemain.",
+        description: "Komunitas telah dibuat. Silakan bagikan kode akses ke pemain.",
       });
       setIsSubmitting(false);
     } else if (state.success === false && state.teamCode === null) {
@@ -95,7 +95,7 @@ export default function RegisterTeamPage() {
   const copyToClipboard = () => {
     if (successData?.code) {
       navigator.clipboard.writeText(successData.code);
-      toast({ title: "Kode Tim Disalin", description: "Bagikan ke grup WhatsApp atlet Anda." });
+      toast({ title: "Kode Komunitas Disalin", description: "Bagikan ke grup WhatsApp atlet Anda." });
     }
   };
 
@@ -109,7 +109,7 @@ export default function RegisterTeamPage() {
             </div>
             <CardTitle className="text-2xl text-green-700 dark:text-green-400">Pendaftaran Sukses!</CardTitle>
             <CardDescription>
-              Tim <strong>{successData.name}</strong> berhasil didaftarkan.
+              Komunitas <strong>{successData.name}</strong> berhasil didaftarkan.
             </CardDescription>
           </CardHeader>
           
@@ -117,7 +117,7 @@ export default function RegisterTeamPage() {
             <div className="bg-background border rounded-xl p-6 text-center space-y-2 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent" />
               <p className="text-sm text-muted-foreground uppercase tracking-wider font-semibold">
-                Kode Join Tim (Share Code)
+                Kode Join Komunitas (Share Code)
               </p>
               <div 
                 className="text-4xl md:text-5xl font-mono font-bold tracking-widest text-primary cursor-pointer hover:opacity-80 transition-opacity"
@@ -133,8 +133,8 @@ export default function RegisterTeamPage() {
 
           <CardFooter className="flex flex-col gap-3">
             <Button className="w-full" asChild>
-              <Link href={`/manager/roster/new`}>
-                Kelola Roster & Pemain <ArrowRight className="ml-2 h-4 w-4" />
+              <Link href={`/manager/members`}>
+                Kelola Anggota Komunitas <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </CardFooter>
@@ -147,9 +147,9 @@ export default function RegisterTeamPage() {
     <div className="container mx-auto py-10 max-w-3xl">
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle className="text-2xl">Formulir Pendaftaran Tim Independen</CardTitle>
+          <CardTitle className="text-2xl">Formulir Pendaftaran Komunitas</CardTitle>
           <CardDescription>
-            Daftarkan tim Anda untuk mengikuti kategori yang tersedia.
+            Daftarkan komunitas Anda untuk mengikuti turnamen.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -157,11 +157,11 @@ export default function RegisterTeamPage() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               
               <div className="space-y-4">
-                <h3 className="text-lg font-medium">Identitas Tim & Manajer</h3>
+                <h3 className="text-lg font-medium">Identitas Komunitas & Manajer</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField control={form.control} name="entityName" render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nama Tim</FormLabel>
+                        <FormLabel>Nama Komunitas</FormLabel>
                         <FormControl>
                           <Input placeholder="Contoh: PB. Badminton Ceria" {...field} />
                         </FormControl>
@@ -170,7 +170,7 @@ export default function RegisterTeamPage() {
                   )} />
                   <FormField control={form.control} name="officialLocation" render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Domisili / Asal Klub</FormLabel>
+                        <FormLabel>Domisili / Asal Komunitas</FormLabel>
                         <FormControl>
                           <Input placeholder="Contoh: Cimahi" {...field} />
                         </FormControl>
@@ -206,7 +206,7 @@ export default function RegisterTeamPage() {
                 render={({ field }) => (
                   <FormItem className="space-y-4">
                     <FormLabel className="text-lg font-medium">Kategori Pertandingan</FormLabel>
-                    <FormDescription>Pilih salah satu kategori yang akan diikuti oleh tim ini.</FormDescription>
+                    <FormDescription>Pilih kategori yang akan diikuti oleh para pemain di komunitas ini.</FormDescription>
                     <FormControl>
                       <RadioGroup
                         onValueChange={field.onChange}
@@ -236,7 +236,7 @@ export default function RegisterTeamPage() {
                 <Button type="submit" size="lg" disabled={isSubmitting} className="min-w-[200px]">
                   {isSubmitting ? (
                     <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Memproses...</>
-                  ) : "Buat Tim & Dapatkan Kode"}
+                  ) : "Buat Komunitas & Dapatkan Kode"}
                 </Button>
               </div>
             </form>
@@ -246,3 +246,4 @@ export default function RegisterTeamPage() {
     </div>
   );
 }
+

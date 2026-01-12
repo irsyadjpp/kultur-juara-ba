@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Badge } from "@/components/ui/badge";
@@ -15,7 +16,7 @@ export default function MembersPage() {
       <div className="flex justify-between items-end">
         <div>
           <h1 className="font-headline text-3xl mb-1">DATA <span className="text-primary">ANGGOTA</span></h1>
-          <p className="text-muted-foreground text-sm">Kelola {42} atlet terdaftar di komunitas.</p>
+          <p className="text-muted-foreground text-sm">Kelola 42 atlet terdaftar di komunitas.</p>
         </div>
         <Button className="rounded-pill font-bold shadow-lg shadow-primary/20">
            + Tambah Manual

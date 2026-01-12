@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState } from "react";
@@ -11,10 +12,10 @@ import { validatePairing, PlayerLevel, PlayerTier } from "@/lib/matrix-validatio
 
 // Mock Data
 const UNPAIRED_PLAYERS: { id: number; name: string; level: PlayerLevel; tier: PlayerTier; communityCode: string; }[] = [
-  { id: 1, name: "Kevin", level: "Pro", tier: 1, communityCode: "DJARUM" },
-  { id: 2, name: "Marcus", level: "Pro", tier: 1, communityCode: "DJARUM" },
-  { id: 3, name: "Fajar", level: "Advance", tier: 1, communityCode: "JAYA-RAYA" },
-  { id: 4, name: "Rian", level: "Advance", tier: 2, communityCode: "JAYA-RAYA" },
+  { id: 1, name: "Kevin", level: "Beginner", tier: 1, communityCode: "DJARUM" },
+  { id: 2, name: "Marcus", level: "Beginner", tier: 1, communityCode: "DJARUM" },
+  { id: 3, name: "Fajar", level: "Beginner", tier: 1, communityCode: "JAYA-RAYA" },
+  { id: 4, name: "Rian", level: "Beginner", tier: 2, communityCode: "JAYA-RAYA" },
 ];
 
 export default function PairingPage() {
@@ -29,9 +30,9 @@ export default function PairingPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="font-headline text-3xl">PAIRING <span className="text-primary">SYSTEM</span></h1>
+        <h1 className="font-headline text-3xl">PENDAFTARAN <span className="text-primary">GANDA</span></h1>
         <Button variant="outline" className="rounded-pill gap-2 border-2">
-           <Shuffle size={16} /> Auto-Generate
+           <Shuffle size={16} /> Auto-Pairing
         </Button>
       </div>
 
@@ -100,7 +101,7 @@ export default function PairingPage() {
                         disabled={!isValid} 
                         className="rounded-pill h-12 px-8 font-bold shadow-lg shadow-primary/20"
                      >
-                        Simpan Pasangan
+                        Daftarkan Pasangan
                      </Button>
                   </div>
 
@@ -108,16 +109,16 @@ export default function PairingPage() {
             </Card>
 
             {/* LIST PASANGAN */}
-            <h3 className="font-bold text-lg px-2">Daftar Pasangan Terbentuk</h3>
+            <h3 className="font-bold text-lg px-2">Daftar Pasangan Terdaftar</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                <Card className="rounded-[1.5rem] border-none shadow-sm flex items-center p-4 gap-4">
                   <div className="flex -space-x-3">
-                     <div className="h-10 w-10 rounded-full bg-secondary border-2 border-background flex items-center justify-center text-xs font-bold">AB</div>
-                     <div className="h-10 w-10 rounded-full bg-secondary border-2 border-background flex items-center justify-center text-xs font-bold">CD</div>
+                     <div className="h-10 w-10 rounded-full bg-secondary border-2 border-background flex items-center justify-center text-xs font-bold">AH</div>
+                     <div className="h-10 w-10 rounded-full bg-secondary border-2 border-background flex items-center justify-center text-xs font-bold">HS</div>
                   </div>
                   <div>
                      <p className="font-bold text-sm">Ahsan / Hendra</p>
-                     <p className="text-[10px] text-muted-foreground">MD - Advance</p>
+                     <p className="text-[10px] text-muted-foreground">Ganda Putra</p>
                   </div>
                   <div className="ml-auto">
                      <Badge variant="outline" className="text-orange-600 bg-orange-50 border-orange-200">Belum Bayar</Badge>
@@ -157,3 +158,4 @@ export default function PairingPage() {
     </div>
   );
 }
+

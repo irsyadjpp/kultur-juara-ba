@@ -19,18 +19,17 @@
     },
     "Protest": {
       "title": "Protest Submission",
-      "description": "Represents a formal protest submitted by a team manager.",
+      "description": "Represents a formal protest submitted by a player or their representative.",
       "type": "object",
       "properties": {
-        "managerName": { "type": "string" },
-        "teamName": { "type": "string" },
-        "managerWhatsapp": { "type": "string" },
+        "reporterName": { "type": "string" },
+        "clubName": { "type": "string" },
+        "reporterWhatsapp": { "type": "string" },
         "category": { "type": "string", "enum": ["Putra", "Putri", "Campuran"] },
         "incidentTime": { "type": "string" },
         "courtNumber": { "type": "string" },
-        "partaiNumber": { "type": "number" },
-        "opponentTeam": { "type": "string" },
-        "opponentPlayer": { "type": "string" },
+        "matchNumber": { "type": "number" },
+        "opponentName": { "type": "string" },
         "violationType": { "type": "array", "items": { "type": "string" } },
         "youtubeUrl": { "type": "string" },
         "videoUrl": { "type": "string", "format": "uri" },
@@ -39,7 +38,7 @@
         "createdAt": { "type": "string", "format": "date-time" },
         "decisionNotes": { "type": "string" }
       },
-      "required": ["managerName", "teamName", "category", "incidentTime", "courtNumber", "partaiNumber", "opponentTeam", "opponentPlayer", "violationType", "status", "createdAt"]
+      "required": ["reporterName", "category", "incidentTime", "courtNumber", "matchNumber", "opponentName", "violationType", "status", "createdAt"]
     }
   },
   "auth": {
@@ -52,7 +51,7 @@
     },
     "/protests/{protestId}": {
         "schema": { "$ref": "#/entities/Protest" },
-        "description": "Stores all protest submissions from team managers."
+        "description": "Stores all protest submissions from players or representatives."
     }
   }
 }

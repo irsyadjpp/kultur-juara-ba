@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { z } from "zod";
@@ -12,29 +13,27 @@ const MOCK_TEAMS = [
   {
     id: "T001",
     teamName: "PB Djarum KW",
-    category: "Beregu PUTRA",
+    category: "Tunggal Putra",
     manager: "Budi Santoso",
     whatsapp: "08123456789",
     email: "budi@example.com",
     paymentStatus: "PAID", // PAID, PENDING, REJECTED
     players: [
       { name: "Kevin Sanjaya KW", nik: "3201...", status: "APPROVED", note: "-" },
-      { name: "Marcus Gideon KW", nik: "3202...", status: "APPROVED", note: "-" },
-      { name: "Taufik Hidayat KW", nik: "3203...", status: "UPGRADE REQUIRED", note: "Skill terlalu jago, naik ke Advance" },
+      { name: "Taufik Hidayat KW", nik: "3203...", status: "UPGRADE REQUIRED", note: "Skill terlalu jago, harap daftar ulang di kategori berbeda" },
       { name: "Lee Chong Wei KW", nik: "3204...", status: "PENDING", note: "Video buram" },
     ]
   },
   {
     id: "T002",
     teamName: "PB Smash Ceria",
-    category: "Beregu PUTRI",
+    category: "Tunggal Putri",
     manager: "Siti Aminah",
     whatsapp: "08129999888",
     email: "siti@example.com",
     paymentStatus: "PENDING",
     players: [
       { name: "Susi Susanti KW", nik: "3205...", status: "PENDING", note: "-" },
-      { name: "Mia Audina KW", nik: "3206...", status: "PENDING", note: "-" },
     ]
   }
 ];
@@ -64,3 +63,4 @@ export async function checkRegistrationStatus(prevState: any, formData: FormData
 
   return { success: true, data: team };
 }
+

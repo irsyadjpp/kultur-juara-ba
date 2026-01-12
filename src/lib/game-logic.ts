@@ -1,4 +1,5 @@
 
+
 // src/lib/game-logic.ts
 
 export type PlayerLevel = 'Beginner';
@@ -7,8 +8,7 @@ export type CompetitionCategory = 'Beginner';
 interface ValidationResult {
   isValid: boolean;
   category?: CompetitionCategory;
-  pricePerTeam?: number; // Harga total per pasang
-  pricePerPerson?: number; // Harga per orang (split bill)
+  pricePerPerson?: number; // Harga per orang
   reason?: string;
 }
 
@@ -17,8 +17,7 @@ const PRICE_LIST = {
   Beginner: 100000,     // 100k per orang
 };
 
-export function validatePairingAndGetPrice(level1: PlayerLevel, level2: PlayerLevel): ValidationResult {
-  // Since there is only one level, all pairings are valid within that level.
+export function validateIndividualRegistration(level: PlayerLevel): ValidationResult {
   const category: CompetitionCategory = 'Beginner';
 
   const basePrice = PRICE_LIST[category];
@@ -26,7 +25,6 @@ export function validatePairingAndGetPrice(level1: PlayerLevel, level2: PlayerLe
     isValid: true,
     category: category,
     pricePerPerson: basePrice,
-    pricePerTeam: basePrice * 2
   };
 }
 
@@ -42,7 +40,7 @@ export function calculateSwapCostDiff(
   currentUserLevel: PlayerLevel
 ): { allowed: boolean, priceDiff: number, newCategory?: CompetitionCategory, message?: string } {
   
-  const validation = validatePairingAndGetPrice(currentUserLevel, newPartnerLevel);
+  const validation = validateIndividualRegistration(newPartnerLevel);
   
   if (!validation.isValid) {
       return { allowed: false, priceDiff: 0, message: validation.reason };
@@ -72,3 +70,4 @@ export async function isNikUnique(nik: string): Promise<boolean> {
     const mockExistingNIKS = ["1234567890", "0987654321"];
     return !mockExistingNIKS.includes(nik);
 }
+

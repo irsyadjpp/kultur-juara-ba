@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useActionState } from "react"; 
@@ -116,8 +117,8 @@ export default function StatusPage() {
                     {/* Tombol Download Dokumen (Hanya muncul jika sudah Lunas) */}
                     {state.data.paymentStatus === 'PAID' && (
                         <div className="p-4 bg-blue-50 border-b border-blue-100 flex flex-wrap gap-3">
-                            <Button size="sm" variant="outline" onClick={() => handleDownload("ID Card Tim")} className="bg-white text-blue-700 border-blue-200 hover:bg-blue-100">
-                                <Download className="w-4 h-4 mr-2" /> Unduh ID Card Tim
+                            <Button size="sm" variant="outline" onClick={() => handleDownload("ID Card")} className="bg-white text-blue-700 border-blue-200 hover:bg-blue-100">
+                                <Download className="w-4 h-4 mr-2" /> Unduh ID Card
                             </Button>
                             <Button size="sm" variant="outline" onClick={() => handleDownload("Formulir Waiver")} className="bg-white text-blue-700 border-blue-200 hover:bg-blue-100">
                                 <FileText className="w-4 h-4 mr-2" /> Unduh Lembar Pernyataan (Waiver)
@@ -181,3 +182,4 @@ export default function StatusPage() {
     </div>
   );
 }
+

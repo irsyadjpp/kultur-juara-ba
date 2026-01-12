@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState } from "react";
@@ -13,7 +14,7 @@ import { CheckCircle2, Circle, ChevronRight, UserPlus, Trophy } from "lucide-rea
 // Tahapan Pendaftaran
 const STEPS = [
   { id: 1, title: "Category" },
-  { id: 2, title: "Partner" },
+  { id: 2, title: "Player Data" },
   { id: 3, title: "Confirm" },
 ];
 
@@ -76,7 +77,7 @@ export default function TournamentRegistration() {
                         <Trophy size={18} />
                       </div>
                       <div>
-                        <h3 className="font-bold text-base">Ganda Pemula</h3>
+                        <h3 className="font-bold text-base">Tunggal Putra / Putri</h3>
                         <p className="text-xs text-muted-foreground">Beginner Only</p>
                       </div>
                     </div>
@@ -94,37 +95,17 @@ export default function TournamentRegistration() {
         {/* STEP 2: PILIH PARTNER */}
         {currentStep === 2 && (
           <div className="animate-in fade-in slide-in-from-right-10 duration-500">
-             <h2 className="text-lg font-bold mb-4">Siapa Pasangan Anda?</h2>
+             <h2 className="text-lg font-bold mb-4">Verifikasi Data Pemain</h2>
              
              <div className="bg-card rounded-[2rem] p-6 shadow-m3-1 mb-6">
                 <div className="mb-4">
-                  <Label className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2 block">Masukkan Athlete Code</Label>
-                  <div className="flex gap-2">
-                    <Input 
-                      placeholder="Contoh: BCC-8821" 
-                      className="rounded-xl h-12 bg-secondary/30 border-transparent font-mono uppercase tracking-widest text-lg"
-                      value={partnerCode}
-                      onChange={(e) => setPartnerCode(e.target.value)}
-                    />
-                    <Button size="icon" className="h-12 w-12 rounded-xl bg-primary text-white shrink-0">
-                      <UserPlus size={20} />
-                    </Button>
-                  </div>
-                  <p className="text-[10px] text-muted-foreground mt-2">
-                    *Pastikan partner anda sudah memiliki akun dan menyelesaikan penilaian TPF.
-                  </p>
+                  <Label className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2 block">Cek Kembali Data Anda</Label>
+                   <div className="bg-secondary/30 p-4 rounded-xl border">
+                        <p className="font-bold">Irsyad JPP (Anda)</p>
+                        <p className="text-xs text-muted-foreground">TPF Level: Beginner</p>
+                    </div>
                 </div>
              </div>
-
-             <div className="flex items-center gap-4 text-center my-6">
-               <div className="h-px bg-border flex-1"></div>
-               <span className="text-xs text-muted-foreground font-medium">ATAU</span>
-               <div className="h-px bg-border flex-1"></div>
-             </div>
-
-             <Button variant="outline" className="w-full h-12 rounded-pill font-bold border-dashed border-2">
-               Cari Partner Acak (Coming Soon)
-             </Button>
           </div>
         )}
 
@@ -136,22 +117,18 @@ export default function TournamentRegistration() {
             <Card className="rounded-[2rem] overflow-hidden border-none shadow-m3-1">
               <div className="bg-primary/10 p-6 flex flex-col items-center justify-center border-b border-primary/10">
                 <Trophy className="h-12 w-12 text-primary mb-2" />
-                <h3 className="font-headline text-xl">ROAD TO BADMINTOUR #1</h3>
-                <Badge className="mt-2 bg-primary">Ganda Dewasa Beginner</Badge>
+                <h3 className="font-headline text-xl">Badmintour Open #1</h3>
+                <Badge className="mt-2 bg-primary">Tunggal Beginner</Badge>
               </div>
               <div className="p-6 space-y-4">
                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Pemain 1</span>
+                    <span className="text-sm text-muted-foreground">Pemain</span>
                     <span className="font-bold">Irsyad JPP (Anda)</span>
-                 </div>
-                 <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Pemain 2</span>
-                    <span className="font-bold">{partnerCode || "-"}</span>
                  </div>
                  <Separator />
                  <div className="flex justify-between items-center text-lg">
                     <span className="font-bold">Total Biaya</span>
-                    <span className="font-headline text-primary">IDR 200.000</span>
+                    <span className="font-headline text-primary">IDR 100.000</span>
                  </div>
               </div>
             </Card>

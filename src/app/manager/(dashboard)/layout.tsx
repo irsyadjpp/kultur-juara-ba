@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { usePathname } from 'next/navigation';
@@ -28,7 +29,8 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
     {
         title: "MANAJEMEN TIM",
         items: [
-            { name: "Registrasi Tim", href: "/manager/register-team", icon: Users },
+            { name: "Daftar Pemain", href: "/manager/members", icon: Users },
+            { name: "Registrasi Komunitas", href: "/manager/register-team", icon: UserPlus },
             { name: "Status & Verifikasi", href: "/manager/status", icon: CheckCircle },
         ]
     },
@@ -145,3 +147,4 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
     </div>
   );
 }
+
