@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,7 +15,7 @@ export function WhyJoinSection() {
     {
       icon: Trophy,
       title: "Golden Ticket",
-      desc: "Jalur VIP untuk Juara. Dapatkan slot prioritas & diskon khusus untuk turnamen utama Beregu BCC 2026.",
+      desc: "Jalur VIP untuk Juara. Dapatkan slot prioritas & diskon khusus untuk turnamen utama Badmintour Open selanjutnya.",
       bg: "bg-yellow-400 text-black",
     },
     {
