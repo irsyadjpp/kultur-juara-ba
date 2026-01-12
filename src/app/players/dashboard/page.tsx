@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -201,7 +202,7 @@ export default function PlayerDashboard() {
              href="/players/find-partner" 
            />
            <ShortcutButton 
-             icon={Trophy} title="Daftar Turnamen" desc="Road to BCC 2025" 
+             icon={Trophy} title="Daftar Turnamen" desc="Badmintour Open #1" 
              href="/players/tournament" highlight 
            />
         </section>

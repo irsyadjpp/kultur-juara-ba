@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { 
@@ -91,7 +92,7 @@ export function DirectorDashboard() {
                 <div>
                     <h3 className="text-3xl font-black text-red-500 mb-1">Critical Issues</h3>
                     <p className="text-red-300/70 text-sm font-medium leading-relaxed">
-                        Perlu keputusan segera: Protes Tim Djarum, AC Hall B Mati, Izin Keramaian (Polsek).
+                        Protes Tim, AC Hall B Mati, Izin Keramaian (Polsek).
                     </p>
                 </div>
                 <Button className="w-full mt-4 bg-red-600 hover:bg-red-700 text-white rounded-full font-bold">

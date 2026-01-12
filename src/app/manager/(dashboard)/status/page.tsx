@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -40,7 +41,7 @@ export function Header() {
                 <Image src="/images/logo.png" alt="Logo" fill className="object-contain" />
             </div>
             <span className={cn("font-headline font-black tracking-tighter uppercase hidden md:block transition-all", isScrolled ? "text-lg" : "text-xl")}>
-              BCC<span className="text-primary">2026</span>
+              BADMINTOUR
             </span>
         </Link>
 

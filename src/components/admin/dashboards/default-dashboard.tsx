@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -30,7 +31,7 @@ export default function DefaultDashboard() {
     <div className="space-y-8">
        <div className="space-y-1">
         <h1 className="text-3xl font-black font-headline tracking-tight">Dashboard Overview</h1>
-        <p className="text-muted-foreground">Ringkasan aktivitas turnamen BCC 2026.</p>
+        <p className="text-muted-foreground">Ringkasan aktivitas turnamen Badmintour Open #1.</p>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

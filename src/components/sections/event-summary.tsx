@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { Card } from "@/components/ui/card";
@@ -17,14 +18,14 @@ export function EventSummarySection() {
              <div className="absolute -right-10 -top-10 bg-white/10 w-64 h-64 rounded-full blur-3xl pointer-events-none" />
              <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-xs font-bold uppercase tracking-widest mb-4 backdrop-blur-sm">
-                   <Info className="w-3 h-3" /> Road to Badmintour #1
+                   <Info className="w-3 h-3" /> Badmintour Open #1
                 </div>
                 <h2 className="text-5xl font-black font-headline leading-[0.9]">
                    THE<br/>GAME<br/>PLAN.
                 </h2>
              </div>
              <p className="font-medium text-primary-foreground/90 mt-4">
-                Persiapkan timmu. Simak detail waktu, biaya, dan aturan main sebelum terjun ke arena.
+                Persiapkan dirimu. Simak detail waktu, biaya, dan aturan main sebelum terjun ke arena.
              </p>
           </div>
 

@@ -1,3 +1,4 @@
+
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
@@ -12,7 +13,7 @@ export default function PartnersPage() {
       <main className="flex-grow">
         <div className="container mx-auto px-4 py-16 text-center">
             <h1 className="text-4xl md:text-5xl font-black font-headline text-foreground mb-6">
-                Bermitra dengan Road to BCC 2026
+                Bermitra dengan Badmintour Open #1
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-12">
                 Jangkau 1.000+ atlit komunitas dan ribuan penonton dalam event olahraga paling dinanti tahun ini.
