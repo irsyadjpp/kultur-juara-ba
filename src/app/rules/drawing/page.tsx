@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Header } from '@/components/layout/header';
@@ -71,10 +72,9 @@ const PublicRules = () => (
         <div className="space-y-8">
             <RuleCard title="Status Peserta & Pasangan" icon={Users}>
                  <ul className="space-y-3">
-                    <RuleListItem text="Peserta mendaftar sebagai PASANGAN (bukan individu)." />
-                    <RuleListItem text="Level pemain (Beginner) dinilai per-individu oleh Tim Verifikasi." />
-                    <RuleListItem text="Pasangan dikunci sebelum Technical Meeting dan tidak boleh diganti." />
-                    <RuleListItem text="Gelar juara ditetapkan sebagai pasangan." />
+                    <RuleListItem text="Peserta mendaftar sebagai PASANGAN dari komunitas." />
+                    <RuleListItem text="Level pemain dinilai per individu." />
+                    <RuleListItem text="Gelar juara ditetapkan sebagai pasangan, bukan individu." />
                 </ul>
             </RuleCard>
             <RuleCard title="Fair Play & Keputusan" icon={Gavel}>
@@ -115,15 +115,15 @@ const TechnicalRules = () => (
         <div className="space-y-8">
              <RuleCard title="Form Teknis" icon={FileText}>
                 <ul className="space-y-3">
-                    <RuleListItem text="Form TPF / Audit Individu: Menentukan level pemain (Internal, tidak dipublikasikan)." />
+                    <RuleListItem text="Form TVT / Audit Individu: Menentukan level pemain (Internal, tidak dipublikasikan)." />
                     <RuleListItem text="Form H (Pair Synergy): Verifikasi awal pasangan (Internal)." />
                 </ul>
             </RuleCard>
             <RuleCard title="Pengawasan & Sanksi" icon={ShieldAlert}>
                 <ul className="space-y-3">
-                    <RuleListItem text="Manipulasi level → DISKUALIFIKASI." />
-                    <RuleListItem text="Mengganti pasangan tanpa izin → DISKUALIFIKASI." />
-                    <RuleListItem text="Pelanggaran berulang → BLACKLIST event berikutnya." />
+                    <RuleListItem text="Manipulasi level → diskualifikasi." />
+                    <RuleListItem text="Ganti pasangan tanpa izin → diskualifikasi." />
+                    <RuleListItem text="Pelanggaran berulang → blacklist event berikutnya." />
                 </ul>
             </RuleCard>
              <RuleCard title="Dokumentasi Internal" icon={FileText}>

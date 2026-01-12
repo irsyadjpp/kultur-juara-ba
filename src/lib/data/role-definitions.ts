@@ -1,8 +1,9 @@
+
 export const ROLE_DEFINITIONS = {
-  TPF: {
-    title: "Tim Pencari Fakta (TPF) & Verifikasi",
+  TVT: {
+    title: "Tim Verifikasi Teknis (TVT)",
     menimbang: "Bahwa untuk menjamin integritas kompetisi, penerapan asas Fair Play, dan pencegahan manipulasi level kemampuan (sandbagging) dalam turnamen BCC 2026.",
-    // JOB DESC: Apa yang dikerjakan (Bab 3: Tim Verifikasi TPF)
+    // JOB DESC: Apa yang dikerjakan (Bab 3: Tim Verifikasi Teknis)
     jobDescriptions: [
       "Melakukan audit teknis terhadap video gameplay peserta (Verifikasi Pra-Event).",
       "Melakukan pemantauan langsung (Spot Check) di lapangan untuk identifikasi manipulasi level.",

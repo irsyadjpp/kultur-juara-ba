@@ -37,11 +37,11 @@ const DIVISIONS = [
     border: "border-red-500/20",
     head: "Agung",
     members: 12,
-    description: "Menjamin integritas kompetisi, jadwal, wasit, dan penanganan sengketa (TPF).",
+    description: "Menjamin integritas kompetisi, jadwal, wasit, dan penanganan sengketa (TVT).",
     responsibilities: [
       "Perencanaan & Scheduling Pertandingan",
       "Regulasi & Integritas (Fair Play)",
-      "Koordinasi Tim Verifikasi (TPF)",
+      "Koordinasi Tim Verifikasi Teknis (TVT)",
       "Manajemen Referee & Umpire"
     ]
   },

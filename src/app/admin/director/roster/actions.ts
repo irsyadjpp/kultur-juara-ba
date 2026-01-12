@@ -17,9 +17,9 @@ let COMMITTEE_ROSTER: CommitteeMember[] = [
   // Bidang Pertandingan
   { id: "wicky_p", name: "Wicky (PBSI)", phone: "081-...", email: "wicky@example.com", expertise: "Match Control", role: "STAFF" },
   { id: "sarah_f", name: "Sarah Fatmawati", phone: "081-...", email: "sarah.f@example.com", expertise: "MLO", role: "STAFF" },
-  { id: "anindiffa_p", name: "Anindiffa Pandu Prayuda", phone: "081-...", email: "anindiffa@example.com", expertise: "TPF", role: "STAFF" },
-  { id: "aulia_f", name: "Aulia Febrianto", phone: "081-...", email: "aulia@example.com", expertise: "TPF", role: "STAFF" },
-  { id: "faiz_a", name: "Faiz Azilla Syaehon", phone: "081-...", email: "faiz@example.com", expertise: "TPF", role: "STAFF" },
+  { id: "anindiffa_p", name: "Anindiffa Pandu Prayuda", phone: "081-...", email: "anindiffa@example.com", expertise: "TVT", role: "STAFF" },
+  { id: "aulia_f", name: "Aulia Febrianto", phone: "081-...", email: "aulia@example.com", expertise: "TVT", role: "STAFF" },
+  { id: "faiz_a", name: "Faiz Azilla Syaehon", phone: "081-...", email: "faiz@example.com", expertise: "TVT", role: "STAFF" },
 
   // Bidang Komersial
   { id: "teri_t", name: "Teri Taufiq Mulyadi", phone: "081-...", email: "teri@example.com", expertise: "Business", role: "STAFF" },

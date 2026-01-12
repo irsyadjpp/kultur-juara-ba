@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -61,7 +62,7 @@ export default function LevelingGuidePage() {
                         </li>
                         <li className="flex gap-3 text-sm font-medium opacity-80">
                             <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
-                            Struktur seeding yang konsisten & objektif berbasis data TPF.
+                            Struktur seeding yang konsisten & objektif berbasis data TVT.
                         </li>
                     </CardContent>
                 </Card>
@@ -82,8 +83,8 @@ export default function LevelingGuidePage() {
                             <p className="text-sm text-muted-foreground">Klasifikasi kekuatan detail dalam level yang sama (Bawah, Menengah, Atas).</p>
                         </div>
                         <div className="flex gap-3">
-                            <Badge variant="outline" className="h-fit border-yellow-500 text-yellow-500">TPF</Badge>
-                            <p className="text-sm text-muted-foreground">Tim Penilai Federatif yang memverifikasi skill & tier pemain.</p>
+                            <Badge variant="outline" className="h-fit border-yellow-500 text-yellow-500">TVT</Badge>
+                            <p className="text-sm text-muted-foreground">Tim Verifikasi Teknis yang memverifikasi skill & tier pemain.</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -97,16 +98,16 @@ export default function LevelingGuidePage() {
                 </div>
             </div>
             
-            {/* 4. KRITERIA PENILAIAN TPF (NEW SECTION) */}
+            {/* 4. KRITERIA PENILAIAN TVT (NEW SECTION) */}
             <div className="bg-zinc-900 text-zinc-100 rounded-[3rem] p-8 md:p-12 border border-white/5 shadow-2xl relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-full bg-[url('/images/noise.png')] opacity-10 mix-blend-overlay pointer-events-none" />
                 <div className="absolute -right-20 -top-20 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px] pointer-events-none" />
 
                 <div className="relative z-10 mb-10 text-center md:text-left">
-                    <Badge variant="outline" className="mb-4 border-purple-500 text-purple-400 bg-purple-500/10">Transparansi TPF</Badge>
-                    <h2 className="text-3xl md:text-4xl font-black font-headline uppercase mb-4">Ringkasan Penilaian TPF</h2>
+                    <Badge variant="outline" className="mb-4 border-purple-500 text-purple-400 bg-purple-500/10">Transparansi TVT</Badge>
+                    <h2 className="text-3xl md:text-4xl font-black font-headline uppercase mb-4">Ringkasan Penilaian TVT</h2>
                     <p className="text-zinc-400 max-w-3xl leading-relaxed">
-                        TPF menggunakan <strong>Formulir Penilaian Terstandarisasi</strong> (Skala 1-5) untuk memastikan penilaian yang objektif. Berikut adalah ringkasan aspek yang dinilai dari video atau pantauan langsung Anda.
+                        TVT menggunakan <strong>Formulir Penilaian Terstandarisasi</strong> (Skala 1-5) untuk memastikan penilaian yang objektif. Berikut adalah ringkasan aspek yang dinilai dari video atau pantauan langsung Anda.
                     </p>
                 </div>
 
@@ -164,7 +165,7 @@ export default function LevelingGuidePage() {
                     <div>
                         <h4 className="font-bold text-zinc-200 text-sm uppercase mb-1">Fokus Pengamatan Video</h4>
                         <p className="text-xs text-zinc-400 leading-relaxed">
-                            Berdasarkan standar TPF, video akan diamati untuk melihat: <strong>Momentum Unggul</strong>, <strong>Titik Lemah Dominan</strong>, dan <strong>Konsistensi di Akhir Game</strong>. Pastikan video yang dikirim jelas dan tidak terpotong.
+                            Berdasarkan standar TVT, video akan diamati untuk melihat: <strong>Momentum Unggul</strong>, <strong>Titik Lemah Dominan</strong>, dan <strong>Konsistensi di Akhir Game</strong>. Pastikan video yang dikirim jelas dan tidak terpotong.
                         </p>
                     </div>
                 </div>

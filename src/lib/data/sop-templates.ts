@@ -1,7 +1,8 @@
 
+
 export const SOP_TEMPLATES = {
   TPF: {
-    roleName: "Tim Pencari Fakta (TPF) & Verifikasi",
+    roleName: "Tim Verifikasi Teknis (TVT)",
     menimbang: "Bahwa untuk menjamin integritas kompetisi, penerapan asas Fair Play, dan pencegahan manipulasi level kemampuan (sandbagging) dalam turnamen Badmintour Open #1, dipandang perlu untuk menugaskan Tim Verifikasi yang kompeten dan independen.",
     tugas: [
       "Melakukan audit teknis terhadap video gameplay peserta (Verifikasi Pra-Event).",

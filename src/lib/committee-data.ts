@@ -28,9 +28,9 @@ export const INITIAL_COMMITTEE_STRUCTURE: CommitteeDivision[] = [
     members: [
       { position: "Koordinator", name: "Wicky (PBSI)" },
       { position: "Match Liaison Officer (MLO)", name: "Sarah Fatmawati" },
-      { position: "Ketua Tim Verifikasi (TPF)", name: "Anindiffa Pandu Prayuda" },
-      { position: "Anggota TPF", name: "Aulia Febrianto" },
-      { position: "Anggota TPF", name: "Faiz Azilla Syaehon" },
+      { position: "Ketua Tim Verifikasi Teknis (TVT)", name: "Anindiffa Pandu Prayuda" },
+      { position: "Anggota TVT", name: "Aulia Febrianto" },
+      { position: "Anggota TVT", name: "Faiz Azilla Syaehon" },
     ]
   },
   {

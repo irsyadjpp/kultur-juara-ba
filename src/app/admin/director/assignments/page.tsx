@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from "react";
@@ -26,9 +27,9 @@ import { useToast } from "@/hooks/use-toast";
 const ACTIVE_MANDATES = [
   { 
     id: "SPT-001", 
-    no: "001/SPT-TPF/XII/2025", 
-    roleKey: "TPF",
-    title: "Tim Pencari Fakta",
+    no: "001/SPT-TVT/XII/2025", 
+    roleKey: "TVT",
+    title: "Tim Verifikasi Teknis",
     issuedTo: [
       { name: "Faiz Azilla", avatar: "" },
       { name: "Anindiffa Pandu", avatar: "" },
@@ -52,9 +53,9 @@ const ACTIVE_MANDATES = [
 ];
 
 const STAFF_LIST = [
-  { id: "S1", name: "Faiz Azilla Syaehon", role: "Koordinator TPF" },
-  { id: "S2", name: "Anindiffa Pandu Prayuda", role: "Anggota TPF" },
-  { id: "S3", name: "Aulia Febrianto", role: "Anggota TPF" },
+  { id: "S1", name: "Faiz Azilla Syaehon", role: "Koordinator TVT" },
+  { id: "S2", name: "Anindiffa Pandu Prayuda", role: "Anggota TVT" },
+  { id: "S3", name: "Aulia Febrianto", role: "Anggota TVT" },
   { id: "S4", name: "Dr. Nanda", role: "Koordinator Medis" },
   { id: "S5", name: "Sidiq", role: "Koordinator Keamanan" },
   { id: "S6", name: "Agung", role: "Referee" },
