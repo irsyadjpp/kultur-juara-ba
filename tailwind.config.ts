@@ -1,3 +1,4 @@
+
 import type {Config} from 'tailwindcss';
 
 export default {
@@ -10,9 +11,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['"Plus Jakarta Sans"', 'sans-serif'], // Modern Clean sans
-        headline: ['"Archivo Black"', 'sans-serif'], // Heavy Sporty font
-        mono: ['"JetBrains Mono"', 'monospace'],
+        body: ['"Outfit"', 'sans-serif'],
+        headline: ['"Outfit"', 'sans-serif'],
+        mono: ['"Outfit"', 'monospace'],
       },
       borderRadius: {
         '3xl': '1.75rem',
