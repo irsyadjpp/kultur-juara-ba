@@ -34,7 +34,7 @@ export function HeroSection() {
            </h1>
 
            <p className="text-lg md:text-xl text-zinc-600 dark:text-zinc-400 font-medium max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
-              Turnamen badminton digital pertama dengan integrasi Live Score & Statistik Real-time. Rasakan atmosfer profesional di level komunitas.
+              Turnamen badminton dengan integrasi digital penuh, dari Live Score hingga Statistik Real-time. Rasakan atmosfer profesional di level komunitas.
            </p>
 
            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
