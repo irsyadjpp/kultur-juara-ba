@@ -25,7 +25,7 @@ export function HeroSection() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
               </span>
-              Badmintour Open #1: The Digital Prologue
+              Badmintour Open #1
            </div>
 
            <h1 className="text-6xl sm:text-7xl md:text-8xl font-black font-headline tracking-tighter leading-[0.9] mb-6 text-foreground">
@@ -66,9 +66,9 @@ export function HeroSection() {
                     <div className="absolute bottom-8 left-8 right-8 text-white">
                         <div className="flex items-center gap-2 mb-2 text-yellow-400">
                              <Trophy className="w-5 h-5 fill-current" />
-                             <span className="font-bold tracking-wider">TOTAL PRIZE POOL RP 19 JUTA</span>
+                             <span className="font-bold tracking-wider">TOTAL PRIZE POOL</span>
                         </div>
-                        <p className="text-4xl font-black font-headline">RP 19 JUTA</p>
+                        <p className="text-4xl font-black font-headline">RP 5 JUTA</p>
                         
                         <div className="mt-6 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20">
                            <ClientOnly>
@@ -93,7 +93,7 @@ export function HeroSection() {
          <div className="flex whitespace-nowrap animate-marquee">
             {[1,2,3,4,5,6].map(i => (
                 <span key={i} className="text-xl md:text-2xl font-black font-headline mx-8 uppercase tracking-widest flex items-center gap-4">
-                   <Zap className="w-6 h-6 fill-black" /> Badmintour Open #1 • THE DIGITAL PROLOGUE • LEVEL UP YOUR GAME
+                   <Zap className="w-6 h-6 fill-black" /> Badmintour Open #1 • LEVEL UP YOUR GAME
                 </span>
             ))}
          </div>

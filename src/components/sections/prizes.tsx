@@ -4,7 +4,7 @@
 import { Trophy, Star } from "lucide-react";
 
 const prizes = [
-  { cat: "Beginner", pool: "19 JUTA", color: "text-green-500", bg: "bg-green-500/10" },
+  { cat: "Beginner", pool: "5 JUTA", color: "text-green-500", bg: "bg-green-500/10" },
 ];
 
 export function PrizesSection() {
@@ -16,7 +16,7 @@ export function PrizesSection() {
                 <Trophy className="w-10 h-10 text-yellow-600 dark:text-yellow-400" />
             </div>
             <h2 className="text-4xl md:text-6xl font-black font-headline uppercase mb-4">
-                Total Prize Pool Rp 19 Juta
+                Total Prize Pool Rp 5 Juta
             </h2>
             <p className="text-xl text-muted-foreground font-medium">
                 Total Hadiah Uang Tunai + Throphy + Merchandise untuk Kategori Beginner.
