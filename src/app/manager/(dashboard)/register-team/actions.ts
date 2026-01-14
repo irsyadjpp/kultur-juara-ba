@@ -20,5 +20,3 @@ export async function registerTeamEntity(prevState: any, formData: FormData): Pr
   
   return { success: true, teamCode };
 }
-
-    

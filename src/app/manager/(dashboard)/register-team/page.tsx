@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { useState, useActionState, useEffect } from "react";
@@ -246,4 +245,3 @@ export default function RegisterTeamPage() {
     </div>
   );
 }
-

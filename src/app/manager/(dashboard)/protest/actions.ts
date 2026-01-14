@@ -22,5 +22,3 @@ export async function submitProtest(data: ProtestFormValues) {
         protestId: protestId
     };
 }
-
-    
