@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -14,7 +15,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 10%;
     
-    --primary: 349 73% 46%; /* Kultur Juara Red */
+    --primary: 349 75% 45%; /* red: #ca1f3d */
     --primary-foreground: 0 0% 98%;
     
     --secondary: 0 0% 92%;
@@ -23,15 +24,15 @@
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 40%;
     
-    --accent: 45 100% 95%; /* Light Yellow */
-    --accent-foreground: 45 95% 30%; /* Dark Yellow */
+    --accent: 45 100% 50%; /* yellow: #ffbe00 */
+    --accent-foreground: 45 100% 10%;
     
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     
     --border: 0 0% 90%;
     --input: 0 0% 90%;
-    --ring: 349 73% 46%; /* Kultur Juara Red */
+    --ring: 349 75% 45%;
     
     --radius: 1.5rem;
   }
@@ -47,7 +48,7 @@
     --popover: 240 10% 8%;
     --popover-foreground: 0 0% 98%;
     
-    --primary: 349 80% 60%; /* Brighter Red */
+    --primary: 349 80% 55%; /* Brighter Red */
     --primary-foreground: 0 0% 98%;
     
     --secondary: 240 6% 15%;
@@ -56,15 +57,15 @@
     --muted: 240 6% 12%;
     --muted-foreground: 240 5% 65%;
     
-    --accent: 45 95% 15%; /* Dark Yellow-Brown */
-    --accent-foreground: 45 95% 85%; /* Light Yellow Text */
+    --accent: 45 100% 50%; /* yellow: #ffbe00 */
+    --accent-foreground: 45 100% 10%;
     
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     
     --border: 240 6% 20%;
     --input: 240 6% 20%;
-    --ring: 349 80% 60%;
+    --ring: 349 80% 55%;
   }
 }
 
@@ -92,7 +93,7 @@
 
   /* Gen Z / Sporty Gradients */
   .bg-gradient-sport {
-    @apply bg-gradient-to-br from-primary via-yellow-500 to-orange-600;
+    @apply bg-gradient-to-br from-primary via-accent to-orange-600;
   }
   
   .text-outline {
