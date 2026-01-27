@@ -3,7 +3,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import Image from "next/image"
+import Image from "next/image" // Import Image dari Next.js
 import { usePathname } from "next/navigation"
 import { 
   LayoutDashboard, User, Briefcase, CalendarRange, 
@@ -14,7 +14,7 @@ import {
   Timer, Navigation,
   BarChart3, Megaphone,
   Mail, FileSignature, Award, 
-  Tags, UserCog, Handshake, Newspaper, Settings, ChevronRight, LogOut, ShieldCheck as UserCheck
+  Tags, UserCog, Handshake, Newspaper, Settings, ChevronRight, LogOut, ShieldCheck as UserCheck, Dumbbell
 } from "lucide-react"
 
 import {
@@ -63,6 +63,7 @@ const data = {
   navMatch: [
     { title: "Manajemen Atlet", url: "/admin/participants/teams", icon: Users },
     { title: "Jadwal Latihan", url: "/admin/match-control/schedule", icon: CalendarDays },
+    { title: "Evaluasi Fisik", url: "/admin/evaluations/physical", icon: Dumbbell },
     { title: "Evaluasi & Laporan", url: "/admin/match-control/results", icon: FileText },
     { title: "Absensi Atlet", url: "/admin/gate", icon: QrCode },
   ],
