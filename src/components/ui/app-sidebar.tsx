@@ -45,8 +45,8 @@ const data = {
     { title: "Profil Akademi", url: "/admin/profile", icon: User },
     { title: "Program Latihan", url: "/admin/planning", icon: CalendarRange },
   ],
-  // 2. COACH'S OFFICE
-  navDirector: [
+  // 2. MANAJEMEN
+  navManajemen: [
     { title: "Monitoring Latihan", url: "/admin/director/monitor", icon: Activity },
     { title: "Database Pelatih", url: "/admin/director/roster", icon: Users },
     { title: "Struktur Organisasi", url: "/admin/director/committee", icon: Network },
@@ -59,20 +59,17 @@ const data = {
     { title: "Honorarium Pelatih", url: "/admin/finance/honorarium", icon: Wallet },
     { title: "Kas Kecil", url: "/admin/finance/petty-cash", icon: Coins },
   ],
-  // 4. ATLET
-  navMatch: [
-    { title: "Registrasi Atlet", url: "/admin/participants/register", icon: UserPlus },
-    { title: "Manajemen Atlet", url: "/admin/participants/teams", icon: Users },
+  // 4. LATIHAN
+  navLatihan: [
     { title: "Jadwal Latihan", url: "/admin/match-control/schedule", icon: CalendarDays },
     { title: "Evaluasi Fisik", url: "/admin/evaluations/physical", icon: Dumbbell },
-    { title: "Evaluasi & Laporan", url: "/admin/match-control/results", icon: FileText },
+    { title: "Hasil Pertandingan", url: "/admin/match-control/results", icon: FileText },
     { title: "Absensi Atlet", url: "/admin/gate", icon: QrCode },
   ],
   // 5. OPERASIONAL
-  navOps: [
+  navOperasional: [
     { title: "Inventaris Alat", url: "/admin/logistics/inventory", icon: Box },
     { title: "Manajemen Shuttlecock", url: "/admin/logistics/shuttlecock", icon: Package },
-    { title: "Dispatch (Umum)", url: "/admin/dispatch", icon: Navigation },
   ],
   // 6. ADMINISTRASI
   navSecretariat: [
@@ -91,7 +88,7 @@ export function AppSidebar({ onLogout, ...props }: React.ComponentProps<typeof S
       <SidebarHeader className="h-20 flex justify-center border-b border-white/5 bg-zinc-950/50">
         <div className="flex items-center gap-3 px-2 group-data-[collapsible=icon]:justify-center">
           
-          <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-black/50 border border-white/10 shadow-[0_0_15px_rgba(234,179,8,0.3)] overflow-hidden p-1">
+          <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-black/50 border border-white/10 shadow-[0_0_20px_hsl(var(--primary)/0.4)] overflow-hidden p-1">
             <Image 
               src="/images/logo.png" 
               alt="Kultur Juara Logo" 
@@ -108,13 +105,13 @@ export function AppSidebar({ onLogout, ...props }: React.ComponentProps<typeof S
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="px-3 py-4 space-y-6 bg-zinc-950/50 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
+      <SidebarContent className="px-3 py-4 space-y-4 bg-zinc-950/50 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
         
         <NavGroup label="UTAMA" items={data.navMain} currentPath={pathname} />
-        <NavGroup label="MANAJEMEN" items={data.navDirector} currentPath={pathname} />
+        <NavGroup label="MANAJEMEN" items={data.navManajemen} currentPath={pathname} />
         <NavGroup label="KEUANGAN" items={data.navFinance} currentPath={pathname} />
-        <NavGroup label="ATLET & LATIHAN" items={data.navMatch} currentPath={pathname} />
-        <NavGroup label="OPERASIONAL" items={data.navOps} currentPath={pathname} />
+        <NavGroup label="ATLET & LATIHAN" items={data.navLatihan} currentPath={pathname} />
+        <NavGroup label="OPERASIONAL" items={data.navOperasional} currentPath={pathname} />
         <NavGroup label="ADMINISTRASI" items={data.navSecretariat} currentPath={pathname} />
 
       </SidebarContent>
@@ -140,39 +137,44 @@ export function AppSidebar({ onLogout, ...props }: React.ComponentProps<typeof S
   )
 }
 
-// --- SUB COMPONENT: NAV GROUP (MD3 STYLE) ---
-function NavGroup({ label, items, currentPath }: { label: string, items: any[], currentPath: string }) {
-    return (
-        <SidebarGroup>
-            <SidebarGroupLabel className="text-[10px] font-black tracking-[0.2em] text-zinc-600 uppercase mb-2 px-2 group-data-[collapsible=icon]:hidden">
-                {label}
-            </SidebarGroupLabel>
-            <SidebarMenu className="space-y-1">
-                {items.map((item) => {
-                    const isActive = currentPath.startsWith(item.url);
-                    
-                    return (
-                        <SidebarMenuItem key={item.title}>
-                            <SidebarMenuButton asChild tooltip={item.title} 
-                                className={cn(
-                                    "h-10 rounded-full px-4 transition-all duration-300 font-medium text-sm group/btn relative overflow-hidden",
-                                    isActive 
-                                        ? "bg-primary text-primary-foreground shadow-[0_2px_10px_-5px_hsl(var(--primary)/0.5)] font-bold hover:bg-primary" 
-                                        : "text-zinc-400 hover:text-white hover:bg-white/5"
-                                )}
-                            >
-                                <Link href={item.url} className="flex items-center w-full">
-                                    <item.icon className={cn("size-4 mr-3 transition-transform duration-300 group-hover/btn:scale-110", isActive && "animate-pulse-slow")} />
-                                    <span className="flex-1 truncate">{item.title}</span>
-                                    {isActive && <ChevronRight className="size-3 opacity-50 ml-auto" />}
-                                    
-                                    {isActive && <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] animate-shimmer" />}
-                                </Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                    )
-                })}
-            </SidebarMenu>
-        </SidebarGroup>
-    )
+function NavGroup({ label, items, currentPath }: { label: string, items: any[], currentPath:string }) {
+  return (
+    <SidebarGroup>
+      <SidebarGroupLabel className="text-xs font-bold tracking-widest text-zinc-500 uppercase mb-2 px-3 group-data-[collapsible=icon]:hidden">
+        {label}
+      </SidebarGroupLabel>
+      <SidebarMenu className="space-y-1">
+        {items.map((item) => {
+          const isActive = currentPath.startsWith(item.url);
+          return (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton
+                asChild
+                tooltip={item.title}
+                className={cn(
+                  "h-12 rounded-2xl px-3 transition-all duration-300 font-bold text-sm group/btn relative overflow-hidden",
+                  isActive
+                    ? "bg-zinc-800 text-white shadow-lg border border-primary/50"
+                    : "text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+                )}
+              >
+                <Link href={item.url} className="flex items-center w-full">
+                  <div className={cn(
+                      "w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition-all duration-300",
+                      isActive ? "bg-primary text-black" : "bg-zinc-800 text-zinc-400 group-hover/btn:text-white"
+                  )}>
+                    <item.icon className="size-5" />
+                  </div>
+                  <span className="flex-1 truncate">{item.title}</span>
+                  {isActive && (
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse ml-auto" />
+                  )}
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          );
+        })}
+      </SidebarMenu>
+    </SidebarGroup>
+  );
 }
