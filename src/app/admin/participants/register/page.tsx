@@ -42,7 +42,6 @@ export default function RegisterAthletePage() {
       nik: "",
       dob: "",
       gender: undefined,
-      clubName: "",
       category: undefined,
       email: "",
       whatsapp: "",
@@ -123,19 +122,12 @@ export default function RegisterAthletePage() {
 
           <Card className="rounded-[2rem] border-border/50 shadow-lg">
             <CardHeader className="p-8 pb-4">
-              <CardTitle className="text-xl">Informasi Klub & Kontak</CardTitle>
+              <CardTitle className="text-xl">Informasi Pendaftaran & Kontak</CardTitle>
               <CardDescription>Data untuk keperluan administrasi turnamen.</CardDescription>
             </CardHeader>
             <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField control={form.control} name="clubName" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nama Klub / PB</FormLabel>
-                  <FormControl><Input {...field} placeholder="Contoh: PB. Jaya Raya" /></FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
               <FormField control={form.control} name="category" render={({ field }) => (
-                <FormItem>
+                <FormItem className="md:col-span-2">
                   <FormLabel>Kategori Usia</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl><SelectTrigger><SelectValue placeholder="Pilih Kategori" /></SelectTrigger></FormControl>
@@ -173,4 +165,3 @@ export default function RegisterAthletePage() {
     </div>
   );
 }
-    
