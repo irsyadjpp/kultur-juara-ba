@@ -2,27 +2,27 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { TrendingUp, Trophy, ShieldCheck, Gamepad2 } from "lucide-react";
+import { TrendingUp, Trophy, ShieldCheck, Gamepad2, BrainCircuit, Dumbbell, Award } from "lucide-react";
 
 export function WhyJoinSection() {
   const points = [
     {
-      icon: Gamepad2,
-      title: "Digital Experience",
-      desc: "Rasakan sensasi turnamen rasa pro. Live Score, Player Stats, dan Match History tercatat digital selamanya.",
+      icon: Award,
+      title: "Pelatih Berlisensi",
+      desc: "Dibimbing oleh pelatih profesional dengan sertifikasi PBSI untuk memastikan teknik dan strategi Anda berkembang pesat.",
       bg: "bg-blue-500 text-white",
     },
     {
-      icon: Trophy,
-      title: "Golden Ticket",
-      desc: "Jalur VIP untuk Juara. Dapatkan slot prioritas untuk Badmintour Anniversary di Desember.",
+      icon: BrainCircuit,
+      title: "Kurikulum Modern",
+      desc: "Program latihan terstruktur yang menggabungkan sport science dengan metode pelatihan terkini untuk hasil maksimal.",
       bg: "bg-yellow-400 text-black",
     },
     {
-      icon: ShieldCheck,
-      title: "Fair Play Matrix",
-      desc: "Anti-Sandbagging Club. Sistem validasi level & matriks pasangan memastikan lawanmu seimbang.",
-      bg: "bg-primary text-white",
+      icon: Dumbbell,
+      title: "Fasilitas Standar",
+      desc: "Berlatih di GOR dengan lapangan karpet standar internasional, pencahayaan optimal, dan fasilitas pendukung yang lengkap.",
+      bg: "bg-primary text-black",
     },
   ];
 
@@ -31,10 +31,10 @@ export function WhyJoinSection() {
       <div className="container mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-4xl md:text-5xl font-black font-headline mb-6 uppercase">
-            Why Join <span className="text-primary">The Prologue?</span>
+            Why Train at <span className="text-primary">Kultur Juara?</span>
           </h2>
           <p className="text-xl text-muted-foreground leading-relaxed font-medium">
-            Lebih dari sekadar mabar. Ini adalah pemanasan strategis Anda sebelum pertempuran utama.
+            Kami bukan sekadar tempat latihan. Kami adalah ekosistem untuk mencetak juara.
           </p>
         </div>
 

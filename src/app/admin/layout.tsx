@@ -94,27 +94,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    // DefaultOpen = true agar di desktop langsung terbuka
     <SidebarProvider defaultOpen={true}>
       
-      {/* 1. SIDEBAR (Layer Tertinggi di Kiri) */}
       <AppSidebar className="z-50 border-r border-white/5" />
       
-      {/* 2. AREA KONTEN (Sebelah Kanan) */}
       <SidebarInset className="relative flex flex-col min-h-screen bg-transparent overflow-hidden">
         
-        {/* GLOBAL BACKGROUND: Fixed di belakang semuanya */}
         <div className="fixed inset-0 -z-50 pointer-events-none">
             <AdminBackground />
         </div>
 
-        {/* HEADER: Sticky di atas konten */}
         <header className="flex h-16 shrink-0 items-center justify-between gap-2 px-4 bg-black/40 backdrop-blur-md border-b border-white/5 sticky top-0 z-40 transition-all">
             <div className="flex items-center gap-2">
                 <SidebarTrigger className="text-zinc-400 hover:text-white hover:bg-white/10 rounded-full w-10 h-10 transition-all" />
                 <Separator orientation="vertical" className="mr-2 h-4 bg-zinc-700" />
                 <span className="text-sm font-black text-zinc-200 hidden md:block tracking-widest uppercase font-headline">
-                  BADMINTOUR COMMAND CENTER
+                  KULTUR JUARA | ADMIN
                 </span>
             </div>
 
@@ -123,14 +118,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </div>
         </header>
 
-        {/* MAIN CONTENT: Scrollable */}
         <div className="flex-1 overflow-auto relative z-10 scroll-smooth">
             <div className="p-4 md:p-6 lg:p-8">
                 {children}
             </div>
         </div>
         
-        {/* FLOATING WIDGETS */}
         <EmergencyButton /> 
         <Toaster />
 

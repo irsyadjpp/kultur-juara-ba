@@ -1,15 +1,14 @@
 
-
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'Badmintour Open #1',
-  description: 'Badmintour Open #1: Integritas, Solidaritas, dan Sportivitas.',
+  title: 'Kultur Juara Badminton Academy',
+  description: 'Mencetak atlet bulutangkis masa depan dengan kurikulum profesional dan fasilitas modern.',
   manifest: "/manifest.json",
-  themeColor: "#9e1d24",
+  themeColor: "#EAB308", // Gold
 };
 
 export default function RootLayout({
@@ -22,7 +21,7 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
         <ThemeProvider

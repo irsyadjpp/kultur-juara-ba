@@ -14,17 +14,17 @@ export function EventSummarySection() {
           
           {/* TITLE CARD */}
           <div className="md:col-span-4 bg-primary text-primary-foreground rounded-[2.5rem] p-8 flex flex-col justify-between relative overflow-hidden min-h-[300px]">
-             <div className="absolute -right-10 -top-10 bg-white/10 w-64 h-64 rounded-full blur-3xl pointer-events-none" />
+             <div className="absolute -right-10 -top-10 bg-black/10 w-64 h-64 rounded-full blur-3xl pointer-events-none" />
              <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-xs font-bold uppercase tracking-widest mb-4 backdrop-blur-sm">
-                   <Info className="w-3 h-3" /> Badmintour Open #1
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/20 text-xs font-bold uppercase tracking-widest mb-4 backdrop-blur-sm">
+                   <Info className="w-3 h-3" /> Kultur Juara Academy
                 </div>
                 <h2 className="text-5xl font-black font-headline leading-[0.9]">
-                   THE<br/>GAME<br/>PLAN.
+                   PROGRAM<br/>& BIAYA.
                 </h2>
              </div>
              <p className="font-medium text-primary-foreground/90 mt-4">
-                Persiapkan dirimu. Simak detail waktu, biaya, dan aturan main sebelum terjun ke arena.
+                Informasi dasar mengenai jadwal latihan, lokasi, program, dan biaya bulanan di akademi kami.
              </p>
           </div>
 
@@ -37,13 +37,13 @@ export function EventSummarySection() {
                   <div className="relative z-10">
                       <div className="flex items-center gap-3 text-zinc-400 mb-2">
                           <Banknote className="w-6 h-6" />
-                          <span className="font-bold uppercase tracking-wider text-sm">Fee: Beginner</span>
+                          <span className="font-bold uppercase tracking-wider text-sm">Biaya Bulanan</span>
                       </div>
                       <p className="text-4xl font-black font-headline text-yellow-400">
-                        IDR 100K <span className="text-lg text-zinc-400 font-medium">/org</span>
+                        IDR 500K <span className="text-lg text-zinc-400 font-medium">/atlet</span>
                       </p>
                        <p className="text-sm text-zinc-400 mt-1 bg-white/10 w-fit px-3 py-1 rounded-full">
-                         Total: IDR 200rb / Pasang
+                         Termasuk 8x Sesi Latihan & Shuttlecock
                       </p>
                   </div>
               </Card>
@@ -56,8 +56,8 @@ export function EventSummarySection() {
                   <CalendarClock className="w-6 h-6 text-primary" />
                </div>
                <div className="z-10 mt-auto">
-                   <h3 className="text-3xl font-black font-headline">3 - 4 APRIL 2026</h3>
-                   <p className="text-lg font-medium text-muted-foreground">Sabtu & Minggu, 08:00 WIB - Selesai</p>
+                   <h3 className="text-3xl font-black font-headline">SELASA & KAMIS</h3>
+                   <p className="text-lg font-medium text-muted-foreground">16:00 - 18:00 WIB</p>
                </div>
           </div>
 
@@ -73,8 +73,8 @@ export function EventSummarySection() {
               <div className="bg-background border rounded-[2.5rem] p-8 flex flex-col justify-between hover:border-primary/50 transition-colors">
                   <Swords className="w-8 h-8 text-primary mb-4" />
                   <div>
-                      <h4 className="text-xl font-bold font-headline">Sistem Pool & Gugur</h4>
-                      <p className="text-muted-foreground">Main 3x (Anti Gugur Awal)</p>
+                      <h4 className="text-xl font-bold font-headline">Fokus Program</h4>
+                      <p className="text-muted-foreground">Teknik, Fisik, & Taktik Pertandingan</p>
                   </div>
               </div>
           </div>

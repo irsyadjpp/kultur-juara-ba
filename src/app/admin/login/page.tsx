@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useActionState, useEffect, useState } from "react";
@@ -51,7 +50,6 @@ export default function AdminLoginPage() {
             ...res.user,
             isLoggedIn: true
         };
-        // Simpan sesi di sessionStorage agar layout bisa mendeteksinya
         sessionStorage.setItem('badmintour_admin_session', JSON.stringify(sessionData));
 
         toast({ title: "Google Login Berhasil", description: "Selamat datang!", className: "bg-green-600 text-white" });
@@ -66,15 +64,14 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen w-full flex bg-black text-white overflow-hidden">
       
-      {/* --- BAGIAN KIRI: VISUAL & BRANDING --- */}
       <div className="hidden lg:flex w-[60%] relative flex-col justify-between p-12 bg-zinc-900">
         
         <div className="absolute inset-0 z-0">
             <Image 
-                src="/images/gor-koni.jpg" 
-                alt="Court" 
+                src="https://images.unsplash.com/photo-1579487784860-e4d42c385f09?q=80&w=1974&auto=format&fit=crop" 
+                alt="Academy" 
                 fill 
-                className="object-cover opacity-40 grayscale mix-blend-luminosity"
+                className="object-cover opacity-30 grayscale mix-blend-luminosity"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
             <div className="absolute inset-0 bg-[url('/images/noise.png')] opacity-20 mix-blend-overlay"></div>
@@ -83,35 +80,34 @@ export default function AdminLoginPage() {
         <div className="relative z-10">
              <div className="flex items-center gap-3 mb-2">
                 <Image src="/images/logo.png" alt="Logo" width={40} height={40} />
-                <span className="font-bold text-xl tracking-widest uppercase text-white/80">Badmintour Open #1</span>
+                <span className="font-bold text-xl tracking-widest uppercase text-white/80">Kultur Juara Academy</span>
              </div>
         </div>
 
         <div className="relative z-10 max-w-xl">
             <h1 className="text-6xl font-black font-headline leading-[0.9] mb-6 tracking-tighter">
                 PUSAT KENDALI.<br/>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-600">SATU GENGGAMAN.</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-400">SATU GENGGAMAN.</span>
             </h1>
             <p className="text-lg text-zinc-400 font-medium leading-relaxed">
-                Selamat datang di Admin Portal. Pusat komando untuk mengelola seluruh aspek turnamen, dari pendaftaran hingga laporan akhir.
+                Selamat datang di Admin Portal. Pusat komando untuk mengelola seluruh aspek akademi, dari pendaftaran atlet hingga evaluasi latihan.
             </p>
         </div>
 
         <div className="relative z-10 flex gap-6 text-sm text-zinc-500 font-mono">
-            <span>© {new Date().getFullYear()} Badmintour Dev Team</span>
+            <span>© {new Date().getFullYear()} Kultur Juara</span>
             <span>v1.0.0 (Beta)</span>
         </div>
       </div>
 
-      {/* --- BAGIAN KANAN: FORM LOGIN --- */}
       <div className="w-full lg:w-[40%] flex items-center justify-center p-8 relative">
          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[100px] pointer-events-none" />
          <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600/10 blur-[100px] pointer-events-none" />
 
          <div className="w-full max-w-md space-y-8 relative z-10">
             <div className="text-center lg:text-left">
-                <h2 className="text-3xl font-black font-headline mb-2">Admin Portal</h2>
-                <p className="text-zinc-400">Masuk untuk mengelola turnamen.</p>
+                <h2 className="text-3xl font-black font-headline mb-2">Akademi Portal</h2>
+                <p className="text-zinc-400">Masuk untuk mengelola data akademi.</p>
             </div>
 
             <Tabs defaultValue="google" className="w-full">
@@ -120,11 +116,10 @@ export default function AdminLoginPage() {
                   <TabsTrigger value="pin">Kode PIN</TabsTrigger>
               </TabsList>
 
-              {/* --- METODE 1: GOOGLE (UTAMA) --- */}
                <TabsContent value="google" className="space-y-4">
                   <div className="text-center py-6 px-4 border border-zinc-800 rounded-lg bg-black/50">
                       <p className="text-sm text-zinc-400 mb-6">
-                          Gunakan akun Google resmi yang terdaftar untuk akses penuh sebagai administrator.
+                          Gunakan akun Google resmi yang terdaftar untuk akses penuh sebagai pelatih atau admin.
                       </p>
                       <button
                           onClick={handleGoogleLogin}
@@ -148,11 +143,10 @@ export default function AdminLoginPage() {
                   </div>
               </TabsContent>
 
-              {/* --- METODE 2: PIN (UNTUK LAPANGAN) --- */}
               <TabsContent value="pin">
                   <form action={formAction} className="space-y-6">
                       <div className="space-y-2 text-center">
-                          <Label className="text-xs font-bold uppercase text-zinc-500 tracking-wider">Masukkan Kode Akses Panitia</Label>
+                          <Label className="text-xs font-bold uppercase text-zinc-500 tracking-wider">Masukkan Kode Akses Staff</Label>
                           <Input 
                             name="code" 
                             type="password"

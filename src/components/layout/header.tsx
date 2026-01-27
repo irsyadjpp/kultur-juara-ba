@@ -22,9 +22,9 @@ export function Header() {
 
   const navItems = [
     { name: 'Beranda', href: '/' },
-    { name: 'Bagan', href: '/bagan' },
-    { name: 'Jadwal', href: '/schedule' },
-    { name: 'Participants', href: '/participants' },
+    { name: 'Program', href: '/#programs' },
+    { name: 'Fasilitas', href: '/#venue' },
+    { name: 'Tentang Kami', href: '/about' },
   ];
 
   return (
@@ -41,7 +41,7 @@ export function Header() {
                 <Image src="/images/logo.png" alt="Logo" fill className="object-contain" />
             </div>
             <span className={cn("font-headline font-black tracking-tighter uppercase hidden md:block transition-all", isScrolled ? "text-lg" : "text-xl")}>
-              BADMINTOUR
+              KULTUR JUARA
             </span>
         </Link>
 
@@ -64,7 +64,7 @@ export function Header() {
              
              <Button asChild className="rounded-full font-bold bg-primary text-primary-foreground hover:brightness-110 shadow-lg shadow-primary/20 px-6 hidden sm:flex">
                 <Link href="/admin/login">
-                    <User className="w-4 h-4 mr-2"/> Masuk
+                    <User className="w-4 h-4 mr-2"/> Portal
                 </Link>
              </Button>
             
@@ -81,7 +81,7 @@ export function Header() {
                          <Link key={item.href} href={item.href} className="text-2xl font-black font-headline uppercase text-muted-foreground data-[active=true]:text-foreground">{item.name}</Link>
                       ))}
                       <div className="flex flex-col w-full gap-3 mt-8">
-                         <Button asChild size="lg" className="w-full rounded-full text-lg font-bold bg-primary"><Link href="/admin/login">Login Admin</Link></Button>
+                         <Button asChild size="lg" className="w-full rounded-full text-lg font-bold bg-primary"><Link href="/admin/login">Login Portal</Link></Button>
                       </div>
                    </div>
                 </SheetContent>

@@ -3,7 +3,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import Image from "next/image" // Import Image dari Next.js
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { 
   LayoutDashboard, User, Briefcase, CalendarRange, 
@@ -33,76 +33,51 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-// --- DATA MENU LENGKAP ---
 const data = {
   user: {
-    name: "Irsyad Jamal",
-    role: "Project Director",
+    name: "Pelatih Kepala",
+    role: "Head Coach",
     avatar: "/avatars/irsyad.jpg",
   },
-  // 1. UTAMA
+  // 1. MAIN
   navMain: [
     { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
-    { title: "Profil Saya", url: "/admin/profile", icon: User },
-    { title: "RKA & Planning", url: "/admin/planning", icon: CalendarRange },
+    { title: "Profil Akademi", url: "/admin/profile", icon: User },
+    { title: "Program Latihan", url: "/admin/planning", icon: CalendarRange },
   ],
-  // 2. DIRECTOR'S OFFICE
+  // 2. COACH'S OFFICE
   navDirector: [
-    { title: "Live Monitor", url: "/admin/director/monitor", icon: Activity },
-    { title: "Master Roster Panitia", url: "/admin/director/roster", icon: Users },
-    { title: "Struktur & Penugasan", url: "/admin/director/committee", icon: Network },
+    { title: "Monitoring Latihan", url: "/admin/director/monitor", icon: Activity },
+    { title: "Database Pelatih", url: "/admin/director/roster", icon: Users },
+    { title: "Struktur Organisasi", url: "/admin/director/committee", icon: Network },
   ],
   // 3. KEUANGAN
   navFinance: [
     { title: "Dashboard Keuangan", url: "/admin/finance", icon: PieChart },
-    { title: "Approval Reimbursement", url: "/admin/finance/reimbursement-approval", icon: Stamp },
-    { title: "Tagihan Sponsor", url: "/admin/finance/invoices", icon: Receipt },
-    { title: "Skema Honorarium", url: "/admin/finance/honorarium", icon: Wallet },
-    { title: "Kas Kecil (Petty Cash)", url: "/admin/finance/petty-cash", icon: Coins },
+    { title: "Manajemen SPP", url: "/admin/finance/invoices", icon: Receipt },
+    { title: "Approval Pengeluaran", url: "/admin/finance/reimbursement-approval", icon: Stamp },
+    { title: "Honorarium Pelatih", url: "/admin/finance/honorarium", icon: Wallet },
+    { title: "Kas Kecil", url: "/admin/finance/petty-cash", icon: Coins },
   ],
-  // 4. PERTANDINGAN
+  // 4. ATLET
   navMatch: [
-    { title: "Arena Manager", url: "/admin/match-control", icon: Trophy },
-    { title: "Editor Jadwal", url: "/admin/match-control/schedule", icon: CalendarDays },
-    { title: "Generate Bagan", url: "/admin/match-control/bracket", icon: Network },
-    { title: "Verifikasi Hasil", url: "/admin/match-control/results", icon: FileText },
-    { title: "Verifikasi TVT", url: "/admin/tpf", icon: ShieldAlert },
-    { title: "Keputusan Protes", url: "/admin/protests", icon: Gavel },
-    { title: "Papan Skor Wasit", url: "/admin/referee/match/1", icon: MonitorPlay },
+    { title: "Manajemen Atlet", url: "/admin/participants/teams", icon: Users },
+    { title: "Jadwal Latihan", url: "/admin/match-control/schedule", icon: CalendarDays },
+    { title: "Evaluasi & Laporan", url: "/admin/match-control/results", icon: FileText },
+    { title: "Absensi Atlet", url: "/admin/gate", icon: QrCode },
   ],
   // 5. OPERASIONAL
   navOps: [
-    { title: "Gate Check-in", url: "/admin/gate", icon: QrCode },
-    { title: "Kontrol Shuttlecock", url: "/admin/logistics/shuttlecock", icon: Package },
-    { title: "Inventaris Umum", url: "/admin/logistics/inventory", icon: Box },
-    { title: "Dispatch Command", url: "/admin/logistics/dispatch", icon: Navigation },
-    { title: "Absensi & Konsumsi", url: "/admin/hr/meals", icon: Utensils },
-    { title: "Undian Doorprize", url: "/admin/operations/doorprize", icon: Gift },
-    { title: "Pengajuan Reimbursement", url: "/admin/reimbursement/submit", icon: Upload },
-    { title: "Logistik Habis Pakai", url: "/admin/logistics/consumables", icon: Layers },
+    { title: "Inventaris Alat", url: "/admin/logistics/inventory", icon: Box },
+    { title: "Manajemen Shuttlecock", url: "/admin/logistics/shuttlecock", icon: Package },
+    { title: "Dispatch (Umum)", url: "/admin/dispatch", icon: Navigation },
   ],
-  // 6. ACARA & PENUTUPAN
-  navEvent: [
-    { title: "Master Rundown", url: "/admin/event/rundown", icon: Timer },
-  ],
-  // 7. BISNIS & MEDIA
-  navBiz: [
-    { title: "Analisis Pengunjung", url: "/admin/business/visitors", icon: BarChart3 },
-    { title: "Laporan Sponsor", url: "/admin/business/reports", icon: BarChart3 },
-  ],
-  // 8. SEKRETARIAT
+  // 6. ADMINISTRASI
   navSecretariat: [
     { title: "Verifikasi Pendaftaran", url: "/admin/secretariat/verification", icon: UserCheck },
-    { title: "E-Mandate (Surat Tugas)", url: "/admin/secretary/assignments", icon: FileCheck },
-    { title: "Generator Sertifikat", url: "/admin/event/certificates", icon: Award },
     { title: "Surat-menyurat", url: "/admin/secretary/correspondence", icon: Mail },
+    { title: "Generator Sertifikat", url: "/admin/event/certificates", icon: Award },
   ],
-  // 9. MASTER DATA & PARTISIPAN
-  navMaster: [
-    { title: "Database Klub", url: "/admin/participants/teams", icon: Users },
-    { title: "Master Kategori", url: "/admin/master/categories", icon: Tags },
-    { title: "Manajemen User", url: "/admin/settings/users", icon: UserCog },
-  ]
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -111,15 +86,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props} className="border-r-0 bg-black">
       
-      {/* 1. HEADER (LOGO) */}
       <SidebarHeader className="h-20 flex justify-center border-b border-white/5 bg-zinc-950/50">
         <div className="flex items-center gap-3 px-2 group-data-[collapsible=icon]:justify-center">
           
-          {/* LOGO IMAGE */}
-          <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-black/50 border border-white/10 shadow-[0_0_15px_rgba(220,38,38,0.3)] overflow-hidden p-1">
+          <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-black/50 border border-white/10 shadow-[0_0_15px_rgba(234,179,8,0.3)] overflow-hidden p-1">
             <Image 
               src="/images/logo.png" 
-              alt="Badmintour Open #1 Logo" 
+              alt="Kultur Juara Logo" 
               width={40} 
               height={40} 
               className="w-full h-full object-contain"
@@ -127,33 +100,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </div>
 
           <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-            <span className="truncate font-black font-headline text-lg tracking-tight text-white">Badmintour #1</span>
-            <span className="truncate text-[10px] uppercase font-bold text-zinc-500 tracking-widest">Official Admin</span>
+            <span className="truncate font-black font-headline text-lg tracking-tight text-white">Kultur Juara</span>
+            <span className="truncate text-[10px] uppercase font-bold text-zinc-500 tracking-widest">Admin Panel</span>
           </div>
         </div>
       </SidebarHeader>
 
-      {/* 2. CONTENT (MENU ITEMS) - Scrollable */}
       <SidebarContent className="px-3 py-4 space-y-6 bg-zinc-950/50 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
         
         <NavGroup label="UTAMA" items={data.navMain} currentPath={pathname} />
-        <NavGroup label="DIRECTOR'S OFFICE" items={data.navDirector} currentPath={pathname} />
+        <NavGroup label="MANAJEMEN" items={data.navDirector} currentPath={pathname} />
         <NavGroup label="KEUANGAN" items={data.navFinance} currentPath={pathname} />
-        <NavGroup label="PERTANDINGAN" items={data.navMatch} currentPath={pathname} />
+        <NavGroup label="ATLET & LATIHAN" items={data.navMatch} currentPath={pathname} />
         <NavGroup label="OPERASIONAL" items={data.navOps} currentPath={pathname} />
-        <NavGroup label="ACARA" items={data.navEvent} currentPath={pathname} />
-        <NavGroup label="BISNIS & MEDIA" items={data.navBiz} currentPath={pathname} />
-        <NavGroup label="SEKRETARIAT" items={data.navSecretariat} currentPath={pathname} />
-        <NavGroup label="PESERTA & MASTER" items={data.navMaster} currentPath={pathname} />
+        <NavGroup label="ADMINISTRASI" items={data.navSecretariat} currentPath={pathname} />
 
       </SidebarContent>
 
-      {/* 3. FOOTER (USER PROFILE) */}
       <SidebarFooter className="p-4 bg-zinc-950/80 border-t border-white/5">
         <div className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center">
             <Avatar className="h-10 w-10 rounded-xl border-2 border-zinc-800 cursor-pointer hover:border-primary transition-colors">
                 <AvatarImage src={data.user.avatar} />
-                <AvatarFallback className="bg-zinc-900 font-bold text-zinc-400">IJ</AvatarFallback>
+                <AvatarFallback className="bg-zinc-900 font-bold text-zinc-400">KJ</AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                 <span className="truncate font-bold text-white">{data.user.name}</span>
@@ -187,7 +155,7 @@ function NavGroup({ label, items, currentPath }: { label: string, items: any[], 
                                 className={cn(
                                     "h-10 rounded-full px-4 transition-all duration-300 font-medium text-sm group/btn relative overflow-hidden",
                                     isActive 
-                                        ? "bg-primary text-primary-foreground shadow-[0_2px_10px_-5px_rgba(220,38,38,0.5)] font-bold hover:bg-primary" 
+                                        ? "bg-primary text-primary-foreground shadow-[0_2px_10px_-5px_rgba(234,179,8,0.5)] font-bold hover:bg-primary" 
                                         : "text-zinc-400 hover:text-white hover:bg-white/5"
                                 )}
                             >
@@ -196,7 +164,6 @@ function NavGroup({ label, items, currentPath }: { label: string, items: any[], 
                                     <span className="flex-1 truncate">{item.title}</span>
                                     {isActive && <ChevronRight className="size-3 opacity-50 ml-auto" />}
                                     
-                                    {/* Active Indicator Glow */}
                                     {isActive && <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] animate-shimmer" />}
                                 </Link>
                             </SidebarMenuButton>

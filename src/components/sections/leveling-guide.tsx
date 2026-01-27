@@ -2,20 +2,28 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle2, XCircle, Gauge, Tag } from "lucide-react";
+import { CheckCircle2, Dumbbell, BrainCircuit, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function LevelingGuideSection() {
-  const levels = [
+  const philosophies = [
     {
-      title: "Beginner",
-      subtitle: "Pemula",
-      price: "Rp 100.000",
-      skills: ["Grip 'Panci' (Panhandle)", "Ayunan lengan besar (bahu)"],
-      bans: ["DILARANG bisa Backhand Overhead Clear", "Tidak ada rotasi lengan bawah"],
-      color: "text-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400",
-      borderColor: "border-green-500",
-      priceColor: "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+      title: "Teknik Fundamental",
+      description: "Penguasaan grip, footwork, dan body balance sebagai fondasi utama setiap pukulan.",
+      icon: Dumbbell,
+      color: "border-green-500",
+    },
+    {
+      title: "Kecerdasan Taktis",
+      description: "Kemampuan membaca permainan, mengatur tempo, dan mengeksekusi strategi yang efektif.",
+      icon: BrainCircuit,
+      color: "border-blue-500",
+    },
+    {
+      title: "Kondisi Fisik Prima",
+      description: "Program latihan fisik terpadu untuk meningkatkan stamina, kecepatan, dan power.",
+      icon: Activity,
+      color: "border-orange-500",
     },
   ];
 
@@ -24,62 +32,22 @@ export function LevelingGuideSection() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-black font-headline text-foreground mb-6">
-            Klasifikasi Level & Biaya
+            Filosofi Latihan Kami
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            BCC 2026 menggunakan parameter Biomekanik untuk memastikan kompetisi yang adil.
-            <span className="block mt-2 font-bold text-destructive">Salah kategori = Diskualifikasi tanpa refund.</span>
+            Kami percaya juara sejati dibentuk dari tiga pilar utama: Teknik, Taktik, dan Fisik.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-1 gap-8 max-w-lg mx-auto">
-          {levels.map((level, idx) => (
-            <Card key={idx} className={cn("border-t-8 shadow-xl hover:-translate-y-2 transition-transform duration-300 rounded-[2rem] overflow-hidden", level.borderColor)}>
-              <CardHeader className={cn("text-center pb-8 pt-8", level.color)}>
-                <CardTitle className="flex flex-col gap-1">
-                    <span className="text-3xl font-black font-headline uppercase tracking-tight">{level.title}</span>
-                    <span className="text-sm font-bold opacity-70 uppercase tracking-widest">{level.subtitle}</span>
-                </CardTitle>
-                
-                <div className={cn("inline-flex items-center gap-2 px-4 py-2 rounded-full font-black text-lg mt-4 shadow-sm", level.priceColor)}>
-                    <Tag className="w-4 h-4" />
-                    {level.price}
-                    <span className="text-xs font-medium opacity-70">/org</span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          {philosophies.map((item, idx) => (
+            <Card key={idx} className={cn("border-t-8 shadow-xl hover:-translate-y-2 transition-transform duration-300 rounded-[2rem] overflow-hidden bg-card text-center", item.color)}>
+              <CardContent className="p-8">
+                <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mx-auto mb-6">
+                  <item.icon className="w-8 h-8 text-primary" />
                 </div>
-              </CardHeader>
-              
-              <CardContent className="pt-8 px-6 pb-8 bg-card">
-                <div className="space-y-6">
-                  <div>
-                    <h4 className="font-bold mb-3 flex items-center gap-2 text-foreground">
-                      <CheckCircle2 className="w-5 h-5 text-green-500" /> Ciri Khas:
-                    </h4>
-                    <ul className="text-sm text-muted-foreground space-y-3 pl-2">
-                      {level.skills.map((item, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 shrink-0" />
-                            {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <div className="h-px bg-border/50" />
-                  
-                  <div>
-                    <h4 className="font-bold mb-3 flex items-center gap-2 text-destructive">
-                      <XCircle className="w-5 h-5" /> Pantangan:
-                    </h4>
-                    <ul className="text-sm text-muted-foreground space-y-3 pl-2">
-                      {level.bans.map((item, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                             <span className="w-1.5 h-1.5 rounded-full bg-destructive mt-1.5 shrink-0" />
-                            {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+                <h3 className="text-xl font-bold font-headline mb-3">{item.title}</h3>
+                <p className="text-muted-foreground">{item.description}</p>
               </CardContent>
             </Card>
           ))}

@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    /* Material 3 Light Scheme - Sporty Red */
+    /* M3 Light Scheme - Champion Gold */
     --background: 0 0% 98%;
     --foreground: 0 0% 10%;
     
@@ -14,57 +14,57 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 10%;
     
-    --primary: 354 70% 50%; /* Sporty Red */
-    --primary-foreground: 0 0% 100%;
+    --primary: 45 90% 55%; /* Champion Gold */
+    --primary-foreground: 0 0% 10%;
     
-    --secondary: 0 0% 92%; /* Surface Container Low */
+    --secondary: 0 0% 92%;
     --secondary-foreground: 0 0% 10%;
     
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 40%;
     
-    --accent: 354 100% 92%; /* Primary Container */
-    --accent-foreground: 354 70% 30%; /* On Primary Container */
+    --accent: 45 100% 92%;
+    --accent-foreground: 45 90% 30%;
     
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     
     --border: 0 0% 90%;
     --input: 0 0% 90%;
-    --ring: 354 70% 50%;
+    --ring: 45 90% 55%;
     
-    --radius: 1.5rem; /* Material 3 Large Radius */
+    --radius: 1.5rem;
   }
 
   .dark {
-    /* Material 3 Dark Scheme - Cyber Sport */
-    --background: 240 10% 4%; /* Deep Graphite */
+    /* M3 Dark Scheme - Champion Gold */
+    --background: 240 10% 4%;
     --foreground: 0 0% 98%;
     
-    --card: 240 10% 8%; /* Surface Container */
+    --card: 240 10% 8%;
     --card-foreground: 0 0% 98%;
     
     --popover: 240 10% 8%;
     --popover-foreground: 0 0% 98%;
     
-    --primary: 354 85% 60%; /* Neon Red */
+    --primary: 45 90% 60%; /* Bright Gold */
     --primary-foreground: 0 0% 0%;
     
-    --secondary: 240 6% 15%; /* Surface Container High */
+    --secondary: 240 6% 15%;
     --secondary-foreground: 0 0% 98%;
     
     --muted: 240 6% 12%;
     --muted-foreground: 240 5% 65%;
     
-    --accent: 354 30% 20%; /* Primary Container Dark */
-    --accent-foreground: 354 85% 90%; /* On Primary Container Dark */
+    --accent: 45 30% 20%;
+    --accent-foreground: 45 85% 90%;
     
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     
     --border: 240 6% 20%;
     --input: 240 6% 20%;
-    --ring: 354 85% 60%;
+    --ring: 45 85% 60%;
   }
 }
 
@@ -92,7 +92,7 @@
 
   /* Gen Z / Sporty Gradients */
   .bg-gradient-sport {
-    @apply bg-gradient-to-br from-primary via-red-500 to-orange-600;
+    @apply bg-gradient-to-br from-primary via-yellow-500 to-orange-600;
   }
   
   .text-outline {

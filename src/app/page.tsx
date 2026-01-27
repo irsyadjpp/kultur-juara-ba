@@ -31,24 +31,24 @@ export default function Home() {
           <HeroSection />
         </ClientOnly>
         
-        {/* 2. Event Summary: The 4 Ws */}
+        {/* 2. Event Summary: The 4 Ws -> Repurposed to Program Summary */}
         <EventSummarySection />
         
-        {/* 3. Why Join? - NEW SECTION */}
+        {/* 3. Why Join? -> Why Train at Kultur Juara */}
         <WhyJoinSection />
         
-        {/* 4. Kategori: Siapa saja yang bisa ikut? */}
-        <CategoriesSection />
-
-        {/* 5. Syarat Level: Filter peserta agar tidak salah daftar */}
-        <div id="levels">
-          <LevelingGuideSection /> 
+        {/* 4. Kategori -> Programs */}
+        <div id="programs">
+          <CategoriesSection />
         </div>
 
-        {/* 6. Hadiah */}
+        {/* 5. Syarat Level -> Training Philosophy */}
+        <LevelingGuideSection /> 
+
+        {/* 6. Hadiah -> Hall of Fame */}
         <PrizesSection />
 
-        {/* 7. Sponsor: Undangan kerjasama */}
+        {/* 7. Sponsor -> Our Partners */}
         <SponsorsSection />
 
         {/* 8. Lokasi: Peta GOR KONI */}
