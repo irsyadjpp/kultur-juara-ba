@@ -4,11 +4,10 @@
 import { useState } from "react";
 import { 
   Dumbbell, Footprints, Shield, Zap, HeartPulse, 
-  Bike, Target, User, Calendar, Save, Loader2 
+  Bike, Target, User, Calendar, Save, Loader2, Info
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,200 +15,271 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 
-// Reusable component for scoring sections
-const ScoreSection = ({ title, icon: Icon, children }: { title: string, icon: React.ElementType, children: React.ReactNode }) => (
-  <Card className="bg-zinc-900 border-zinc-800 rounded-3xl">
-    <CardHeader>
-      <CardTitle className="flex items-center gap-3 font-headline text-lg">
-        <Icon className="w-5 h-5 text-primary" /> {title}
-      </CardTitle>
+// --- MD3 Style Components ---
+
+const AssessmentCard = ({ icon: Icon, title, description, children, className }: { icon: React.ElementType, title: string, description?: string, children: React.ReactNode, className?: string }) => (
+  <Card className={cn("rounded-[1.75rem] border-border/50 bg-card/80 backdrop-blur-md shadow-lg", className)}>
+    <CardHeader className="pb-4">
+      <div className="flex items-start gap-4">
+        <div className="p-3 bg-primary/10 rounded-xl mt-1">
+          <Icon className="w-6 h-6 text-primary" />
+        </div>
+        <div>
+          <CardTitle className="font-headline text-lg text-foreground">{title}</CardTitle>
+          {description && <CardDescription className="text-sm mt-1">{description}</CardDescription>}
+        </div>
+      </div>
     </CardHeader>
-    <CardContent className="space-y-6">
+    <CardContent className="space-y-4">
       {children}
     </CardContent>
   </Card>
 );
 
-const ScoreToggle = ({ label, name }: { label: string, name: string }) => (
-  <div className="flex items-center justify-between p-3 bg-zinc-950 border border-zinc-800/50 rounded-lg">
-    <Label htmlFor={`${name}-${label}`} className="text-sm font-medium">{label}</Label>
-    <div className="flex gap-1">
-      {[1, 2, 3, 4, 5].map(val => (
-        <button key={val} type="button" className="w-8 h-8 rounded-md bg-zinc-800 text-zinc-400 hover:bg-zinc-700 font-bold">{val}</button>
+const RatingScale = ({ label, name, value, onChange }: { label: string, name: string, value: number, onChange: (val: number) => void }) => (
+  <div>
+    <Label className="text-sm font-medium text-muted-foreground ml-1">{label}</Label>
+    <div className="mt-2 flex gap-1 p-1 bg-secondary/50 rounded-full border">
+      {[1, 2, 3, 4, 5].map((val) => (
+        <TooltipProvider key={val} delayDuration={100}>
+           <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  onClick={() => onChange(val)}
+                  className={cn(
+                    "flex-1 h-10 rounded-full font-bold text-lg transition-all",
+                    value === val 
+                      ? "bg-primary text-primary-foreground shadow-md"
+                      : "text-muted-foreground hover:bg-secondary"
+                  )}
+                >
+                  {val}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent className="bg-zinc-800 text-white border-zinc-700">
+                <p>Skor {val}</p>
+              </TooltipContent>
+           </Tooltip>
+        </TooltipProvider>
       ))}
     </div>
   </div>
 );
 
-const QuadToggle = ({ label, name }: { label: string, name: string }) => (
-  <div className="flex items-center justify-between p-3 bg-zinc-950 border border-zinc-800/50 rounded-lg">
-    <Label className="text-sm font-medium">{label}</Label>
-    <RadioGroup name={name} className="flex gap-1">
-      {["Kurang", "Cukup", "Baik", "Sangat Baik"].map(val => (
-        <Label key={val} className="px-2 py-1 text-xs rounded-md border border-zinc-700 bg-zinc-800 has-[:checked]:bg-primary has-[:checked]:text-white cursor-pointer">
-          <RadioGroupItem value={val.toLowerCase()} className="sr-only" />
-          {val}
-        </Label>
+const SegmentedButton = ({ label, name, options, value, onChange }: { label: string, name: string, options: string[], value: string, onChange: (val: string) => void }) => (
+  <div>
+    <Label className="text-sm font-medium text-muted-foreground ml-1">{label}</Label>
+    <div className="mt-2 grid grid-cols-2 md:grid-cols-4 gap-2">
+      {options.map((opt) => (
+        <button
+          key={opt}
+          type="button"
+          onClick={() => onChange(opt)}
+          className={cn(
+            "h-11 rounded-lg text-xs font-bold transition-colors border-2",
+            value === opt
+              ? "bg-primary/10 text-primary border-primary/50"
+              : "bg-secondary/50 border-transparent hover:bg-secondary"
+          )}
+        >
+          {opt}
+        </button>
       ))}
-    </RadioGroup>
+    </div>
   </div>
 );
 
+const HealthCheckbox = ({ label, name, checked, onChange }: { label: string, name: string, checked: boolean, onChange: (checked: boolean) => void }) => (
+    <div 
+        onClick={() => onChange(!checked)}
+        className={cn("flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all",
+        checked ? "bg-red-500/10 text-red-500 border-red-500/30" : "bg-secondary/50 border-transparent"
+    )}>
+        <Label className="font-semibold cursor-pointer">{label}</Label>
+        <Checkbox checked={checked} onCheckedChange={onChange} className="h-5 w-5"/>
+    </div>
+);
+
 export default function PhysicalEvaluationPage() {
+  const [formState, setFormState] = useState({
+      kehadiran: 0, motivasi: 0, disiplin: 0, respons: 0,
+      ankle: '', hip: '', knee: '', core: '',
+      posisi: 0, recovery: 0, efisiensi: 0, konsistensi_lelah: 0,
+      kaki: '', core_strength: '', lengan: '',
+      shuttleRun: '', shuttleRunStandar: '', shuttleRunOk: false,
+      reaksi: '', reaksiStandar: '', reaksiOk: false,
+      agility: '', agilityStandar: '', agilityOk: false,
+      rally: 0, recovery_set: 0, performa_akhir: 0,
+      nyeriLutut: false, nyeriAnkle: false, nyeriBahu: false, kelelahan: false,
+      kesimpulan: '',
+  });
+
+  const handleStateChange = (field: string, value: any) => {
+      setFormState(prev => ({ ...prev, [field]: value }));
+  };
+
   return (
     <div className="space-y-8 p-4 md:p-8 font-body pb-24">
       {/* HEADER */}
       <div className="space-y-2">
-        <Badge variant="outline" className="text-primary border-primary/30">FORM PENILAIAN</Badge>
-        <h1 className="text-3xl md:text-4xl font-black font-headline uppercase tracking-tighter text-white">
+        <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5">FORM PENILAIAN</Badge>
+        <h1 className="text-3xl md:text-4xl font-black font-headline uppercase tracking-tighter text-foreground">
             Evaluasi Fisik Badminton (2 Mingguan)
         </h1>
-        <p className="text-zinc-400 max-w-xl text-lg">
+        <p className="text-muted-foreground max-w-xl text-lg">
             Formulir ini digunakan untuk memantau progres fisik atlet menuju standar performa tinggi.
         </p>
       </div>
 
       <form className="space-y-8">
         {/* IDENTITAS ATLET */}
-        <Card className="bg-zinc-900 border-zinc-800 rounded-3xl">
-          <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-            <div className="space-y-2 md:col-span-2">
-              <Label>Nama Atlet</Label>
-              <Select><SelectTrigger className="h-12 bg-zinc-950 border-zinc-800 rounded-xl"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP</SelectItem></SelectContent></Select>
+        <AssessmentCard title="Identitas Atlet" icon={User} description="Pilih atlet dan periode evaluasi.">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="space-y-2 lg:col-span-2">
+                    <Label>Nama Atlet</Label>
+                    <Select><SelectTrigger className="h-14 rounded-xl bg-secondary/50 text-base"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP</SelectItem></SelectContent></Select>
+                </div>
+                <div className="space-y-2">
+                    <Label>Kategori</Label>
+                    <Input value="SMA" disabled className="h-14 rounded-xl bg-secondary/30 font-bold"/>
+                </div>
+                <div className="space-y-2">
+                    <Label>Periode Evaluasi</Label>
+                    <Input type="text" placeholder="Minggu ke- / Tanggal" className="h-14 rounded-xl bg-secondary/50"/>
+                </div>
+                <div className="space-y-2 lg:col-span-2">
+                    <Label>Pelatih Fisik</Label>
+                    <Input placeholder="Nama Pelatih" className="h-14 rounded-xl bg-secondary/50"/>
+                </div>
             </div>
-            <div className="space-y-2">
-              <Label>Usia / Kategori</Label>
-              <Input value="SMA" disabled className="h-12 bg-zinc-950 border-zinc-800 rounded-xl"/>
-            </div>
-            <div className="space-y-2">
-              <Label>Periode Evaluasi</Label>
-              <Input type="text" placeholder="Minggu ke- / Tanggal" className="h-12 bg-zinc-950 border-zinc-800 rounded-xl"/>
-            </div>
-            <div className="space-y-2">
-              <Label>Pelatih Fisik</Label>
-              <Input placeholder="Nama Pelatih" className="h-12 bg-zinc-950 border-zinc-800 rounded-xl"/>
-            </div>
-          </CardContent>
-        </Card>
+        </AssessmentCard>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="space-y-8">
                 {/* A. KONDISI UMUM */}
-                <ScoreSection title="A. Kondisi Umum Atlet" icon={User}>
-                    <ScoreToggle label="Kehadiran latihan" name="kehadiran" />
-                    <ScoreToggle label="Motivasi latihan" name="motivasi" />
-                    <ScoreToggle label="Fokus & disiplin" name="disiplin" />
-                    <ScoreToggle label="Respons terhadap instruksi" name="respons" />
-                    <Textarea placeholder="Catatan pelatih..." className="bg-zinc-950 border-zinc-800 rounded-lg"/>
-                </ScoreSection>
+                <AssessmentCard title="A. Kondisi Umum Atlet" icon={User}>
+                    <RatingScale label="Kehadiran latihan" name="kehadiran" value={formState.kehadiran} onChange={(v) => handleStateChange('kehadiran', v)} />
+                    <RatingScale label="Motivasi latihan" name="motivasi" value={formState.motivasi} onChange={(v) => handleStateChange('motivasi', v)} />
+                    <RatingScale label="Fokus & disiplin" name="disiplin" value={formState.disiplin} onChange={(v) => handleStateChange('disiplin', v)} />
+                    <RatingScale label="Respons terhadap instruksi" name="respons" value={formState.respons} onChange={(v) => handleStateChange('respons', v)} />
+                    <Textarea placeholder="Catatan pelatih..." className="bg-secondary/50 rounded-xl border-border/50"/>
+                </AssessmentCard>
 
                 {/* B. MOBILITY & STABILITAS */}
-                <ScoreSection title="B. Mobility & Stabilitas" icon={Bike}>
-                    <QuadToggle label="Mobilitas ankle" name="ankle" />
-                    <QuadToggle label="Mobilitas pinggul" name="hip" />
-                    <QuadToggle label="Stabilitas lutut" name="knee" />
-                    <QuadToggle label="Stabilitas core" name="core" />
-                    <Textarea placeholder="Catatan risiko cedera..." className="bg-zinc-950 border-zinc-800 rounded-lg"/>
-                </ScoreSection>
+                <AssessmentCard title="B. Mobility & Stabilitas" icon={Bike}>
+                    <SegmentedButton label="Mobilitas ankle" name="ankle" options={["Kurang", "Cukup", "Baik", "Sangat Baik"]} value={formState.ankle} onChange={(v) => handleStateChange('ankle', v)} />
+                    <SegmentedButton label="Mobilitas pinggul" name="hip" options={["Kurang", "Cukup", "Baik", "Sangat Baik"]} value={formState.hip} onChange={(v) => handleStateChange('hip', v)} />
+                    <SegmentedButton label="Stabilitas lutut" name="knee" options={["Kurang", "Cukup", "Baik", "Sangat Baik"]} value={formState.knee} onChange={(v) => handleStateChange('knee', v)} />
+                    <SegmentedButton label="Stabilitas core" name="core" options={["Kurang", "Cukup", "Baik", "Sangat Baik"]} value={formState.core} onChange={(v) => handleStateChange('core', v)} />
+                    <Textarea placeholder="Catatan risiko cedera..." className="bg-secondary/50 rounded-xl border-border/50"/>
+                </AssessmentCard>
 
                  {/* C. FOOTWORK */}
-                <ScoreSection title="C. Footwork & Movement Quality" icon={Footprints}>
-                    <ScoreToggle label="Posisi badan rendah" name="posisi" />
-                    <ScoreToggle label="Recovery ke tengah" name="recovery" />
-                    <ScoreToggle label="Efisiensi langkah" name="efisiensi" />
-                    <ScoreToggle label="Konsistensi saat lelah" name="konsistensi_lelah" />
-                    <Textarea placeholder="Catatan teknis footwork..." className="bg-zinc-950 border-zinc-800 rounded-lg"/>
-                </ScoreSection>
+                <AssessmentCard title="C. Footwork & Movement Quality" icon={Footprints}>
+                    <RatingScale label="Posisi badan rendah" name="posisi" value={formState.posisi} onChange={(v) => handleStateChange('posisi', v)} />
+                    <RatingScale label="Recovery ke tengah" name="recovery" value={formState.recovery} onChange={(v) => handleStateChange('recovery', v)} />
+                    <RatingScale label="Efisiensi langkah" name="efisiensi" value={formState.efisiensi} onChange={(v) => handleStateChange('efisiensi', v)} />
+                    <RatingScale label="Konsistensi saat lelah" name="konsistensi_lelah" value={formState.konsistensi_lelah} onChange={(v) => handleStateChange('konsistensi_lelah', v)} />
+                    <Textarea placeholder="Catatan teknis footwork..." className="bg-secondary/50 rounded-xl border-border/50"/>
+                </AssessmentCard>
             </div>
             
             <div className="space-y-8">
                 {/* D. KEKUATAN */}
-                <ScoreSection title="D. Kekuatan (Strength)" icon={Dumbbell}>
-                    <QuadToggle label="Kekuatan kaki" name="kaki" />
-                    <QuadToggle label="Kekuatan core" name="core_strength" />
-                    <QuadToggle label="Kekuatan bahu & lengan" name="lengan" />
-                    <Textarea placeholder="Observasi khusus (ketimpangan, postur)..." className="bg-zinc-950 border-zinc-800 rounded-lg"/>
-                </ScoreSection>
+                <AssessmentCard title="D. Kekuatan (Strength)" icon={Dumbbell}>
+                    <SegmentedButton label="Kekuatan kaki" name="kaki" options={["Kurang", "Cukup", "Baik", "Sangat Baik"]} value={formState.kaki} onChange={(v) => handleStateChange('kaki', v)} />
+                    <SegmentedButton label="Kekuatan core" name="core_strength" options={["Kurang", "Cukup", "Baik", "Sangat Baik"]} value={formState.core_strength} onChange={(v) => handleStateChange('core_strength', v)} />
+                    <SegmentedButton label="Kekuatan bahu & lengan" name="lengan" options={["Kurang", "Cukup", "Baik", "Sangat Baik"]} value={formState.lengan} onChange={(v) => handleStateChange('lengan', v)} />
+                    <Textarea placeholder="Observasi khusus (ketimpangan, postur)..." className="bg-secondary/50 rounded-xl border-border/50"/>
+                </AssessmentCard>
 
                 {/* E. KECEPATAN & AGILITY */}
-                <ScoreSection title="E. Kecepatan & Agility" icon={Zap}>
+                <AssessmentCard title="E. Kecepatan & Agility" icon={Zap}>
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead>
-                                <tr className="text-left text-zinc-500">
+                                <tr className="text-left text-muted-foreground">
                                     <th className="p-2">Tes</th><th className="p-2">Hasil</th><th className="p-2">Standar PB</th><th className="p-2 text-center">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {[
-                                    {label: "Shuttle run (10-20m)"}, 
-                                    {label: "Reaksi arah (coach call)"},
-                                    {label: "Agility cone / ladder"}
+                                    {label: "Shuttle run (10-20m)", name: 'shuttleRun'}, 
+                                    {label: "Reaksi arah (coach call)", name: 'reaksi'},
+                                    {label: "Agility cone / ladder", name: 'agility'}
                                 ].map((item, i) => (
-                                    <tr key={i} className="border-t border-zinc-800">
+                                    <tr key={i} className="border-t border-border/50">
                                         <td className="p-2 font-bold">{item.label}</td>
-                                        <td><Input className="h-9 bg-zinc-950 border-zinc-800 rounded-md" /></td>
-                                        <td><Input className="h-9 bg-zinc-950 border-zinc-800 rounded-md" /></td>
+                                        <td><Input className="h-10 bg-secondary/50 rounded-lg" /></td>
+                                        <td><Input className="h-10 bg-secondary/50 rounded-lg" /></td>
                                         <td className="p-2 text-center"><Checkbox /></td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     </div>
-                </ScoreSection>
+                </AssessmentCard>
                 
                  {/* F. DAYA TAHAN */}
-                <ScoreSection title="F. Daya Tahan & Intensitas" icon={HeartPulse}>
-                    <ScoreToggle label="Daya tahan rally" name="rally" />
-                    <ScoreToggle label="Recovery antar set" name="recovery_set" />
-                    <ScoreToggle label="Penurunan performa di akhir sesi" name="performa_akhir" />
-                </ScoreSection>
+                <AssessmentCard title="F. Daya Tahan & Intensitas" icon={HeartPulse}>
+                    <RatingScale label="Daya tahan rally" name="rally" value={formState.rally} onChange={(v) => handleStateChange('rally', v)} />
+                    <RatingScale label="Recovery antar set" name="recovery_set" value={formState.recovery_set} onChange={(v) => handleStateChange('recovery_set', v)} />
+                    <RatingScale label="Penurunan performa di akhir sesi" name="performa_akhir" value={formState.performa_akhir} onChange={(v) => handleStateChange('performa_akhir', v)} />
+                </AssessmentCard>
                 
                 {/* G. KONDISI FISIK */}
-                 <ScoreSection title="G. Kondisi Fisik & Kesehatan" icon={Shield}>
+                 <AssessmentCard title="G. Kondisi Fisik & Kesehatan" icon={Shield}>
                     <div className="grid grid-cols-2 gap-3">
-                      {["Nyeri lutut", "Nyeri ankle", "Nyeri bahu", "Kelelahan berlebih"].map(item => (
-                          <div key={item} className="flex items-center p-3 border border-zinc-800/50 rounded-lg bg-zinc-950 justify-between">
-                            <Label>{item}</Label>
-                            <Checkbox />
-                          </div>
-                      ))}
+                      <HealthCheckbox label="Nyeri lutut" name="nyeriLutut" checked={formState.nyeriLutut} onChange={(c) => handleStateChange('nyeriLutut', c)} />
+                      <HealthCheckbox label="Nyeri ankle" name="nyeriAnkle" checked={formState.nyeriAnkle} onChange={(c) => handleStateChange('nyeriAnkle', c)} />
+                      <HealthCheckbox label="Nyeri bahu" name="nyeriBahu" checked={formState.nyeriBahu} onChange={(c) => handleStateChange('nyeriBahu', c)} />
+                      <HealthCheckbox label="Kelelahan berlebih" name="kelelahan" checked={formState.kelelahan} onChange={(c) => handleStateChange('kelelahan', c)} />
                     </div>
-                    <Textarea placeholder="Jika ada keluhan, jelaskan detailnya di sini..." className="bg-zinc-950 border-zinc-800 rounded-lg"/>
-                </ScoreSection>
+                    <Textarea placeholder="Jika ada keluhan, jelaskan detailnya di sini..." className="bg-secondary/50 rounded-xl border-border/50"/>
+                </AssessmentCard>
 
             </div>
         </div>
 
         {/* H. KESIMPULAN */}
-        <ScoreSection title="H. Kesimpulan & Fokus Latihan" icon={Target}>
+        <AssessmentCard title="H. Kesimpulan & Fokus Latihan" icon={Target}>
             <div className="space-y-4">
-                <Label>Status Atlet (Kesimpulan)</Label>
-                 <RadioGroup name="kesimpulan" className="grid grid-cols-3 gap-3">
-                    <Label className="p-4 border rounded-lg cursor-pointer has-[:checked]:bg-green-600 has-[:checked]:text-white has-[:checked]:border-green-400">
-                        <RadioGroupItem value="ON TRACK" className="sr-only"/>
-                        <p className="font-bold">🟢 ON TRACK</p>
+                <Label className="font-bold">Status Atlet (Kesimpulan)</Label>
+                 <RadioGroup value={formState.kesimpulan} onValueChange={(v) => handleStateChange('kesimpulan', v)} className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <Label className="p-5 border-2 rounded-xl cursor-pointer has-[:checked]:border-green-500/50 has-[:checked]:bg-green-500/10 flex items-center gap-3">
+                        <RadioGroupItem value="ON TRACK"/>
+                        <span className="font-bold text-green-500">🟢 ON TRACK</span>
                     </Label>
-                    <Label className="p-4 border rounded-lg cursor-pointer has-[:checked]:bg-yellow-500 has-[:checked]:text-black has-[:checked]:border-yellow-400">
-                        <RadioGroupItem value="ADJUST" className="sr-only"/>
-                        <p className="font-bold">🟡 PERLU PENYESUAIAN</p>
+                    <Label className="p-5 border-2 rounded-xl cursor-pointer has-[:checked]:border-yellow-500/50 has-[:checked]:bg-yellow-500/10 flex items-center gap-3">
+                        <RadioGroupItem value="ADJUST"/>
+                        <span className="font-bold text-yellow-500">🟡 PERLU PENYESUAIAN</span>
                     </Label>
-                    <Label className="p-4 border rounded-lg cursor-pointer has-[:checked]:bg-red-600 has-[:checked]:text-white has-[:checked]:border-red-400">
-                        <RadioGroupItem value="INTERVENE" className="sr-only"/>
-                        <p className="font-bold">🔴 PERLU INTERVENSI</p>
+                     <Label className="p-5 border-2 rounded-xl cursor-pointer has-[:checked]:border-red-500/50 has-[:checked]:bg-red-500/10 flex items-center gap-3">
+                        <RadioGroupItem value="INTERVENE"/>
+                        <span className="font-bold text-red-500">🔴 PERLU INTERVENSI</span>
                     </Label>
                 </RadioGroup>
                 
-                <Label>Fokus 2 Minggu Ke Depan</Label>
-                <Textarea placeholder="1. ...&#10;2. ...&#10;3. ..." className="bg-zinc-950 border-zinc-800 rounded-lg h-24" />
+                <div>
+                    <Label className="font-bold">Fokus 2 Minggu Ke Depan</Label>
+                    <Textarea placeholder="1. Peningkatan kekuatan core&#10;2. Latihan agility dengan ladder drill&#10;3. Pemantauan recovery lutut" className="bg-secondary/50 rounded-xl border-border/50 h-28 mt-2" />
+                </div>
             </div>
-        </ScoreSection>
+        </AssessmentCard>
         
         {/* SUBMIT */}
-        <div className="flex justify-end pt-6 border-t border-zinc-800">
-            <Button size="lg" className="h-14 rounded-full font-bold text-lg px-8 shadow-lg shadow-primary/20">
-                <Save className="w-5 h-5 mr-3"/> Simpan Evaluasi
+        <div className="flex justify-end pt-6 border-t border-border/50">
+            <Button size="lg" className="h-16 rounded-full font-bold text-lg px-10 shadow-lg shadow-primary/20">
+                <Save className="w-6 h-6 mr-3"/> Simpan Evaluasi
             </Button>
         </div>
 
@@ -217,3 +287,4 @@ export default function PhysicalEvaluationPage() {
     </div>
   );
 }
+
