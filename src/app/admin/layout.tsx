@@ -96,7 +96,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <SidebarProvider defaultOpen={true}>
       
-      <AppSidebar className="z-50 border-r border-white/5" />
+      <AppSidebar onLogout={handleLogout} className="z-50 border-r border-white/5" />
       
       <SidebarInset className="relative flex flex-col min-h-screen bg-transparent overflow-hidden">
         
