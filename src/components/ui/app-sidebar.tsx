@@ -14,7 +14,7 @@ import {
   Timer, Navigation,
   BarChart3, Megaphone,
   Mail, FileSignature, Award, 
-  Tags, UserCog, Handshake, Newspaper, Settings, ChevronRight, LogOut, ShieldCheck as UserCheck, Dumbbell
+  Tags, UserCog, Handshake, Newspaper, Settings, ChevronRight, LogOut, ShieldCheck as UserCheck, Dumbbell, UserPlus
 } from "lucide-react"
 
 import {
@@ -61,6 +61,7 @@ const data = {
   ],
   // 4. ATLET
   navMatch: [
+    { title: "Registrasi Atlet", url: "/admin/participants/register", icon: UserPlus },
     { title: "Manajemen Atlet", url: "/admin/participants/teams", icon: Users },
     { title: "Jadwal Latihan", url: "/admin/match-control/schedule", icon: CalendarDays },
     { title: "Evaluasi Fisik", url: "/admin/evaluations/physical", icon: Dumbbell },
@@ -148,7 +149,7 @@ function NavGroup({ label, items, currentPath }: { label: string, items: any[], 
             </SidebarGroupLabel>
             <SidebarMenu className="space-y-1">
                 {items.map((item) => {
-                    const isActive = currentPath === item.url;
+                    const isActive = currentPath.startsWith(item.url);
                     
                     return (
                         <SidebarMenuItem key={item.title}>
@@ -156,7 +157,7 @@ function NavGroup({ label, items, currentPath }: { label: string, items: any[], 
                                 className={cn(
                                     "h-10 rounded-full px-4 transition-all duration-300 font-medium text-sm group/btn relative overflow-hidden",
                                     isActive 
-                                        ? "bg-primary text-primary-foreground shadow-[0_2px_10px_-5px_rgba(234,179,8,0.5)] font-bold hover:bg-primary" 
+                                        ? "bg-primary text-primary-foreground shadow-[0_2px_10px_-5px_hsl(var(--primary)/0.5)] font-bold hover:bg-primary" 
                                         : "text-zinc-400 hover:text-white hover:bg-white/5"
                                 )}
                             >
