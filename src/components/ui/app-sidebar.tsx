@@ -33,6 +33,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
+// --- DATA MENU LENGKAP ---
 const data = {
   user: {
     name: "Pelatih Kepala",
@@ -152,23 +153,20 @@ function NavGroup({ label, items, currentPath }: { label: string, items: any[], 
                 asChild
                 tooltip={item.title}
                 className={cn(
-                  "h-12 rounded-2xl px-3 transition-all duration-300 font-bold text-sm group/btn relative overflow-hidden",
+                  "h-12 rounded-full px-3 justify-start transition-all duration-300 font-bold text-sm group/btn",
                   isActive
-                    ? "bg-zinc-800 text-white shadow-lg border border-primary/50"
-                    : "text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+                    ? "bg-primary text-primary-foreground shadow-[0_4px_14px_0_hsl(var(--primary)/0.3)]"
+                    : "text-zinc-400 hover:text-white hover:bg-white/5"
                 )}
               >
                 <Link href={item.url} className="flex items-center w-full">
                   <div className={cn(
                       "w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition-all duration-300",
-                      isActive ? "bg-primary text-black" : "bg-zinc-800 text-zinc-400 group-hover/btn:text-white"
+                      isActive ? "bg-black/20" : "bg-zinc-800 text-zinc-400 group-hover/btn:text-white"
                   )}>
                     <item.icon className="size-5" />
                   </div>
-                  <span className="flex-1 truncate">{item.title}</span>
-                  {isActive && (
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse ml-auto" />
-                  )}
+                  <span className="flex-1 truncate group-data-[collapsible=icon]:hidden">{item.title}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
