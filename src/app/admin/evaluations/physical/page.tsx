@@ -208,7 +208,7 @@ export default function PhysicalEvaluationPage() {
                         <table className="w-full text-sm">
                             <thead>
                                 <tr className="text-left text-muted-foreground">
-                                    <th className="p-2">Tes</th><th className="p-2">Hasil</th><th className="p-2">Standar PB</th><th className="p-2 text-center">Status</th>
+                                    <th className="p-2">Tes</th><th className="p-2">Hasil</th><th className="p-2 text-center">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -219,7 +219,6 @@ export default function PhysicalEvaluationPage() {
                                 ].map((item, i) => (
                                     <tr key={i} className="border-t border-border/50">
                                         <td className="p-2 font-bold">{item.label}</td>
-                                        <td><Input className="h-10 bg-secondary/50 rounded-lg" /></td>
                                         <td><Input className="h-10 bg-secondary/50 rounded-lg" /></td>
                                         <td className="p-2 text-center"><Checkbox /></td>
                                     </tr>
@@ -271,7 +270,7 @@ export default function PhysicalEvaluationPage() {
                 
                 <div>
                     <Label className="font-bold">Fokus 2 Minggu Ke Depan</Label>
-                    <Textarea placeholder="1. Peningkatan kekuatan core&#10;2. Latihan agility dengan ladder drill&#10;3. Pemantauan recovery lutut" className="bg-secondary/50 rounded-xl border-border/50 h-28 mt-2" />
+                    <Textarea placeholder="1. Peningkatan kekuatan core\n2. Latihan agility dengan ladder drill\n3. Pemantauan recovery lutut" className="bg-secondary/50 rounded-xl border-border/50 h-28 mt-2" />
                 </div>
             </div>
         </AssessmentCard>
@@ -287,4 +286,3 @@ export default function PhysicalEvaluationPage() {
     </div>
   );
 }
-
