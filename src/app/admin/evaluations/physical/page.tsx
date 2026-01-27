@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { 
-  Dumbbell, Footprints, Shield, Run, HeartPulse, 
+  Dumbbell, Footprints, Shield, Zap, HeartPulse, 
   Bike, Target, User, Calendar, Save, Loader2 
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -133,7 +133,7 @@ export default function PhysicalEvaluationPage() {
                 </ScoreSection>
 
                 {/* E. KECEPATAN & AGILITY */}
-                <ScoreSection title="E. Kecepatan & Agility" icon={Run}>
+                <ScoreSection title="E. Kecepatan & Agility" icon={Zap}>
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead>
@@ -217,4 +217,3 @@ export default function PhysicalEvaluationPage() {
     </div>
   );
 }
-
