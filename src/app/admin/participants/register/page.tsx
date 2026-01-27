@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { UserPlus, Loader2, PartyPopper } from 'lucide-react';
 import { registerAthlete } from './actions';
+import { Label } from '@/components/ui/label';
 
 const initialState = {
   success: false,
@@ -172,3 +173,4 @@ export default function RegisterAthletePage() {
     </div>
   );
 }
+    
