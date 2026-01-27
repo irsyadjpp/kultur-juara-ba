@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    /* M3 Light Scheme - Champion Gold */
+    /* M3 Light Scheme - Kultur Juara Red & Gold */
     --background: 0 0% 98%;
     --foreground: 0 0% 10%;
     
@@ -14,8 +14,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 10%;
     
-    --primary: 45 90% 55%; /* Champion Gold */
-    --primary-foreground: 0 0% 10%;
+    --primary: 349 73% 46%; /* Kultur Juara Red */
+    --primary-foreground: 0 0% 98%;
     
     --secondary: 0 0% 92%;
     --secondary-foreground: 0 0% 10%;
@@ -23,21 +23,21 @@
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 40%;
     
-    --accent: 45 100% 92%;
-    --accent-foreground: 45 90% 30%;
+    --accent: 45 100% 95%; /* Light Yellow */
+    --accent-foreground: 45 95% 30%; /* Dark Yellow */
     
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     
     --border: 0 0% 90%;
     --input: 0 0% 90%;
-    --ring: 45 90% 55%;
+    --ring: 349 73% 46%; /* Kultur Juara Red */
     
     --radius: 1.5rem;
   }
 
   .dark {
-    /* M3 Dark Scheme - Champion Gold */
+    /* M3 Dark Scheme - Kultur Juara Red & Gold */
     --background: 240 10% 4%;
     --foreground: 0 0% 98%;
     
@@ -47,8 +47,8 @@
     --popover: 240 10% 8%;
     --popover-foreground: 0 0% 98%;
     
-    --primary: 45 90% 60%; /* Bright Gold */
-    --primary-foreground: 0 0% 0%;
+    --primary: 349 80% 60%; /* Brighter Red */
+    --primary-foreground: 0 0% 98%;
     
     --secondary: 240 6% 15%;
     --secondary-foreground: 0 0% 98%;
@@ -56,15 +56,15 @@
     --muted: 240 6% 12%;
     --muted-foreground: 240 5% 65%;
     
-    --accent: 45 30% 20%;
-    --accent-foreground: 45 85% 90%;
+    --accent: 45 95% 15%; /* Dark Yellow-Brown */
+    --accent-foreground: 45 95% 85%; /* Light Yellow Text */
     
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     
     --border: 240 6% 20%;
     --input: 240 6% 20%;
-    --ring: 45 85% 60%;
+    --ring: 349 80% 60%;
   }
 }
 
