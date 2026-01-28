@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { 
   UserSquare, Save, Brain, Smile, Frown, Meh, SmilePlus, Info, CheckCircle2
 } from "lucide-react";
@@ -13,7 +13,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 
@@ -105,12 +104,123 @@ export default function MentalEvaluationPage() {
     confidence: 7,
     stress: 5,
   });
+  
+  const [selectedAthleteAge, setSelectedAthleteAge] = useState<number | null>(null);
 
   const handleScoreChange = (skill: keyof typeof scores, value: number) => {
     setScores(prev => ({ ...prev, [skill]: value }));
   };
 
+  const getAgeGroup = (age: number | null): string => {
+    if (age === null) return '';
+    if (age >= 3 && age <= 6) return '3-6';
+    if (age >= 7 && age <= 9) return '7-9';
+    if (age >= 10 && age <= 12) return '10-12';
+    if (age >= 13 && age <= 15) return '13-15';
+    if (age >= 16 && age <= 20) return '16-20';
+    return '';
+  };
+  
+  const ageGroup = useMemo(() => getAgeGroup(selectedAthleteAge), [selectedAthleteAge]);
+
   const scale = ['Tidak Pernah', 'Kadang', 'Sering', 'Sgt. Sering'];
+
+  const renderFormForAgeGroup = () => {
+    switch (ageGroup) {
+      case '3-6':
+        return (
+          <SectionCard title="Observasi Pelatih (Usia 3-6)" icon={Brain}>
+              <div className="space-y-6">
+                  <ObservationScale label="Mudah menangis saat gagal" scale={scale} />
+                  <ObservationScale label="Mudah marah saat kalah" scale={scale} />
+                  <ObservationScale label="Bisa tenang kembali < 2 menit" scale={scale} />
+                  <ObservationScale label="Bertahan fokus ≥5 menit" scale={scale} />
+                  <ObservationScale label="Konflik dengan teman" scale={scale} />
+              </div>
+          </SectionCard>
+        );
+      case '7-9':
+        return (
+          <SectionCard title="Self-report Sederhana (Usia 7-9)" icon={Brain}>
+            <div className="space-y-6">
+                <EmojiScale label="Saat latihan saya merasa:" />
+                <div className="space-y-3">
+                    <Label>Kalau gagal saya ingin mencoba lagi</Label>
+                    <RadioGroup className="grid grid-cols-2 gap-2">
+                      <div className="flex items-center space-x-2 border p-3 rounded-lg"><RadioGroupItem value="yes" id="b-yes" /><Label htmlFor="b-yes">Ya</Label></div>
+                      <div className="flex items-center space-x-2 border p-3 rounded-lg"><RadioGroupItem value="no" id="b-no" /><Label htmlFor="b-no">Tidak</Label></div>
+                    </RadioGroup>
+                </div>
+            </div>
+          </SectionCard>
+        );
+      case '10-12':
+        return (
+          <SectionCard title="Mental & Motivasi (Usia 10-12)" icon={Brain}>
+              <div className="space-y-6">
+                  <RatingSlider label="Saya latihan karena saya mau" value={scores.motivation} onValueChange={(v) => handleScoreChange('motivation', v)} max={5}/>
+                  <RatingSlider label="Saya takut dimarahi jika salah" value={scores.stress} onValueChange={(v) => handleScoreChange('stress', v)} max={5}/>
+                  <RatingSlider label="Saya senang belajar teknik baru" value={scores.focus} onValueChange={(v) => handleScoreChange('focus', v)} max={5}/>
+                  <RatingSlider label="Saya ingin jadi atlet hebat" value={scores.confidence} onValueChange={(v) => handleScoreChange('confidence', v)} max={5}/>
+              </div>
+          </SectionCard>
+        );
+      case '13-15':
+        return (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <SectionCard title="Mental Kompetisi (Usia 13-15)" icon={Brain}>
+                  <div className="space-y-6">
+                      <RatingSlider label="Gugup sebelum pertandingan" value={scores.stress} onValueChange={(v) => handleScoreChange('stress', v)} max={5}/>
+                      <RatingSlider label="Fokus saat tertinggal" value={scores.focus} onValueChange={(v) => handleScoreChange('focus', v)} max={5}/>
+                      <RatingSlider label="Self-talk negatif" value={scores.emotionControl} onValueChange={(v) => handleScoreChange('emotionControl', v)} max={5}/>
+                      <RatingSlider label="Emosi setelah kalah" value={scores.resilience} onValueChange={(v) => handleScoreChange('resilience', v)} max={5}/>
+                  </div>
+              </SectionCard>
+              <SectionCard title="Kesejahteraan (Usia 13-15)" icon={Brain}>
+                  <div className="space-y-6">
+                      <RatingSlider label="Stres dari Sekolah/Akademis" value={3} onValueChange={()=>{}} max={5}/>
+                      <RatingSlider label="Merasa Lelah Mental" value={2} onValueChange={()=>{}} max={5}/>
+                      <RatingSlider label="Enjoyment Latihan" value={4} onValueChange={()=>{}} max={5}/>
+                      <RatingSlider label="Motivasi Jangka Panjang" value={5} onValueChange={()=>{}} max={5}/>
+                  </div>
+              </SectionCard>
+          </div>
+        );
+      case '16-20':
+        return (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <SectionCard title="Profil Mental Atlet (Usia 16-20)" icon={Brain}>
+                  <div className="space-y-6">
+                      <RatingSlider label="Fokus (Kualitas Perhatian)" value={scores.focus} onValueChange={(v) => handleScoreChange('focus', v)} />
+                      <RatingSlider label="Konsentrasi (Durasi Perhatian)" value={scores.concentration} onValueChange={(v) => handleScoreChange('concentration', v)} />
+                      <RatingSlider label="Kontrol Emosi" value={scores.emotionControl} onValueChange={(v) => handleScoreChange('emotionControl', v)} />
+                      <RatingSlider label="Mental di Bawah Tekanan" value={scores.pressureHandling} onValueChange={(v) => handleScoreChange('pressureHandling', v)} />
+                      <RatingSlider label="Resiliensi (Cepat Bangkit)" value={scores.resilience} onValueChange={(v) => handleScoreChange('resilience', v)} />
+                  </div>
+              </SectionCard>
+              <SectionCard title="Self-Assessment (Usia 16-20)" icon={UserSquare}>
+                  <div className="space-y-6">
+                      <RatingSlider label="Motivasi Latihan" value={scores.motivation} onValueChange={(v) => handleScoreChange('motivation', v)} max={10} />
+                      <RatingSlider label="Tingkat Kepercayaan Diri" value={scores.confidence} onValueChange={(v) => handleScoreChange('confidence', v)} max={10} />
+                      <RatingSlider label="Tingkat Stres Umum (Luar Lapangan)" value={scores.stress} onValueChange={(v) => handleScoreChange('stress', v)} max={10} />
+                      <div className="space-y-2 pt-4 border-t border-zinc-800">
+                          <Label>Goal Orientation</Label>
+                          <Select><SelectTrigger className="h-12"><SelectValue placeholder="Pilih Orientasi..."/></SelectTrigger><SelectContent><SelectItem value="task">Task-oriented (Fokus pada proses & self-improvement)</SelectItem><SelectItem value="ego">Ego-oriented (Fokus pada hasil & mengalahkan orang lain)</SelectItem></SelectContent></Select>
+                      </div>
+                  </div>
+              </SectionCard>
+          </div>
+        );
+      default:
+        return (
+          <div className="h-48 flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-zinc-800 rounded-3xl text-zinc-600">
+            <UserSquare className="w-12 h-12 mb-2" />
+            <p className="font-bold text-zinc-400">Pilih Seorang Atlet</p>
+            <p className="text-sm">Formulir evaluasi mental akan muncul di sini sesuai dengan kelompok usianya.</p>
+          </div>
+        );
+    }
+  };
 
   return (
     <div className="space-y-8 p-4 md:p-0">
@@ -127,12 +237,22 @@ export default function MentalEvaluationPage() {
       
       <form className="space-y-8">
         
-        {/* IDENTITAS ATLET & SESI */}
         <SectionCard title="Identitas Atlet & Sesi" icon={UserSquare}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2 md:col-span-2">
                     <Label>Nama Atlet</Label>
-                    <Select><SelectTrigger className="h-14 rounded-xl bg-zinc-950 border-zinc-800 text-base"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP (Usia 16)</SelectItem><SelectItem value="budi">Budi (Usia 8)</SelectItem></SelectContent></Select>
+                    <Select onValueChange={(v) => setSelectedAthleteAge(Number(v))}>
+                      <SelectTrigger className="h-14 rounded-xl bg-zinc-950 border-zinc-800 text-base">
+                        <SelectValue placeholder="Pilih Atlet..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="16">Irsyad JPP (Usia 16)</SelectItem>
+                        <SelectItem value="8">Budi (Usia 8)</SelectItem>
+                        <SelectItem value="5">Ana (Usia 5)</SelectItem>
+                        <SelectItem value="11">Cici (Usia 11)</SelectItem>
+                        <SelectItem value="14">Dedi (Usia 14)</SelectItem>
+                      </SelectContent>
+                    </Select>
                 </div>
                  <div className="space-y-2">
                     <Label>Tanggal Evaluasi</Label>
@@ -145,115 +265,25 @@ export default function MentalEvaluationPage() {
             </div>
         </SectionCard>
 
-        {/* TABS KELOMPOK UMUR */}
-        <Tabs defaultValue="16-20" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 bg-zinc-900 border border-zinc-800 h-auto">
-                <TabsTrigger value="3-6">3-6 Thn</TabsTrigger>
-                <TabsTrigger value="7-9">7-9 Thn</TabsTrigger>
-                <TabsTrigger value="10-12">10-12 Thn</TabsTrigger>
-                <TabsTrigger value="13-15">13-15 Thn</TabsTrigger>
-                <TabsTrigger value="16-20">16-20 Thn</TabsTrigger>
-            </TabsList>
-            
-            {/* Form A: Usia 3–6 Tahun */}
-            <TabsContent value="3-6" className="mt-6">
-                <SectionCard title="Observasi Pelatih (Usia 3-6)" icon={Brain}>
-                    <div className="space-y-6">
-                        <ObservationScale label="Mudah menangis saat gagal" scale={scale} />
-                        <ObservationScale label="Mudah marah saat kalah" scale={scale} />
-                        <ObservationScale label="Bisa tenang kembali < 2 menit" scale={scale} />
-                        <ObservationScale label="Bertahan fokus ≥5 menit" scale={scale} />
-                        <ObservationScale label="Konflik dengan teman" scale={scale} />
-                    </div>
-                </SectionCard>
-            </TabsContent>
-            
-            {/* Form B: Usia 7–9 Tahun */}
-            <TabsContent value="7-9" className="mt-6">
-                 <SectionCard title="Self-report Sederhana (Usia 7-9)" icon={Brain}>
-                    <div className="space-y-6">
-                       <EmojiScale label="Saat latihan saya merasa:" />
-                       <div className="space-y-3">
-                           <Label>Kalau gagal saya ingin mencoba lagi</Label>
-                           <RadioGroup className="grid grid-cols-2 gap-2"><RadioGroupItem value="yes" id="b-yes" /><Label htmlFor="b-yes">Ya</Label><RadioGroupItem value="no" id="b-no" /><Label htmlFor="b-no">Tidak</Label></RadioGroup>
-                       </div>
-                    </div>
-                 </SectionCard>
-            </TabsContent>
-
-            {/* Form C: Usia 10–12 Tahun */}
-            <TabsContent value="10-12" className="mt-6">
-                 <SectionCard title="Mental & Motivasi (Usia 10-12)" icon={Brain}>
-                    <div className="space-y-6">
-                        <RatingSlider label="Saya latihan karena saya mau" value={scores.motivation} onValueChange={(v) => handleScoreChange('motivation', v)} max={5}/>
-                        <RatingSlider label="Saya takut dimarahi jika salah" value={scores.stress} onValueChange={(v) => handleScoreChange('stress', v)} max={5}/>
-                        <RatingSlider label="Saya senang belajar teknik baru" value={scores.focus} onValueChange={(v) => handleScoreChange('focus', v)} max={5}/>
-                        <RatingSlider label="Saya ingin jadi atlet hebat" value={scores.confidence} onValueChange={(v) => handleScoreChange('confidence', v)} max={5}/>
-                    </div>
-                 </SectionCard>
-            </TabsContent>
-            
-            {/* Form D: Usia 13–15 Tahun */}
-            <TabsContent value="13-15" className="mt-6">
-                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                     <SectionCard title="Mental Kompetisi (Usia 13-15)" icon={Brain}>
-                        <div className="space-y-6">
-                            <RatingSlider label="Gugup sebelum pertandingan" value={scores.stress} onValueChange={(v) => handleScoreChange('stress', v)} max={5}/>
-                            <RatingSlider label="Fokus saat tertinggal" value={scores.focus} onValueChange={(v) => handleScoreChange('focus', v)} max={5}/>
-                            <RatingSlider label="Self-talk negatif" value={scores.emotionControl} onValueChange={(v) => handleScoreChange('emotionControl', v)} max={5}/>
-                            <RatingSlider label="Emosi setelah kalah" value={scores.resilience} onValueChange={(v) => handleScoreChange('resilience', v)} max={5}/>
-                        </div>
-                     </SectionCard>
-                     <SectionCard title="Kesejahteraan (Usia 13-15)" icon={Brain}>
-                        <div className="space-y-6">
-                            <RatingSlider label="Stres dari Sekolah/Akademis" value={3} onValueChange={()=>{}} max={5}/>
-                            <RatingSlider label="Merasa Lelah Mental" value={2} onValueChange={()=>{}} max={5}/>
-                            <RatingSlider label="Enjoyment Latihan" value={4} onValueChange={()=>{}} max={5}/>
-                            <RatingSlider label="Motivasi Jangka Panjang" value={5} onValueChange={()=>{}} max={5}/>
-                        </div>
-                     </SectionCard>
-                 </div>
-            </TabsContent>
-
-            {/* Form E: Usia 16–20 Tahun */}
-            <TabsContent value="16-20" className="mt-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <SectionCard title="Profil Mental Atlet (Usia 16-20)" icon={Brain}>
-                        <div className="space-y-6">
-                            <RatingSlider label="Fokus (Kualitas Perhatian)" value={scores.focus} onValueChange={(v) => handleScoreChange('focus', v)} />
-                            <RatingSlider label="Konsentrasi (Durasi Perhatian)" value={scores.concentration} onValueChange={(v) => handleScoreChange('concentration', v)} />
-                            <RatingSlider label="Kontrol Emosi" value={scores.emotionControl} onValueChange={(v) => handleScoreChange('emotionControl', v)} />
-                            <RatingSlider label="Mental di Bawah Tekanan" value={scores.pressureHandling} onValueChange={(v) => handleScoreChange('pressureHandling', v)} />
-                            <RatingSlider label="Resiliensi (Cepat Bangkit)" value={scores.resilience} onValueChange={(v) => handleScoreChange('resilience', v)} />
-                        </div>
-                    </SectionCard>
-                     <SectionCard title="Self-Assessment (Usia 16-20)" icon={UserSquare}>
-                        <div className="space-y-6">
-                            <RatingSlider label="Motivasi Latihan" value={scores.motivation} onValueChange={(v) => handleScoreChange('motivation', v)} max={10} />
-                            <RatingSlider label="Tingkat Kepercayaan Diri" value={scores.confidence} onValueChange={(v) => handleScoreChange('confidence', v)} max={10} />
-                            <RatingSlider label="Tingkat Stres Umum (Luar Lapangan)" value={scores.stress} onValueChange={(v) => handleScoreChange('stress', v)} max={10} />
-                            <div className="space-y-2 pt-4 border-t border-zinc-800">
-                                <Label>Goal Orientation</Label>
-                                <Select><SelectTrigger className="h-12"><SelectValue placeholder="Pilih Orientasi..."/></SelectTrigger><SelectContent><SelectItem value="task">Task-oriented (Fokus pada proses & self-improvement)</SelectItem><SelectItem value="ego">Ego-oriented (Fokus pada hasil & mengalahkan orang lain)</SelectItem></SelectContent></Select>
-                            </div>
-                        </div>
-                     </SectionCard>
-                </div>
-            </TabsContent>
-
-        </Tabs>
-        
-        {/* REKOMENDASI PELATIH */}
-        <SectionCard title="Catatan Psikolog / Pelatih Mental" icon={Brain}>
-            <Textarea placeholder="Tulis catatan observasi, rekomendasi latihan mental, atau area yang perlu perhatian khusus..." className="bg-zinc-950 border-zinc-800 rounded-xl h-32"/>
-        </SectionCard>
-        
-        {/* SUBMIT */}
-        <div className="flex justify-end pt-6 border-t border-border/20">
-            <Button size="lg" className="h-16 rounded-full font-bold text-lg px-10 shadow-lg shadow-primary/20">
-                <Save className="w-6 h-6 mr-3"/> Simpan Evaluasi Mental
-            </Button>
+        {/* --- DYNAMIC FORM AREA --- */}
+        <div className="animate-in fade-in duration-500">
+           {renderFormForAgeGroup()}
         </div>
+        
+        {/* REKOMENDASI PELATIH & SUBMIT (muncul setelah atlet dipilih) */}
+        {ageGroup && (
+          <>
+            <SectionCard title="Catatan Psikolog / Pelatih Mental" icon={Brain}>
+                <Textarea placeholder="Tulis catatan observasi, rekomendasi latihan mental, atau area yang perlu perhatian khusus..." className="bg-zinc-950 border-zinc-800 rounded-xl h-32"/>
+            </SectionCard>
+            
+            <div className="flex justify-end pt-6 border-t border-border/20">
+                <Button size="lg" className="h-16 rounded-full font-bold text-lg px-10 shadow-lg shadow-primary/20">
+                    <Save className="w-6 h-6 mr-3"/> Simpan Evaluasi Mental
+                </Button>
+            </div>
+          </>
+        )}
       </form>
     </div>
   );
