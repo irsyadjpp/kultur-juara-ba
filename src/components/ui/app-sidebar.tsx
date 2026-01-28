@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from "react"
@@ -9,7 +8,8 @@ import {
   LayoutDashboard, User, Dumbbell, 
   UserPlus, CheckSquare, Users,
   Box, Package, Layers, Upload, UserCog,
-  LogOut
+  LogOut,
+  Swords
 } from "lucide-react"
 
 import {
@@ -44,6 +44,7 @@ const data = {
     { title: "Daftar Atlet", url: "/admin/participants/teams", icon: Users },
     { title: "Verifikasi Dokumen", url: "/admin/secretariat/verification", icon: CheckSquare },
     { title: "Evaluasi Fisik", url: "/admin/evaluations/physical", icon: Dumbbell },
+    { title: "Evaluasi Teknik", url: "/admin/evaluations/technical", icon: Swords },
   ],
   navOperasional: [
     { title: "Inventaris Alat", url: "/admin/logistics/inventory", icon: Box },
