@@ -1,8 +1,9 @@
+
 'use client';
 
 import { useState } from "react";
 import { 
-  UserSquare, Save, Brain
+  UserSquare, Save, Brain, Smile, Frown, Meh, SmilePlus, Info, CheckCircle2
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,10 +13,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { cn } from "@/lib/utils";
 
-// --- Custom Components from other eval pages ---
-const SectionCard = ({ icon: Icon, title, description, children }: { icon: React.ElementType, title: string, description?: string, children: React.ReactNode }) => (
-  <Card className="bg-zinc-900/50 backdrop-blur-sm border-border/20 rounded-3xl shadow-xl">
+
+// --- Reusable Components ---
+const SectionCard = ({ icon: Icon, title, description, children, className }: { icon: React.ElementType, title: string, description?: string, children: React.ReactNode, className?: string }) => (
+  <Card className={cn("bg-zinc-900/50 backdrop-blur-sm border-border/20 rounded-3xl shadow-xl", className)}>
     <CardHeader className="p-8 pb-4">
       <CardTitle className="text-xl font-headline flex items-center gap-3">
         <Icon className="w-6 h-6 text-primary"/> {title}
@@ -28,47 +33,84 @@ const SectionCard = ({ icon: Icon, title, description, children }: { icon: React
   </Card>
 );
 
-const RatingSlider = ({ label, value, onValueChange, max = 5, step = 1 }: { label: string, value: number, onValueChange: (value: number) => void, max?: number, step?: number }) => (
-  <div className="space-y-3">
-    <div className="flex justify-between items-center">
+const ObservationScale = ({ label, scale }: { label: string, scale: string[] }) => (
+    <div className="space-y-3">
       <Label>{label}</Label>
-      <span className="font-mono font-bold text-lg text-primary w-8 text-center">{value}</span>
+      <RadioGroup className="flex items-center justify-between bg-zinc-950 p-2 rounded-xl border border-zinc-800">
+        {scale.map((item, index) => (
+            <div key={item} className="flex-1 text-center">
+                <RadioGroupItem value={String(index)} id={`${label}-${index}`} className="sr-only" />
+                <Label htmlFor={`${label}-${index}`} className="flex flex-col items-center gap-1 cursor-pointer p-2 rounded-lg transition-colors text-zinc-500 hover:bg-zinc-800 data-[state=checked]:text-primary">
+                    <span className="text-2xl font-bold">{index}</span>
+                    <span className="text-[10px] uppercase font-bold">{item}</span>
+                </Label>
+            </div>
+        ))}
+      </RadioGroup>
     </div>
-    <Slider
-      defaultValue={[value]}
-      max={max}
-      min={1}
-      step={step}
-      onValueChange={(v) => onValueChange(v[0])}
-      className="[&>span:first-child]:h-1"
-    />
-  </div>
 );
+
+const EmojiScale = ({ label }: { label: string }) => (
+    <div className="space-y-3">
+        <Label>{label}</Label>
+        <RadioGroup className="grid grid-cols-4 gap-2">
+            {[
+                { icon: Frown, label: 'Sedih', color: 'text-red-500' },
+                { icon: Meh, label: 'Biasa', color: 'text-yellow-500' },
+                { icon: Smile, label: 'Senang', color: 'text-green-500' },
+                { icon: SmilePlus, label: 'Gembira', color: 'text-blue-500' },
+            ].map((emoji, index) => {
+                const Icon = emoji.icon;
+                return (
+                    <div key={index}>
+                        <RadioGroupItem value={String(index)} id={`${label}-${index}`} className="sr-only" />
+                        <Label htmlFor={`${label}-${index}`} className={cn("flex flex-col items-center justify-center gap-2 p-4 rounded-2xl border-2 border-transparent bg-zinc-950 hover:border-primary/50 cursor-pointer data-[state=checked]:border-primary data-[state=checked]:bg-primary/10", emoji.color)}>
+                           <Icon className="w-10 h-10" />
+                           <span className="text-xs font-bold text-zinc-400">{emoji.label}</span>
+                        </Label>
+                    </div>
+                )
+            })}
+        </RadioGroup>
+    </div>
+)
+
+const RatingSlider = ({ label, value, onValueChange, max = 5, step = 1 }: { label: string, value: number, onValueChange: (value: number) => void, max?: number, step?: number }) => (
+    <div className="space-y-3">
+      <div className="flex justify-between items-center">
+        <Label>{label}</Label>
+        <span className="font-mono font-bold text-lg text-primary w-8 text-center">{value}</span>
+      </div>
+      <Slider
+        defaultValue={[value]}
+        max={max}
+        min={1}
+        step={step}
+        onValueChange={(v) => onValueChange(v[0])}
+        className="[&>span:first-child]:h-1"
+      />
+    </div>
+);
+
 
 // --- Main Page Component ---
 export default function MentalEvaluationPage() {
-  const [mentalScores, setMentalScores] = useState({
+  const [scores, setScores] = useState({
     focus: 3,
     concentration: 3,
     emotionControl: 3,
     pressureHandling: 3,
     resilience: 3,
+    motivation: 7,
+    confidence: 7,
+    stress: 5,
   });
 
-  const [psychoScores, setPsychoScores] =useState({
-      motivation: 7,
-      confidence: 7,
-      stress: 5,
-  })
-
-  const handleMentalScoreChange = (skill: keyof typeof mentalScores, value: number) => {
-    setMentalScores(prev => ({ ...prev, [skill]: value }));
+  const handleScoreChange = (skill: keyof typeof scores, value: number) => {
+    setScores(prev => ({ ...prev, [skill]: value }));
   };
 
-  const handlePsychoScoreChange = (skill: keyof typeof psychoScores, value: number) => {
-    setPsychoScores(prev => ({ ...prev, [skill]: value }));
-  };
-
+  const scale = ['Tidak Pernah', 'Kadang', 'Sering', 'Sgt. Sering'];
 
   return (
     <div className="space-y-8 p-4 md:p-0">
@@ -79,10 +121,10 @@ export default function MentalEvaluationPage() {
             Evaluasi Mental & Psikologis
         </h1>
         <p className="text-muted-foreground max-w-xl text-lg">
-            Formulir untuk memantau ketangguhan mental dan kondisi psikologis atlet.
+            Formulir untuk memantau ketangguhan mental dan kondisi psikologis atlet, disesuaikan per kelompok umur.
         </p>
       </div>
-
+      
       <form className="space-y-8">
         
         {/* IDENTITAS ATLET & SESI */}
@@ -90,7 +132,7 @@ export default function MentalEvaluationPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2 md:col-span-2">
                     <Label>Nama Atlet</Label>
-                    <Select><SelectTrigger className="h-14 rounded-xl bg-zinc-950 border-zinc-800 text-base"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP</SelectItem></SelectContent></Select>
+                    <Select><SelectTrigger className="h-14 rounded-xl bg-zinc-950 border-zinc-800 text-base"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP (Usia 16)</SelectItem><SelectItem value="budi">Budi (Usia 8)</SelectItem></SelectContent></Select>
                 </div>
                  <div className="space-y-2">
                     <Label>Tanggal Evaluasi</Label>
@@ -103,29 +145,104 @@ export default function MentalEvaluationPage() {
             </div>
         </SectionCard>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* MENTAL TRAINING ASSESSMENT */}
-            <SectionCard title="Mental Training Assessment" icon={Brain} description="Penilaian kualitas mental di lapangan (Skala 1-5).">
-                <div className="space-y-6">
-                    <RatingSlider label="Fokus (Kualitas Perhatian)" value={mentalScores.focus} onValueChange={(v) => handleMentalScoreChange('focus', v)} />
-                    <RatingSlider label="Konsentrasi (Durasi Perhatian)" value={mentalScores.concentration} onValueChange={(v) => handleMentalScoreChange('concentration', v)} />
-                    <RatingSlider label="Kontrol Emosi" value={mentalScores.emotionControl} onValueChange={(v) => handleMentalScoreChange('emotionControl', v)} />
-                    <RatingSlider label="Mental di Bawah Tekanan" value={mentalScores.pressureHandling} onValueChange={(v) => handleMentalScoreChange('pressureHandling', v)} />
-                    <RatingSlider label="Resiliensi (Cepat Bangkit)" value={mentalScores.resilience} onValueChange={(v) => handleMentalScoreChange('resilience', v)} />
+        {/* TABS KELOMPOK UMUR */}
+        <Tabs defaultValue="16-20" className="w-full">
+            <TabsList className="grid w-full grid-cols-5 bg-zinc-900 border border-zinc-800 h-auto">
+                <TabsTrigger value="3-6">3-6 Thn</TabsTrigger>
+                <TabsTrigger value="7-9">7-9 Thn</TabsTrigger>
+                <TabsTrigger value="10-12">10-12 Thn</TabsTrigger>
+                <TabsTrigger value="13-15">13-15 Thn</TabsTrigger>
+                <TabsTrigger value="16-20">16-20 Thn</TabsTrigger>
+            </TabsList>
+            
+            {/* Form A: Usia 3–6 Tahun */}
+            <TabsContent value="3-6" className="mt-6">
+                <SectionCard title="Observasi Pelatih (Usia 3-6)" icon={Brain}>
+                    <div className="space-y-6">
+                        <ObservationScale label="Mudah menangis saat gagal" scale={scale} />
+                        <ObservationScale label="Mudah marah saat kalah" scale={scale} />
+                        <ObservationScale label="Bisa tenang kembali < 2 menit" scale={scale} />
+                        <ObservationScale label="Bertahan fokus ≥5 menit" scale={scale} />
+                        <ObservationScale label="Konflik dengan teman" scale={scale} />
+                    </div>
+                </SectionCard>
+            </TabsContent>
+            
+            {/* Form B: Usia 7–9 Tahun */}
+            <TabsContent value="7-9" className="mt-6">
+                 <SectionCard title="Self-report Sederhana (Usia 7-9)" icon={Brain}>
+                    <div className="space-y-6">
+                       <EmojiScale label="Saat latihan saya merasa:" />
+                       <div className="space-y-3">
+                           <Label>Kalau gagal saya ingin mencoba lagi</Label>
+                           <RadioGroup className="grid grid-cols-2 gap-2"><RadioGroupItem value="yes" id="b-yes" /><Label htmlFor="b-yes">Ya</Label><RadioGroupItem value="no" id="b-no" /><Label htmlFor="b-no">Tidak</Label></RadioGroup>
+                       </div>
+                    </div>
+                 </SectionCard>
+            </TabsContent>
+
+            {/* Form C: Usia 10–12 Tahun */}
+            <TabsContent value="10-12" className="mt-6">
+                 <SectionCard title="Mental & Motivasi (Usia 10-12)" icon={Brain}>
+                    <div className="space-y-6">
+                        <RatingSlider label="Saya latihan karena saya mau" value={scores.motivation} onValueChange={(v) => handleScoreChange('motivation', v)} max={5}/>
+                        <RatingSlider label="Saya takut dimarahi jika salah" value={scores.stress} onValueChange={(v) => handleScoreChange('stress', v)} max={5}/>
+                        <RatingSlider label="Saya senang belajar teknik baru" value={scores.focus} onValueChange={(v) => handleScoreChange('focus', v)} max={5}/>
+                        <RatingSlider label="Saya ingin jadi atlet hebat" value={scores.confidence} onValueChange={(v) => handleScoreChange('confidence', v)} max={5}/>
+                    </div>
+                 </SectionCard>
+            </TabsContent>
+            
+            {/* Form D: Usia 13–15 Tahun */}
+            <TabsContent value="13-15" className="mt-6">
+                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                     <SectionCard title="Mental Kompetisi (Usia 13-15)" icon={Brain}>
+                        <div className="space-y-6">
+                            <RatingSlider label="Gugup sebelum pertandingan" value={scores.stress} onValueChange={(v) => handleScoreChange('stress', v)} max={5}/>
+                            <RatingSlider label="Fokus saat tertinggal" value={scores.focus} onValueChange={(v) => handleScoreChange('focus', v)} max={5}/>
+                            <RatingSlider label="Self-talk negatif" value={scores.emotionControl} onValueChange={(v) => handleScoreChange('emotionControl', v)} max={5}/>
+                            <RatingSlider label="Emosi setelah kalah" value={scores.resilience} onValueChange={(v) => handleScoreChange('resilience', v)} max={5}/>
+                        </div>
+                     </SectionCard>
+                     <SectionCard title="Kesejahteraan (Usia 13-15)" icon={Brain}>
+                        <div className="space-y-6">
+                            <RatingSlider label="Stres dari Sekolah/Akademis" value={3} onValueChange={()=>{}} max={5}/>
+                            <RatingSlider label="Merasa Lelah Mental" value={2} onValueChange={()=>{}} max={5}/>
+                            <RatingSlider label="Enjoyment Latihan" value={4} onValueChange={()=>{}} max={5}/>
+                            <RatingSlider label="Motivasi Jangka Panjang" value={5} onValueChange={()=>{}} max={5}/>
+                        </div>
+                     </SectionCard>
+                 </div>
+            </TabsContent>
+
+            {/* Form E: Usia 16–20 Tahun */}
+            <TabsContent value="16-20" className="mt-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <SectionCard title="Profil Mental Atlet (Usia 16-20)" icon={Brain}>
+                        <div className="space-y-6">
+                            <RatingSlider label="Fokus (Kualitas Perhatian)" value={scores.focus} onValueChange={(v) => handleScoreChange('focus', v)} />
+                            <RatingSlider label="Konsentrasi (Durasi Perhatian)" value={scores.concentration} onValueChange={(v) => handleScoreChange('concentration', v)} />
+                            <RatingSlider label="Kontrol Emosi" value={scores.emotionControl} onValueChange={(v) => handleScoreChange('emotionControl', v)} />
+                            <RatingSlider label="Mental di Bawah Tekanan" value={scores.pressureHandling} onValueChange={(v) => handleScoreChange('pressureHandling', v)} />
+                            <RatingSlider label="Resiliensi (Cepat Bangkit)" value={scores.resilience} onValueChange={(v) => handleScoreChange('resilience', v)} />
+                        </div>
+                    </SectionCard>
+                     <SectionCard title="Self-Assessment (Usia 16-20)" icon={UserSquare}>
+                        <div className="space-y-6">
+                            <RatingSlider label="Motivasi Latihan" value={scores.motivation} onValueChange={(v) => handleScoreChange('motivation', v)} max={10} />
+                            <RatingSlider label="Tingkat Kepercayaan Diri" value={scores.confidence} onValueChange={(v) => handleScoreChange('confidence', v)} max={10} />
+                            <RatingSlider label="Tingkat Stres Umum (Luar Lapangan)" value={scores.stress} onValueChange={(v) => handleScoreChange('stress', v)} max={10} />
+                            <div className="space-y-2 pt-4 border-t border-zinc-800">
+                                <Label>Goal Orientation</Label>
+                                <Select><SelectTrigger className="h-12"><SelectValue placeholder="Pilih Orientasi..."/></SelectTrigger><SelectContent><SelectItem value="task">Task-oriented (Fokus pada proses & self-improvement)</SelectItem><SelectItem value="ego">Ego-oriented (Fokus pada hasil & mengalahkan orang lain)</SelectItem></SelectContent></Select>
+                            </div>
+                        </div>
+                     </SectionCard>
                 </div>
-            </SectionCard>
+            </TabsContent>
 
-            {/* PSYCHOLOGICAL ASSESSMENT */}
-            <SectionCard title="Psychological Report (Self-Assessment)" icon={UserSquare} description="Input berdasarkan wawancara dengan atlet (Skala 1-10).">
-                <div className="space-y-6">
-                    <RatingSlider label="Motivasi Latihan" value={psychoScores.motivation} onValueChange={(v) => handlePsychoScoreChange('motivation', v)} max={10} />
-                    <RatingSlider label="Tingkat Kepercayaan Diri" value={psychoScores.confidence} onValueChange={(v) => handlePsychoScoreChange('confidence', v)} max={10} />
-                    <RatingSlider label="Tingkat Stres Umum" value={psychoScores.stress} onValueChange={(v) => handlePsychoScoreChange('stress', v)} max={10} />
-                </div>
-            </SectionCard>
-        </div>
-
-
+        </Tabs>
+        
         {/* REKOMENDASI PELATIH */}
         <SectionCard title="Catatan Psikolog / Pelatih Mental" icon={Brain}>
             <Textarea placeholder="Tulis catatan observasi, rekomendasi latihan mental, atau area yang perlu perhatian khusus..." className="bg-zinc-950 border-zinc-800 rounded-xl h-32"/>
