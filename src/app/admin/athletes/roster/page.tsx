@@ -86,7 +86,7 @@ export default function AthleteRosterPage() {
                 </Badge>
             </div>
             <h1 className="text-4xl md:text-5xl font-black font-headline uppercase tracking-tighter text-white">
-                Daftar <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-600">Atlet</span>
+                Roster <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-600">Atlet</span>
             </h1>
             <p className="text-zinc-400 mt-2 max-w-xl text-lg">
                 Lihat dan kelola semua atlet yang terdaftar di Kultur Juara Academy.

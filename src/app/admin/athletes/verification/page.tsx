@@ -262,6 +262,7 @@ export default function VerificationPage() {
                 </div>
             )}
          </div>
+
       </div>
       <Dialog open={!!previewImage} onOpenChange={() => setPreviewImage(null)}>
         <DialogContent className="bg-black/90 border-none shadow-none max-w-4xl h-[80vh] p-0 flex items-center justify-center">

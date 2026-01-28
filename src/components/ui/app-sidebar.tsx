@@ -34,7 +34,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-// SIMPLIFIED DATA
 const data = {
   user: {
     name: "Pelatih Kepala",
@@ -46,16 +45,20 @@ const data = {
     { title: "Profil Saya", url: "/admin/profile", icon: User },
   ],
   navAtlet: [
-    { title: "Registrasi Atlet Baru", url: "/admin/participants/register", icon: UserPlus },
-    { title: "Daftar Atlet", url: "/admin/participants/teams", icon: Users },
-    { title: "Verifikasi Dokumen", url: "/admin/secretariat/verification", icon: CheckSquare },
-    { title: "Training Log", url: "/admin/training/log", icon: ClipboardCheck },
-    { title: "Log Pertandingan", url: "/admin/training/match-log", icon: Trophy },
-    { title: "Log Nutrisi & Recovery", url: "/admin/training/nutrition-log", icon: HeartPulse },
+    { title: "Registrasi Atlet Baru", url: "/admin/athletes/register", icon: UserPlus },
+    { title: "Roster Atlet", url: "/admin/athletes/roster", icon: Users },
+    { title: "Verifikasi Dokumen", url: "/admin/athletes/verification", icon: CheckSquare },
+  ],
+  navEvaluasi: [
     { title: "Evaluasi Fisik", url: "/admin/evaluations/physical", icon: Dumbbell },
     { title: "Evaluasi Teknik", url: "/admin/evaluations/technical", icon: Swords },
     { title: "Evaluasi Taktik", url: "/admin/evaluations/tactical", icon: BrainCircuit },
     { title: "Evaluasi Mental", url: "/admin/evaluations/mental", icon: Brain },
+  ],
+  navLatihan: [
+    { title: "Daily Training Log", url: "/admin/training/daily-log", icon: ClipboardCheck },
+    { title: "Log Pertandingan", url: "/admin/training/match-log", icon: Trophy },
+    { title: "Log Nutrisi & Recovery", url: "/admin/training/nutrition-log", icon: HeartPulse },
   ],
   navOperasional: [
     { title: "Inventaris Alat", url: "/admin/logistics/inventory", icon: Box },
@@ -98,6 +101,8 @@ export function AppSidebar({ onLogout, ...props }: React.ComponentProps<typeof S
         
         <NavGroup label="UTAMA" items={data.navUtama} currentPath={pathname} />
         <NavGroup label="MANAJEMEN ATLET" items={data.navAtlet} currentPath={pathname} />
+        <NavGroup label="EVALUASI" items={data.navEvaluasi} currentPath={pathname} />
+        <NavGroup label="LOG LATIHAN" items={data.navLatihan} currentPath={pathname} />
         <NavGroup label="OPERASIONAL" items={data.navOperasional} currentPath={pathname} />
         <NavGroup label="ADMINISTRASI" items={data.navAdministrasi} currentPath={pathname} />
 
