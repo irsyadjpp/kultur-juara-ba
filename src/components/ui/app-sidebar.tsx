@@ -168,5 +168,3 @@ function NavGroup({ label, items, currentPath }: { label: string, items: any[], 
     </SidebarGroup>
   );
 }
-
-    
