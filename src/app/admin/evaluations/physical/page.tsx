@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { 
   Dumbbell, HeartPulse, Target, User, 
-  Save, UserSquare, Ruler, Activity, Weight, Wind, Stretch, Calendar
+  Save, UserSquare, Ruler, Activity, Weight, Wind, StretchVertical, Calendar
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -127,7 +127,7 @@ export default function PhysicalEvaluationPage() {
                 </SectionCard>
 
                 {/* 4. TES FLEKSIBILITAS */}
-                <SectionCard title="Fleksibilitas" icon={Stretch} description="Mengukur rentang gerak sendi.">
+                <SectionCard title="Fleksibilitas" icon={StretchVertical} description="Mengukur rentang gerak sendi.">
                     <div className="space-y-4">
                         <MetricInput label="Sit & Reach" unit="cm" />
                         <MetricInput label="Shoulder Mobility" unit="derajat" />
