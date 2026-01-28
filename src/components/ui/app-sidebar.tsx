@@ -59,6 +59,7 @@ const data = {
     { title: "Daily Training Log", url: "/admin/training/daily-log", icon: ClipboardCheck },
     { title: "Log Pertandingan", url: "/admin/training/match-log", icon: Trophy },
     { title: "Log Nutrisi & Recovery", url: "/admin/training/nutrition-log", icon: HeartPulse },
+    { title: "Mental Journal", url: "/admin/training/mental-journal", icon: BrainCircuit },
   ],
   navOperasional: [
     { title: "Inventaris Alat", url: "/admin/logistics/inventory", icon: Box },
@@ -167,3 +168,5 @@ function NavGroup({ label, items, currentPath }: { label: string, items: any[], 
     </SidebarGroup>
   );
 }
+
+    
