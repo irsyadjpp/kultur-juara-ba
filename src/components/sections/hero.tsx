@@ -37,8 +37,8 @@ export function HeroSection() {
            </p>
 
            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button asChild size="lg" className="h-16 px-8 rounded-full text-lg font-bold shadow-xl shadow-primary/20 hover:scale-105 transition-transform bg-primary text-black hover:bg-primary/90">
-                 <Link href="/#register">
+              <Button asChild size="lg" className="h-16 px-8 rounded-full text-lg font-bold shadow-xl shadow-primary/20 hover:scale-105 transition-transform bg-primary hover:bg-primary/90">
+                 <Link href="/contact">
                     Join Program <ArrowRight className="ml-2 w-5 h-5" />
                  </Link>
               </Button>

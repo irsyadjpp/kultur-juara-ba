@@ -1,20 +1,14 @@
-
 'use client';
 
 import * as React from "react"
 import Link from "next/link"
-import Image from "next/image" // Import Image dari Next.js
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { 
-  LayoutDashboard, User, Briefcase, CalendarRange, 
-  Activity, Users, Network, CheckSquare, 
-  PieChart, FileCheck, Stamp, Receipt, Store, Wallet, Coins, 
-  Trophy, CalendarDays, FileText, ShieldAlert, Mic2, LifeBuoy, ClipboardList, Gavel, MonitorPlay, ClipboardCheck, 
-  QrCode, Stethoscope, Package, Box, Database, Utensils, Gift, Upload, Layers, 
-  Timer, Navigation,
-  BarChart3, Megaphone,
-  Mail, FileSignature, Award, 
-  Tags, UserCog, Handshake, Newspaper, Settings, ChevronRight, LogOut, ShieldCheck as UserCheck, Dumbbell, UserPlus
+  LayoutDashboard, User, Dumbbell, 
+  UserPlus, CheckSquare,
+  Box, Package, Layers, Upload, UserCog,
+  LogOut
 } from "lucide-react"
 
 import {
@@ -33,51 +27,31 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-// --- DATA MENU LENGKAP ---
+// SIMPLIFIED DATA
 const data = {
   user: {
     name: "Pelatih Kepala",
     role: "Head Coach",
     avatar: "/avatars/irsyad.jpg",
   },
-  // 1. MAIN
-  navMain: [
+  navUtama: [
     { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
-    { title: "Profil Akademi", url: "/admin/profile", icon: User },
-    { title: "Program Latihan", url: "/admin/planning", icon: CalendarRange },
+    { title: "Profil Saya", url: "/admin/profile", icon: User },
   ],
-  // 2. MANAJEMEN
-  navManajemen: [
-    { title: "Monitoring Latihan", url: "/admin/director/monitor", icon: Activity },
-    { title: "Database Pelatih", url: "/admin/director/roster", icon: Users },
-    { title: "Struktur Organisasi", url: "/admin/director/committee", icon: Network },
-  ],
-  // 3. KEUANGAN
-  navFinance: [
-    { title: "Dashboard Keuangan", url: "/admin/finance", icon: PieChart },
-    { title: "Manajemen SPP", url: "/admin/finance/invoices", icon: Receipt },
-    { title: "Approval Pengeluaran", url: "/admin/finance/reimbursement-approval", icon: Stamp },
-    { title: "Honorarium Pelatih", url: "/admin/finance/honorarium", icon: Wallet },
-    { title: "Kas Kecil", url: "/admin/finance/petty-cash", icon: Coins },
-  ],
-  // 4. LATIHAN
-  navLatihan: [
-    { title: "Jadwal Latihan", url: "/admin/match-control/schedule", icon: CalendarDays },
+  navAtlet: [
+    { title: "Pendaftaran Atlet", url: "/admin/participants/register", icon: UserPlus },
+    { title: "Verifikasi Atlet", url: "/admin/secretariat/verification", icon: CheckSquare },
     { title: "Evaluasi Fisik", url: "/admin/evaluations/physical", icon: Dumbbell },
-    { title: "Hasil Pertandingan", url: "/admin/match-control/results", icon: FileText },
-    { title: "Absensi Atlet", url: "/admin/gate", icon: QrCode },
   ],
-  // 5. OPERASIONAL
   navOperasional: [
     { title: "Inventaris Alat", url: "/admin/logistics/inventory", icon: Box },
-    { title: "Manajemen Shuttlecock", url: "/admin/logistics/shuttlecock", icon: Package },
+    { title: "Stok Shuttlecock", url: "/admin/logistics/shuttlecock", icon: Package },
+    { title: "Logistik Habis Pakai", url: "/admin/logistics/consumables", icon: Layers },
   ],
-  // 6. ADMINISTRASI
-  navSecretariat: [
-    { title: "Verifikasi Pendaftaran", url: "/admin/secretariat/verification", icon: UserCheck },
-    { title: "Surat-menyurat", url: "/admin/secretary/correspondence", icon: Mail },
-    { title: "Generator Sertifikat", url: "/admin/event/certificates", icon: Award },
-  ],
+  navAdministrasi: [
+    { title: "Reimbursement", url: "/admin/reimbursement/submit", icon: Upload },
+    { title: "Manajemen User", url: "/admin/settings/users", icon: UserCog },
+  ]
 }
 
 export function AppSidebar({ onLogout, ...props }: React.ComponentProps<typeof Sidebar> & { onLogout?: () => void }) {
@@ -108,12 +82,10 @@ export function AppSidebar({ onLogout, ...props }: React.ComponentProps<typeof S
 
       <SidebarContent className="px-3 py-4 space-y-4 bg-zinc-950/50 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
         
-        <NavGroup label="UTAMA" items={data.navMain} currentPath={pathname} />
-        <NavGroup label="MANAJEMEN" items={data.navManajemen} currentPath={pathname} />
-        <NavGroup label="KEUANGAN" items={data.navFinance} currentPath={pathname} />
-        <NavGroup label="ATLET & LATIHAN" items={data.navLatihan} currentPath={pathname} />
+        <NavGroup label="UTAMA" items={data.navUtama} currentPath={pathname} />
+        <NavGroup label="ATLET & LATIHAN" items={data.navAtlet} currentPath={pathname} />
         <NavGroup label="OPERASIONAL" items={data.navOperasional} currentPath={pathname} />
-        <NavGroup label="ADMINISTRASI" items={data.navSecretariat} currentPath={pathname} />
+        <NavGroup label="ADMINISTRASI" items={data.navAdministrasi} currentPath={pathname} />
 
       </SidebarContent>
 
@@ -155,7 +127,7 @@ function NavGroup({ label, items, currentPath }: { label: string, items: any[], 
                 className={cn(
                   "h-12 rounded-full px-3 justify-start transition-all duration-300 font-bold text-sm group/btn",
                   isActive
-                    ? "bg-primary text-primary-foreground shadow-[0_4px_14px_0_hsl(var(--primary)/0.3)]"
+                    ? "bg-primary text-white shadow-[0_4px_14px_0_hsl(var(--primary)/0.3)]"
                     : "text-zinc-400 hover:text-white hover:bg-white/5"
                 )}
               >

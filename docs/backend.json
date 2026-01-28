@@ -16,29 +16,6 @@
           "description": "URL of the user's profile picture."
         }
       }
-    },
-    "Protest": {
-      "title": "Protest Submission",
-      "description": "Represents a formal protest submitted by a player or their representative.",
-      "type": "object",
-      "properties": {
-        "reporterName": { "type": "string" },
-        "clubName": { "type": "string" },
-        "reporterWhatsapp": { "type": "string" },
-        "category": { "type": "string", "enum": ["Putra", "Putri", "Campuran"] },
-        "incidentTime": { "type": "string" },
-        "courtNumber": { "type": "string" },
-        "matchNumber": { "type": "number" },
-        "opponentName": { "type": "string" },
-        "violationType": { "type": "array", "items": { "type": "string" } },
-        "youtubeUrl": { "type": "string" },
-        "videoUrl": { "type": "string", "format": "uri" },
-        "additionalEvidence": { "type": "string" },
-        "status": { "type": "string", "enum": ["PENDING", "ACCEPTED", "REJECTED"], "default": "PENDING" },
-        "createdAt": { "type": "string", "format": "date-time" },
-        "decisionNotes": { "type": "string" }
-      },
-      "required": ["reporterName", "category", "incidentTime", "courtNumber", "matchNumber", "opponentName", "violationType", "status", "createdAt"]
     }
   },
   "auth": {
@@ -48,10 +25,6 @@
     "/users/{userId}": {
       "schema": { "$ref": "#/entities/UserProfile" },
       "description": "Stores public user profile information."
-    },
-    "/protests/{protestId}": {
-        "schema": { "$ref": "#/entities/Protest" },
-        "description": "Stores all protest submissions from players or representatives."
     }
   }
 }

@@ -10,17 +10,21 @@ import {
 export function FaqSection() {
     const items = [
         {
-            q: "Bolehkah ganti pasangan setelah daftar?",
-            a: "Boleh! Maksimal H-7 sebelum hari H. Syaratnya level pengganti tidak mengubah kategori awal (misal: Beginner tidak boleh diganti Advance)."
+            q: "Bagaimana cara mendaftar di Kultur Juara Academy?",
+            a: "Anda dapat menghubungi kami melalui formulir kontak di website ini atau datang langsung ke lokasi latihan kami di GOR Sutta saat jam operasional untuk pendaftaran dan informasi lebih lanjut."
         },
         {
-            q: "Pembayaran per tim atau per orang?",
-            a: "Pembayaran dilakukan per orang melalui akun masing-masing (split bill). Namun, manajer tim juga bisa membayarkan sekaligus untuk anggotanya."
+            q: "Apakah tersedia kelas percobaan (trial class)?",
+            a: "Ya, kami menyediakan satu sesi kelas percobaan gratis bagi calon atlet. Silakan hubungi admin kami via WhatsApp untuk menjadwalkan sesi trial Anda."
         },
         {
-            q: "Apakah wanita boleh ikut?",
-            a: "Tentu! Kami menggunakan standar Ganda Putra Umum. Wanita diperbolehkan join (bisa main di GD/XD) asalkan siap bersaing dengan standar tenaga pria di level yang dipilih."
+            q: "Apa saja kelompok umur yang tersedia di akademi?",
+            a: "Saat ini kami membuka tiga kelompok utama: U-13 (Sekolah Dasar), U-17 (SMP-SMA), dan Kelas Dewasa untuk pemain hobi atau mereka yang ingin menjaga kebugaran."
         },
+        {
+            q: "Berapa biaya bulanan dan apa saja yang termasuk?",
+            a: "Biaya bulanan adalah Rp 500.000 per atlet. Biaya ini sudah termasuk 8 sesi latihan terjadwal setiap bulan dan shuttlecock yang digunakan selama latihan."
+        }
     ]
 
   return (
