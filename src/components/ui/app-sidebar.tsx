@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from "react"
@@ -11,7 +12,8 @@ import {
   LogOut,
   Swords,
   BrainCircuit,
-  Brain
+  Brain,
+  ClipboardCheck
 } from "lucide-react"
 
 import {
@@ -45,6 +47,7 @@ const data = {
     { title: "Registrasi Atlet Baru", url: "/admin/participants/register", icon: UserPlus },
     { title: "Daftar Atlet", url: "/admin/participants/teams", icon: Users },
     { title: "Verifikasi Dokumen", url: "/admin/secretariat/verification", icon: CheckSquare },
+    { title: "Training Log", url: "/admin/training/log", icon: ClipboardCheck },
     { title: "Evaluasi Fisik", url: "/admin/evaluations/physical", icon: Dumbbell },
     { title: "Evaluasi Teknik", url: "/admin/evaluations/technical", icon: Swords },
     { title: "Evaluasi Taktik", url: "/admin/evaluations/tactical", icon: BrainCircuit },
