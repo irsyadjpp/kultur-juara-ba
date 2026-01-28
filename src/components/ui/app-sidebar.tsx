@@ -10,7 +10,8 @@ import {
   Box, Package, Layers, Upload, UserCog,
   LogOut,
   Swords,
-  BrainCircuit
+  BrainCircuit,
+  Brain
 } from "lucide-react"
 
 import {
@@ -47,6 +48,7 @@ const data = {
     { title: "Evaluasi Fisik", url: "/admin/evaluations/physical", icon: Dumbbell },
     { title: "Evaluasi Teknik", url: "/admin/evaluations/technical", icon: Swords },
     { title: "Evaluasi Taktik", url: "/admin/evaluations/tactical", icon: BrainCircuit },
+    { title: "Evaluasi Mental", url: "/admin/evaluations/mental", icon: Brain },
   ],
   navOperasional: [
     { title: "Inventaris Alat", url: "/admin/logistics/inventory", icon: Box },
