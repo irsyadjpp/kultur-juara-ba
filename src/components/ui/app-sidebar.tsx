@@ -14,7 +14,8 @@ import {
   BrainCircuit,
   Brain,
   ClipboardCheck,
-  Trophy
+  Trophy,
+  HeartPulse
 } from "lucide-react"
 
 import {
@@ -50,6 +51,7 @@ const data = {
     { title: "Verifikasi Dokumen", url: "/admin/secretariat/verification", icon: CheckSquare },
     { title: "Training Log", url: "/admin/training/log", icon: ClipboardCheck },
     { title: "Log Pertandingan", url: "/admin/training/match-log", icon: Trophy },
+    { title: "Log Nutrisi & Recovery", url: "/admin/training/nutrition-log", icon: HeartPulse },
     { title: "Evaluasi Fisik", url: "/admin/evaluations/physical", icon: Dumbbell },
     { title: "Evaluasi Teknik", url: "/admin/evaluations/technical", icon: Swords },
     { title: "Evaluasi Taktik", url: "/admin/evaluations/tactical", icon: BrainCircuit },
