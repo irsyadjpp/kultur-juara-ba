@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from "react"
@@ -6,7 +7,7 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { 
   LayoutDashboard, User, Dumbbell, 
-  UserPlus, CheckSquare,
+  UserPlus, CheckSquare, Users,
   Box, Package, Layers, Upload, UserCog,
   LogOut
 } from "lucide-react"
@@ -39,8 +40,9 @@ const data = {
     { title: "Profil Saya", url: "/admin/profile", icon: User },
   ],
   navAtlet: [
-    { title: "Pendaftaran Atlet", url: "/admin/participants/register", icon: UserPlus },
-    { title: "Verifikasi Atlet", url: "/admin/secretariat/verification", icon: CheckSquare },
+    { title: "Registrasi Atlet Baru", url: "/admin/participants/register", icon: UserPlus },
+    { title: "Daftar Atlet", url: "/admin/participants/teams", icon: Users },
+    { title: "Verifikasi Dokumen", url: "/admin/secretariat/verification", icon: CheckSquare },
     { title: "Evaluasi Fisik", url: "/admin/evaluations/physical", icon: Dumbbell },
   ],
   navOperasional: [
@@ -83,7 +85,7 @@ export function AppSidebar({ onLogout, ...props }: React.ComponentProps<typeof S
       <SidebarContent className="px-3 py-4 space-y-4 bg-zinc-950/50 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
         
         <NavGroup label="UTAMA" items={data.navUtama} currentPath={pathname} />
-        <NavGroup label="ATLET & LATIHAN" items={data.navAtlet} currentPath={pathname} />
+        <NavGroup label="MANAJEMEN ATLET" items={data.navAtlet} currentPath={pathname} />
         <NavGroup label="OPERASIONAL" items={data.navOperasional} currentPath={pathname} />
         <NavGroup label="ADMINISTRASI" items={data.navAdministrasi} currentPath={pathname} />
 
