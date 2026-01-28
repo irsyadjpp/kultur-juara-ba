@@ -9,7 +9,8 @@ import {
   UserPlus, CheckSquare, Users,
   Box, Package, Layers, Upload, UserCog,
   LogOut,
-  Swords
+  Swords,
+  BrainCircuit
 } from "lucide-react"
 
 import {
@@ -45,6 +46,7 @@ const data = {
     { title: "Verifikasi Dokumen", url: "/admin/secretariat/verification", icon: CheckSquare },
     { title: "Evaluasi Fisik", url: "/admin/evaluations/physical", icon: Dumbbell },
     { title: "Evaluasi Teknik", url: "/admin/evaluations/technical", icon: Swords },
+    { title: "Evaluasi Taktik", url: "/admin/evaluations/tactical", icon: BrainCircuit },
   ],
   navOperasional: [
     { title: "Inventaris Alat", url: "/admin/logistics/inventory", icon: Box },
