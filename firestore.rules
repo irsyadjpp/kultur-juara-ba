@@ -1,0 +1,78 @@
+/**
+ * Core Philosophy:
+ * This ruleset enforces a strict "Public Read-Only" security model. It is designed
+ * for a public-facing landing page where data like event information, sponsors,
+ * and partners must be readable by any visitor, including those who are not signed
+ * in. All write operations (create, update, delete) from the client-side are
+ * explicitly disabled to protect the integrity of the data. Data management is
+ * expected to be handled through a trusted server environment using the Firebase
+ * Admin SDK or directly in the Firebase Console.
+ *
+ * Data Structure:
+ * The data structure is flat and simple, consisting of three top-level collections:
+ * - /live_info: Contains dynamic information for the landing page, like countdowns.
+ * - /sponsors: A list of event sponsors.
+ * - /partners: A list of event partners.
+ * This flat structure is performant and simplifies security rules, as there are no
+ * complex relationships or user-specific data to protect.
+ *
+ * Key Security Decisions:
+ * - Public Read Access: All collections are configured with `allow get, list: if true;`
+ *   to ensure the landing page can fetch and display the necessary information
+ *   without requiring user authentication.
+ * - Client Writes Disabled: All `create`, `update`, and `delete` permissions are
+ *   set to `if false;`. This is a critical security measure that prevents any
+ *   end-user from modifying the site's content.
+ * - No User-Specific Data: The ruleset does not handle any user-owned or private
+ *   data, simplifying the logic and eliminating the need for authentication checks.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description Publicly readable live information for the landing page. All writes are disabled.
+     * @path        /live_info/{liveInfoId}
+     * @allow       (get) Any user, signed in or not, can read a live info document.
+     * @deny        (create) No user can create a new live info document from the client.
+     * @principle   Secures data as read-only for public consumption, preventing all client-side modification.
+     */
+    match /live_info/{liveInfoId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Publicly readable list of sponsors. All writes are disabled.
+     * @path        /sponsors/{sponsorId}
+     * @allow       (list) Any user, signed in or not, can list all sponsor documents.
+     * @deny        (update) No user can update a sponsor document from the client.
+     * @principle   Secures data as read-only for public consumption, preventing all client-side modification.
+     */
+    match /sponsors/{sponsorId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Publicly readable list of partners. All writes are disabled.
+     * @path        /partners/{partnerId}
+     * @allow       (get) Any user, signed in or not, can read a specific partner document.
+     * @deny        (delete) No user can delete a partner document from the client.
+     * @principle   Secures data as read-only for public consumption, preventing all client-side modification.
+     */
+    match /partners/{partnerId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+  }
+}

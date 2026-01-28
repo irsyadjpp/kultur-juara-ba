@@ -1,30 +1,151 @@
-
 {
   "entities": {
-    "UserProfile": {
-      "title": "User Profile",
-      "description": "Represents a user's public profile.",
+    "LiveInfo": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "LiveInfo",
       "type": "object",
+      "description": "Entity to store live information for the BCC 2026 Landing Page, fetched from Firebase Firestore.",
       "properties": {
-        "displayName": {
+        "id": {
           "type": "string",
-          "description": "The user's display name."
+          "description": "Unique identifier for the Live Info entry. (Primary Key)"
         },
-        "photoURL": {
+        "slotsFilled": {
+          "type": "number",
+          "description": "Number of slots filled in the tournament."
+        },
+        "totalSlots": {
+          "type": "number",
+          "description": "Total number of available slots."
+        },
+        "countdownDate": {
           "type": "string",
-          "format": "uri",
-          "description": "URL of the user's profile picture."
+          "description": "The target date for the countdown.",
+          "format": "date-time"
         }
-      }
+      },
+      "required": [
+        "id",
+        "slotsFilled",
+        "totalSlots",
+        "countdownDate"
+      ]
+    },
+    "Sponsor": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Sponsor",
+      "type": "object",
+      "description": "Entity to store sponsor information for the BCC 2026 event.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Sponsor entity. (Primary Key)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the sponsor."
+        },
+        "logoUrl": {
+          "type": "string",
+          "description": "URL to the sponsor's logo.",
+          "format": "uri"
+        },
+        "isMainSponsor": {
+          "type": "boolean",
+          "description": "Indicates whether the sponsor is a main sponsor."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "logoUrl",
+        "isMainSponsor"
+      ]
+    },
+    "Partner": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Partner",
+      "type": "object",
+      "description": "Entity to store partner information for the BCC 2026 event.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Partner entity. (Primary Key)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the partner."
+        },
+        "logoUrl": {
+          "type": "string",
+          "description": "URL to the partner's logo.",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "logoUrl"
+      ]
     }
   },
   "auth": {
-    "providers": ["google.com", "email-password"]
+    "providers": [
+      "password",
+      "anonymous"
+    ]
   },
   "firestore": {
-    "/users/{userId}": {
-      "schema": { "$ref": "#/entities/UserProfile" },
-      "description": "Stores public user profile information."
-    }
+    "structure": [
+      {
+        "path": "/live_info/{liveInfoId}",
+        "definition": {
+          "entityName": "LiveInfo",
+          "schema": {
+            "$ref": "#/backend/entities/LiveInfo"
+          },
+          "description": "Stores live information for the BCC 2026 Landing Page. Allows public read access.",
+          "params": [
+            {
+              "name": "liveInfoId",
+              "description": "Unique identifier for the Live Info entry."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/sponsors/{sponsorId}",
+        "definition": {
+          "entityName": "Sponsor",
+          "schema": {
+            "$ref": "#/backend/entities/Sponsor"
+          },
+          "description": "Stores sponsor information for the BCC 2026 event. Allows public read access.",
+          "params": [
+            {
+              "name": "sponsorId",
+              "description": "Unique identifier for the Sponsor entity."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/partners/{partnerId}",
+        "definition": {
+          "entityName": "Partner",
+          "schema": {
+            "$ref": "#/backend/entities/Partner"
+          },
+          "description": "Stores partner information for the BCC 2026 event. Allows public read access.",
+          "params": [
+            {
+              "name": "partnerId",
+              "description": "Unique identifier for the Partner entity."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "Given the application's primary need for read-only access to `LiveInfo`, `Sponsor`, and `Partner` data for the landing page, a simple, flat structure is suitable. All collections reside at the root level. This approach avoids unnecessary complexity and allows for straightforward security rules that permit unauthenticated read access, which is crucial for the public-facing nature of the landing page.  By storing the sponsors and partners in their own root collections, we enable secure `list` operations. This structure facilitates Authorization Independence, as no `get()` calls are needed to validate access."
   }
 }
