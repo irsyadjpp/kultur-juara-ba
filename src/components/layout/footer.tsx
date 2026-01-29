@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export function Footer() {
   return (
-    <footer id="contact" className="bg-background text-foreground border-t">
+    <footer id="contact" className="bg-secondary text-secondary-foreground border-t">
       <div className="container mx-auto px-4 py-8 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
           {/* Kolom 1: Deskripsi */}

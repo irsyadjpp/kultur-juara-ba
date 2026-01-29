@@ -13,7 +13,7 @@ const partners = [
 
 export function SponsorsSection() {
     return (
-        <section className="py-20 bg-secondary/30">
+        <section className="py-20 bg-secondary">
             <div className="container mx-auto px-4">
                 <h3 className="text-center text-sm font-bold uppercase text-muted-foreground tracking-[0.3em] mb-10">
                     DIDUKUNG OLEH
@@ -25,7 +25,7 @@ export function SponsorsSection() {
                                 src={p.logo} 
                                 alt={p.name}
                                 fill
-                                className="object-contain brightness-0 invert opacity-50 dark:opacity-70 dark:brightness-100 dark:invert-0"
+                                className="object-contain opacity-60"
                             />
                         </div>
                     ))}

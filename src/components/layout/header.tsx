@@ -31,8 +31,8 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 px-4 pointer-events-none">
       <div className={cn(
         "flex items-center justify-between px-2 py-2 transition-all duration-300 pointer-events-auto",
-        "bg-background/80 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-lg",
-        isScrolled ? "w-full max-w-5xl rounded-full" : "w-full max-w-7xl rounded-3xl"
+        "bg-background/80 backdrop-blur-xl border shadow-lg",
+        isScrolled ? "w-full max-w-5xl rounded-full border-border/50" : "w-full max-w-7xl rounded-3xl border-transparent"
       )}>
         
         {/* LOGO */}
@@ -71,7 +71,7 @@ export function Header() {
             {/* MOBILE TRIGGER */}
             <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="outline" size="icon" className="rounded-full md:hidden w-10 h-10 border-none bg-secondary">
+                  <Button variant="outline" size="icon" className="rounded-full md:hidden w-10 h-10 border bg-secondary">
                     <Menu className="h-5 w-5"/>
                   </Button>
                 </SheetTrigger>

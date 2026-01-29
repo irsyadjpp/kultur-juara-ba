@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: 'Kultur Juara PWN Indonesia Badminton Academy',
   description: 'Mencetak atlet bulutangkis masa depan dengan kurikulum profesional dan fasilitas modern di Kultur Juara PWN Indonesia Badminton Academy.',
   manifest: "/manifest.json",
-  themeColor: "#EAB308", // Gold
+  themeColor: "#ca1f3d", // Primary Red
 };
 
 export default function RootLayout({
@@ -27,7 +27,7 @@ export default function RootLayout({
       <body className="font-body antialiased">
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >

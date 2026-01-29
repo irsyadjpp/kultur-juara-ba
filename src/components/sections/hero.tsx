@@ -12,14 +12,14 @@ export function HeroSection() {
     <section className="relative min-h-screen flex flex-col pt-24 pb-20 overflow-hidden bg-background">
       
       {/* BACKGROUND ELEMENTS */}
-      <div className="absolute top-0 right-0 w-[50vw] h-[50vh] bg-primary/20 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[40vw] h-[40vh] bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[50vw] h-[50vh] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[40vw] h-[40vh] bg-sky-500/10 blur-[100px] rounded-full pointer-events-none" />
       
       <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 flex-grow items-center relative z-10">
         
         {/* LEFT CONTENT */}
         <div className="lg:col-span-7 flex flex-col justify-center text-center lg:text-left">
-           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-foreground font-bold text-sm w-fit mx-auto lg:mx-0 mb-6 animate-fade-in-up">
+           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card border text-foreground font-bold text-sm w-fit mx-auto lg:mx-0 mb-6 animate-fade-in-up">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
@@ -32,7 +32,7 @@ export function HeroSection() {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-400">CHAMPIONS.</span>
            </h1>
 
-           <p className="text-lg md:text-xl text-zinc-600 dark:text-zinc-400 font-medium max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
+           <p className="text-lg md:text-xl text-muted-foreground font-medium max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
               Akademi bulutangkis dengan kurikulum profesional, fasilitas modern, dan pendekatan sport science untuk mencetak atlet berprestasi.
            </p>
 
@@ -42,7 +42,7 @@ export function HeroSection() {
                     Join Program <ArrowRight className="ml-2 w-5 h-5" />
                  </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="h-16 px-8 rounded-full text-lg font-bold border-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 bg-background text-foreground">
+              <Button asChild variant="outline" size="lg" className="h-16 px-8 rounded-full text-lg font-bold border-2 hover:bg-secondary bg-background text-foreground">
                  <Link href="/about">
                     Tentang Akademi
                  </Link>
@@ -53,14 +53,14 @@ export function HeroSection() {
         {/* RIGHT CONTENT - VISUAL CARD */}
         <div className="lg:col-span-5 relative hidden md:block">
             <div className="relative aspect-[4/5] w-full max-w-md mx-auto">
-                <div className="absolute inset-0 bg-zinc-900 rounded-[2.5rem] shadow-2xl rotate-3 border border-zinc-800 overflow-hidden">
+                <div className="absolute inset-0 bg-card rounded-[2.5rem] shadow-2xl rotate-3 border overflow-hidden">
                     <Image 
                         src="https://images.unsplash.com/photo-1579487784860-e4d42c385f09?q=80&w=1974&auto=format&fit=crop" 
                         alt="Arena" 
                         fill 
-                        className="object-cover opacity-60 hover:scale-110 transition-transform duration-700" 
+                        className="object-cover opacity-80 hover:scale-110 transition-transform duration-700" 
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                     
                     <div className="absolute bottom-8 left-8 right-8 text-white">
                         <div className="flex items-center gap-2 mb-2 text-yellow-400">
@@ -80,7 +80,7 @@ export function HeroSection() {
                     </div>
                 </div>
 
-                <div className="absolute -top-6 -right-6 bg-primary text-black p-4 rounded-3xl shadow-xl animate-float-slow z-20">
+                <div className="absolute -top-6 -right-6 bg-primary text-primary-foreground p-4 rounded-3xl shadow-xl animate-float-slow z-20">
                     <Zap className="w-8 h-8 fill-current" />
                 </div>
             </div>
