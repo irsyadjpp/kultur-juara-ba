@@ -75,12 +75,12 @@ export default function TPFVerificationPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 shrink-0">
         <div>
             <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="rounded-full px-3 py-1 border-cyan-500 text-cyan-500 bg-cyan-500/10 backdrop-blur-md animate-pulse">
+                <Badge variant="outline" className="rounded-full px-3 py-1 border-sky-500 text-sky-500 bg-sky-500/10 backdrop-blur-md animate-pulse">
                     <ScanLine className="w-3 h-3 mr-2" /> SKILL ASSESSMENT
                 </Badge>
             </div>
             <h1 className="text-3xl md:text-4xl font-black font-headline uppercase tracking-tighter text-white">
-                Analisis Skill <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500">Atlet</span>
+                Analisis Skill <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-600">Atlet</span>
             </h1>
             <p className="text-zinc-400 mt-2 max-w-xl text-lg">
                 Audit skill, cek rekam jejak, dan tentukan level yang sesuai untuk program latihan.
@@ -103,7 +103,7 @@ export default function TPFVerificationPage() {
         
         <div className="px-1 mb-4">
             <TabsList className="bg-zinc-900 border border-zinc-800 p-1 rounded-full">
-                <TabsTrigger value="VERIFICATION" className="rounded-full px-6 data-[state=active]:bg-cyan-600 data-[state=active]:text-white">Analisis Video (Pra-Latihan)</TabsTrigger>
+                <TabsTrigger value="VERIFICATION" className="rounded-full px-6 data-[state=active]:bg-sky-600 data-[state=active]:text-white">Analisis Video (Pra-Latihan)</TabsTrigger>
                 <TabsTrigger value="CASES" className="rounded-full px-6 data-[state=active]:bg-zinc-800">Spot Check Lapangan</TabsTrigger>
             </TabsList>
         </div>
@@ -117,7 +117,7 @@ export default function TPFVerificationPage() {
                             <input 
                                 type="text" 
                                 placeholder="Cari nama atau ID atlet..." 
-                                className="w-full bg-zinc-900 text-white font-bold placeholder:text-zinc-600 pl-10 pr-4 h-12 rounded-xl border border-zinc-800 focus:outline-none focus:border-cyan-500 transition-colors"
+                                className="w-full bg-zinc-900 text-white font-bold placeholder:text-zinc-600 pl-10 pr-4 h-12 rounded-xl border border-zinc-800 focus:outline-none focus:border-sky-500 transition-colors"
                             />
                         </div>
                     </div>
@@ -130,7 +130,7 @@ export default function TPFVerificationPage() {
                                     onClick={() => setSelectedPlayer(player)}
                                     className={cn(
                                         "group relative p-4 rounded-[24px] border-2 transition-all cursor-pointer hover:bg-zinc-800",
-                                        selectedPlayer?.id === player.id ? "bg-zinc-800 border-cyan-500/50" : "bg-zinc-950 border-zinc-800 hover:border-zinc-700"
+                                        selectedPlayer?.id === player.id ? "bg-zinc-800 border-sky-500/50" : "bg-zinc-950 border-zinc-800 hover:border-zinc-700"
                                     )}
                                 >
                                     {player.riskScore >= 70 && (
@@ -145,7 +145,7 @@ export default function TPFVerificationPage() {
                                             <AvatarFallback className="bg-zinc-900 font-black text-zinc-500">{player.name.charAt(0)}</AvatarFallback>
                                         </Avatar>
                                         <div>
-                                            <h4 className="font-bold text-white text-base group-hover:text-cyan-400 transition-colors">{player.name}</h4>
+                                            <h4 className="font-bold text-white text-base group-hover:text-sky-400 transition-colors">{player.name}</h4>
                                             <p className="text-xs text-zinc-500 font-medium mb-2">{player.club}</p>
                                             <Badge variant="secondary" className="bg-zinc-900 text-zinc-300 border-zinc-700 text-[10px]">
                                                 Klaim: {player.registeredLevel}
@@ -156,11 +156,11 @@ export default function TPFVerificationPage() {
                                     <div className="mt-4 flex items-center gap-2">
                                         <div className="h-1.5 flex-1 bg-zinc-900 rounded-full overflow-hidden">
                                             <div 
-                                                className={cn("h-full rounded-full", player.riskScore >= 70 ? "bg-red-500" : "bg-cyan-500")} 
+                                                className={cn("h-full rounded-full", player.riskScore >= 70 ? "bg-red-500" : "bg-sky-500")} 
                                                 style={{ width: `${player.riskScore}%` }}
                                             ></div>
                                         </div>
-                                        <span className={cn("text-[10px] font-black", player.riskScore >= 70 ? "text-red-500" : "text-cyan-500")}>
+                                        <span className={cn("text-[10px] font-black", player.riskScore >= 70 ? "text-red-500" : "text-sky-500")}>
                                             {player.riskScore}% Mismatch Risk
                                         </span>
                                     </div>

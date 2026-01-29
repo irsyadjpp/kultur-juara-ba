@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState } from "react";
@@ -98,12 +97,12 @@ export default function DigitalMandatePage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
             <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="rounded-full px-3 py-1 border-cyan-500 text-cyan-500 bg-cyan-500/10 backdrop-blur-md animate-pulse">
+                <Badge variant="outline" className="rounded-full px-3 py-1 border-sky-500 text-sky-500 bg-sky-500/10 backdrop-blur-md animate-pulse">
                     <Fingerprint className="w-3 h-3 mr-2" /> OFFICIAL AUTHORIZATION
                 </Badge>
             </div>
             <h1 className="text-4xl md:text-5xl font-black font-headline uppercase tracking-tighter text-white">
-                E-Mandate <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">System</span>
+                E-Mandate <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600">System</span>
             </h1>
             <p className="text-zinc-400 mt-2 max-w-xl text-lg">
                 Penerbitan surat tugas & wewenang operasional secara digital.
@@ -112,7 +111,7 @@ export default function DigitalMandatePage() {
 
         <Button 
             onClick={() => setIsCreateOpen(true)}
-            className="h-14 rounded-full px-8 bg-cyan-600 hover:bg-cyan-700 text-white font-black text-lg shadow-[0_0_25px_rgba(8,145,178,0.4)] transition-transform active:scale-95"
+            className="h-14 rounded-full px-8 bg-sky-600 hover:bg-sky-700 text-white font-black text-lg shadow-[0_0_25px_rgba(14,165,233,0.4)] transition-transform active:scale-95"
         >
             <Plus className="mr-2 w-6 h-6"/> ISSUE MANDATE
         </Button>
@@ -121,9 +120,9 @@ export default function DigitalMandatePage() {
       {/* --- ACTIVE MANDATES GRID --- */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
          {ACTIVE_MANDATES.map((mandate) => (
-             <div key={mandate.id} className="group relative bg-zinc-900 border border-zinc-800 rounded-[32px] p-6 hover:border-cyan-500/50 transition-all hover:-translate-y-1 overflow-hidden">
+             <div key={mandate.id} className="group relative bg-zinc-900 border border-zinc-800 rounded-[32px] p-6 hover:border-sky-500/50 transition-all hover:-translate-y-1 overflow-hidden">
                 {/* Visual Accent */}
-                <div className="absolute top-0 left-0 w-1.5 h-full bg-cyan-600"></div>
+                <div className="absolute top-0 left-0 w-1.5 h-full bg-sky-600"></div>
                 
                 <div className="flex justify-between items-start mb-4 pl-4">
                     <div>
@@ -164,7 +163,7 @@ export default function DigitalMandatePage() {
                         </Button>
                         <Button 
                             onClick={() => setSelectedMandateQR(mandate)}
-                            className="h-10 rounded-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-4 text-xs shadow-lg"
+                            className="h-10 rounded-full bg-sky-600 hover:bg-sky-700 text-white font-bold px-4 text-xs shadow-lg"
                         >
                             <QrCode className="w-4 h-4 mr-2"/> SHOW QR
                         </Button>
@@ -224,12 +223,12 @@ export default function DigitalMandatePage() {
                         <div className="space-y-2">
                             <div className="flex justify-between items-center px-1">
                                 <label className="text-xs font-bold uppercase text-zinc-500">3. Pilih Personil</label>
-                                <span className="text-xs text-cyan-500 font-bold">{selectedStaff.length} Selected</span>
+                                <span className="text-xs text-sky-500 font-bold">{selectedStaff.length} Selected</span>
                             </div>
                             <ScrollArea className="h-48 rounded-2xl border border-zinc-800 bg-zinc-900 p-2">
                                 {STAFF_LIST.map((staff) => (
                                     <div key={staff.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-zinc-800 transition-colors cursor-pointer" onClick={() => handleToggleStaff(staff.name)}>
-                                        <Checkbox checked={selectedStaff.includes(staff.name)} className="data-[state=checked]:bg-cyan-600 data-[state=checked]:text-white border-zinc-600" />
+                                        <Checkbox checked={selectedStaff.includes(staff.name)} className="data-[state=checked]:bg-sky-600 data-[state=checked]:text-white border-zinc-600" />
                                         <div className="flex-1">
                                             <p className="text-sm font-bold text-white">{staff.name}</p>
                                             <p className="text-[10px] text-zinc-500 uppercase">{staff.role}</p>
@@ -245,7 +244,7 @@ export default function DigitalMandatePage() {
                 <div className="bg-zinc-900 p-8 flex flex-col h-full">
                     <div className="flex-1 space-y-6">
                         <div className="flex items-center gap-2 mb-4">
-                            <FileSignature className="w-5 h-5 text-cyan-500"/>
+                            <FileSignature className="w-5 h-5 text-sky-500"/>
                             <span className="text-xs font-bold uppercase tracking-widest text-zinc-400">Mandate Preview</span>
                         </div>
 
@@ -257,7 +256,7 @@ export default function DigitalMandatePage() {
                                         {activeRoleData.menimbang}
                                     </p>
                                     <div className="space-y-2">
-                                        <Badge variant="outline" className="border-cyan-500/30 text-cyan-500 bg-cyan-500/10 text-[10px]">
+                                        <Badge variant="outline" className="border-sky-500/30 text-sky-500 bg-sky-500/10 text-[10px]">
                                             JOB DESC: {activeRoleData.jobDescriptions.length} Items
                                         </Badge>
                                         <Badge variant="outline" className="border-orange-500/30 text-orange-500 bg-orange-500/10 text-[10px] ml-2">
@@ -269,7 +268,7 @@ export default function DigitalMandatePage() {
                                 <div className="p-4 rounded-2xl bg-zinc-950 border border-zinc-800">
                                     <p className="text-[10px] font-bold text-zinc-500 uppercase mb-2">Authorization</p>
                                     <div className="flex items-center gap-3">
-                                        <div className="h-10 w-10 rounded-full bg-cyan-900/50 flex items-center justify-center text-cyan-500">
+                                        <div className="h-10 w-10 rounded-full bg-sky-900/50 flex items-center justify-center text-sky-500">
                                             <Fingerprint className="w-6 h-6"/>
                                         </div>
                                         <div>
@@ -291,7 +290,7 @@ export default function DigitalMandatePage() {
                         <Button 
                             onClick={handlePublish}
                             disabled={!selectedRole || selectedStaff.length === 0}
-                            className="w-full h-16 rounded-2xl font-black text-lg bg-cyan-600 hover:bg-cyan-700 text-white shadow-xl shadow-cyan-900/20"
+                            className="w-full h-16 rounded-2xl font-black text-lg bg-sky-600 hover:bg-sky-700 text-white shadow-xl shadow-sky-900/20"
                         >
                             AUTHORIZE & PUBLISH <CheckCircle2 className="ml-2 w-5 h-5"/>
                         </Button>

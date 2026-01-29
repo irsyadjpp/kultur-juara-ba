@@ -103,7 +103,7 @@ export default function UnifiedLoginPage() {
 
       <div className="w-full lg:w-[40%] flex items-center justify-center p-8 relative">
          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[100px] pointer-events-none" />
-         <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600/10 blur-[100px] pointer-events-none" />
+         <div className="absolute bottom-0 left-0 w-64 h-64 bg-sky-600/10 blur-[100px] pointer-events-none" />
 
          <div className="w-full max-w-md space-y-8 relative z-10">
             <div className="text-center lg:text-left">

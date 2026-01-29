@@ -81,12 +81,12 @@ export default function VerificationPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 shrink-0">
         <div>
             <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="rounded-full px-3 py-1 border-blue-500 text-blue-500 bg-blue-500/10 backdrop-blur-md animate-pulse">
+                <Badge variant="outline" className="rounded-full px-3 py-1 border-sky-500 text-sky-500 bg-sky-500/10 backdrop-blur-md animate-pulse">
                     <ShieldCheck className="w-3 h-3 mr-2" /> DATA VALIDATION
                 </Badge>
             </div>
             <h1 className="text-3xl md:text-4xl font-black font-headline uppercase tracking-tighter text-white">
-                Verifikasi Dokumen <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-600">Atlet</span>
+                Verifikasi Dokumen <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-600">Atlet</span>
             </h1>
             <p className="text-zinc-400 mt-2 max-w-xl text-lg">
                 Validasi dokumen identitas (KTP/Akta) untuk memastikan kesesuaian kategori umur.
@@ -119,7 +119,7 @@ export default function VerificationPage() {
             <div className="p-4 space-y-4">
                 <div className="relative">
                     <Search className="absolute left-4 top-3.5 w-4 h-4 text-zinc-500" />
-                    <Input placeholder="Search name or ID..." className="h-12 bg-zinc-950 border-zinc-800 rounded-xl pl-10 text-white focus:ring-blue-500" />
+                    <Input placeholder="Search name or ID..." className="h-12 bg-zinc-950 border-zinc-800 rounded-xl pl-10 text-white focus:ring-sky-500" />
                 </div>
                 <Tabs defaultValue="PENDING" className="w-full" onValueChange={setActiveTab}>
                     <TabsList className="bg-zinc-950 p-1 rounded-xl w-full grid grid-cols-3">
@@ -139,7 +139,7 @@ export default function VerificationPage() {
                             className={cn(
                                 "group p-4 rounded-[20px] border cursor-pointer transition-all hover:bg-zinc-800",
                                 selectedApplicant?.id === applicant.id 
-                                    ? "bg-zinc-800 border-blue-500/50 shadow-lg" 
+                                    ? "bg-zinc-800 border-sky-500/50 shadow-lg" 
                                     : "bg-zinc-950 border-zinc-800 hover:border-zinc-700"
                             )}
                         >
@@ -157,7 +157,7 @@ export default function VerificationPage() {
                                     </AvatarFallback>
                                 </Avatar>
                                 <div>
-                                    <h4 className="font-bold text-white text-sm line-clamp-1 group-hover:text-blue-400 transition-colors">
+                                    <h4 className="font-bold text-white text-sm line-clamp-1 group-hover:text-sky-400 transition-colors">
                                         {applicant.name}
                                     </h4>
                                     <p className="text-xs text-zinc-500 truncate">{applicant.category}</p>
@@ -205,7 +205,7 @@ export default function VerificationPage() {
                             
                             <div className="space-y-3">
                                 <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-2">
-                                    <FileText className="w-4 h-4 text-blue-500"/> KTP / Identitas
+                                    <FileText className="w-4 h-4 text-sky-500"/> KTP / Identitas
                                 </h3>
                                 <div 
                                     className="aspect-video bg-black rounded-2xl border border-zinc-800 relative group cursor-zoom-in overflow-hidden"
@@ -222,7 +222,7 @@ export default function VerificationPage() {
 
                             <div className="space-y-3">
                                 <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-2">
-                                    <FileText className="w-4 h-4 text-purple-500"/> Akta Kelahiran
+                                    <FileText className="w-4 h-4 text-sky-500"/> Akta Kelahiran
                                 </h3>
                                 <div 
                                     className="aspect-video bg-black rounded-2xl border border-zinc-800 relative group cursor-zoom-in overflow-hidden"
@@ -248,7 +248,7 @@ export default function VerificationPage() {
                             >
                                 <XCircle className="w-5 h-5 mr-2"/> REJECT / REVISION
                             </Button>
-                            <Button className="h-14 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-900/20 text-lg">
+                            <Button className="h-14 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-bold shadow-lg shadow-sky-900/20 text-lg">
                                 <UserCheck className="w-5 h-5 mr-2"/> VERIFY ATLET
                             </Button>
                         </div>

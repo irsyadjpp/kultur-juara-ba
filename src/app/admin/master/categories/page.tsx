@@ -87,7 +87,7 @@ export default function MasterCategoryPage() {
     switch(g) {
         case 'MALE': return "text-blue-400 bg-blue-500/10 border-blue-500/20";
         case 'FEMALE': return "text-pink-400 bg-pink-500/10 border-pink-500/20";
-        default: return "text-purple-400 bg-purple-500/10 border-purple-500/20";
+        default: return "text-sky-400 bg-sky-500/10 border-sky-500/20";
     }
   };
 
@@ -106,12 +106,12 @@ export default function MasterCategoryPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 shrink-0">
         <div>
             <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="rounded-full px-3 py-1 border-cyan-500 text-cyan-500 bg-cyan-500/10 backdrop-blur-md">
+                <Badge variant="outline" className="rounded-full px-3 py-1 border-sky-500 text-sky-500 bg-sky-500/10 backdrop-blur-md">
                     <Trophy className="w-3 h-3 mr-2" /> TOURNAMENT CONFIG
                 </Badge>
             </div>
             <h1 className="text-3xl md:text-4xl font-black font-headline uppercase tracking-tighter text-white">
-                Competition <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-600">Divisions</span>
+                Competition <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-600">Divisions</span>
             </h1>
             <p className="text-zinc-400 mt-2 max-w-xl text-lg">
                 Atur kelas pertandingan, kuota peserta, dan biaya pendaftaran.
@@ -120,7 +120,7 @@ export default function MasterCategoryPage() {
 
         <Button 
             onClick={() => setIsFormOpen(true)}
-            className="h-14 rounded-full px-8 bg-cyan-600 hover:bg-cyan-700 text-white font-black text-lg shadow-[0_0_20px_rgba(8,145,178,0.4)] transition-transform active:scale-95"
+            className="h-14 rounded-full px-8 bg-sky-600 hover:bg-sky-700 text-white font-black text-lg shadow-[0_0_20px_rgba(14,165,233,0.4)] transition-transform active:scale-95"
         >
             <Plus className="mr-2 w-5 h-5"/> NEW CLASS
         </Button>
@@ -150,7 +150,7 @@ export default function MasterCategoryPage() {
             <input 
                 type="text" 
                 placeholder="Search category..." 
-                className="w-full bg-zinc-950 text-white font-bold placeholder:text-zinc-600 pl-12 pr-4 h-12 rounded-full border border-zinc-800 focus:outline-none focus:border-cyan-500 transition-colors"
+                className="w-full bg-zinc-950 text-white font-bold placeholder:text-zinc-600 pl-12 pr-4 h-12 rounded-full border border-zinc-800 focus:outline-none focus:border-sky-500 transition-colors"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -167,7 +167,7 @@ export default function MasterCategoryPage() {
                     <div 
                         key={cat.id}
                         onClick={() => setSelectedCat(cat)}
-                        className="group relative bg-zinc-900 border border-zinc-800 rounded-[32px] p-6 cursor-pointer hover:border-cyan-500/50 transition-all hover:-translate-y-1 hover:shadow-2xl overflow-hidden"
+                        className="group relative bg-zinc-900 border border-zinc-800 rounded-[32px] p-6 cursor-pointer hover:border-sky-500/50 transition-all hover:-translate-y-1 hover:shadow-2xl overflow-hidden"
                     >
                         {/* Header Code */}
                         <div className="flex justify-between items-start mb-6">
@@ -181,7 +181,7 @@ export default function MasterCategoryPage() {
 
                         {/* Title & Info */}
                         <div className="mb-6">
-                            <h3 className="text-xl font-bold text-white mb-1 group-hover:text-cyan-400 transition-colors">{cat.name}</h3>
+                            <h3 className="text-xl font-bold text-white mb-1 group-hover:text-sky-400 transition-colors">{cat.name}</h3>
                             <p className="text-sm text-zinc-500 font-medium">{cat.age}</p>
                         </div>
 
@@ -193,7 +193,7 @@ export default function MasterCategoryPage() {
                                     {cat.quota.current} <span className="text-zinc-600">/ {cat.quota.max}</span>
                                 </span>
                             </div>
-                            <Progress value={fillPercent} className="h-2 bg-zinc-800" indicatorClassName={cn(fillPercent >= 100 ? "bg-red-500" : "bg-cyan-500")} />
+                            <Progress value={fillPercent} className="h-2 bg-zinc-800" indicatorClassName={cn(fillPercent >= 100 ? "bg-red-500" : "bg-sky-500")} />
                         </div>
 
                         {/* Price Tag */}
@@ -219,7 +219,7 @@ export default function MasterCategoryPage() {
             {/* Add New Card Placeholder */}
             <button 
                 onClick={() => setIsFormOpen(true)}
-                className="border-2 border-dashed border-zinc-800 rounded-[32px] flex flex-col items-center justify-center gap-4 text-zinc-600 hover:text-cyan-500 hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all min-h-[250px] group"
+                className="border-2 border-dashed border-zinc-800 rounded-[32px] flex flex-col items-center justify-center gap-4 text-zinc-600 hover:text-sky-500 hover:border-sky-500/50 hover:bg-sky-500/5 transition-all min-h-[250px] group"
             >
                 <div className="w-16 h-16 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center group-hover:scale-110 transition-transform">
                     <Plus className="w-8 h-8"/>
@@ -236,13 +236,13 @@ export default function MasterCategoryPage() {
                 <div className="flex flex-col h-full">
                     
                     {/* Header */}
-                    <div className="p-8 border-b border-zinc-800 bg-cyan-950/20">
+                    <div className="p-8 border-b border-zinc-800 bg-sky-950/20">
                         <div className="flex items-center gap-4 mb-4">
                             <div className={cn("h-16 w-16 rounded-2xl flex items-center justify-center text-2xl font-black border-2", getGenderColor(selectedCat.gender))}>
                                 {selectedCat.code.split('-')[0]}
                             </div>
                             <div>
-                                <Badge variant="outline" className="border-cyan-500/50 text-cyan-500 mb-1">{selectedCat.id}</Badge>
+                                <Badge variant="outline" className="border-sky-500/50 text-sky-500 mb-1">{selectedCat.id}</Badge>
                                 <h2 className="text-2xl font-black text-white uppercase leading-none">{selectedCat.name}</h2>
                             </div>
                         </div>
@@ -258,7 +258,7 @@ export default function MasterCategoryPage() {
                         <div className="space-y-4">
                             <div className="flex justify-between items-center">
                                 <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-2">
-                                    <Users className="w-4 h-4 text-cyan-500"/> Capacity Control
+                                    <Users className="w-4 h-4 text-sky-500"/> Capacity Control
                                 </h3>
                                 <Switch checked={selectedCat.status === 'OPEN'} />
                             </div>
@@ -296,7 +296,7 @@ export default function MasterCategoryPage() {
                         <Button variant="outline" className="h-14 rounded-2xl border-red-900/50 text-red-500 hover:bg-red-950 font-bold hover:text-white">
                             <Trash2 className="w-5 h-5 mr-2"/> DELETE
                         </Button>
-                        <Button className="h-14 rounded-2xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold shadow-lg shadow-cyan-900/20">
+                        <Button className="h-14 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-bold shadow-lg shadow-sky-900/20">
                             SAVE CHANGES
                         </Button>
                     </div>
@@ -308,9 +308,9 @@ export default function MasterCategoryPage() {
       {/* --- ADD CATEGORY MODAL --- */}
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent className="bg-zinc-950 border-zinc-800 text-white rounded-[40px] max-w-lg p-0 overflow-hidden shadow-2xl">
-            <div className="p-8 border-b border-zinc-800 bg-cyan-950/20">
+            <div className="p-8 border-b border-zinc-800 bg-sky-950/20">
                 <DialogHeader>
-                    <DialogTitle className="text-2xl font-black font-headline uppercase flex items-center gap-2 text-cyan-500">
+                    <DialogTitle className="text-2xl font-black font-headline uppercase flex items-center gap-2 text-sky-500">
                         <LayoutGrid className="w-6 h-6"/> Create Division
                     </DialogTitle>
                     <DialogDescription>Tambahkan kategori pertandingan baru.</DialogDescription>
@@ -353,7 +353,7 @@ export default function MasterCategoryPage() {
                     </div>
                 </div>
 
-                <Button className="w-full h-16 rounded-full font-black text-lg bg-cyan-600 hover:bg-cyan-700 text-white mt-4 shadow-xl shadow-cyan-900/20">
+                <Button className="w-full h-16 rounded-full font-black text-lg bg-sky-600 hover:bg-sky-700 text-white mt-4 shadow-xl shadow-sky-900/20">
                     PUBLISH DIVISION
                 </Button>
             </div>
@@ -363,5 +363,3 @@ export default function MasterCategoryPage() {
     </div>
   );
 }
-
-    

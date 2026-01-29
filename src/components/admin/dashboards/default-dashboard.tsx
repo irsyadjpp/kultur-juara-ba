@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 
 export default function DefaultDashboard() {
   const stats = [
-    { title: "Total Pengunjung", value: "2,450", icon: Users, desc: "+120 sejak jam terakhir", color: "text-blue-400" },
+    { title: "Total Pengunjung", value: "2,450", icon: Users, desc: "+120 sejak jam terakhir", color: "text-sky-400" },
     { title: "Total Vote Masuk", value: "1,890", icon: TrendingUp, desc: "78% participation rate", color: "text-green-400" },
     { title: "Total Scan Booth", value: "5,300", icon: QrCode, desc: "Avg 2.5 scans/user", color: "text-purple-400" },
   ];
@@ -83,7 +83,7 @@ export default function DefaultDashboard() {
                             </TableCell>
                             <TableCell className="text-right">
                                 {act.status === 'PAID' && <Badge className="bg-green-500/10 text-green-400 border-green-500/20">{act.type}</Badge>}
-                                {act.status === 'APPROVED' && <Badge className="bg-blue-500/10 text-blue-400 border-blue-500/20">{act.type}</Badge>}
+                                {act.status === 'APPROVED' && <Badge className="bg-sky-500/10 text-sky-400 border-sky-500/20">{act.type}</Badge>}
                                 {act.status === 'LIVE' && <Badge className="bg-yellow-500/10 text-yellow-400 border-yellow-500/20">{act.type}</Badge>}
                                 {act.status === 'REJECTED' && <Badge className="bg-red-500/10 text-red-400 border-red-500/20">{act.type}</Badge>}
                             </TableCell>

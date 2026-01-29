@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { 
@@ -69,7 +68,7 @@ export function DirectorDashboard() {
                     <div className="p-4 bg-black/40 rounded-2xl border border-zinc-800">
                         <p className="text-[10px] text-zinc-500 uppercase font-bold">Registrasi</p>
                         <p className="text-xl font-bold text-white mt-1">92%</p>
-                        <Progress value={92} className="h-1.5 mt-2 bg-zinc-800" indicatorClassName="bg-blue-500"/>
+                        <Progress value={92} className="h-1.5 mt-2 bg-zinc-800" indicatorClassName="bg-sky-500"/>
                     </div>
                     <div className="p-4 bg-black/40 rounded-2xl border border-zinc-800">
                         <p className="text-[10px] text-zinc-500 uppercase font-bold">Tenant/Bazaar</p>
@@ -105,10 +104,10 @@ export function DirectorDashboard() {
         <Card className="bg-zinc-900 border-zinc-800 rounded-[32px]">
             <CardContent className="p-8 flex flex-col h-full justify-between">
                 <div className="flex justify-between items-start">
-                    <div className="p-3 bg-blue-500/10 rounded-2xl text-blue-500">
+                    <div className="p-3 bg-sky-500/10 rounded-2xl text-sky-500">
                         <Users className="w-8 h-8" />
                     </div>
-                    <Badge variant="outline" className="border-blue-500/30 text-blue-400 font-bold">+12% YoY</Badge>
+                    <Badge variant="outline" className="border-sky-500/30 text-sky-400 font-bold">+12% YoY</Badge>
                 </div>
                 <div>
                     <h3 className="text-4xl font-black text-white mb-1">1,240</h3>
@@ -179,7 +178,7 @@ export function DirectorDashboard() {
                     <StatusWidget label="Court Usage" value="8/8" sub="Full Capacity" color="text-white" icon={Target} />
                     <StatusWidget label="Next Match Queue" value="12" sub="On Schedule" color="text-green-500" icon={Users} />
                     <StatusWidget label="Medical Incidents" value="2" sub="Minor Injuries" color="text-yellow-500" icon={Activity} />
-                    <StatusWidget label="Pending Protests" value="0" sub="Clean Sheet" color="text-blue-500" icon={CheckCircle2} />
+                    <StatusWidget label="Pending Protests" value="0" sub="Clean Sheet" color="text-sky-500" icon={CheckCircle2} />
                 </div>
             </CardContent>
         </Card>

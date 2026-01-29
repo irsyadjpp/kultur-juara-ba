@@ -85,7 +85,7 @@ export default function AssessmentPage() {
             else tier = "Tier 1 (Prospect)";
         } else if (finalScore >= 37 && finalScore <= 62) {
             level = "INTERMEDIATE";
-            color = "bg-blue-600 text-white border-blue-800";
+            color = "bg-sky-600 text-white border-sky-800";
             if (finalScore <= 44) tier = "Tier 3 (Grinder)";
             else if (finalScore <= 54) tier = "Tier 2 (Striker)";
             else tier = "Tier 1 (Carry)";

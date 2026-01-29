@@ -82,12 +82,12 @@ export default function AthleteRosterPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
             <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="rounded-full px-3 py-1 border-indigo-500 text-indigo-500 bg-indigo-500/10 backdrop-blur-md">
+                <Badge variant="outline" className="rounded-full px-3 py-1 border-sky-500 text-sky-500 bg-sky-500/10 backdrop-blur-md">
                     <Users className="w-3 h-3 mr-2" /> DATABASE ATLET
                 </Badge>
             </div>
             <h1 className="text-4xl md:text-5xl font-black font-headline uppercase tracking-tighter text-white">
-                Roster <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-600">Atlet</span>
+                Roster <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-600">Atlet</span>
             </h1>
             <p className="text-zinc-400 mt-2 max-w-xl text-lg">
                 Lihat dan kelola semua atlet yang terdaftar di Kultur Juara Academy.
@@ -96,7 +96,7 @@ export default function AthleteRosterPage() {
 
         <Button 
             asChild
-            className="h-14 rounded-full px-8 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-lg shadow-[0_0_20px_rgba(79,70,229,0.4)] transition-transform active:scale-95"
+            className="h-14 rounded-full px-8 bg-sky-600 hover:bg-sky-700 text-white font-black text-lg shadow-[0_0_20px_rgba(14,165,233,0.4)] transition-transform active:scale-95"
         >
             <Link href="/admin/athletes/register">
               <UserPlus className="mr-2 w-5 h-5"/> DAFTARKAN ATLET BARU
@@ -107,7 +107,7 @@ export default function AthleteRosterPage() {
       {/* --- STATS CARDS --- */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
          <Card className="bg-zinc-900 border-zinc-800 rounded-[28px] p-1 overflow-hidden relative group">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/10 rounded-full blur-[40px] group-hover:bg-indigo-500/20 transition-all"></div>
+            <div className="absolute top-0 right-0 w-24 h-24 bg-sky-500/10 rounded-full blur-[40px] group-hover:bg-sky-500/20 transition-all"></div>
             <CardContent className="p-5 flex items-center gap-4 relative z-10">
                 <div className="h-12 w-12 rounded-2xl bg-zinc-800 flex items-center justify-center text-zinc-400">
                     <Users className="w-6 h-6"/>
@@ -151,7 +151,7 @@ export default function AthleteRosterPage() {
                 <Search className="absolute left-4 top-3.5 w-4 h-4 text-zinc-500" />
                 <Input 
                     placeholder="Cari nama atlet..." 
-                    className="h-12 bg-zinc-950 border-zinc-800 rounded-full pl-10 text-white focus:ring-indigo-500"
+                    className="h-12 bg-zinc-950 border-zinc-800 rounded-full pl-10 text-white focus:ring-sky-500"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -183,7 +183,7 @@ export default function AthleteRosterPage() {
                   </TableCell>
                   <TableCell className="font-mono text-xs text-zinc-400">{athlete.id}</TableCell>
                   <TableCell>
-                    <Badge variant="outline" className="border-indigo-500/30 text-indigo-400 bg-indigo-500/10">
+                    <Badge variant="outline" className="border-sky-500/30 text-sky-400 bg-sky-500/10">
                       {athlete.level}
                     </Badge>
                   </TableCell>

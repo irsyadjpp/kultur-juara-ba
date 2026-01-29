@@ -13,7 +13,7 @@ export default function AboutPage() {
       icon: Dumbbell,
       title: "Pengembangan Fisik",
       desc: "Program latihan fisik terstruktur untuk membangun stamina, kekuatan, dan agilitas.",
-      className: "lg:col-span-2 bg-blue-950/20 border-blue-500/30",
+      className: "lg:col-span-2 bg-sky-950/20 border-sky-500/30",
     },
     {
       icon: BrainCircuit,

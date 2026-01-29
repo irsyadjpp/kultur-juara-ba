@@ -54,7 +54,7 @@ const CONSUMABLES = [
     burnRate: "Critical", 
     status: "CRITICAL",
     icon: PackageOpen,
-    color: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20"
+    color: "text-sky-400 bg-sky-500/10 border-sky-500/20"
   },
   { 
     id: "ITEM-004", 
@@ -106,12 +106,12 @@ export default function ConsumablesPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 shrink-0">
         <div>
             <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="rounded-full px-3 py-1 border-cyan-500 text-cyan-500 bg-cyan-500/10 backdrop-blur-md">
+                <Badge variant="outline" className="rounded-full px-3 py-1 border-sky-500 text-sky-500 bg-sky-500/10 backdrop-blur-md">
                     <PackageOpen className="w-3 h-3 mr-2" /> SUPPLY MONITOR
                 </Badge>
             </div>
             <h1 className="text-3xl md:text-4xl font-black font-headline uppercase tracking-tighter text-white">
-                Consumables <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">Tracker</span>
+                Consumables <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600">Tracker</span>
             </h1>
             <p className="text-zinc-400 mt-2 max-w-xl text-lg">
                 Pantau stok barang habis pakai, air, dan kebutuhan harian.
@@ -143,7 +143,7 @@ export default function ConsumablesPage() {
                         className={cn(
                             "px-6 h-12 rounded-full text-sm font-black transition-all whitespace-nowrap border-2",
                             activeTab === cat 
-                                ? "bg-cyan-600 border-cyan-500 text-white shadow-lg" 
+                                ? "bg-sky-600 border-sky-500 text-white shadow-lg" 
                                 : "bg-zinc-950 border-zinc-800 text-zinc-500 hover:text-white hover:border-zinc-700"
                         )}
                     >
@@ -154,7 +154,7 @@ export default function ConsumablesPage() {
 
             <div className="relative w-full md:w-72">
                 <Search className="absolute left-4 top-3.5 w-4 h-4 text-zinc-500" />
-                <Input placeholder="Search supplies..." className="h-12 bg-zinc-950 border-zinc-800 rounded-full pl-10 text-white focus:ring-cyan-500" />
+                <Input placeholder="Search supplies..." className="h-12 bg-zinc-950 border-zinc-800 rounded-full pl-10 text-white focus:ring-sky-500" />
             </div>
         </div>
 
@@ -166,7 +166,7 @@ export default function ConsumablesPage() {
                     const Icon = item.icon;
 
                     return (
-                        <Card key={item.id} className="bg-zinc-900 border-zinc-800 rounded-[32px] overflow-hidden group hover:border-cyan-500/30 transition-all">
+                        <Card key={item.id} className="bg-zinc-900 border-zinc-800 rounded-[32px] overflow-hidden group hover:border-sky-500/30 transition-all">
                             <CardContent className="p-6">
                                 <div className="flex justify-between items-start mb-6">
                                     <div className="flex items-center gap-4">
@@ -207,7 +207,7 @@ export default function ConsumablesPage() {
                                         <Minus className="w-4 h-4 mr-2"/> TAKE
                                     </Button>
                                     <Button 
-                                        className="h-12 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold shadow-lg shadow-cyan-900/20"
+                                        className="h-12 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold shadow-lg shadow-sky-900/20"
                                         onClick={() => { setSelectedItem(item); setActionType('REFILL'); }}
                                     >
                                         <Plus className="w-4 h-4 mr-2"/> REFILL
@@ -219,7 +219,7 @@ export default function ConsumablesPage() {
                 })}
                 
                 {/* Add New Item Placeholder */}
-                <button className="border-2 border-dashed border-zinc-800 rounded-[32px] flex flex-col items-center justify-center gap-4 text-zinc-600 hover:text-cyan-500 hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all min-h-[220px]">
+                <button className="border-2 border-dashed border-zinc-800 rounded-[32px] flex flex-col items-center justify-center gap-4 text-zinc-600 hover:text-sky-500 hover:border-sky-500/50 hover:bg-sky-500/5 transition-all min-h-[220px]">
                     <Plus className="w-12 h-12"/>
                     <span className="font-black uppercase tracking-widest">Register New Item</span>
                 </button>
@@ -233,9 +233,9 @@ export default function ConsumablesPage() {
         <DialogContent className="bg-zinc-950 border-zinc-800 text-white rounded-[40px] max-w-sm p-0 overflow-hidden shadow-2xl">
             {selectedItem && (
                 <>
-                    <div className={cn("p-8 border-b border-zinc-800", actionType === 'REFILL' ? "bg-cyan-950/30" : "bg-orange-950/30")}>
+                    <div className={cn("p-8 border-b border-zinc-800", actionType === 'REFILL' ? "bg-sky-950/30" : "bg-orange-950/30")}>
                         <DialogHeader>
-                            <DialogTitle className={cn("text-2xl font-black font-headline uppercase flex items-center gap-2", actionType === 'REFILL' ? "text-cyan-500" : "text-orange-500")}>
+                            <DialogTitle className={cn("text-2xl font-black font-headline uppercase flex items-center gap-2", actionType === 'REFILL' ? "text-sky-500" : "text-orange-500")}>
                                 {actionType === 'REFILL' ? <RefreshCcw className="w-6 h-6"/> : <PackageOpen className="w-6 h-6"/>}
                                 {actionType === 'REFILL' ? "Restock Supply" : "Dispense Item"}
                             </DialogTitle>
@@ -295,7 +295,7 @@ export default function ConsumablesPage() {
                             className={cn(
                                 "w-full h-16 rounded-full font-black text-lg text-white mt-2 shadow-xl",
                                 actionType === 'REFILL' 
-                                    ? "bg-cyan-600 hover:bg-cyan-700 shadow-cyan-900/20" 
+                                    ? "bg-sky-600 hover:bg-sky-700 shadow-sky-900/20" 
                                     : "bg-orange-600 hover:bg-orange-700 shadow-orange-900/20"
                             )}
                         >

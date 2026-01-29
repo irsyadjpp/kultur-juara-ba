@@ -91,12 +91,12 @@ export default function GateCheckInPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 shrink-0">
         <div>
             <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="rounded-full px-3 py-1 border-violet-500 text-violet-500 bg-violet-500/10 backdrop-blur-md animate-pulse">
+                <Badge variant="outline" className="rounded-full px-3 py-1 border-sky-500 text-sky-500 bg-sky-500/10 backdrop-blur-md animate-pulse">
                     <DoorOpen className="w-3 h-3 mr-2" /> GATE 1 ACTIVE
                 </Badge>
             </div>
             <h1 className="text-3xl md:text-4xl font-black font-headline uppercase tracking-tighter text-white">
-                Access <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-600">Control</span>
+                Access <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-600">Control</span>
             </h1>
             <p className="text-zinc-400 mt-2 max-w-xl text-lg">
                 Validasi tiket dan kontrol akses masuk venue secara real-time.
@@ -113,7 +113,7 @@ export default function GateCheckInPage() {
                 </div>
             </div>
             <div className="h-12 w-2 bg-zinc-800 rounded-full overflow-hidden flex flex-col-reverse">
-                <div className="w-full bg-violet-500" style={{ height: '50%' }}></div>
+                <div className="w-full bg-sky-500" style={{ height: '50%' }}></div>
             </div>
         </div>
       </div>
@@ -132,18 +132,18 @@ export default function GateCheckInPage() {
                 {/* Scan Frame */}
                 <div className={cn(
                     "w-64 h-64 border-4 rounded-[32px] flex items-center justify-center relative transition-all duration-300",
-                    isScanning ? "border-violet-500 shadow-[0_0_50px_rgba(139,92,246,0.5)]" : "border-zinc-700 group-hover:border-violet-500/50"
+                    isScanning ? "border-sky-500 shadow-[0_0_50px_rgba(14,165,233,0.4)]" : "border-zinc-700 group-hover:border-sky-500/50"
                 )}>
                     {/* Scanning Laser */}
                     {isScanning && (
-                        <div className="absolute top-0 left-0 right-0 h-1 bg-violet-400 shadow-[0_0_20px_#a78bfa] animate-scan"></div>
+                        <div className="absolute top-0 left-0 right-0 h-1 bg-sky-400 shadow-[0_0_20px_#38bdf8] animate-scan"></div>
                     )}
                     
                     <div className="text-center z-10">
                         {isScanning ? (
                             <div className="flex flex-col items-center gap-2">
-                                <ScanLine className="w-16 h-16 text-violet-400 animate-pulse"/>
-                                <span className="text-violet-400 font-bold text-sm tracking-widest animate-pulse">VERIFYING...</span>
+                                <ScanLine className="w-16 h-16 text-sky-400 animate-pulse"/>
+                                <span className="text-sky-400 font-bold text-sm tracking-widest animate-pulse">VERIFYING...</span>
                             </div>
                         ) : (
                             <div className="flex flex-col items-center gap-4 text-zinc-500 group-hover:text-white transition-colors">
@@ -170,7 +170,7 @@ export default function GateCheckInPage() {
                     <Search className="absolute left-4 top-4 w-5 h-5 text-zinc-500" />
                     <Input 
                         placeholder="Input Manual ID / Kode..." 
-                        className="h-14 bg-zinc-950 border-zinc-800 rounded-2xl pl-12 text-white font-mono font-bold focus:ring-violet-500"
+                        className="h-14 bg-zinc-950 border-zinc-800 rounded-2xl pl-12 text-white font-mono font-bold focus:ring-sky-500"
                         value={manualCode}
                         onChange={(e) => setManualCode(e.target.value)}
                     />
@@ -198,8 +198,8 @@ export default function GateCheckInPage() {
                 </Card>
                 <Card className="bg-zinc-900 border-zinc-800 rounded-[24px] p-5 flex flex-col justify-between">
                     <div className="flex justify-between items-start">
-                        <div className="p-2 bg-violet-500/10 rounded-xl text-violet-500"><UserCheck className="w-5 h-5"/></div>
-                        <Badge variant="outline" className="border-violet-900 text-violet-500">Athletes</Badge>
+                        <div className="p-2 bg-sky-500/10 rounded-xl text-sky-500"><UserCheck className="w-5 h-5"/></div>
+                        <Badge variant="outline" className="border-sky-900 text-sky-500">Athletes</Badge>
                     </div>
                     <div className="mt-2">
                         <span className="text-3xl font-black text-white">{GATE_STATS.athleteCount}</span>
@@ -222,15 +222,15 @@ export default function GateCheckInPage() {
             <Card className="bg-zinc-900 border-zinc-800 rounded-[32px] flex-1 flex flex-col overflow-hidden">
                 <div className="p-6 border-b border-zinc-800 bg-zinc-950/50">
                     <h3 className="text-sm font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2">
-                        <History className="w-4 h-4 text-violet-500"/> Recent Entry Log
+                        <History className="w-4 h-4 text-sky-500"/> Recent Entry Log
                     </h3>
                 </div>
                 <ScrollArea className="flex-1 p-4">
                     <div className="space-y-3">
                         {RECENT_ENTRIES.map((entry, i) => (
-                            <div key={i} className="flex items-center justify-between p-4 bg-zinc-950 border border-zinc-800 rounded-[24px] group hover:border-violet-500/30 transition-colors">
+                            <div key={i} className="flex items-center justify-between p-4 bg-zinc-950 border border-zinc-800 rounded-[24px] group hover:border-sky-500/30 transition-colors">
                                 <div className="flex items-center gap-4">
-                                    <Avatar className="h-12 w-12 border-2 border-zinc-800 group-hover:border-violet-500 transition-colors">
+                                    <Avatar className="h-12 w-12 border-2 border-zinc-800 group-hover:border-sky-500 transition-colors">
                                         <AvatarImage src={entry.avatar} />
                                         <AvatarFallback className="bg-zinc-900 font-bold text-zinc-500">{entry.name.charAt(0)}</AvatarFallback>
                                     </Avatar>

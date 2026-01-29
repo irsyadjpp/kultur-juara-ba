@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -44,7 +45,7 @@ export default function MatchControlDashboard() {
             <Button variant="destructive" className="animate-pulse">
                 <AlertTriangle className="w-4 h-4 mr-2" /> Darurat Medis
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button className="bg-sky-600 hover:bg-sky-700">
                 <Mic className="w-4 h-4 mr-2" /> Panggil Suara (Announcer)
             </Button>
         </div>
@@ -55,7 +56,7 @@ export default function MatchControlDashboard() {
           <Card key={court.id} className={`${
               court.status === 'LIVE' ? 'border-green-500' : 
               court.status === 'WARMUP' ? 'border-yellow-500' :
-              court.status === 'INTERVAL' ? 'border-blue-500' :
+              court.status === 'INTERVAL' ? 'border-sky-500' :
               'border-gray-300 bg-gray-50 dark:bg-secondary/20'
           }`}>
             <CardContent className="p-4 flex flex-col h-full justify-between">

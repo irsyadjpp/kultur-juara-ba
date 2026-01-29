@@ -54,12 +54,12 @@ export default function ScheduleEditorPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 shrink-0">
         <div>
             <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="rounded-full px-3 py-1 border-cyan-500 text-cyan-500 bg-cyan-500/10 backdrop-blur-md">
+                <Badge variant="outline" className="rounded-full px-3 py-1 border-sky-500 text-sky-500 bg-sky-500/10 backdrop-blur-md">
                     <CalendarDays className="w-3 h-3 mr-2" /> FIXTURE ARCHITECT
                 </Badge>
             </div>
             <h1 className="text-3xl md:text-4xl font-black font-headline uppercase tracking-tighter text-white">
-                Schedule <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">Builder</span>
+                Schedule <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600">Builder</span>
             </h1>
             <p className="text-zinc-400 mt-2 max-w-xl text-lg">
                 Drag & drop jadwal, atur alur pertandingan, dan publikasikan fixture.
@@ -70,7 +70,7 @@ export default function ScheduleEditorPage() {
             <Button variant="outline" className="h-12 rounded-full border-zinc-700 text-zinc-300 hover:text-white hover:bg-zinc-800">
                 <RefreshCw className="mr-2 w-4 h-4"/> Auto-Generate
             </Button>
-            <Button className="h-12 rounded-full px-6 bg-cyan-600 hover:bg-cyan-700 text-white font-bold shadow-[0_0_20px_rgba(8,145,178,0.4)]">
+            <Button className="h-12 rounded-full px-6 bg-sky-600 hover:bg-sky-700 text-white font-bold shadow-[0_0_20px_rgba(8,145,178,0.4)]">
                 <Save className="mr-2 w-4 h-4"/> PUBLISH FIXTURE
             </Button>
         </div>
@@ -103,7 +103,7 @@ export default function ScheduleEditorPage() {
              <Button 
                 onClick={() => setIsPoolOpen(!isPoolOpen)}
                 variant="secondary" 
-                className={cn("rounded-full h-10 font-bold transition-colors", isPoolOpen && "bg-cyan-500/20 text-cyan-500")}
+                className={cn("rounded-full h-10 font-bold transition-colors", isPoolOpen && "bg-sky-500/20 text-sky-500")}
              >
                 Unscheduled Pool <Badge className="ml-2 bg-zinc-900">{POOL_MATCHES.length}</Badge>
              </Button>
@@ -121,7 +121,7 @@ export default function ScheduleEditorPage() {
                         {/* Column Header */}
                         <div className="flex items-center justify-between bg-zinc-900 p-4 rounded-2xl border border-zinc-800 sticky top-0 z-10 shadow-xl">
                             <div className="font-black text-white uppercase flex items-center gap-2">
-                                <MapPin className="w-4 h-4 text-cyan-500"/> {court}
+                                <MapPin className="w-4 h-4 text-sky-500"/> {court}
                             </div>
                             <MoreHorizontal className="w-4 h-4 text-zinc-500 cursor-pointer"/>
                         </div>
@@ -136,7 +136,7 @@ export default function ScheduleEditorPage() {
                                         "group relative p-4 rounded-[24px] border-2 transition-all cursor-pointer hover:-translate-y-1 hover:shadow-xl",
                                         match.status === 'LOCKED' 
                                             ? "bg-zinc-900/50 border-green-900/30 hover:border-green-500/50" 
-                                            : "bg-zinc-900 border-zinc-800 hover:border-cyan-500/50"
+                                            : "bg-zinc-900 border-zinc-800 hover:border-sky-500/50"
                                     )}
                                 >
                                     {/* Drag Handle */}
@@ -147,7 +147,7 @@ export default function ScheduleEditorPage() {
                                     <div className="pl-4">
                                         <div className="flex justify-between items-start mb-3">
                                             <div className="flex items-center gap-2 bg-zinc-950 px-2 py-1 rounded-lg border border-zinc-800">
-                                                <Clock className="w-3 h-3 text-cyan-500"/>
+                                                <Clock className="w-3 h-3 text-sky-500"/>
                                                 <span className="text-xs font-mono font-bold text-white">{match.time}</span>
                                             </div>
                                             <Badge variant="outline" className="border-zinc-800 text-[9px] text-zinc-500 px-1.5 h-5">{match.id}</Badge>
@@ -183,7 +183,7 @@ export default function ScheduleEditorPage() {
              <div className="w-80 bg-zinc-900 border-l border-zinc-800 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300 rounded-l-[32px] overflow-hidden">
                 <div className="p-6 border-b border-zinc-800 bg-zinc-950/50">
                     <h3 className="font-black font-headline uppercase text-white flex items-center gap-2">
-                        <Filter className="w-4 h-4 text-cyan-500"/> Pool
+                        <Filter className="w-4 h-4 text-sky-500"/> Pool
                     </h3>
                     <p className="text-xs text-zinc-500 mt-1">Drag ke slot kosong.</p>
                 </div>
@@ -193,7 +193,7 @@ export default function ScheduleEditorPage() {
                             <div key={m.id} className="p-4 bg-black border border-zinc-800 rounded-[20px] hover:border-zinc-600 cursor-grab active:cursor-grabbing">
                                 <div className="flex justify-between mb-2">
                                     <Badge className="bg-zinc-900 text-zinc-400 border-none text-[10px]">{m.id}</Badge>
-                                    <span className="text-[10px] font-bold text-cyan-600">{m.cat}</span>
+                                    <span className="text-[10px] font-bold text-sky-600">{m.cat}</span>
                                 </div>
                                 <div className="text-xs font-bold text-white mb-1">{m.pA}</div>
                                 <div className="text-[10px] text-zinc-600 font-bold mb-1">VS</div>
@@ -213,7 +213,7 @@ export default function ScheduleEditorPage() {
             <div className="p-8 border-b border-zinc-800 bg-zinc-900/50">
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-black font-headline uppercase flex items-center gap-2">
-                        <Calendar className="w-6 h-6 text-cyan-500"/> Edit Slot
+                        <Calendar className="w-6 h-6 text-sky-500"/> Edit Slot
                     </DialogTitle>
                     <DialogDescription>{selectedMatch?.id} • {selectedMatch?.cat}</DialogDescription>
                 </DialogHeader>
@@ -255,7 +255,7 @@ export default function ScheduleEditorPage() {
                     <Button variant="outline" className="h-14 rounded-full border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800">
                         Unschedule
                     </Button>
-                    <Button className="h-14 rounded-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold shadow-lg shadow-cyan-900/20">
+                    <Button className="h-14 rounded-full bg-sky-600 hover:bg-sky-700 text-white font-bold shadow-lg shadow-sky-900/20">
                         Save Changes
                     </Button>
                 </div>
@@ -270,5 +270,3 @@ export default function ScheduleEditorPage() {
 function CheckCircle2({ className }: { className?: string }) {
     return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
 }
-
-    
