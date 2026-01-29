@@ -94,7 +94,7 @@ export default function UserManagementPage() {
   };
 
   return (
-    <div className="space-y-8 p-4 md:p-8 font-body pb-24 h-[calc(100vh-64px)] flex flex-col">
+    <div className="space-y-8">
       
       {/* --- HEADER --- */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 shrink-0">
@@ -152,7 +152,7 @@ export default function UserManagementPage() {
       </div>
 
       {/* --- MAIN CONTENT --- */}
-      <div className="flex-1 bg-zinc-900/50 border border-zinc-800/50 rounded-[40px] p-2 backdrop-blur-sm flex flex-col min-h-0">
+      <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-[40px] p-2 backdrop-blur-sm flex flex-col">
         
         {/* Filter Bar */}
         <div className="flex flex-col md:flex-row items-center justify-between px-4 py-4 gap-4 shrink-0">
@@ -186,7 +186,7 @@ export default function UserManagementPage() {
         </div>
 
         {/* User Grid */}
-        <ScrollArea className="flex-1 px-4 pb-4">
+        <ScrollArea className="px-4 pb-4">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {filteredUsers.map((user) => (
                     <div 
@@ -390,3 +390,5 @@ export default function UserManagementPage() {
     </div>
   );
 }
+
+    
