@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -12,11 +13,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 const MANAGER_NAV = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/manager/dashboard" },
   { icon: Users, label: "Anggota & TPF", href: "/manager/members" }, // Fitur 2, 4
-  { icon: UserPlus, label: "Pairing & Daftar", href: "/manager/pairing" }, // Fitur 5, 6, 7
+  // { icon: UserPlus, label: "Pairing & Daftar", href: "/manager/pairing" }, // Fitur 5, 6, 7
   { icon: Wallet, label: "Keuangan", href: "/manager/finance" }, // Fitur 8
-  { icon: Megaphone, label: "Broadcast", href: "/manager/broadcast" }, // Fitur 14
-  { icon: FileBarChart, label: "Laporan", href: "/manager/reports" }, // Fitur 10, 13
-  { icon: Settings, label: "Identitas Klub", href: "/manager/settings" }, // Fitur 3
+  // { icon: Megaphone, label: "Broadcast", href: "/manager/broadcast" }, // Fitur 14
+  // { icon: FileBarChart, label: "Laporan", href: "/manager/reports" }, // Fitur 10, 13
+  // { icon: Settings, label: "Identitas Klub", href: "/manager/settings" }, // Fitur 3
 ];
 
 export default function ManagerLayout({ children }: { children: React.ReactNode }) {

@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from "react";
+import Link from "next/link";
 import { 
   Users, Shield, Trophy, Search, 
   Plus, MapPin, Mail, Phone, Edit3, 
@@ -94,10 +95,12 @@ export default function AthleteRosterPage() {
         </div>
 
         <Button 
-            onClick={() => {}}
+            asChild
             className="h-14 rounded-full px-8 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-lg shadow-[0_0_20px_rgba(79,70,229,0.4)] transition-transform active:scale-95"
         >
-            <UserPlus className="mr-2 w-5 h-5"/> DAFTARKAN ATLET BARU
+            <Link href="/admin/athletes/register">
+              <UserPlus className="mr-2 w-5 h-5"/> DAFTARKAN ATLET BARU
+            </Link>
         </Button>
       </div>
 
