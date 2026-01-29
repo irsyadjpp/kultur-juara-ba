@@ -1,5 +1,5 @@
 
-"use client";
+'use client';
 
 import { MapPin, Navigation } from "lucide-react";
 import { Button } from "@/components/ui/button";

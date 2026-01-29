@@ -1,5 +1,5 @@
 
-"use client";
+'use client';
 
 import { Card, CardContent } from "@/components/ui/card";
 import { TrendingUp, Trophy, ShieldCheck, Gamepad2, BrainCircuit, Dumbbell, Award } from "lucide-react";

@@ -1,5 +1,5 @@
 
-"use client";
+'use client';
 
 import { Trophy, Star, Award } from "lucide-react";
 import Image from "next/image";

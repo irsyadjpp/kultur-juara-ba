@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { AlertTriangle, Ambulance, ShieldAlert, Wrench } from "lucide-react";
-import { triggerSOS } from "@/app/admin/(app)/dashboard/actions";
+import { triggerSOS } from "@/app/admin/dispatch/actions";
 import { useToast } from "@/hooks/use-toast";
 
 export function EmergencyButton() {

@@ -15,8 +15,8 @@ export default function MembersPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-end">
         <div>
-          <h1 className="font-headline text-3xl mb-1">DATA <span className="text-primary">ANGGOTA</span></h1>
-          <p className="text-muted-foreground text-sm">Kelola 42 atlet terdaftar di komunitas.</p>
+          <h1 className="font-headline text-3xl mb-1">DATA <span className="text-primary">ATLET</span></h1>
+          <p className="text-muted-foreground text-sm">Kelola 42 atlet terdaftar di klub Anda.</p>
         </div>
         <Button className="rounded-pill font-bold shadow-lg shadow-primary/20">
            + Tambah Manual
@@ -44,7 +44,7 @@ export default function MembersPage() {
             <TableRow>
               <TableHead className="w-[50px] font-bold text-xs uppercase pl-6">Avatar</TableHead>
               <TableHead className="font-bold text-xs uppercase">Nama & Kode</TableHead>
-              <TableHead className="font-bold text-xs uppercase">Status TPF</TableHead>
+              <TableHead className="font-bold text-xs uppercase">Status Dokumen</TableHead>
               <TableHead className="font-bold text-xs uppercase">Level / Tier</TableHead>
               <TableHead className="font-bold text-xs uppercase text-right pr-6">Aksi</TableHead>
             </TableRow>
@@ -59,12 +59,12 @@ export default function MembersPage() {
                 </TableCell>
                 <TableCell>
                    <p className="font-bold text-sm">Nama Pemain {i}</p>
-                   <p className="text-xs text-muted-foreground font-mono">BCC-8821-{i}</p>
+                   <p className="text-xs text-muted-foreground font-mono">KJA-8821-{i}</p>
                 </TableCell>
                 <TableCell>
                    {i === 1 ? (
                       <Badge variant="outline" className="bg-yellow-50 text-yellow-600 border-yellow-200">
-                         Menunggu Video
+                         Menunggu Verifikasi
                       </Badge>
                    ) : (
                       <div className="flex items-center gap-1.5 text-green-600 text-xs font-bold">
@@ -77,7 +77,7 @@ export default function MembersPage() {
                       <span className="text-xs text-muted-foreground">-</span>
                    ) : (
                       <div className="flex gap-1">
-                         <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-none">Advance</Badge>
+                         <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-none">Intermediate</Badge>
                          <Badge variant="outline">Tier 2</Badge>
                       </div>
                    )}

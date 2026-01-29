@@ -1,3 +1,4 @@
+
 'use client';
 
 // This is the main dashboard page.

@@ -4,7 +4,7 @@
 import { revalidatePath } from "next/cache";
 
 // Mock Data Insiden
-let activeIncidents = [
+let activeIncidents: any[] = [
   { id: 'SOS-001', type: 'MEDIS', location: 'Lapangan 3', status: 'OPEN', time: '10:45', reportedBy: 'Kevin Ops' },
   { id: 'SOS-002', type: 'SECURITY', location: 'Pintu Tribun B', status: 'ASSIGNED', time: '10:50', reportedBy: 'System', handler: 'Sarah Security' }
 ];
@@ -67,6 +67,23 @@ export async function requestService(court: string, serviceType: 'MOP' | 'SHUTTL
     return { success: true, message: `Request for ${serviceType} on Court ${court} logged.` };
 }
 
+export async function triggerSOS(type: string, location: string) {
+    await new Promise(r => setTimeout(r, 800));
+
+    const newIncident = {
+        id: `SOS-${Date.now()}`,
+        type: type.toUpperCase(),
+        location: location,
+        status: 'OPEN' as 'OPEN' | 'ASSIGNED',
+        time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+        reportedBy: 'Emergency Button',
+    };
+
+    activeIncidents.unshift(newIncident);
+    revalidatePath('/admin/dispatch');
+
+    return { success: true, message: `SOS for ${type} at ${location} logged.` };
+}
     
 
     

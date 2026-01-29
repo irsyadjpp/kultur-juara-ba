@@ -1,5 +1,5 @@
 
-"use client";
+'use client';
 
 import { Card } from "@/components/ui/card";
 import { Banknote, CalendarClock, MapPin, Swords, Zap, Info } from "lucide-react";
