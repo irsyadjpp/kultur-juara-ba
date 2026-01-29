@@ -27,7 +27,7 @@ import { useFirestore, useCollection, useMemoFirebase, useUser } from '@/firebas
 import { inviteUser, updateUser, deleteUser } from './actions';
 
 const ROLES = [
-  { id: "SUPER_ADMIN", label: "Super Admin", color: "text-violet-400 border-violet-500 bg-violet-500/10", desc: "Full System Access" },
+  { id: "SUPER_ADMIN", label: "Super Admin", color: "text-sky-400 border-sky-500 bg-sky-500/10", desc: "Full System Access" },
   { id: "COACH", label: "Coach", color: "text-blue-400 border-blue-500 bg-blue-500/10", desc: "Manages athletes and logs." },
   { id: "PSYCHOLOGIST", label: "Psychologist", color: "text-pink-400 border-pink-500 bg-pink-500/10", desc: "Access to mental journals." },
   { id: "STAFF", label: "Staff / Logistics", color: "text-orange-400 border-orange-500 bg-orange-500/10", desc: "Inventory & Check-in" },
@@ -122,12 +122,12 @@ export default function UserManagementPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 shrink-0">
         <div>
             <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="rounded-full px-3 py-1 border-violet-500 text-violet-500 bg-violet-500/10 backdrop-blur-md">
+                <Badge variant="outline" className="rounded-full px-3 py-1 border-sky-500 text-sky-500 bg-sky-500/10 backdrop-blur-md">
                     <UserCog className="w-3 h-3 mr-2" /> SYSTEM ACCESS
                 </Badge>
             </div>
             <h1 className="text-3xl md:text-4xl font-black font-headline uppercase tracking-tighter text-white">
-                User <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-600">Management</span>
+                User <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600">Management</span>
             </h1>
             <p className="text-zinc-400 mt-2 max-w-xl text-lg">
                 Atur hak akses panitia, referee, dan staff operasional.
@@ -136,7 +136,7 @@ export default function UserManagementPage() {
 
         <Button 
             onClick={() => setIsAddOpen(true)}
-            className="h-14 rounded-full px-8 bg-violet-600 hover:bg-violet-700 text-white font-black text-lg shadow-[0_0_20px_rgba(124,58,237,0.4)] transition-transform active:scale-95"
+            className="h-14 rounded-full px-8 bg-sky-600 hover:bg-sky-700 text-white font-black text-lg shadow-[0_0_20px_rgba(14,165,233,0.4)] transition-transform active:scale-95"
         >
             <Plus className="mr-2 w-5 h-5"/> INVITE USER
         </Button>
@@ -199,7 +199,7 @@ export default function UserManagementPage() {
                 <Search className="absolute left-4 top-3.5 w-4 h-4 text-zinc-500" />
                 <Input 
                     placeholder="Find user..." 
-                    className="h-12 bg-zinc-950 border-zinc-800 rounded-full pl-10 text-white focus:ring-violet-500"
+                    className="h-12 bg-zinc-950 border-zinc-800 rounded-full pl-10 text-white focus:ring-sky-500"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -215,7 +215,7 @@ export default function UserManagementPage() {
                     <div 
                         key={user.id} 
                         onClick={() => setSelectedUser(user)}
-                        className="group relative bg-zinc-900 border border-zinc-800 rounded-[32px] p-6 hover:border-violet-500/50 transition-all cursor-pointer hover:-translate-y-1 hover:shadow-2xl overflow-hidden"
+                        className="group relative bg-zinc-900 border border-zinc-800 rounded-[32px] p-6 hover:border-sky-500/50 transition-all cursor-pointer hover:-translate-y-1 hover:shadow-2xl overflow-hidden"
                     >
                         <div className="flex justify-between items-start mb-6">
                             <Avatar className="h-16 w-16 border-4 border-zinc-950 shadow-xl">
@@ -232,7 +232,7 @@ export default function UserManagementPage() {
                             </div>
                         </div>
                         <div className="space-y-1 mb-4">
-                            <h3 className="text-lg font-black text-white leading-tight group-hover:text-violet-400 transition-colors">
+                            <h3 className="text-lg font-black text-white leading-tight group-hover:text-sky-400 transition-colors">
                                 {user.name}
                             </h3>
                             <p className="text-sm text-zinc-500 truncate">{user.email}</p>
@@ -250,7 +250,7 @@ export default function UserManagementPage() {
                 ))}
                 <button 
                     onClick={() => setIsAddOpen(true)}
-                    className="border-2 border-dashed border-zinc-800 rounded-[32px] flex flex-col items-center justify-center gap-4 text-zinc-600 hover:text-violet-500 hover:border-violet-500/50 hover:bg-violet-500/5 transition-all min-h-[200px] group"
+                    className="border-2 border-dashed border-zinc-800 rounded-[32px] flex flex-col items-center justify-center gap-4 text-zinc-600 hover:text-sky-500 hover:border-sky-500/50 hover:bg-sky-500/5 transition-all min-h-[200px] group"
                 >
                     <div className="w-16 h-16 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center group-hover:scale-110 transition-transform">
                         <Plus className="w-8 h-8"/>
@@ -266,7 +266,7 @@ export default function UserManagementPage() {
         <SheetContent className="w-full sm:max-w-md bg-zinc-950 border-l border-zinc-800 p-0 overflow-y-auto">
             {selectedUser && (
                 <div className="flex flex-col h-full">
-                    <div className="h-48 bg-gradient-to-b from-violet-900/50 to-zinc-900 relative flex flex-col items-center justify-center">
+                    <div className="h-48 bg-gradient-to-b from-sky-900/50 to-zinc-900 relative flex flex-col items-center justify-center">
                         <div className="absolute inset-0 bg-[url('/images/grid-pattern.png')] opacity-20 pointer-events-none"></div>
                         <Avatar className="h-24 w-24 border-4 border-zinc-900 shadow-2xl mb-3">
                             <AvatarImage src={selectedUser.avatar} />
@@ -288,11 +288,11 @@ export default function UserManagementPage() {
                         </div>
                         <div className="space-y-4">
                             <h3 className="text-xs font-black text-zinc-500 uppercase tracking-widest flex items-center gap-2">
-                                <Key className="w-4 h-4 text-violet-500"/> Permissions
+                                <Key className="w-4 h-4 text-sky-500"/> Permissions
                             </h3>
                             <div className="grid grid-cols-1 gap-3">
                                 <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl flex items-center gap-3">
-                                    <BadgeCheck className="w-5 h-5 text-violet-500"/>
+                                    <BadgeCheck className="w-5 h-5 text-sky-500"/>
                                     <div className="flex-1">
                                         <p className="text-sm font-bold text-white">Current Role</p>
                                         <p className="text-xs text-zinc-500">{ROLES.find(r => r.id === selectedUser.role)?.label}</p>
@@ -328,9 +328,9 @@ export default function UserManagementPage() {
 
       <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
         <DialogContent className="bg-zinc-950 border-zinc-800 text-white rounded-[40px] max-w-lg p-0 overflow-hidden shadow-2xl">
-            <div className="p-8 border-b border-zinc-800 bg-violet-950/20">
+            <div className="p-8 border-b border-zinc-800 bg-sky-950/20">
                 <DialogHeader>
-                    <DialogTitle className="text-2xl font-black font-headline uppercase flex items-center gap-2 text-violet-500">
+                    <DialogTitle className="text-2xl font-black font-headline uppercase flex items-center gap-2 text-sky-500">
                         <UserPlus className="w-6 h-6"/> Invite Staff
                     </DialogTitle>
                     <DialogDescription>Kirim undangan akses ke anggota tim baru.</DialogDescription>
@@ -371,7 +371,7 @@ export default function UserManagementPage() {
                             </Select>
                         </div>
                     </div>
-                    <Button type="submit" className="w-full h-16 rounded-full font-black text-lg bg-violet-600 hover:bg-violet-700 text-white mt-2 shadow-xl shadow-violet-900/20" disabled={isSubmitting}>
+                    <Button type="submit" className="w-full h-16 rounded-full font-black text-lg bg-sky-600 hover:bg-sky-700 text-white mt-2 shadow-xl shadow-sky-900/20" disabled={isSubmitting}>
                         {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <UserPlus className="w-5 h-5 mr-2" />}
                         {isSubmitting ? "SENDING..." : "SEND INVITATION"}
                     </Button>
@@ -382,3 +382,5 @@ export default function UserManagementPage() {
     </div>
   );
 }
+
+    
