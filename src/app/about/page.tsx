@@ -47,7 +47,7 @@ export default function AboutPage() {
               LEBIH DARI <br/>SEKADAR <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-yellow-500">LATIHAN.</span>
            </h1>
            <p className="text-lg md:text-xl text-zinc-400 max-w-3xl mx-auto font-medium">
-              Kami adalah akademi bulutangkis yang berdedikasi untuk mencetak generasi atlet berkarakter, berprestasi, dan bermental juara.
+              Kultur Juara PWN Indonesia adalah akademi bulutangkis yang berdedikasi untuk mencetak generasi atlet berkarakter, berprestasi, dan bermental juara.
            </p>
         </div>
 
@@ -76,7 +76,7 @@ export default function AboutPage() {
                      <div className="mx-auto bg-card p-4 rounded-full w-fit mb-6 border-2 border-primary/30 shadow-2xl shadow-primary/20">
                         <Trophy className="w-12 h-12 text-primary" />
                      </div>
-                     <p className="text-3xl font-black text-white leading-tight">Kultur Juara Academy</p>
+                     <p className="text-3xl font-black text-white leading-tight">Kultur Juara PWN Indonesia</p>
                      <p className="text-sm text-primary font-bold mt-1 tracking-widest uppercase">Forging Champions Since 2024</p>
                    </div>
                 </div>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useActionState, useEffect, useState } from "react";
@@ -80,7 +81,7 @@ export default function UnifiedLoginPage() {
         <Link href="/" className="relative z-10">
              <div className="flex items-center gap-3 mb-2">
                 <Image src="/images/logo.png" alt="Logo" width={40} height={40} />
-                <span className="font-bold text-xl tracking-widest uppercase text-white/80">Kultur Juara Academy</span>
+                <span className="font-bold text-lg tracking-widest uppercase text-white/80">Kultur Juara PWN Indonesia</span>
              </div>
         </Link>
 
@@ -90,12 +91,12 @@ export default function UnifiedLoginPage() {
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-400">SATU GENGGAMAN.</span>
             </h1>
             <p className="text-lg text-zinc-400 font-medium leading-relaxed">
-                Selamat datang di Portal Kultur Juara. Pusat komando untuk mengelola seluruh aspek akademi, dari pendaftaran atlet hingga evaluasi latihan.
+                Selamat datang di Portal Kultur Juara PWN Indonesia. Pusat komando untuk mengelola seluruh aspek akademi, dari pendaftaran atlet hingga evaluasi latihan.
             </p>
         </div>
 
         <div className="relative z-10 flex gap-6 text-sm text-zinc-500 font-mono">
-            <span>© {new Date().getFullYear()} Kultur Juara</span>
+            <span>© {new Date().getFullYear()} Kultur Juara PWN Indonesia</span>
             <span>v1.0.0 (Beta)</span>
         </div>
       </div>

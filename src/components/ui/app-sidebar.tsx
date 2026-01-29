@@ -92,7 +92,7 @@ export function AppSidebar({ onLogout, ...props }: React.ComponentProps<typeof S
           </div>
 
           <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-            <span className="truncate font-black font-headline text-lg tracking-tight text-white">Kultur Juara</span>
+            <span className="truncate font-black font-headline text-lg tracking-tight text-white">Kultur Juara PWN</span>
             <span className="truncate text-[10px] uppercase font-bold text-zinc-500 tracking-widest">Admin Panel</span>
           </div>
         </div>

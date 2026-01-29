@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, type ReactNode } from 'react';
@@ -100,7 +101,7 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
                 <SidebarTrigger className="text-zinc-400 hover:text-white hover:bg-white/10 rounded-full w-10 h-10 transition-all" />
                 <Separator orientation="vertical" className="mr-2 h-4 bg-zinc-700" />
                 <span className="text-sm font-black text-zinc-200 hidden md:block tracking-widest uppercase font-headline">
-                  KULTUR JUARA | ADMIN
+                  KULTUR JUARA PWN | ADMIN
                 </span>
             </div>
 

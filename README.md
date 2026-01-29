@@ -1,7 +1,7 @@
 
-# Kultur Juara - Athlete & Academy Management System
+# Kultur Juara PWN Indonesia Badminton Academy - Management System
 
-This is a comprehensive, data-driven platform designed to manage all aspects of a professional badminton academy. From athlete registration and multi-faceted evaluations to real-time training logs and administrative controls, this system provides a holistic view of athlete development and academy operations.
+This is a comprehensive, data-driven platform designed to manage all aspects of Kultur Juara PWN Indonesia Badminton Academy. From athlete registration and multi-faceted evaluations to real-time training logs and administrative controls, this system provides a holistic view of athlete development and academy operations.
 
 ## ✨ Core Modules
 
@@ -52,7 +52,7 @@ This is a comprehensive, data-driven platform designed to manage all aspects of 
 
 -   **Manager Portal:** A dedicated dashboard for external team managers to register their players, check validation status, and manage team finances.
 -   **Player Portal:** A self-service area for athletes to view their schedules, check their TPF assessment results, and monitor their progress.
--   **Public Pages:** Includes a homepage, schedule, live bracket, and information about the academy's programs and rules, all accessible to the public.
+-   **Public Pages:** Includes a homepage, schedule, live bracket, and information about Kultur Juara PWN Indonesia Badminton Academy's programs and rules, all accessible to the public.
 
 ---
 

@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -39,8 +40,8 @@ export function Header() {
             <div className="relative w-8 h-8 md:w-10 md:h-10 transition-transform group-hover:scale-110">
                 <Image src="/images/logo.png" alt="Logo" fill className="object-contain" />
             </div>
-            <span className={cn("font-headline font-black tracking-tighter uppercase hidden md:block transition-all", isScrolled ? "text-lg" : "text-xl")}>
-              KULTUR JUARA
+            <span className={cn("font-headline font-black tracking-tighter uppercase hidden md:block transition-all", isScrolled ? "text-base" : "text-lg")}>
+              KULTUR JUARA PWN
             </span>
         </Link>
 

@@ -93,7 +93,7 @@ export default function RegisterAthletePage() {
                 Registrasi <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-500">Atlet Baru</span>
             </h1>
             <p className="text-zinc-400 mt-2 max-w-xl text-lg">
-                Formulir untuk mendata atlet baru secara manual di Kultur Juara Academy.
+                Formulir untuk mendata atlet baru secara manual di Kultur Juara PWN Indonesia Badminton Academy.
             </p>
         </div>
       </div>
