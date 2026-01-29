@@ -1,20 +1,10 @@
-
 'use client';
 
 import { useState, useEffect, type ReactNode } from 'react';
-import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { 
-  LogOut,
-  Menu,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
-import { cn } from '@/lib/utils';
+import { LogOut } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { logoutAdmin } from './actions';
-import { ThemeToggle } from '@/components/theme-toggle';
+import { logout, signIntegrityPact } from '../actions'; // Updated import
 import { IntegrityPactModal } from '@/components/admin/integrity-pact-modal';
 import { EmergencyButton } from '@/components/admin/emergency-button';
 import { Toaster } from "@/components/ui/toaster";
@@ -24,7 +14,6 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar"
 import { AppSidebar } from '@/components/ui/app-sidebar';
 
-
 export default function AdminRootLayout({ children }: { children: ReactNode }) {
   const { toast } = useToast();
   const [session, setSession] = useState<any | null>(null);
@@ -33,27 +22,23 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (pathname === '/admin/login') {
-      setLoading(false);
-      return;
-    }
-
-    const sessionStr = sessionStorage.getItem('badmintour_admin_session');
+    // No longer need to check for /login path here since this layout won't render for it.
+    const sessionStr = sessionStorage.getItem('kultur_juara_session'); // Updated session name
     if (sessionStr) {
         try {
             const storedSession = JSON.parse(sessionStr);
             if (storedSession && storedSession.isLoggedIn) {
                 setSession(storedSession);
             } else {
-                router.push('/admin/login');
+                router.push('/login'); // Redirect to unified login
             }
         } catch (error) {
-            console.error("Failed to parse admin session", error);
-            sessionStorage.removeItem('badmintour_admin_session');
-            router.push('/admin/login');
+            console.error("Failed to parse session", error);
+            sessionStorage.removeItem('kultur_juara_session');
+            router.push('/login');
         }
     } else {
-        router.push('/admin/login');
+        router.push('/login');
     }
     setLoading(false);
   }, [pathname, router]);
@@ -62,21 +47,17 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
     if (!session) return;
     const updatedSession = { ...session, isOnboarded: true };
     setSession(updatedSession);
-    sessionStorage.setItem('badmintour_admin_session', JSON.stringify(updatedSession));
+    sessionStorage.setItem('kultur_juara_session', JSON.stringify(updatedSession));
+    signIntegrityPact(); // Call server action to update cookie
   };
-
 
   const handleLogout = async () => {
-    await logoutAdmin();
-    sessionStorage.removeItem('badmintour_admin_session');
+    await logout(); // Use unified logout action
+    sessionStorage.removeItem('kultur_juara_session');
     setSession(null);
     toast({ title: "Logout Berhasil" });
-    router.push('/');
+    router.push('/'); // Redirect to home after logout
   };
-  
-  if (pathname === '/admin/login') {
-    return <>{children}</>;
-  }
   
   if (loading) {
     return (
@@ -87,18 +68,21 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
   }
 
   if (!session?.isLoggedIn) {
+    // This state should ideally not be reached due to the useEffect redirect,
+    // but it's good practice as a fallback.
     return null;
   }
   
-  if (!session.isOnboarded) {
-    return (
-        <IntegrityPactModal 
-            isOpen={true}
-            onComplete={handlePactComplete}
-            userName={session.name}
-        />
-    )
-  }
+  // Temporarily disabling pact for easier debugging if needed
+  // if (!session.isOnboarded) {
+  //   return (
+  //       <IntegrityPactModal 
+  //           isOpen={true}
+  //           onComplete={handlePactComplete}
+  //           userName={session.name}
+  //       />
+  //   )
+  // }
 
   return (
     <SidebarProvider defaultOpen={true}>

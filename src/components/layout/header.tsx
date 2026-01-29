@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -63,7 +62,7 @@ export function Header() {
              </ClientOnly>
              
              <Button asChild className="rounded-full font-bold bg-primary text-primary-foreground hover:brightness-110 shadow-lg shadow-primary/20 px-6 hidden sm:flex">
-                <Link href="/admin/login">
+                <Link href="/login">
                     <User className="w-4 h-4 mr-2"/> Portal
                 </Link>
              </Button>
@@ -81,7 +80,7 @@ export function Header() {
                          <Link key={item.href} href={item.href} className="text-2xl font-black font-headline uppercase text-muted-foreground data-[active=true]:text-foreground">{item.name}</Link>
                       ))}
                       <div className="flex flex-col w-full gap-3 mt-8">
-                         <Button asChild size="lg" className="w-full rounded-full text-lg font-bold bg-primary"><Link href="/admin/login">Login Portal</Link></Button>
+                         <Button asChild size="lg" className="w-full rounded-full text-lg font-bold bg-primary"><Link href="/login">Login Portal</Link></Button>
                       </div>
                    </div>
                 </SheetContent>
