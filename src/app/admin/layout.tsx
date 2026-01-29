@@ -3,7 +3,7 @@
 
 import { useState, useEffect, type ReactNode } from 'react';
 import Link from 'next/link';
-import { usePathname, redirect } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { 
   LogOut,
@@ -30,13 +30,14 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const pathname = usePathname();
+  const router = useRouter();
 
-  // If we're on the login page, don't show the main layout
-  if (pathname === '/admin/login') {
-    return <>{children}</>;
-  }
-  
   useEffect(() => {
+    if (pathname === '/admin/login') {
+      setLoading(false);
+      return;
+    }
+
     const sessionStr = sessionStorage.getItem('badmintour_admin_session');
     if (sessionStr) {
         try {
@@ -44,18 +45,18 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
             if (storedSession && storedSession.isLoggedIn) {
                 setSession(storedSession);
             } else {
-                redirect('/admin/login');
+                router.push('/admin/login');
             }
         } catch (error) {
             console.error("Failed to parse admin session", error);
             sessionStorage.removeItem('badmintour_admin_session');
-            redirect('/admin/login');
+            router.push('/admin/login');
         }
     } else {
-        redirect('/admin/login');
+        router.push('/admin/login');
     }
     setLoading(false);
-  }, [pathname]);
+  }, [pathname, router]);
   
   const handlePactComplete = () => {
     if (!session) return;
@@ -70,8 +71,12 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
     sessionStorage.removeItem('badmintour_admin_session');
     setSession(null);
     toast({ title: "Logout Berhasil" });
-    redirect('/');
+    router.push('/');
   };
+  
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
   
   if (loading) {
     return (
@@ -82,7 +87,6 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
   }
 
   if (!session?.isLoggedIn) {
-    redirect('/admin/login');
     return null;
   }
   

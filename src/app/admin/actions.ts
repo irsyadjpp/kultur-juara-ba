@@ -69,7 +69,6 @@ export async function loginAdminByCode(prevState: any, formData: FormData) {
 
 export async function logoutAdmin() {
   cookies().delete('badmintour_admin_session');
-  redirect('/');
 }
 
 export async function getAdminSession() {
