@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -10,7 +9,7 @@ import { ShieldCheck, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 // Simpan status persetujuan ke server/cookie
-import { signIntegrityPact } from '@/app/admin/actions'; 
+import { signIntegrityPact } from '@/app/actions'; 
 
 export function IntegrityPactModal({ isOpen, onComplete, userName }: { isOpen: boolean, onComplete: () => void, userName: string }) {
   const [agreed, setAgreed] = useState(false);
