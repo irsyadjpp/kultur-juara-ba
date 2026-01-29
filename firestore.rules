@@ -12,6 +12,11 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // Allow listing users for authenticated users.
+    match /users {
+        allow list: if isSignedIn();
+    }
+
     // Users collection - only signed-in users can manage other users.
     // For production, you'd want to restrict this to admins.
     match /users/{userId} {

@@ -23,7 +23,7 @@ import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { collection } from 'firebase/firestore';
-import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { useFirestore, useCollection, useMemoFirebase, useUser } from '@/firebase';
 import { inviteUser, updateUser, deleteUser } from './actions';
 
 const ROLES = [
@@ -36,6 +36,7 @@ const ROLES = [
 export default function UserManagementPage() {
   const { toast } = useToast();
   const firestore = useFirestore();
+  const { user, isUserLoading } = useUser();
   
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -43,8 +44,16 @@ export default function UserManagementPage() {
   const [roleFilter, setRoleFilter] = useState("ALL");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const usersCollection = useMemoFirebase(() => firestore ? collection(firestore, 'users') : null, [firestore]);
-  const { data: usersData, isLoading } = useCollection(usersCollection);
+  const usersCollection = useMemoFirebase(() => {
+    if (firestore && user) {
+        return collection(firestore, 'users');
+    }
+    return null;
+  }, [firestore, user]);
+
+  const { data: usersData, isLoading: isCollectionLoading } = useCollection(usersCollection);
+
+  const isLoading = isUserLoading || isCollectionLoading;
 
   const filteredUsers = useMemo(() => {
     if (!usersData) return [];
@@ -211,7 +220,7 @@ export default function UserManagementPage() {
                         <div className="flex justify-between items-start mb-6">
                             <Avatar className="h-16 w-16 border-4 border-zinc-950 shadow-xl">
                                 <AvatarImage src={user.avatar} />
-                                <AvatarFallback className="bg-zinc-800 font-bold text-zinc-500 text-xl">{user.name.split(' ').map(n=>n[0]).join('')}</AvatarFallback>
+                                <AvatarFallback className="bg-zinc-800 font-bold text-zinc-500 text-xl">{user.name.split(' ').map((n: string)=>n[0]).join('')}</AvatarFallback>
                             </Avatar>
                             <div className="text-right">
                                 {user.status === 'ACTIVE' ? (
