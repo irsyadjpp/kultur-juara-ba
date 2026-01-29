@@ -28,7 +28,7 @@ import { inviteUser, updateUser, deleteUser } from './actions';
 
 const ROLES = [
   { id: "SUPER_ADMIN", label: "Super Admin", color: "text-sky-400 border-sky-500 bg-sky-500/10", desc: "Full System Access" },
-  { id: "COACH", label: "Coach", color: "text-blue-400 border-blue-500 bg-blue-500/10", desc: "Manages athletes and logs." },
+  { id: "COACH", label: "Coach", color: "text-sky-400 border-sky-500 bg-sky-500/10", desc: "Manages athletes and logs." },
   { id: "PSYCHOLOGIST", label: "Psychologist", color: "text-pink-400 border-pink-500 bg-pink-500/10", desc: "Access to mental journals." },
   { id: "STAFF", label: "Staff / Logistics", color: "text-orange-400 border-orange-500 bg-orange-500/10", desc: "Inventory & Check-in" },
 ];
@@ -116,7 +116,7 @@ export default function UserManagementPage() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-128px)] flex flex-col space-y-8">
+    <div className="flex flex-col space-y-8">
       
       {/* --- HEADER --- */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 shrink-0">
@@ -127,10 +127,10 @@ export default function UserManagementPage() {
                 </Badge>
             </div>
             <h1 className="text-3xl md:text-4xl font-black font-headline uppercase tracking-tighter text-white">
-                User <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600">Management</span>
+                User <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-sky-600">Management</span>
             </h1>
             <p className="text-zinc-400 mt-2 max-w-xl text-lg">
-                Atur hak akses panitia, referee, dan staff operasional.
+                Atur hak akses untuk pelatih, staf, dan administrator akademi.
             </p>
         </div>
 
@@ -383,4 +383,3 @@ export default function UserManagementPage() {
   );
 }
 
-    
