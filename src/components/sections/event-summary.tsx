@@ -30,19 +30,19 @@ export function EventSummarySection() {
 
           {/* FEES - UPDATED */}
           <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-1 gap-4">
-              <Card className="bg-zinc-900 dark:bg-zinc-800 text-white border-none rounded-[2.5rem] p-8 flex flex-col justify-center gap-2 relative overflow-hidden group">
-                  <div className="absolute right-0 top-0 p-8 opacity-10 group-hover:scale-125 transition-transform duration-500">
+              <Card className="bg-card border-border rounded-[2.5rem] p-8 flex flex-col justify-center gap-2 relative overflow-hidden group">
+                  <div className="absolute right-0 top-0 p-8 opacity-5 group-hover:scale-125 transition-transform duration-500 text-muted-foreground">
                       <Zap className="w-32 h-32" />
                   </div>
                   <div className="relative z-10">
-                      <div className="flex items-center gap-3 text-zinc-400 mb-2">
-                          <Banknote className="w-6 h-6" />
+                      <div className="flex items-center gap-3 text-muted-foreground mb-2">
+                          <Banknote className="w-6 h-6 text-primary" />
                           <span className="font-bold uppercase tracking-wider text-sm">Biaya Bulanan</span>
                       </div>
-                      <p className="text-4xl font-black font-headline text-yellow-400">
-                        IDR 500K <span className="text-lg text-zinc-400 font-medium">/atlet</span>
+                      <p className="text-4xl font-black font-headline text-accent">
+                        IDR 200K <span className="text-lg text-muted-foreground font-medium">/atlet</span>
                       </p>
-                       <p className="text-sm text-zinc-400 mt-1 bg-white/10 w-fit px-3 py-1 rounded-full">
+                       <p className="text-sm text-muted-foreground mt-1 bg-secondary w-fit px-3 py-1 rounded-full">
                          Termasuk 8x Sesi Latihan & Shuttlecock
                       </p>
                   </div>
