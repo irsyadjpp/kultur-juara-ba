@@ -5,7 +5,7 @@ import { useState, useEffect, type ReactNode } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { LogOut } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { logout, signIntegrityPact } from '../actions'; // Updated import
+import { logout, signIntegrityPact } from '../actions'; 
 import { IntegrityPactModal } from '@/components/admin/integrity-pact-modal';
 import { EmergencyButton } from '@/components/admin/emergency-button';
 import { Toaster } from "@/components/ui/toaster";
@@ -23,15 +23,14 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // No longer need to check for /login path here since this layout won't render for it.
-    const sessionStr = sessionStorage.getItem('kultur_juara_session'); // Updated session name
+    const sessionStr = sessionStorage.getItem('kultur_juara_session');
     if (sessionStr) {
         try {
             const storedSession = JSON.parse(sessionStr);
             if (storedSession && storedSession.isLoggedIn) {
                 setSession(storedSession);
             } else {
-                router.push('/login'); // Redirect to unified login
+                router.push('/login');
             }
         } catch (error) {
             console.error("Failed to parse session", error);
@@ -49,41 +48,28 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
     const updatedSession = { ...session, isOnboarded: true };
     setSession(updatedSession);
     sessionStorage.setItem('kultur_juara_session', JSON.stringify(updatedSession));
-    signIntegrityPact(); // Call server action to update cookie
+    signIntegrityPact(); 
   };
 
   const handleLogout = async () => {
-    await logout(); // Use unified logout action
+    await logout();
     sessionStorage.removeItem('kultur_juara_session');
     setSession(null);
     toast({ title: "Logout Berhasil" });
-    router.push('/'); // Redirect to home after logout
+    router.push('/');
   };
   
   if (loading) {
     return (
-        <div className="min-h-screen w-full flex items-center justify-center bg-background">
+        <div className="min-h-screen w-full flex items-center justify-center bg-zinc-950">
             <div className="w-8 h-8 animate-spin text-primary" />
         </div>
     );
   }
 
   if (!session?.isLoggedIn) {
-    // This state should ideally not be reached due to the useEffect redirect,
-    // but it's good practice as a fallback.
     return null;
   }
-  
-  // Temporarily disabling pact for easier debugging if needed
-  // if (!session.isOnboarded) {
-  //   return (
-  //       <IntegrityPactModal 
-  //           isOpen={true}
-  //           onComplete={handlePactComplete}
-  //           userName={session.name}
-  //       />
-  //   )
-  // }
 
   return (
     <SidebarProvider defaultOpen={true}>
