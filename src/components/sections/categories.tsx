@@ -1,31 +1,30 @@
-
 'use client';
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { X, Check, AlertTriangle, Info, Swords, ArrowUpRight, User, Users } from "lucide-react";
+import { Trophy, User, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const programs = [
   {
-    level: "U-13",
-    title: "Kelompok Umur U-13",
-    desc: "Pembinaan dasar yang fokus pada teknik fundamental, koordinasi, dan kecintaan pada olahraga.",
+    level: "U9 & U11",
+    title: "Kelompok Prioritas (U9 & U11)",
+    desc: "Pembinaan dasar yang fokus pada teknik fundamental, koordinasi, dan menanamkan kecintaan pada olahraga sejak dini.",
     icon: User,
     color: "text-green-500 border-green-500/30 bg-green-500/10",
   },
   {
-    level: "U-17",
-    title: "Kelompok Umur U-17",
-    desc: "Program intensif untuk atlet muda yang ingin berkompetisi di level junior, fokus pada taktik dan fisik.",
+    level: "U-13",
+    title: "Kelompok Seleksi (U-13)",
+    desc: "Program evaluasi khusus bagi atlet dengan potensi tinggi untuk masuk ke jenjang pembinaan prestasi yang lebih intensif.",
     icon: Users,
     color: "text-blue-500 border-blue-500/30 bg-blue-500/10",
   },
   {
-    level: "Dewasa",
-    title: "Kelas Dewasa & Hobi",
-    desc: "Untuk pemain dewasa yang ingin meningkatkan skill, menjaga kebugaran, dan sparring rutin.",
-    icon: Users,
+    level: "Prestasi",
+    title: "Tim Prestasi (Elite)",
+    desc: "Latihan intensif dengan sport science, taktik pertandingan, dan pembinaan mental untuk mencetak juara.",
+    icon: Trophy,
     color: "text-purple-500 border-purple-500/30 bg-purple-500/10",
   },
 ];
@@ -44,7 +43,7 @@ export function CategoriesSection() {
                     Program <span className="text-primary">Latihan</span>
                 </h2>
                 <p className="text-xl text-muted-foreground font-medium leading-relaxed">
-                    Kurikulum terstruktur untuk setiap jenjang, dari anak-anak hingga dewasa.
+                    Kurikulum terstruktur untuk setiap jenjang, dari usia dini hingga jenjang prestasi.
                 </p>
             </div>
         </div>
