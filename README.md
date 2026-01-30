@@ -1,680 +1,168 @@
+# STRATEGIC ALIGNMENT DOCUMENT (SAD)
 
-# ATURAN RESMI PENERIMAAN ATLET
+**YAYASAN KULTUR JUARA INDONESIA**
+*"From School Yard to Podium: Data-Driven Talent Funnel"*
 
-## PERSATUAN BULUTANGKIS (PB)
-
----
-
-## A. TUJUAN
-
-Aturan ini disusun sebagai pedoman resmi penerimaan atlet Persatuan Bulutangkis (PB) dalam rangka pembinaan jangka panjang, pembentukan karakter, serta persiapan atlet usia dini menuju pembinaan prestasi yang berjenjang dan berkelanjutan.
+**Versi:** 2.0 (Revised Strategy)
+**Sifat:** Internal & Strategis
 
 ---
 
-## B. PRINSIP PEMBINAAN PB
+## 1. RINGKASAN EKSEKUTIF
 
-PB menerapkan prinsip pembinaan sebagai berikut:
+### Tujuan Dokumen
 
-1. **Pembinaan jangka panjang (Long Term Athlete Development)**
-2. **Kesetaraan kesempatan** bagi anak dari berbagai latar belakang sosial
-3. **Keselamatan, kesehatan, dan perkembangan psikologis atlet**
-4. **Pendidikan karakter melalui olahraga**
-5. **Prestasi sebagai proses, bukan tujuan instan**
+Dokumen ini berfungsi sebagai panduan strategis utama untuk menyelaraskan seluruh organ yayasan dalam transisi model bisnis menuju **"Integrated Talent Funnel"**. Tujuannya adalah memastikan setiap divisi (Squad) memahami perannya dalam rantai nilai pembinaan, mulai dari pengenalan massal di sekolah hingga pencetakan atlet elit di PB (Perkumpulan Bulutangkis).
 
----
+### Masalah & Solusi
 
-## C. KRITERIA USIA ATLET
+**Masalah:**
+Model pembinaan olahraga konvensional seringkali terputus (*disconnected*). Banyak bakat di sekolah yang tidak terdeteksi, sementara klub prestasi (PB) kesulitan mendapatkan suplai atlet muda yang berkualitas dan memiliki fundamental yang benar. Selain itu, transisi dari hobi (sekolah) ke profesi (atlet) sering terkendala masalah legalitas izin orang tua dan kesiapan mental anak.
 
-1. PB menerima atlet **usia dini dan usia pembinaan awal**.
-2. Usia atlet ditentukan berdasarkan **tahun kelahiran**, sesuai ketentuan PBSI.
+**Solusi Yayasan Kultur Juara:**
+Membangun ekosistem yang terintegrasi penuh:
 
-### 1. Kategori Usia Prioritas
-
-| Kategori | Tahun Lahir  | Keterangan                         |
-| -------- | ------------ | ---------------------------------- |
-| U9       | 2018 ke atas | Prioritas utama pembinaan dasar    |
-| U11      | 2016–2017    | Prioritas utama pembinaan lanjutan |
-
-### 2. Kategori Bersyarat
-
-| Kategori | Tahun Lahir | Ketentuan                       |
-| -------- | ----------- | ------------------------------- |
-| U13      | 2014–2015   | Diterima dengan evaluasi khusus |
-
-3. Atlet di luar kategori di atas **tidak diprioritaskan** untuk penerimaan reguler.
+1. **Mass Market (Sekolah):** Fokus pada kuantitas, kesenangan (*fun*), dan dasar teknik yang benar.
+2. **The Filter (Teknologi & Data):** Jembatan seleksi yang objektif menggunakan parameter *Sport Science*.
+3. **Elite Unit (PB):** Fokus pada kualitas, intensitas tinggi, dan prestasi kompetitif bagi mereka yang lolos seleksi.
 
 ---
 
-## D. SYARAT ADMINISTRASI
+## 2. VISI, MISI, DAN NILAI INTI (REVISED)
 
-Calon atlet wajib menyerahkan:
+### Visi Jangka Panjang (2030)
 
-1. Fotokopi Akta Kelahiran / Kartu Keluarga
-2. Pas foto terbaru
-3. Formulir pendaftaran atlet PB
-4. Surat izin orang tua/wali
-5. Surat keterangan kesehatan (jika diminta)
+Menjadi ekosistem olahraga terintegrasi nomor satu di Indonesia yang menggabungkan partisipasi massal (*mass-participation*) dan performa tinggi (*high-performance*) melalui manajemen berbasis data.
 
----
+### Misi Strategis
 
-## E. PROSES SELEKSI ATLET
+1. **Massal (Sekolah):** Menanamkan kecintaan pada olahraga dan karakter juara melalui pelatihan dasar di sekolah-sekolah mitra.
+2. **Filter (Teknologi):** Menggunakan *Data Intelligence* untuk mendeteksi bakat (*Talent Scouting*) secara dini dan objektif.
+3. **Prestasi (PB):** Mencetak atlet berprestasi nasional/internasional melalui kurikulum PB yang terukur dan intensif.
+4. **Legal & Etis:** Memastikan setiap transisi atlet didasari oleh persetujuan orang tua (*parental consent*) dan prinsip *safeguarding*.
 
-1. Seleksi dilakukan melalui:
+### Nilai Inti (Core Values)
 
-   * Observasi fisik dasar
-   * Koordinasi dan motorik
-   * Minat dan sikap terhadap latihan
-2. Seleksi **bukan bertujuan mencari juara instan**, tetapi menilai potensi dan kesiapan pembinaan.
-3. Keputusan penerimaan ditetapkan oleh **pelatih utama dan pengurus PB**.
+* **Data-Driven:** Keputusan rekrutmen berbasis fakta, bukan asumsi.
+* **Integrity:** Transparansi dalam penilaian dan pengelolaan atlet.
+* **Growth Mindset:** Fokus pada perkembangan jangka panjang (LTAD - *Long Term Athlete Development*).
 
 ---
 
-## F. KETENTUAN KHUSUS SOSIAL
+## 3. TANTANGAN STRATEGIS SAAT INI
 
-1. PB memberikan kesempatan khusus bagi atlet dari:
-
-   * Keluarga kurang mampu
-   * Kondisi keluarga rentan
-2. Dukungan dapat berupa:
-
-   * Keringanan iuran
-   * Skema subsidi silang
-   * Program pembinaan berbasis komitmen
-3. Atlet wajib menunjukkan **disiplin dan komitmen** sebagai bentuk tanggung jawab.
+1. **Standarisasi Kurikulum Awal:** Memastikan pelatih di berbagai sekolah mengajarkan teknik dasar (grip, footwork) yang seragam agar mudah dipoles saat masuk PB.
+2. **Konversi Bakat:** Tantangan meyakinkan orang tua bahwa anaknya memiliki potensi atlet dan aman untuk bergabung ke PB.
+3. **Kesenjangan Kualitas:** Jarak antara kemampuan siswa ekstrakurikuler biasa dengan standar atlet PB yang tinggi.
 
 ---
 
-## G. HAK ATLET
+## 4. TUJUAN STRATEGIS (STRATEGIC OBJECTIVES)
 
-Setiap atlet yang diterima berhak:
-
-1. Mengikuti program latihan sesuai kelompok usia
-2. Mendapat pembinaan teknik dan karakter
-3. Mengikuti evaluasi berkala
-4. Mendapat kesempatan mengikuti event sesuai kesiapan
-
----
-
-## H. KEWAJIBAN ATLET
-
-Setiap atlet wajib:
-
-1. Mengikuti latihan secara disiplin
-2. Menjaga sikap, etika, dan sportivitas
-3. Menghormati pelatih, pengurus, dan sesama atlet
-4. Menjaga nama baik PB
+1. **Talent Pipeline Clarity:**
+Terbentuknya jalur promosi yang jelas di mana 10-20% siswa terbaik di sekolah binaan berhasil lolos seleksi data untuk masuk ke PB Kultur Juara setiap tahunnya.
+2. **Operational Excellence:**
+Sistem manajemen yang mampu menangani ratusan siswa sekolah (massal) dan puluhan atlet PB (intensif) secara efisien tanpa tumpang tindih.
+3. **Event & Scouting Authority:**
+Menyelenggarakan kompetisi yang tidak hanya menghasilkan profit, tapi juga berfungsi sebagai kolam data (*data pool*) untuk *scouting* bakat baru.
 
 ---
 
-## I. PENUTUP
+## 5. PETA ALIGNMENT & PROGRAM
 
-Aturan ini berlaku sejak ditetapkan dan dapat disesuaikan dengan perkembangan PB serta regulasi PBSI yang berlaku.
-
-Ditetapkan di: ____________
-
-Tanggal: ____________
-
-Ketua PB,
-
-(_____________________)
+| Tujuan Strategis | Program Kunci | Squad Penanggung Jawab | Peran Teknologi (Enabler) | KPI Utama |
+| --- | --- | --- | --- | --- |
+| **Mass Participation** | Ekstrakurikuler Sekolah (Basic & Character) | Squad Performance (Tim School) | Absensi & Basic Progress Report | Retensi siswa > 80%; Kepuasan Sekolah Mitra. |
+| **Talent Scouting (The Filter)** | **Talent Assessment Day** (Seleksi Masuk PB) | Squad Performance + Squad IT | **Scouting Parameters & Grading Apps** | Akurasi data bakat; Konversi siswa Sekolah ke PB. |
+| **High Performance** | **Training Camp PB Kultur Juara** | **Squad Performance (Tim PB)** | Athlete Monitoring System | Prestasi di sirkuit lokal/nasional; Perkembangan fisik atlet. |
+| **Legal & Compliance** | Transisi & Izin Orang Tua | Squad External | Database Kontrak & Consent | 100% Atlet PB memiliki dokumen legal lengkap. |
 
 ---
 
-# LAMPIRAN PROGRAM 1 TAHUN
+## 6. ALIGNMENT PROSES BISNIS (CORE WORKFLOW)
 
-## (Untuk Persiapan Proposal CSR & Evaluasi Internal)
+Perubahan mendasar pada alur bisnis yayasan adalah penerapan sistem **Corong (Funnel)**:
 
----
+### Fase 1: Introduction (Pool - Sekolah)
 
-## I. TIMELINE BULANAN DETAIL (12 BULAN)
+* **Lokasi:** Sekolah Mitra (SD/SMP/SMA).
+* **Kurikulum:** *Fun Badminton*, Dasar Teknik (Grip & Stroke), Pendidikan Karakter.
+* **Tujuan:** Membangun minat dan fondasi teknik yang benar. Tidak ada target juara di tahap ini.
+* **Output:** Database siswa aktif.
 
-### Bulan 1
+### Fase 2: Assessment (The Filter - Seleksi)
 
-* Pendataan atlet & orang tua
-* Tes fisik dasar (fun)
-* Sosialisasi aturan disiplin
+* **Trigger:** Rekomendasi pelatih sekolah atau permohonan siswa.
+* **Mekanisme:** Tes Parameter Fisik, Teknik, dan Mental yang terukur angka (*scoring*).
+* **Peran IT:** Mengolah skor menjadi rekomendasi (Lolos/Tidak).
+* **Output:** Daftar kandidat atlet ("Draft Pick").
 
-### Bulan 2
+### Fase 3: Promotion (Elite Unit - PB)
 
-* Latihan teknik dasar rutin
-* Edukasi disiplin waktu
-* Program Lapangan Bersih
+* **Syarat Mutlak:**
+1. Lolos Parameter Data (Skor mencukupi).
+2. **Persetujuan Tertulis Orang Tua/Wali (Legal Consent).**
 
-### Bulan 3
 
-* Evaluasi fisik ringan
-* Mini challenge internal
-* Dokumentasi progres awal
-
-### Bulan 4
-
-* Simulasi pertandingan internal
-* Edukasi mental berani kalah
-* Kampanye botol minum pribadi
-
-### Bulan 5
-
-* Latihan pola permainan
-* Mini challenge bulanan
-* Dokumentasi cerita atlet
-
-### Bulan 6
-
-* Evaluasi tengah tahun
-* Sparing internal
-* Laporan semester 1
-
-### Bulan 7
-
-* Sparing dengan PB lain
-* Fun games luar ruang
-* Aksi bersih fasilitas olahraga
-
-### Bulan 8
-
-* Latihan konsistensi & fokus
-* Edukasi sportivitas
-* Dokumentasi komunitas
-
-### Bulan 9
-
-* Simulasi turnamen kecil
-* Evaluasi mental bertanding
-* Testimoni orang tua
-
-### Bulan 10
-
-* Persiapan turnamen internal
-* Review disiplin & karakter
-* Dokumentasi intensif
-
-### Bulan 11
-
-* Turnamen internal tahunan
-* Refleksi atlet & pelatih
-* Pengumpulan data akhir
-
-### Bulan 12
-
-* Penyusunan laporan tahunan
-* Pameran foto perjalanan
-* Perencanaan tahun berikutnya
+* **Kegiatan:** Latihan intensif 4-6x seminggu, program fisik berat, simulasi pertandingan.
+* **Tujuan:** Memenangkan turnamen.
+* **Output:** Atlet berprestasi.
 
 ---
 
-## II. FORMAT LAPORAN BULANAN (1 HALAMAN)
+## 7. ALIGNMENT STRUKTUR & PERAN (SQUAD)
 
-**Nama Program:** Tumbuh Tangguh: Badminton, Alam & Karakter
-**Bulan:** ________
-**Jumlah Atlet Aktif:** ________
+Penyesuaian struktur organisasi untuk mendukung strategi dua kaki (Sekolah & PB):
 
-### A. Kegiatan Utama
+### A. SQUAD PERFORMANCE & CURRICULUM
 
-* (contoh: latihan rutin, mini challenge, aksi lingkungan)
+* **Strategic Lead (Faiz Azila):** Merancang kurikulum terpisah. Kurikulum Sekolah untuk *massal*, Kurikulum PB untuk *prestasi*. Memastikan kurikulum sekolah adalah fondasi yang tepat untuk kurikulum PB.
+* **Operational Lead (Anindifa Pandu):** Mengelola dua tim pelatih (Pelatih Sekolah & Pelatih PB). Memastikan pelatih sekolah paham standar kualitas yang dicari PB.
 
-### B. Capaian
+### B. SQUAD IT & DATA INTELLIGENCE
 
-* Kehadiran latihan: ___ %
-* Perubahan sikap/disiplin: __________
+* **Strategic Lead (Irsyad Jamal):** Membangun "Grading System". Sistem ini harus bisa menjawab pertanyaan: *"Kenapa anak ini layak masuk PB?"* dengan data, bukan perasaan.
+* **Operational:** Menyediakan alat *tracking* perkembangan atlet PB.
 
-### C. Dokumentasi
+### C. SQUAD EXTERNAL RELATIONS
 
-* Foto: ___ file
-* Video: ___ file
+* **Strategic Lead (Maghfira):** Diplomat utama. Menjelaskan kepada orang tua perbedaan jalur "Hobi" (Sekolah) dan "Prestasi" (PB). Mengelola risiko komplain jika anak tidak lolos seleksi PB, atau jika anak PB mengalami cedera/kelelahan.
 
-### D. Catatan Pelatih
+### D. SQUAD ADMINISTRATION & FINANCE
 
-* ---
+* **Fokus Baru:** Memisahkan pembukuan arus kas massal (iuran ekskul sekolah yang stabil) dengan arus kas PB (biaya operasional tinggi untuk sewa GOR, *shuttlecock* turnamen, dll).
 
 ---
 
-## III. INDIKATOR DAMPAK (VERSI ESG / CSR)
+## 8. ALIGNMENT TEKNOLOGI
 
-### A. Sosial
+Teknologi difokuskan pada tiga fungsi utama:
 
-* Jumlah anak keluarga prasejahtera
-* Konsistensi kehadiran
-* Kepercayaan diri & disiplin
-
-### B. Pendidikan Karakter
-
-* Sportivitas
-* Kerja sama
-* Tanggung jawab
-
-### C. Lingkungan
-
-* Pengurangan sampah plastik
-* Kebersihan lapangan
-* Partisipasi aksi lingkungan
-
-### D. Tata Kelola
-
-* Jadwal berjalan konsisten
-* Laporan rutin tersedia
-* Pelibatan orang tua
+1. **Capturing:** Aplikasi/Form untuk pelatih sekolah menginput data dasar siswa.
+2. **Filtering:** Algoritma sederhana untuk menyaring siswa mana yang postur dan fisiknya memenuhi standar PB.
+3. **Monitoring:** Dasbor khusus untuk memantau progres atlet PB (grafik kemenangan, denyut nadi, kehadiran).
 
 ---
 
-## IV. CHECKLIST DOKUMENTASI WAJIB
+## 9. INDIKATOR KINERJA UTAMA (KPI)
 
-### Setiap Kegiatan:
-
-* [ ] Foto kegiatan (5–10)
-* [ ] Video pendek (30–60 detik)
-* [ ] Catatan tanggal & kegiatan
-
-### Setiap Bulan:
-
-* [ ] Rekap kehadiran
-* [ ] Laporan 1 halaman
-* [ ] Backup file (cloud/drive)
-
-### Akhir Tahun:
-
-* [ ] Laporan tahunan
-* [ ] Video perjalanan
-* [ ] Arsip foto terkurasi
+1. **Conversion Rate:** % Siswa sekolah yang berhasil "naik kelas" ke PB.
+2. **Talent Accuracy:** % Atlet PB yang mampu bertahan lebih dari 6 bulan (menandakan seleksi awal akurat).
+3. **Achievement:** Jumlah podium/medali yang diraih oleh tim PB.
+4. **Compliance:** 100% kelengkapan administrasi dan izin orang tua sebelum siswa mulai latihan pertama di PB.
 
 ---
 
-**Catatan:** Dokumen ini menjadi dasar pengajuan proposal CSR dan kerja sama sponsor.
+## 10. PENUTUP & NEXT STEPS
+
+Dokumen revisi ini mengubah Yayasan Kultur Juara Indonesia dari sekadar penyedia ekstrakurikuler menjadi institusi pembinaan karir atlet yang lengkap. Sekolah adalah "hulu" (sumber mata air), dan PB adalah "hilir" (muara prestasi).
+
+**Langkah Prioritas (Immediate Action):**
+
+1. Finalisasi parameter seleksi fisik & teknik (Squad Performance).
+2. Pembuatan draf "Surat Kontrak/Persetujuan Orang Tua" (Squad External/Admin).
+3. Sosialisasi perubahan alur ini kepada seluruh pelatih mitra (All Squads).
 
 ---
 
-# PROGRAM TERPADU CSR 1 TAHUN
-
-## Align dengan Target CSR Perusahaan
-
-**Nama Program:**
-**"Tangguh Berprestasi" – Badminton, Karakter, Lingkungan & Literasi Keuangan**
-
-Program ini dirancang agar **1 kegiatan inti** dapat memenuhi **berbagai arah CSR**:
-
-* **Perusahaan A (Contoh: Outdoor/Apparel):** alam, ketangguhan, karakter, komunitas
-* **Perusahaan B (Contoh: Finansial/Pendidikan):** pendidikan, inklusi keuangan, UMKM & generasi muda
-
----
-
-## I. PILAR PROGRAM
-
-### Pilar 1 — Atlet Tangguh & Berkarakter (Sponsor A + B)
-
-Fokus pembinaan anak usia dini dari keluarga prasejahtera melalui olahraga badminton.
-
-**Aktivitas Utama:**
-
-* Latihan rutin & pembinaan mental
-* Mini challenge disiplin & sportivitas
-* Evaluasi fisik & karakter
-
----
-
-### Pilar 2 — Cinta Lingkungan & Gaya Hidup Aktif (Sponsor A Core)
-
-Mengintegrasikan nilai petualangan, alam, dan kepedulian lingkungan.
-
-**Aktivitas Utama:**
-
-* Program Lapangan Bersih
-* Pengurangan sampah plastik (botol minum pribadi)
-* Fun games luar ruang
-
----
-
-### Pilar 3 — Literasi Keuangan Atlet & Orang Tua (Sponsor B Core)
-
-Membentuk kebiasaan finansial sehat sejak dini.
-
-**Aktivitas Utama:**
-
-* Edukasi menabung atlet (target mikro)
-* Edukasi keuangan orang tua
-* Simulasi keuangan sederhana
-
----
-
-### Pilar 4 — Kemandirian Komunitas PB (Sponsor A + B)
-
-Penguatan tata kelola PB & ekonomi pendukung.
-
-**Aktivitas Utama:**
-
-* Pelatihan manajemen PB sederhana
-* Pelibatan UMKM orang tua
-* Transparansi laporan & dokumentasi
-
----
-
-## II. TIMELINE PROGRAM 12 BULAN (RINGKAS)
-
-| Bulan | Fokus Utama                       |
-| ----- | --------------------------------- |
-| 1     | Pendataan atlet & baseline sosial |
-| 2     | Disiplin latihan & kebersihan     |
-| 3     | Mini challenge & dokumentasi      |
-| 4     | Edukasi lingkungan & karakter     |
-| 5     | Literasi keuangan atlet           |
-| 6     | Evaluasi tengah tahun             |
-| 7     | Fun games luar ruang              |
-| 8     | Literasi keuangan orang tua       |
-| 9     | Simulasi turnamen                 |
-| 10    | Penguatan komunitas               |
-| 11    | Turnamen internal                 |
-| 12    | Laporan & pameran dampak          |
-
----
-
-## III. INDIKATOR DAMPAK (KEY IMPACT INDICATORS)
-
-### A. Dampak Sosial (Sponsor A & B)
-
-* ≥80% atlet dari keluarga prasejahtera aktif 1 tahun
-* Kehadiran latihan rata-rata ≥75%
-* Penurunan angka putus latihan
-
----
-
-### B. Dampak Pendidikan Karakter (Sponsor A)
-
-* Peningkatan disiplin (absensi & kepatuhan aturan)
-* Sportivitas saat kompetisi internal
-* Kepercayaan diri bertanding
-
----
-
-### C. Dampak Lingkungan (Sponsor A)
-
-* ≥70% atlet menggunakan botol minum pribadi
-* Lapangan bersih & bebas sampah
-* Minimal 4 aksi lingkungan/tahun
-
----
-
-### D. Dampak Literasi Keuangan (Sponsor B)
-
-* ≥60% atlet memiliki kebiasaan menabung
-* ≥50% orang tua ikut sesi literasi keuangan
-* Pemahaman dasar: menabung, kebutuhan vs keinginan
-
----
-
-### E. Dampak Tata Kelola (Sponsor B)
-
-* Laporan bulanan tersedia & terdokumentasi
-* Transparansi dana & kegiatan
-* Struktur PB tertata
-
----
-
-## IV. OUTPUT AKHIR PROGRAM
-
-* Laporan Tahunan CSR
-* Video perjalanan 1 tahun
-* Buku kecil kisah atlet
-* Database dampak sosial
-
----
-
-**Catatan Strategis:**
-Program ini dapat diajukan ke **berbagai sponsor secara paralel** dengan narasi berbeda, namun berbasis **data & kegiatan yang sama**.
-
----
-
-# SISTEM MONITORING, EVALUASI & PERENCANAAN PROGRAM (MEP)
-
-## Siap Web-Based • Transparan • Ready ML & AI
-
-Dokumen ini menjadi **blueprint sistem digital** PB untuk ditampilkan ke **calon sponsor**.
-
----
-
-## I. PRINSIP DESAIN SISTEM
-
-1. **Transparan** – semua data dapat diaudit
-2. **Berkelanjutan** – data historis tersimpan
-3. **Terukur** – indikator kuantitatif & kualitatif
-4. **Scalable** – bisa dikembangkan ML/AI
-5. **Human-Centered** – tidak membebani pelatih
-
----
-
-## II. ARSITEKTUR DATA (HIGH LEVEL)
-
-### Entitas Utama
-
-* Atlet
-* Orang Tua
-* Pelatih
-* Program
-* Kegiatan
-* Evaluasi
-* Kehadiran
-* Literasi Keuangan
-* Lingkungan
-* Dokumentasi
-* Laporan
-
-Semua entitas saling terhubung dan membentuk **1 ekosistem data PB**.
-
----
-
-## III. ENTITY RELATIONSHIP DESIGN (ERD – TEXTUAL)
-
-### 1. ATLET
-
-* atlet_id (PK)
-* nama
-* tanggal_lahir
-* jenis_kelamin
-* kategori_usia
-* latar_belakang_sosial
-* status_aktif
-* tanggal_masuk
-
-Relasi:
-
-* Atlet ↔ Kehadiran (1:M)
-* Atlet ↔ Evaluasi (1:M)
-* Atlet ↔ Literasi_Keuangan (1:M)
-* Atlet ↔ Dokumentasi (1:M)
-
----
-
-### 2. ORANG_TUA
-
-* orang_tua_id (PK)
-* nama
-* pekerjaan
-* penghasilan_range
-* kontak
-* atlet_id (FK)
-
----
-
-### 3. PROGRAM
-
-* program_id (PK)
-* nama_program
-* pilar_program
-* sponsor_target (Sponsor A/Sponsor B)
-* tahun
-* status
-
-Relasi:
-
-* Program ↔ Kegiatan (1:M)
-
----
-
-### 4. KEGIATAN
-
-* kegiatan_id (PK)
-* program_id (FK)
-* tanggal
-* jenis_kegiatan
-* lokasi
-* deskripsi
-
-Relasi:
-
-* Kegiatan ↔ Kehadiran (1:M)
-* Kegiatan ↔ Dokumentasi (1:M)
-
----
-
-### 5. KEHADIRAN
-
-* kehadiran_id (PK)
-* atlet_id (FK)
-* kegiatan_id (FK)
-* status_hadir
-* alasan_tidak_hadir
-
----
-
-### 6. EVALUASI
-
-* evaluasi_id (PK)
-* atlet_id (FK)
-* tanggal
-* domain (fisik/mental/teknik/karakter)
-* skor_numerik
-* catatan_pelatih
-
----
-
-### 7. LITERASI_KEUANGAN
-
-* literasi_id (PK)
-* atlet_id (FK)
-* bulan
-* kebiasaan_menabung (boolean)
-* nominal_tabungan
-* pemahaman_keuangan (skala 1–5)
-
----
-
-### 8. LINGKUNGAN
-
-* lingkungan_id (PK)
-* kegiatan_id (FK)
-* jenis_aksi
-* partisipasi_atlet
-* dampak_deskriptif
-
----
-
-### 9. DOKUMENTASI
-
-* dokumentasi_id (PK)
-* kegiatan_id (FK)
-* tipe (foto/video)
-* url_file
-* keterangan
-
----
-
-### 10. LAPORAN
-
-* laporan_id (PK)
-* periode
-* jenis_laporan (bulanan/tahunan)
-* ringkasan_dampak
-* file_url
-
----
-
-## IV. FLOW SISTEM (END-TO-END)
-
-### 1. Perencanaan Program
-
-Admin → Input Program → Tentukan Pilar → Tentukan Indikator
-
-### 2. Pelaksanaan Kegiatan
-
-Pelatih → Input Kegiatan → Absensi Atlet → Upload Dokumentasi
-
-### 3. Monitoring Harian & Bulanan
-
-Sistem → Rekap Kehadiran → Rekap Evaluasi → Dashboard
-
-### 4. Evaluasi & Scoring
-
-Sistem → Hitung Skor Per Atlet → Hitung Dampak Program
-
-### 5. Pelaporan & Transparansi
-
-Admin → Generate Laporan → Akses Sponsor (Read-Only)
-
----
-
-## V. FORMAT FORM (READY ML & AI)
-
-### Prinsip Form
-
-* Field konsisten
-* Skala numerik
-* Timestamp otomatis
-* Minim free-text
-
----
-
-### Contoh Form Evaluasi Atlet
-
-* atlet_id
-* tanggal
-* domain
-* skor_fisik (0–100)
-* skor_disiplin (0–100)
-* skor_mental (0–100)
-* skor_sportivitas (0–100)
-
----
-
-### Contoh Form Literasi Keuangan
-
-* atlet_id
-* bulan
-* menabung_rutin (0/1)
-* nominal_tabungan
-* pemahaman_keuangan (1–5)
-
----
-
-## VI. POTENSI ML & AI KE DEPAN
-
-### Model yang Bisa Dibangun
-
-* Prediksi risiko putus latihan
-* Rekomendasi program latihan
-* Segmentasi atlet
-* Analisis dampak CSR
-
-### Data Siap Pakai
-
-* Time series kehadiran
-* Skor evaluasi longitudinal
-* Latar belakang sosial
-
----
-
-## VII. TAMPILAN DASHBOARD (UNTUK SPONSOR)
-
-### Dashboard CSR
-
-* Jumlah atlet aktif
-* Kehadiran rata-rata
-* Dampak sosial
-* Dampak lingkungan
-* Literasi keuangan
-
-Akses:
-
-* Sponsor: Read Only
-* PB: Full Access
-
----
-
-**Catatan Strategis:**
-Sistem ini menunjukkan bahwa PB dikelola **modern, transparan, dan berbasis data**, setara organisasi profesional.
+*Disetujui oleh Dewan Pendiri untuk dieksekusi segera.*
