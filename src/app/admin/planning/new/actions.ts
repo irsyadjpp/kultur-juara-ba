@@ -1,4 +1,3 @@
-
 'use server';
 
 import { revalidatePath } from 'next/cache';
@@ -14,8 +13,17 @@ export async function submitProgram(prevState: any, formData: FormData) {
   
   // Simple validation
   const title = formData.get('title');
+  const objective = formData.get('objective');
+  const priority = formData.get('priority');
+
   if (!title || typeof title !== 'string' || title.length < 3) {
-      return { success: false, message: 'Program title is required.' }
+      return { success: false, message: 'Nama Program wajib diisi.' }
+  }
+   if (!objective || typeof objective !== 'string' || objective.length < 10) {
+      return { success: false, message: 'Tujuan Program wajib diisi (minimal 10 karakter).' }
+  }
+  if (!priority) {
+      return { success: false, message: 'Prioritas Program wajib dipilih.' }
   }
 
   const newProg = {
@@ -27,8 +35,8 @@ export async function submitProgram(prevState: any, formData: FormData) {
     deadline: formData.get('deadline'),
     costEstimate: Number(formData.get('costEstimate')),
     status: 'SUBMITTED', // Default status
-    objective: 'To be defined', // Placeholder
-    priority: 'SHOULD', // Placeholder
+    objective: formData.get('objective'), 
+    priority: formData.get('priority'), 
   };
   
   // In a real app, this would be a DB call
