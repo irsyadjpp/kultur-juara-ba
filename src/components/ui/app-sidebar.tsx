@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from "react"
@@ -14,7 +15,8 @@ import {
   Brain,
   ClipboardCheck,
   Trophy,
-  HeartPulse
+  HeartPulse,
+  Target
 } from "lucide-react"
 
 import {
@@ -42,6 +44,9 @@ const data = {
   navUtama: [
     { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
     { title: "Profil Saya", url: "/admin/profile", icon: User },
+  ],
+  navStrategis: [
+    { title: "Masterplan", url: "/admin/planning", icon: Target },
   ],
   navAtlet: [
     { title: "Registrasi Atlet Baru", url: "/admin/athletes/register", icon: UserPlus },
@@ -100,6 +105,7 @@ export function AppSidebar({ onLogout, ...props }: React.ComponentProps<typeof S
       <SidebarContent className="px-3 py-4 space-y-4 bg-background/50 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted">
         
         <NavGroup label="UTAMA" items={data.navUtama} currentPath={pathname} />
+        <NavGroup label="STRATEGIS" items={data.navStrategis} currentPath={pathname} />
         <NavGroup label="MANAJEMEN ATLET" items={data.navAtlet} currentPath={pathname} />
         <NavGroup label="EVALUASI" items={data.navEvaluasi} currentPath={pathname} />
         <NavGroup label="LOG LATIHAN" items={data.navLatihan} currentPath={pathname} />
