@@ -7,7 +7,8 @@ import {
   Users, Shield, Trophy, Search, 
   Plus, MapPin, Mail, Phone, Edit3, 
   Crown, Star, UserPlus, Briefcase, 
-  MoreHorizontal
+  MoreHorizontal,
+  ShieldCheck
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
