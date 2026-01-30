@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -16,7 +17,7 @@ import { FormControl } from "@/components/ui/form";
 
 // --- Custom Components from other eval pages ---
 const SectionCard = ({ icon: Icon, title, description, children }: { icon: React.ElementType, title: string, description?: string, children: React.ReactNode }) => (
-  <Card className="bg-zinc-900/50 backdrop-blur-sm border-border/20 rounded-3xl shadow-xl">
+  <Card className="rounded-3xl shadow-xl">
     <CardHeader className="p-8 pb-4">
       <CardTitle className="text-xl font-headline flex items-center gap-3">
         <Icon className="w-6 h-6 text-primary"/> {title}
@@ -79,15 +80,15 @@ export default function TacticalEvaluationPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2 md:col-span-2">
                     <Label>Nama Atlet</Label>
-                    <Select><SelectTrigger className="h-14 rounded-xl bg-zinc-950 border-zinc-800 text-base"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP</SelectItem></SelectContent></Select>
+                    <Select><SelectTrigger className="h-14 rounded-xl text-base"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP</SelectItem></SelectContent></Select>
                 </div>
                  <div className="space-y-2">
                     <Label>Tanggal Evaluasi</Label>
-                    <Input type="date" placeholder="Tanggal" className="h-14 rounded-xl bg-zinc-950 border-zinc-800"/>
+                    <Input type="date" placeholder="Tanggal" className="h-14 rounded-xl"/>
                 </div>
                 <div className="space-y-2">
                     <Label>Pelatih Penilai</Label>
-                    <Input placeholder="Nama Pelatih" className="h-14 rounded-xl bg-zinc-950 border-zinc-800"/>
+                    <Input placeholder="Nama Pelatih" className="h-14 rounded-xl"/>
                 </div>
             </div>
         </SectionCard>
@@ -99,7 +100,7 @@ export default function TacticalEvaluationPage() {
                 <Label>Pola Bermain Dominan</Label>
                 <Select>
                     <FormControl>
-                      <SelectTrigger className="h-12 rounded-xl bg-zinc-950 border-zinc-800">
+                      <SelectTrigger className="h-12 rounded-xl">
                         <SelectValue placeholder="Pilih pola bermain..." />
                       </SelectTrigger>
                     </FormControl>
@@ -119,11 +120,11 @@ export default function TacticalEvaluationPage() {
 
         {/* REKOMENDASI PELATIH */}
         <SectionCard title="Analisis & Rencana Pengembangan" icon={Target}>
-            <Textarea placeholder="Analisa pola permainan dan tentukan area fokus untuk pengembangan taktik selanjutnya..." className="bg-zinc-950 border-zinc-800 rounded-xl h-32"/>
+            <Textarea placeholder="Analisa pola permainan dan tentukan area fokus untuk pengembangan taktik selanjutnya..." className="rounded-xl h-32"/>
         </SectionCard>
         
         {/* SUBMIT */}
-        <div className="flex justify-end pt-6 border-t border-border/20">
+        <div className="flex justify-end pt-6 border-t border-border">
             <Button size="lg" className="h-16 rounded-full font-bold text-lg px-10 shadow-lg shadow-primary/20">
                 <Save className="w-6 h-6 mr-3"/> Simpan Evaluasi Taktik
             </Button>

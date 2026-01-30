@@ -16,7 +16,7 @@ import { Slider } from "@/components/ui/slider";
 
 // --- Reusable Components ---
 const SectionCard = ({ icon: Icon, title, description, children }: { icon: React.ElementType, title: string, description?: string, children: React.ReactNode }) => (
-  <Card className="bg-zinc-900/50 backdrop-blur-sm border-border/20 rounded-3xl shadow-xl">
+  <Card className="rounded-3xl shadow-xl">
     <CardHeader className="p-8 pb-4">
       <CardTitle className="text-xl font-headline flex items-center gap-3">
         <Icon className="w-6 h-6 text-primary"/> {title}
@@ -33,7 +33,7 @@ const MetricInput = ({ label, unit, ...props }: { label: string, unit: string } 
   <div className="space-y-2">
     <Label>{label}</Label>
     <div className="flex items-center gap-2">
-      <Input type="number" step="0.1" className="h-12 rounded-xl bg-zinc-950 border-zinc-800 font-mono" {...props} />
+      <Input type="number" step="0.1" className="h-12 rounded-xl font-mono" {...props} />
       <span className="text-sm font-mono text-muted-foreground">{unit}</span>
     </div>
   </div>
@@ -81,15 +81,15 @@ export default function NutritionRecoveryLogPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2 md:col-span-2">
                     <Label>Nama Atlet</Label>
-                    <Select><SelectTrigger className="h-14 rounded-xl bg-zinc-950 border-zinc-800 text-base"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP</SelectItem></SelectContent></Select>
+                    <Select><SelectTrigger className="h-14 rounded-xl text-base"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP</SelectItem></SelectContent></Select>
                 </div>
                  <div className="space-y-2">
                     <Label>Tanggal Pencatatan</Label>
-                    <Input type="date" className="h-14 rounded-xl bg-zinc-950 border-zinc-800"/>
+                    <Input type="date" className="h-14 rounded-xl"/>
                 </div>
                 <div className="space-y-2">
                     <Label>Dicatat Oleh</Label>
-                    <Input placeholder="Nama Atlet / Pelatih" className="h-14 rounded-xl bg-zinc-950 border-zinc-800"/>
+                    <Input placeholder="Nama Atlet / Pelatih" className="h-14 rounded-xl"/>
                 </div>
             </div>
         </SectionCard>
@@ -100,12 +100,12 @@ export default function NutritionRecoveryLogPage() {
                 <div className="space-y-4">
                     <div className="space-y-2">
                         <Label>Pola Makan Harian</Label>
-                        <Textarea placeholder="Catat menu sarapan, makan siang, makan malam, dan snack..." className="bg-zinc-950 border-zinc-800 rounded-xl h-24"/>
+                        <Textarea placeholder="Catat menu sarapan, makan siang, makan malam, dan snack..." className="rounded-xl h-24"/>
                     </div>
                     <MetricInput label="Asupan Air" unit="liter" />
                     <div className="space-y-2">
                         <Label>Suplemen yang Dikonsumsi</Label>
-                        <Textarea placeholder="Contoh: Creatine 5g, Whey Protein 1 scoop..." className="bg-zinc-950 border-zinc-800 rounded-xl h-20"/>
+                        <Textarea placeholder="Contoh: Creatine 5g, Whey Protein 1 scoop..." className="rounded-xl h-20"/>
                     </div>
                 </div>
             </SectionCard>
@@ -120,7 +120,7 @@ export default function NutritionRecoveryLogPage() {
         </div>
         
         {/* SUBMIT */}
-        <div className="flex justify-end pt-6 border-t border-border/20">
+        <div className="flex justify-end pt-6 border-t border-border">
             <Button size="lg" className="h-16 rounded-full font-bold text-lg px-10 shadow-lg shadow-primary/20">
                 <Save className="w-6 h-6 mr-3"/> Simpan Log Harian
             </Button>

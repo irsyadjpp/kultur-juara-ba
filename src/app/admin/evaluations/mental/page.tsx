@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
 
 // --- Reusable Components ---
 const SectionCard = ({ icon: Icon, title, description, children, className }: { icon: React.ElementType, title: string, description?: string, children: React.ReactNode, className?: string }) => (
-  <Card className={cn("bg-zinc-900/50 backdrop-blur-sm border-border/20 rounded-3xl shadow-xl", className)}>
+  <Card className={cn("rounded-3xl shadow-xl", className)}>
     <CardHeader className="p-8 pb-4">
       <CardTitle className="text-xl font-headline flex items-center gap-3">
         <Icon className="w-6 h-6 text-primary"/> {title}
@@ -35,11 +35,11 @@ const SectionCard = ({ icon: Icon, title, description, children, className }: { 
 const ObservationScale = ({ label, scale }: { label: string, scale: string[] }) => (
     <div className="space-y-3">
       <Label>{label}</Label>
-      <RadioGroup className="flex items-center justify-between bg-zinc-950 p-2 rounded-xl border border-zinc-800">
+      <RadioGroup className="flex items-center justify-between bg-secondary p-2 rounded-xl border">
         {scale.map((item, index) => (
             <div key={item} className="flex-1 text-center">
                 <RadioGroupItem value={String(index)} id={`${label}-${index}`} className="sr-only" />
-                <Label htmlFor={`${label}-${index}`} className="flex flex-col items-center gap-1 cursor-pointer p-2 rounded-lg transition-colors text-zinc-500 hover:bg-zinc-800 data-[state=checked]:text-primary">
+                <Label htmlFor={`${label}-${index}`} className="flex flex-col items-center gap-1 cursor-pointer p-2 rounded-lg transition-colors text-muted-foreground hover:bg-background data-[state=checked]:text-primary">
                     <span className="text-2xl font-bold">{index}</span>
                     <span className="text-[10px] uppercase font-bold">{item}</span>
                 </Label>
@@ -63,9 +63,9 @@ const EmojiScale = ({ label }: { label: string }) => (
                 return (
                     <div key={index}>
                         <RadioGroupItem value={String(index)} id={`${label}-${index}`} className="sr-only" />
-                        <Label htmlFor={`${label}-${index}`} className={cn("flex flex-col items-center justify-center gap-2 p-4 rounded-2xl border-2 border-transparent bg-zinc-950 hover:border-primary/50 cursor-pointer data-[state=checked]:border-primary data-[state=checked]:bg-primary/10", emoji.color)}>
+                        <Label htmlFor={`${label}-${index}`} className={cn("flex flex-col items-center justify-center gap-2 p-4 rounded-2xl border-2 border-transparent bg-secondary hover:border-primary/50 cursor-pointer data-[state=checked]:border-primary data-[state=checked]:bg-primary/10", emoji.color)}>
                            <Icon className="w-10 h-10" />
-                           <span className="text-xs font-bold text-zinc-400">{emoji.label}</span>
+                           <span className="text-xs font-bold text-muted-foreground">{emoji.label}</span>
                         </Label>
                     </div>
                 )
@@ -203,7 +203,7 @@ export default function MentalEvaluationPage() {
                       <RatingSlider label="Motivasi Latihan" value={scores.motivation} onValueChange={(v) => handleScoreChange('motivation', v)} max={10} />
                       <RatingSlider label="Tingkat Kepercayaan Diri" value={scores.confidence} onValueChange={(v) => handleScoreChange('confidence', v)} max={10} />
                       <RatingSlider label="Tingkat Stres Umum (Luar Lapangan)" value={scores.stress} onValueChange={(v) => handleScoreChange('stress', v)} max={10} />
-                      <div className="space-y-2 pt-4 border-t border-zinc-800">
+                      <div className="space-y-2 pt-4 border-t">
                           <Label>Goal Orientation</Label>
                           <Select><SelectTrigger className="h-12"><SelectValue placeholder="Pilih Orientasi..."/></SelectTrigger><SelectContent><SelectItem value="task">Task-oriented (Fokus pada proses & self-improvement)</SelectItem><SelectItem value="ego">Ego-oriented (Fokus pada hasil & mengalahkan orang lain)</SelectItem></SelectContent></Select>
                       </div>
@@ -213,9 +213,9 @@ export default function MentalEvaluationPage() {
         );
       default:
         return (
-          <div className="h-48 flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-zinc-800 rounded-3xl text-zinc-600">
+          <div className="h-48 flex flex-col items-center justify-center text-center p-8 border-2 border-dashed rounded-3xl text-muted-foreground">
             <UserSquare className="w-12 h-12 mb-2" />
-            <p className="font-bold text-zinc-400">Pilih Seorang Atlet</p>
+            <p className="font-bold text-foreground">Pilih Seorang Atlet</p>
             <p className="text-sm">Formulir evaluasi mental akan muncul di sini sesuai dengan kelompok usianya.</p>
           </div>
         );
@@ -242,7 +242,7 @@ export default function MentalEvaluationPage() {
                 <div className="space-y-2 md:col-span-2">
                     <Label>Nama Atlet</Label>
                     <Select onValueChange={(v) => setSelectedAthleteAge(Number(v))}>
-                      <SelectTrigger className="h-14 rounded-xl bg-zinc-950 border-zinc-800 text-base">
+                      <SelectTrigger className="h-14 rounded-xl text-base">
                         <SelectValue placeholder="Pilih Atlet..." />
                       </SelectTrigger>
                       <SelectContent>
@@ -256,11 +256,11 @@ export default function MentalEvaluationPage() {
                 </div>
                  <div className="space-y-2">
                     <Label>Tanggal Evaluasi</Label>
-                    <Input type="date" placeholder="Tanggal" className="h-14 rounded-xl bg-zinc-950 border-zinc-800"/>
+                    <Input type="date" placeholder="Tanggal" className="h-14 rounded-xl"/>
                 </div>
                 <div className="space-y-2">
                     <Label>Pelatih Penilai</Label>
-                    <Input placeholder="Nama Pelatih" className="h-14 rounded-xl bg-zinc-950 border-zinc-800"/>
+                    <Input placeholder="Nama Pelatih" className="h-14 rounded-xl"/>
                 </div>
             </div>
         </SectionCard>
@@ -274,10 +274,10 @@ export default function MentalEvaluationPage() {
         {ageGroup && (
           <>
             <SectionCard title="Catatan Psikolog / Pelatih Mental" icon={Brain}>
-                <Textarea placeholder="Tulis catatan observasi, rekomendasi latihan mental, atau area yang perlu perhatian khusus..." className="bg-zinc-950 border-zinc-800 rounded-xl h-32"/>
+                <Textarea placeholder="Tulis catatan observasi, rekomendasi latihan mental, atau area yang perlu perhatian khusus..." className="rounded-xl h-32"/>
             </SectionCard>
             
-            <div className="flex justify-end pt-6 border-t border-border/20">
+            <div className="flex justify-end pt-6 border-t border-border">
                 <Button size="lg" className="h-16 rounded-full font-bold text-lg px-10 shadow-lg shadow-primary/20">
                     <Save className="w-6 h-6 mr-3"/> Simpan Evaluasi Mental
                 </Button>

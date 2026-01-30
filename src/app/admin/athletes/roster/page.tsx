@@ -76,27 +76,27 @@ export default function AthleteRosterPage() {
   );
 
   return (
-    <div className="space-y-8 p-4 md:p-8 font-body pb-24">
+    <div className="space-y-8 p-4 md:p-0 font-body pb-24">
       
       {/* --- HEADER --- */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
             <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="rounded-full px-3 py-1 border-sky-500 text-sky-500 bg-sky-500/10 backdrop-blur-md">
+                <Badge variant="outline" className="rounded-full px-3 py-1 border-sky-500 text-sky-500 bg-sky-500/10">
                     <Users className="w-3 h-3 mr-2" /> DATABASE ATLET
                 </Badge>
             </div>
-            <h1 className="text-4xl md:text-5xl font-black font-headline uppercase tracking-tighter text-white">
+            <h1 className="text-4xl md:text-5xl font-black font-headline uppercase tracking-tighter text-foreground">
                 Roster <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-600">Atlet</span>
             </h1>
-            <p className="text-zinc-400 mt-2 max-w-xl text-lg">
+            <p className="text-muted-foreground mt-2 max-w-xl text-lg">
                 Lihat dan kelola semua atlet yang terdaftar di Kultur Juara Academy.
             </p>
         </div>
 
         <Button 
             asChild
-            className="h-14 rounded-full px-8 bg-sky-600 hover:bg-sky-700 text-white font-black text-lg shadow-[0_0_20px_rgba(14,165,233,0.4)] transition-transform active:scale-95"
+            className="h-14 rounded-full px-8 bg-sky-600 hover:bg-sky-700 text-white font-bold text-lg shadow-lg transition-transform active:scale-95"
         >
             <Link href="/admin/athletes/register">
               <UserPlus className="mr-2 w-5 h-5"/> DAFTARKAN ATLET BARU
@@ -106,52 +106,49 @@ export default function AthleteRosterPage() {
 
       {/* --- STATS CARDS --- */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-         <Card className="bg-zinc-900 border-zinc-800 rounded-[28px] p-1 overflow-hidden relative group">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-sky-500/10 rounded-full blur-[40px] group-hover:bg-sky-500/20 transition-all"></div>
+         <Card className="rounded-[28px] p-1 overflow-hidden group">
             <CardContent className="p-5 flex items-center gap-4 relative z-10">
-                <div className="h-12 w-12 rounded-2xl bg-zinc-800 flex items-center justify-center text-zinc-400">
+                <div className="h-12 w-12 rounded-2xl bg-secondary flex items-center justify-center text-muted-foreground">
                     <Users className="w-6 h-6"/>
                 </div>
                 <div>
-                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Total Atlet</p>
-                    <p className="text-3xl font-black text-white">{STATS.totalAthletes}</p>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Total Atlet</p>
+                    <p className="text-3xl font-black text-foreground">{STATS.totalAthletes}</p>
                 </div>
             </CardContent>
          </Card>
-         <Card className="bg-zinc-900 border-zinc-800 rounded-[28px] p-1 overflow-hidden relative group">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-full blur-[40px] group-hover:bg-green-500/20 transition-all"></div>
+         <Card className="rounded-[28px] p-1 overflow-hidden group">
             <CardContent className="p-5 flex items-center gap-4 relative z-10">
-                <div className="h-12 w-12 rounded-2xl bg-green-900/20 flex items-center justify-center text-green-500">
+                <div className="h-12 w-12 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-500">
                     <ShieldCheck className="w-6 h-6"/>
                 </div>
                 <div>
-                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Atlet Aktif</p>
-                    <p className="text-3xl font-black text-white">{STATS.activeAthletes}</p>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Atlet Aktif</p>
+                    <p className="text-3xl font-black text-foreground">{STATS.activeAthletes}</p>
                 </div>
             </CardContent>
          </Card>
-         <Card className="bg-zinc-900 border-zinc-800 rounded-[28px] p-1 overflow-hidden relative group">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-yellow-500/10 rounded-full blur-[40px] group-hover:bg-yellow-500/20 transition-all"></div>
+         <Card className="rounded-[28px] p-1 overflow-hidden group">
             <CardContent className="p-5 flex items-center gap-4 relative z-10">
-                <div className="h-12 w-12 rounded-2xl bg-yellow-900/20 flex items-center justify-center text-yellow-500">
+                <div className="h-12 w-12 rounded-2xl bg-yellow-500/10 flex items-center justify-center text-yellow-500">
                     <Star className="w-6 h-6 fill-yellow-500"/>
                 </div>
                 <div>
-                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Kelompok Junior</p>
-                    <p className="text-3xl font-black text-white">{STATS.juniorAthletes}</p>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Kelompok Junior</p>
+                    <p className="text-3xl font-black text-foreground">{STATS.juniorAthletes}</p>
                 </div>
             </CardContent>
          </Card>
       </div>
 
       {/* --- ATHLETE LIST --- */}
-      <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-[40px] p-2 backdrop-blur-sm flex flex-col">
+      <div className="bg-card border rounded-[40px] p-2 flex flex-col">
         <div className="flex items-center justify-end px-4 py-4 gap-4">
             <div className="relative w-full md:w-72">
-                <Search className="absolute left-4 top-3.5 w-4 h-4 text-zinc-500" />
+                <Search className="absolute left-4 top-3.5 w-4 h-4 text-muted-foreground" />
                 <Input 
                     placeholder="Cari nama atlet..." 
-                    className="h-12 bg-zinc-950 border-zinc-800 rounded-full pl-10 text-white focus:ring-sky-500"
+                    className="h-12 bg-background border-border rounded-full pl-10 focus:ring-sky-500"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -161,7 +158,7 @@ export default function AthleteRosterPage() {
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="border-zinc-800">
+              <TableRow>
                 <TableHead className="pl-6">Nama Atlet</TableHead>
                 <TableHead>ID</TableHead>
                 <TableHead>Level</TableHead>
@@ -171,29 +168,29 @@ export default function AthleteRosterPage() {
             </TableHeader>
             <TableBody>
               {filteredAthletes.map((athlete) => (
-                <TableRow key={athlete.id} className="border-zinc-800 hover:bg-zinc-800/50">
+                <TableRow key={athlete.id} className="hover:bg-secondary/50">
                   <TableCell className="pl-6">
                     <div className="flex items-center gap-4">
-                      <Avatar className="h-10 w-10 border-2 border-zinc-700">
+                      <Avatar className="h-10 w-10 border-2">
                         <AvatarImage src={athlete.avatar} />
-                        <AvatarFallback className="bg-zinc-800 text-sm font-bold">{athlete.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
+                        <AvatarFallback className="bg-secondary text-sm font-bold">{athlete.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
                       </Avatar>
-                      <span className="font-bold text-white">{athlete.name}</span>
+                      <span className="font-bold text-foreground">{athlete.name}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="font-mono text-xs text-zinc-400">{athlete.id}</TableCell>
+                  <TableCell className="font-mono text-xs text-muted-foreground">{athlete.id}</TableCell>
                   <TableCell>
-                    <Badge variant="outline" className="border-sky-500/30 text-sky-400 bg-sky-500/10">
+                    <Badge variant="outline" className="border-sky-500/30 text-sky-500 bg-sky-500/10">
                       {athlete.level}
                     </Badge>
                   </TableCell>
                   <TableCell>
-                     <Badge variant={athlete.status === 'ACTIVE' ? 'default' : 'secondary'} className={cn(athlete.status === 'ACTIVE' ? 'bg-green-500/20 text-green-500' : 'bg-zinc-700 text-zinc-400', 'border-none')}>
+                     <Badge variant={athlete.status === 'ACTIVE' ? 'default' : 'secondary'} className={cn(athlete.status === 'ACTIVE' ? 'bg-green-500/10 text-green-600' : 'bg-secondary text-muted-foreground', 'border-none')}>
                       {athlete.status}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right pr-6">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-zinc-500 hover:text-white">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground">
                       <MoreHorizontal className="w-4 h-4" />
                     </Button>
                   </TableCell>

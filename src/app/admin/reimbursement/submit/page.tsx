@@ -74,27 +74,27 @@ export default function ReimbursementRequestPage() {
   };
 
   return (
-    <div className="space-y-8 p-4 md:p-8 font-body pb-24">
+    <div className="space-y-8 p-4 md:p-0 font-body pb-24">
       
       {/* --- HEADER --- */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
             <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="rounded-full px-3 py-1 border-sky-500 text-sky-500 bg-sky-500/10 backdrop-blur-md">
+                <Badge variant="outline" className="rounded-full px-3 py-1 border-sky-500 text-sky-500 bg-sky-500/10">
                     <Receipt className="w-3 h-3 mr-2" /> EXPENSE CLAIM
                 </Badge>
             </div>
-            <h1 className="text-4xl md:text-5xl font-black font-headline uppercase tracking-tighter text-white">
+            <h1 className="text-4xl md:text-5xl font-black font-headline uppercase tracking-tighter text-foreground">
                 My <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-600">Payouts</span>
             </h1>
-            <p className="text-zinc-400 mt-2 max-w-xl text-lg">
+            <p className="text-muted-foreground mt-2 max-w-xl text-lg">
                 Ajukan klaim pengeluaran operasional dengan cepat.
             </p>
         </div>
 
         <Button 
             onClick={() => setIsFormOpen(true)}
-            className="h-14 rounded-full px-8 bg-sky-600 hover:bg-sky-700 text-white font-bold text-lg shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-transform active:scale-95"
+            className="h-14 rounded-full px-8 bg-sky-600 hover:bg-sky-700 text-white font-bold text-lg shadow-lg shadow-sky-500/30 transition-transform active:scale-95"
         >
             <Plus className="mr-2 w-6 h-6"/> NEW CLAIM
         </Button>
@@ -103,33 +103,33 @@ export default function ReimbursementRequestPage() {
       {/* --- WALLET STATS --- */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
          {/* Total Paid Card */}
-         <Card className="bg-gradient-to-br from-emerald-900 to-zinc-950 border-emerald-800 rounded-[32px] relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/20 rounded-full blur-[60px]"></div>
+         <Card className="bg-gradient-to-br from-emerald-50 via-white to-emerald-50 border-emerald-200 rounded-[32px] relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-[60px]"></div>
             <CardContent className="p-8 relative z-10">
                 <div className="flex justify-between items-start mb-4">
-                    <div className="p-3 bg-emerald-500/10 rounded-2xl text-emerald-500 border border-emerald-500/20">
+                    <div className="p-3 bg-emerald-100 rounded-2xl text-emerald-600 border border-emerald-200">
                         <Wallet className="w-6 h-6"/>
                     </div>
-                    <Badge className="bg-emerald-500 text-black font-bold">PAID OUT</Badge>
+                    <Badge className="bg-emerald-600 text-white font-bold">PAID OUT</Badge>
                 </div>
-                <p className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-1">Total Reimbursed</p>
-                <h2 className="text-4xl font-black text-white font-mono tracking-tight">
+                <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-1">Total Reimbursed</p>
+                <h2 className="text-4xl font-black text-foreground font-mono tracking-tight">
                     Rp {totalPaid.toLocaleString('id-ID', { notation: "compact" })}
                 </h2>
             </CardContent>
          </Card>
 
          {/* Pending Card */}
-         <Card className="bg-zinc-900 border-zinc-800 rounded-[32px] relative overflow-hidden group">
+         <Card className="bg-card border rounded-[32px] relative overflow-hidden group">
             <CardContent className="p-8 relative z-10">
                 <div className="flex justify-between items-start mb-4">
-                    <div className="p-3 bg-yellow-500/10 rounded-2xl text-yellow-500 border border-yellow-500/20">
+                    <div className="p-3 bg-yellow-100 rounded-2xl text-yellow-600 border border-yellow-200">
                         <Clock className="w-6 h-6"/>
                     </div>
-                    <Badge variant="outline" className="border-yellow-500 text-yellow-500 font-bold">PROCESSING</Badge>
+                    <Badge variant="outline" className="border-yellow-500 text-yellow-600 font-bold">PROCESSING</Badge>
                 </div>
-                <p className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-1">Pending Approval</p>
-                <h2 className="text-4xl font-black text-white font-mono tracking-tight">
+                <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-1">Pending Approval</p>
+                <h2 className="text-4xl font-black text-foreground font-mono tracking-tight">
                     Rp {totalPending.toLocaleString('id-ID', { notation: "compact" })}
                 </h2>
             </CardContent>
@@ -137,30 +137,30 @@ export default function ReimbursementRequestPage() {
       </div>
 
       {/* --- CLAIM HISTORY LIST --- */}
-      <Card className="bg-zinc-900/50 border-zinc-800 rounded-[40px] flex flex-col min-h-[400px]">
+      <Card className="rounded-[40px] flex flex-col min-h-[400px]">
         <CardHeader className="p-8 pb-4">
-            <CardTitle className="text-xl font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2">
+            <CardTitle className="text-xl font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                 <FileText className="w-5 h-5 text-sky-500"/> Transaction History
             </CardTitle>
         </CardHeader>
         <ScrollArea className="flex-1 p-8 pt-0">
             <div className="space-y-4">
                 {MY_CLAIMS.map((claim) => (
-                    <div key={claim.id} className="group relative bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-[28px] p-6 transition-all cursor-pointer hover:border-sky-500/30">
+                    <div key={claim.id} className="group relative bg-secondary/50 hover:bg-secondary border rounded-[28px] p-6 transition-all cursor-pointer hover:border-primary/30">
                         <div className="flex justify-between items-start mb-4">
                             <div className="flex items-center gap-4">
                                 <div className={cn(
                                     "h-14 w-14 rounded-2xl flex items-center justify-center text-xl font-black",
-                                    claim.status === 'PAID' ? "bg-emerald-500/10 text-emerald-500" : 
-                                    claim.status === 'REJECTED' ? "bg-red-500/10 text-red-500" : "bg-yellow-500/10 text-yellow-500"
+                                    claim.status === 'PAID' ? "bg-emerald-100 text-emerald-600" : 
+                                    claim.status === 'REJECTED' ? "bg-red-100 text-red-600" : "bg-yellow-100 text-yellow-600"
                                 )}>
                                     {claim.status === 'PAID' ? <CheckCircle2 className="w-7 h-7"/> : 
                                      claim.status === 'REJECTED' ? <XCircle className="w-7 h-7"/> : <Clock className="w-7 h-7"/>}
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-white text-lg line-clamp-1">{claim.title}</h4>
-                                    <p className="text-xs text-zinc-500 mt-1 font-medium flex items-center gap-2">
-                                        <span className="bg-zinc-950 px-2 py-0.5 rounded border border-zinc-800">{claim.category}</span>
+                                    <h4 className="font-bold text-foreground text-lg line-clamp-1">{claim.title}</h4>
+                                    <p className="text-xs text-muted-foreground mt-1 font-medium flex items-center gap-2">
+                                        <span className="bg-background px-2 py-0.5 rounded border">{claim.category}</span>
                                         <span>•</span>
                                         <span>{claim.date}</span>
                                     </p>
@@ -170,13 +170,13 @@ export default function ReimbursementRequestPage() {
                                 <Badge variant="outline" className={cn("mb-2 border font-bold text-[10px]", getStatusColor(claim.status))}>
                                     {claim.status}
                                 </Badge>
-                                <p className="text-xl font-black text-white font-mono">
+                                <p className="text-xl font-black text-foreground font-mono">
                                     Rp {claim.amount.toLocaleString('id-ID')}
                                 </p>
                             </div>
                         </div>
                         
-                        <div className="bg-zinc-950 p-3 rounded-xl text-xs text-zinc-400 italic border border-zinc-800/50">
+                        <div className="bg-background p-3 rounded-xl text-xs text-muted-foreground italic border">
                             "{claim.notes}"
                         </div>
                     </div>
@@ -187,10 +187,10 @@ export default function ReimbursementRequestPage() {
 
       {/* --- NEW CLAIM MODAL --- */}
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="bg-zinc-950 border-zinc-800 text-white rounded-[40px] max-w-md p-0 overflow-hidden shadow-2xl">
-            <div className="p-8 border-b border-zinc-800 bg-sky-950/20">
+        <DialogContent className="bg-card text-foreground rounded-[40px] max-w-md p-0 overflow-hidden shadow-2xl">
+            <div className="p-8 border-b bg-sky-500/10">
                 <DialogHeader>
-                    <DialogTitle className="text-2xl font-black font-headline uppercase flex items-center gap-2 text-sky-500">
+                    <DialogTitle className="text-2xl font-black font-headline uppercase flex items-center gap-2 text-sky-600">
                         <DollarSign className="w-6 h-6"/> Claim Expense
                     </DialogTitle>
                     <DialogDescription>Pastikan foto bukti transaksi jelas.</DialogDescription>
@@ -201,28 +201,28 @@ export default function ReimbursementRequestPage() {
                 
                 {/* Amount Input */}
                 <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase text-zinc-500 ml-1">Total Nominal</label>
+                    <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Total Nominal</label>
                     <div className="relative">
-                        <span className="absolute left-6 top-5 text-zinc-500 font-bold text-xl">Rp</span>
+                        <span className="absolute left-6 top-5 text-muted-foreground font-bold text-xl">Rp</span>
                         <Input 
                             type="number" 
                             placeholder="0" 
-                            className="bg-black border-zinc-800 h-20 rounded-[24px] pl-16 text-4xl font-black font-mono text-white focus:ring-sky-500 focus:border-sky-500 placeholder:text-zinc-700" 
+                            className="bg-secondary h-20 rounded-[24px] pl-16 text-4xl font-black font-mono text-foreground focus:ring-sky-500 focus:border-sky-500 placeholder:text-muted-foreground/30" 
                         />
                     </div>
                 </div>
 
                 {/* Details */}
                 <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase text-zinc-500 ml-1">Keperluan</label>
-                    <Input placeholder="Cth: Beli Aqua Galon" className="bg-zinc-900 border-zinc-800 h-14 rounded-2xl text-lg font-bold" />
+                    <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Keperluan</label>
+                    <Input placeholder="Cth: Beli Aqua Galon" className="bg-secondary h-14 rounded-2xl text-lg font-bold" />
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase text-zinc-500 ml-1">Kategori</label>
+                    <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Kategori</label>
                     <Select>
-                        <SelectTrigger className="bg-zinc-900 border-zinc-800 h-14 rounded-2xl"><SelectValue placeholder="Pilih Kategori" /></SelectTrigger>
-                        <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
+                        <SelectTrigger className="bg-secondary h-14 rounded-2xl"><SelectValue placeholder="Pilih Kategori" /></SelectTrigger>
+                        <SelectContent>
                             {CATEGORIES.map(c => <SelectItem key={c.id} value={c.id}>{c.label}</SelectItem>)}
                         </SelectContent>
                     </Select>
@@ -230,9 +230,9 @@ export default function ReimbursementRequestPage() {
 
                 {/* Photo Proof Upload */}
                 <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase text-zinc-500 ml-1">Foto Bukti (Resi/Struk)</label>
+                    <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Foto Bukti (Resi/Struk)</label>
                     <div 
-                        className="h-32 bg-zinc-900 border-2 border-dashed border-zinc-800 rounded-2xl flex flex-col items-center justify-center text-zinc-500 hover:text-white hover:border-sky-500/50 hover:bg-sky-900/10 cursor-pointer transition-all group"
+                        className="h-32 bg-secondary border-2 border-dashed rounded-2xl flex flex-col items-center justify-center text-muted-foreground hover:text-foreground hover:border-sky-500/50 hover:bg-sky-500/10 cursor-pointer transition-all group"
                         onClick={() => setUploadedFile("mock-file.jpg")}
                     >
                         {uploadedFile ? (
@@ -242,7 +242,7 @@ export default function ReimbursementRequestPage() {
                             </div>
                         ) : (
                             <div className="flex flex-col items-center">
-                                <div className="p-3 bg-zinc-800 rounded-full mb-2 group-hover:bg-sky-500 group-hover:text-white transition-colors">
+                                <div className="p-3 bg-background rounded-full mb-2 group-hover:bg-sky-500 group-hover:text-white transition-colors">
                                     <Camera className="w-6 h-6" />
                                 </div>
                                 <span className="text-xs font-bold">Tap to Snap / Upload</span>
@@ -251,7 +251,7 @@ export default function ReimbursementRequestPage() {
                     </div>
                 </div>
 
-                <Button className="w-full h-16 rounded-full font-black text-lg bg-sky-600 hover:bg-sky-700 text-white mt-4 shadow-xl shadow-sky-900/20">
+                <Button className="w-full h-16 rounded-full font-black text-lg bg-sky-600 hover:bg-sky-700 text-white mt-4 shadow-xl shadow-sky-500/20">
                     SEND CLAIM REQUEST <ArrowUpRight className="ml-2 w-5 h-5"/>
                 </Button>
             </div>

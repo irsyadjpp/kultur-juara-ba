@@ -109,14 +109,12 @@ export default function ProfilePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background font-body">
-      {/* Background Sporty Grid */}
-      <div className="fixed inset-0 bg-grid-sporty pointer-events-none z-0 opacity-40"></div>
       
       <main className="relative z-10 py-10 px-4 md:px-8">
         <div className="max-w-6xl mx-auto space-y-8">
           
           {/* HEADER: GREETING & STATUS */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-white/10 pb-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-border pb-6">
             <div>
               <div className="flex items-center gap-2 text-primary font-bold tracking-widest uppercase text-sm mb-1">
                 <ShieldCheck className="w-4 h-4" /> OFFICIAL COMMITTEE PROFILE
@@ -132,7 +130,7 @@ export default function ProfilePage() {
                <Badge variant="outline" className="border-primary text-primary px-3 py-1 mb-2">
                  {MOCK_USER.role}
                </Badge>
-               <h2 className="text-2xl font-bold font-headline text-white">{MOCK_USER.division}</h2>
+               <h2 className="text-2xl font-bold font-headline text-foreground">{MOCK_USER.division}</h2>
             </div>
           </div>
             <div className="flex justify-end gap-3 -mt-6">
@@ -143,43 +141,38 @@ export default function ProfilePage() {
                         </Button>
                     </DialogTrigger>
                     
-                    {/* MODAL DIPERBAIKI: Max Width lebih besar & Scrollable */}
-                    <DialogContent className="max-w-4xl w-full bg-zinc-950 border-zinc-800 p-0 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+                    <DialogContent className="max-w-4xl w-full bg-secondary border-border p-0 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
                         
-                        {/* Header Modal */}
-                        <div className="p-6 border-b border-zinc-800 bg-black/40 shrink-0">
+                        <div className="p-6 border-b shrink-0">
                              <DialogHeader>
-                                <DialogTitle className="text-xl font-headline font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                                <DialogTitle className="text-xl font-headline font-bold text-foreground uppercase tracking-widest flex items-center gap-2">
                                     <CreditCard className="w-5 h-5 text-primary"/> Official ID Card
                                 </DialogTitle>
-                                <DialogDescription className="text-zinc-400 mt-1">
+                                <DialogDescription className="mt-1">
                                     Pratinjau tampilan cetak (Depan & Belakang).
                                 </DialogDescription>
                             </DialogHeader>
                         </div>
 
-                        {/* STAGE PREVIEW (Scrollable & Centered) */}
-                        <div className="flex-1 overflow-auto bg-[url('/images/grid-pattern.png')] bg-zinc-900/50 relative p-8 md:p-12">
+                        <div className="flex-1 overflow-auto bg-background/50 relative p-8 md:p-12">
                             <div className="min-h-[500px] flex items-center justify-center">
-                                {/* Wrapper agar kartu tidak keluar batas (Scale Down on Mobile) */}
                                 <div className="relative transform md:scale-100 scale-[0.6] origin-top md:origin-center transition-all duration-500">
                                     <div className="absolute -inset-10 bg-primary/20 blur-3xl rounded-full opacity-40 pointer-events-none"></div>
-                                    <div className="relative shadow-[0_30px_60px_-15px_rgba(0,0,0,0.9)] rounded-xl overflow-hidden bg-white ring-1 ring-white/10">
+                                    <div className="relative shadow-[0_30px_60px_-15px_rgba(0,0,0,0.2)] rounded-xl overflow-hidden bg-white ring-1 ring-black/10">
                                         <IdCardTemplate 
                                             user={{
                                                 ...MOCK_USER,
                                                 photoUrl: avatarPreview || undefined
                                             }} 
-                                            className="w-[650px]" // Paksa lebar tetap
+                                            className="w-[650px]"
                                         />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Footer Actions */}
-                        <div className="p-6 border-t border-zinc-800 bg-zinc-900 flex flex-col md:flex-row justify-between items-center gap-4 shrink-0">
-                            <div className="text-xs text-zinc-500 text-center md:text-left">
+                        <div className="p-6 border-t bg-card flex flex-col md:flex-row justify-between items-center gap-4 shrink-0">
+                            <div className="text-xs text-muted-foreground text-center md:text-left">
                                 <span className="text-primary font-bold">TIPS:</span> Gunakan kertas PVC atau Art Paper 260gr untuk hasil terbaik.
                             </div>
                             <Button onClick={handleDownloadIdCard} disabled={isGenerating} size="lg" className="w-full md:w-auto bg-primary hover:bg-red-700 text-white font-bold shadow-lg shadow-red-900/20">
@@ -208,21 +201,18 @@ export default function ProfilePage() {
           <form action={formAction}>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               
-              {/* KOLOM KIRI: VISUAL ASSETS (Avatar & Signature) */}
               <div className="space-y-6">
                 
-                {/* 1. AVATAR CARD */}
-                <Card className="border-t-4 border-t-primary bg-zinc-900/50 backdrop-blur-sm border-x-0 border-b-0 shadow-2xl">
+                <Card>
                   <CardHeader>
                     <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Profile Picture</CardTitle>
                   </CardHeader>
                   <CardContent className="flex flex-col items-center pb-8">
                     <div className="relative group cursor-pointer" onClick={() => avatarInputRef.current?.click()}>
-                      <Avatar className="w-48 h-48 border-4 border-zinc-800 shadow-xl transition-all group-hover:border-primary">
+                      <Avatar className="w-48 h-48 border-4 border-secondary shadow-xl transition-all group-hover:border-primary">
                         <AvatarImage src={avatarPreview || ""} className="object-cover" />
-                        <AvatarFallback className="text-4xl font-black bg-zinc-800 text-zinc-500">KS</AvatarFallback>
+                        <AvatarFallback className="text-4xl font-black bg-secondary text-muted-foreground">KS</AvatarFallback>
                       </Avatar>
-                      {/* Overlay Icon */}
                       <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                         <Camera className="w-10 h-10 text-white" />
                       </div>
@@ -242,8 +232,7 @@ export default function ProfilePage() {
                   </CardContent>
                 </Card>
 
-                {/* 2. SIGNATURE CARD */}
-                <Card className="bg-zinc-900/50 backdrop-blur-sm border-0 shadow-xl">
+                <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground">
                       <PenTool className="w-4 h-4" /> Digital Signature
@@ -251,15 +240,15 @@ export default function ProfilePage() {
                   </CardHeader>
                   <CardContent>
                     <div 
-                      className="border-2 border-dashed border-zinc-700 rounded-xl h-32 flex items-center justify-center bg-zinc-950/50 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all relative overflow-hidden"
+                      className="border-2 border-dashed border-border rounded-xl h-32 flex items-center justify-center bg-secondary/30 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all relative overflow-hidden"
                       onClick={() => signatureInputRef.current?.click()}
                     >
                       {signaturePreview ? (
                         <img src={signaturePreview} alt="Signature" className="h-full w-auto object-contain p-2" />
                       ) : (
                         <div className="text-center">
-                          <Upload className="w-6 h-6 text-zinc-500 mx-auto mb-2" />
-                          <span className="text-xs text-zinc-500 font-bold">UPLOAD SCAN TTD</span>
+                          <Upload className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
+                          <span className="text-xs text-muted-foreground font-bold">UPLOAD SCAN TTD</span>
                         </div>
                       )}
                     </div>
@@ -279,12 +268,10 @@ export default function ProfilePage() {
 
               </div>
 
-              {/* KOLOM KANAN: DATA FORM */}
               <div className="lg:col-span-2 space-y-6">
                 
-                {/* PERSONAL INFORMATION */}
-                <Card className="bg-zinc-900/50 backdrop-blur-sm border-0 shadow-xl">
-                  <CardHeader className="border-b border-white/5 pb-4">
+                <Card>
+                  <CardHeader className="border-b pb-4">
                     <CardTitle className="flex items-center gap-2 font-headline text-lg">
                       <User className="w-5 h-5 text-primary" /> Informasi Personal
                     </CardTitle>
@@ -295,36 +282,35 @@ export default function ProfilePage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div className="space-y-2">
                         <Label>Nama Lengkap (Read Only)</Label>
-                        <Input disabled value={MOCK_USER.name} className="bg-zinc-950 border-zinc-800 text-zinc-400 font-bold" />
+                        <Input disabled value={MOCK_USER.name} />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="nickname">Nama Panggilan</Label>
-                        <Input id="nickname" name="nickname" defaultValue={MOCK_USER.nickname} placeholder="Sapaan akrab..." className="bg-zinc-950 border-zinc-700 focus:border-primary" />
+                        <Input id="nickname" name="nickname" defaultValue={MOCK_USER.nickname} placeholder="Sapaan akrab..."/>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div className="space-y-2">
                         <Label htmlFor="phone">No. WhatsApp</Label>
-                        <Input id="phone" name="phone" type="tel" defaultValue={MOCK_USER.phone} className="bg-zinc-950 border-zinc-700 focus:border-primary" />
+                        <Input id="phone" name="phone" type="tel" defaultValue={MOCK_USER.phone} />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="instagram">Instagram</Label>
-                        <Input id="instagram" name="instagram" defaultValue={MOCK_USER.instagram} className="bg-zinc-950 border-zinc-700 focus:border-primary" />
+                        <Input id="instagram" name="instagram" defaultValue={MOCK_USER.instagram} />
                       </div>
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="address">Alamat Domisili Bandung</Label>
-                      <Textarea id="address" name="address" defaultValue={MOCK_USER.address} rows={2} className="bg-zinc-950 border-zinc-700 focus:border-primary resize-none" />
+                      <Textarea id="address" name="address" defaultValue={MOCK_USER.address} rows={2} className="resize-none" />
                     </div>
 
                   </CardContent>
                 </Card>
 
-                {/* LOGISTICS & PREFERENCES */}
-                <Card className="bg-zinc-900/50 backdrop-blur-sm border-0 shadow-xl">
-                  <CardHeader className="border-b border-white/5 pb-4">
+                <Card>
+                  <CardHeader className="border-b pb-4">
                     <CardTitle className="font-headline text-lg">Logistik & Atribut</CardTitle>
                   </CardHeader>
                   <CardContent className="p-6 space-y-5">
@@ -332,7 +318,7 @@ export default function ProfilePage() {
                         <div className="space-y-2">
                           <Label>Ukuran Jersey (Official)</Label>
                           <Select name="shirtSize" defaultValue={MOCK_USER.shirtSize}>
-                            <SelectTrigger className="bg-zinc-950 border-zinc-700 h-11">
+                            <SelectTrigger className="h-11">
                               <SelectValue placeholder="Pilih Ukuran" />
                             </SelectTrigger>
                             <SelectContent>
@@ -344,13 +330,12 @@ export default function ProfilePage() {
                         
                         <div className="space-y-2">
                           <Label>Email Akun Google (Login)</Label>
-                          <Input disabled value={MOCK_USER.email} className="bg-zinc-950 border-zinc-800 text-zinc-400 font-mono text-sm" />
+                          <Input disabled value={MOCK_USER.email} className="font-mono text-sm" />
                         </div>
                      </div>
                   </CardContent>
                 </Card>
 
-                {/* ACTION BUTTON */}
                 <SubmitButton />
 
               </div>

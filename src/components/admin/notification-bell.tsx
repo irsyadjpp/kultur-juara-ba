@@ -32,17 +32,17 @@ export function NotificationBell() {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative text-zinc-400 hover:text-white">
+        <Button variant="ghost" size="icon" className="relative text-muted-foreground hover:text-foreground">
           <Bell className="w-5 h-5" />
           {unreadCount > 0 && (
-            <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-600 rounded-full border-2 border-black animate-pulse" />
+            <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-600 rounded-full border-2 border-background animate-pulse" />
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-80 p-0 bg-zinc-900 border-zinc-800 text-white shadow-xl">
+      <PopoverContent align="end" className="w-80 p-0 bg-card border shadow-xl">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-zinc-800">
+        <div className="flex items-center justify-between p-4 border-b">
           <h4 className="font-bold text-sm">Notifikasi</h4>
           {unreadCount > 0 && <Badge variant="secondary" className="text-xs">{unreadCount} Baru</Badge>}
         </div>
@@ -50,13 +50,13 @@ export function NotificationBell() {
         {/* List */}
         <ScrollArea className="h-[300px]">
           {notifications.length === 0 ? (
-            <div className="p-8 text-center text-zinc-500 text-xs">Tidak ada notifikasi baru.</div>
+            <div className="p-8 text-center text-muted-foreground text-xs">Tidak ada notifikasi baru.</div>
           ) : (
-            <div className="divide-y divide-zinc-800">
+            <div className="divide-y">
               {notifications.map((item) => (
                 <div 
                   key={item.id} 
-                  className={`p-4 hover:bg-zinc-800/50 transition-colors cursor-pointer ${!item.read ? 'bg-zinc-800/20' : ''}`}
+                  className={`p-4 hover:bg-secondary/50 transition-colors cursor-pointer ${!item.read ? 'bg-secondary/30' : ''}`}
                   onClick={() => handleRead(item.id)}
                 >
                   <div className="flex justify-between items-start mb-1">
@@ -64,11 +64,11 @@ export function NotificationBell() {
                         {item.type === 'CRITICAL' && <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"/>}
                         {item.type === 'INFO' && <span className="w-2 h-2 rounded-full bg-blue-500"/>}
                         {item.type === 'SUCCESS' && <span className="w-2 h-2 rounded-full bg-green-500"/>}
-                        <span className={`text-sm font-bold ${!item.read ? 'text-white' : 'text-zinc-400'}`}>{item.title}</span>
+                        <span className={`text-sm font-bold ${!item.read ? 'text-foreground' : 'text-muted-foreground'}`}>{item.title}</span>
                     </div>
-                    <span className="text-[10px] text-zinc-500">{item.time}</span>
+                    <span className="text-[10px] text-muted-foreground">{item.time}</span>
                   </div>
-                  <p className="text-xs text-zinc-400 line-clamp-2">{item.message}</p>
+                  <p className="text-xs text-muted-foreground line-clamp-2">{item.message}</p>
                 </div>
               ))}
             </div>
@@ -76,8 +76,8 @@ export function NotificationBell() {
         </ScrollArea>
 
         {/* Footer */}
-        <div className="p-2 border-t border-zinc-800 bg-black/20">
-            <Button variant="ghost" size="sm" className="w-full text-xs text-zinc-500 h-8">
+        <div className="p-2 border-t bg-background/50">
+            <Button variant="ghost" size="sm" className="w-full text-xs text-muted-foreground h-8">
                 Tandai semua sudah dibaca
             </Button>
         </div>

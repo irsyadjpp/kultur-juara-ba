@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
 
 // Reusable Components
 const SectionCard = ({ icon: Icon, title, description, children }: { icon: React.ElementType, title: string, description?: string, children: React.ReactNode }) => (
-  <Card className="bg-zinc-900/50 backdrop-blur-sm border-border/20 rounded-3xl shadow-xl">
+  <Card className="rounded-3xl shadow-xl">
     <CardHeader className="p-8 pb-4">
       <CardTitle className="text-xl font-headline flex items-center gap-3">
         <Icon className="w-6 h-6 text-primary"/> {title}
@@ -46,9 +46,9 @@ const EmojiSelector = ({ label, onValueChange }: { label: string, onValueChange:
                 return (
                     <div key={index}>
                         <RadioGroupItem value={emoji.value} id={`${label}-${index}`} className="sr-only" />
-                        <Label htmlFor={`${label}-${index}`} className={cn("flex flex-col items-center justify-center gap-2 p-4 rounded-2xl border-2 border-transparent bg-zinc-950 hover:border-primary/50 cursor-pointer data-[state=checked]:border-primary data-[state=checked]:bg-primary/10", emoji.color)}>
+                        <Label htmlFor={`${label}-${index}`} className={cn("flex flex-col items-center justify-center gap-2 p-4 rounded-2xl border-2 border-transparent bg-secondary hover:border-primary/50 cursor-pointer data-[state=checked]:border-primary data-[state=checked]:bg-primary/10", emoji.color)}>
                            <Icon className="w-10 h-10" />
-                           <span className="text-xs font-bold text-zinc-400">{emoji.label}</span>
+                           <span className="text-xs font-bold text-muted-foreground">{emoji.label}</span>
                         </Label>
                     </div>
                 )
@@ -70,8 +70,8 @@ const RatingSlider = ({ label, value, onValueChange, max = 5, step = 1 }: { labe
         step={step}
         onValueChange={(v) => onValueChange(v[0])}
         className="[&>span:first-child]:h-1"
-      />
-    </div>
+    />
+  </div>
 );
 
 
@@ -97,11 +97,11 @@ export default function MentalJournalPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                     <Label>Nama Atlet</Label>
-                    <Select><SelectTrigger className="h-14 rounded-xl bg-zinc-950 border-zinc-800 text-base"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP</SelectItem></SelectContent></Select>
+                    <Select><SelectTrigger className="h-14 rounded-xl text-base"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP</SelectItem></SelectContent></Select>
                 </div>
                  <div className="space-y-2">
                     <Label>Tanggal Pencatatan</Label>
-                    <Input type="date" className="h-14 rounded-xl bg-zinc-950 border-zinc-800"/>
+                    <Input type="date" className="h-14 rounded-xl"/>
                 </div>
             </div>
         </SectionCard>
@@ -117,7 +117,7 @@ export default function MentalJournalPage() {
                             {['Ringan', 'Sedang', 'Berat'].map(item => (
                                 <div key={item}>
                                     <RadioGroupItem value={item} id={item} className="sr-only"/>
-                                    <Label htmlFor={item} className="flex items-center justify-center cursor-pointer rounded-xl p-3 border-2 border-transparent bg-zinc-900 data-[state=checked]:bg-primary/10 data-[state=checked]:border-primary w-full">
+                                    <Label htmlFor={item} className="flex items-center justify-center cursor-pointer rounded-xl p-3 border-2 border-transparent bg-secondary data-[state=checked]:bg-primary/10 data-[state=checked]:border-primary w-full">
                                         {item}
                                     </Label>
                                 </div>
@@ -130,7 +130,7 @@ export default function MentalJournalPage() {
                             {['Latihan', 'Sekolah/Kuliah', 'Tanding', 'Libur'].map(item => (
                                 <div key={item}>
                                     <RadioGroupItem value={item} id={`act-${item}`} className="sr-only"/>
-                                    <Label htmlFor={`act-${item}`} className="flex items-center justify-center cursor-pointer rounded-xl p-3 border-2 border-transparent bg-zinc-900 data-[state=checked]:bg-primary/10 data-[state=checked]:border-primary w-full text-xs font-bold">
+                                    <Label htmlFor={`act-${item}`} className="flex items-center justify-center cursor-pointer rounded-xl p-3 border-2 border-transparent bg-secondary data-[state=checked]:bg-primary/10 data-[state=checked]:border-primary w-full text-xs font-bold">
                                         {item}
                                     </Label>
                                 </div>
@@ -145,11 +145,11 @@ export default function MentalJournalPage() {
             <div className="space-y-6">
                 <div>
                     <Label className="font-bold text-base block mb-2">Hal apa yang paling mengganggu pikiranmu akhir-akhir ini?</Label>
-                    <Textarea placeholder="Tidak ada jawaban benar atau salah, ceritakan saja apa yang Anda rasakan..." className="bg-zinc-950 border-zinc-800 rounded-xl h-24" />
+                    <Textarea placeholder="Tidak ada jawaban benar atau salah, ceritakan saja apa yang Anda rasakan..." className="rounded-xl h-24" />
                 </div>
                  <div>
                     <Label className="font-bold text-base block mb-2">Ada kejadian di latihan/sekolah/rumah yang membuatmu tidak nyaman?</Label>
-                    <Textarea placeholder="Ini adalah ruang aman Anda. Semua informasi bersifat rahasia." className="bg-zinc-950 border-zinc-800 rounded-xl h-24" />
+                    <Textarea placeholder="Ini adalah ruang aman Anda. Semua informasi bersifat rahasia." className="rounded-xl h-24" />
                 </div>
             </div>
         </SectionCard>
@@ -158,18 +158,18 @@ export default function MentalJournalPage() {
             <div className="space-y-3">
                 <Label>Apakah perasaan ini sampai membuatmu:</Label>
                 {['Sulit tidur', 'Tidak ingin latihan', 'Ingin menyakiti diri sendiri', 'Merasa sangat tidak berharga'].map(item => (
-                     <div key={item} className="flex items-center space-x-3 p-4 rounded-xl border border-zinc-800 bg-zinc-900">
+                     <div key={item} className="flex items-center space-x-3 p-4 rounded-xl border bg-secondary">
                         <Checkbox id={item} onCheckedChange={(checked) => checked && setSafetyFlag(true)} />
                         <label htmlFor={item} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                             {item}
                         </label>
                     </div>
                 ))}
-                {safetyFlag && <div className="p-4 bg-red-900/30 border border-red-500/50 text-red-300 rounded-xl text-sm">Terima kasih telah jujur. Psikolog kami akan segera menghubungi Anda untuk sesi personal. Anda tidak sendirian.</div>}
+                {safetyFlag && <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl text-sm">Terima kasih telah jujur. Psikolog kami akan segera menghubungi Anda untuk sesi personal. Anda tidak sendirian.</div>}
             </div>
         </SectionCard>
 
-        <div className="flex justify-end pt-6 border-t border-border/20">
+        <div className="flex justify-end pt-6 border-t border-border">
             <Button size="lg" className="h-16 rounded-full font-bold text-lg px-10 shadow-lg shadow-primary/20">
                 <Save className="w-6 h-6 mr-3"/> Simpan Journal Hari Ini
             </Button>
