@@ -5,7 +5,7 @@ import { useState } from "react";
 import { 
   TrendingUp, TrendingDown, Calendar, Plus, 
   Target, DollarSign, Wallet, PieChart, 
-  ArrowRight, CheckCircle2, Clock, AlertCircle, FileText
+  ArrowRight, CheckCircle2, Clock, AlertCircle, FileText, CheckSquare
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,14 +18,31 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
-// --- MOCK DATA ---
+// MOCK DATA - Financial Overview (can be kept)
 const BUDGET_STATS = {
-  total: 450000000, // 450 Juta
-  used: 125000000,  // 125 Juta Terpakai
-  burnRate: 28,     // 28%
+  total: 450000000, 
+  used: 125000000,  
+  burnRate: 28,     
   remaining: 325000000
 };
 
+// NEW DATA - 12 Month Timeline
+const TIMELINE = [
+  { month: 1, title: "Kick-off & Baseline", focus: ["Pendataan atlet & orang tua", "Tes fisik dasar (fun)", "Sosialisasi aturan disiplin"] },
+  { month: 2, title: "Fondasi Disiplin", focus: ["Latihan teknik dasar rutin", "Edukasi disiplin waktu", "Program Lapangan Bersih"] },
+  { month: 3, title: "Evaluasi Awal", focus: ["Evaluasi fisik ringan", "Mini challenge internal", "Dokumentasi progres awal"] },
+  { month: 4, title: "Mentalitas & Kebiasaan", focus: ["Simulasi pertandingan internal", "Edukasi mental berani kalah", "Kampanye botol minum pribadi"] },
+  { month: 5, title: "Pola & Cerita", focus: ["Latihan pola permainan", "Mini challenge bulanan", "Dokumentasi cerita atlet"] },
+  { month: 6, title: "Review Tengah Tahun", focus: ["Evaluasi tengah tahun", "Sparing internal", "Laporan semester 1"] },
+  { month: 7, title: "Refresh & Bonding", focus: ["Sparing dengan PB lain", "Fun games luar ruang", "Aksi bersih fasilitas olahraga"] },
+  { month: 8, title: "Konsistensi", focus: ["Latihan konsistensi & fokus", "Edukasi sportivitas", "Dokumentasi komunitas"] },
+  { month: 9, title: "Simulasi Kompetisi", focus: ["Simulasi turnamen kecil", "Evaluasi mental bertanding", "Testimoni orang tua"] },
+  { month: 10, title: "Penguatan Karakter", focus: ["Persiapan turnamen internal", "Review disiplin & karakter", "Dokumentasi intensif"] },
+  { month: 11, title: "Puncak Acara Internal", focus: ["Turnamen internal tahunan", "Refleksi atlet & pelatih", "Pengumpulan data akhir"] },
+  { month: 12, title: "Evaluasi & Perencanaan", focus: ["Penyusunan laporan tahunan", "Pameran foto perjalanan", "Perencanaan tahun berikutnya"] },
+];
+
+// OLD DATA for Budget Sheet (can be kept for that tab)
 const PROGRAMS = [
   { id: 1, name: "Sewa Venue GOR KONI", division: "OPERATIONS", cost: 80000000, date: "Jun 2026", status: "APPROVED", progress: 100 },
   { id: 2, name: "Produksi Jersey Panitia", division: "LOGISTICS", cost: 25000000, date: "May 2026", status: "IN_REVIEW", progress: 40 },
@@ -39,7 +56,7 @@ export default function PlanningPage() {
   return (
     <div className="space-y-8 p-4 md:p-0">
       
-      {/* --- HEADER --- */}
+      {/* --- HEADER (Keep as is) --- */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
             <div className="flex items-center gap-2 mb-2">
@@ -63,10 +80,8 @@ export default function PlanningPage() {
         </Button>
       </div>
 
-      {/* --- BUDGET OVERVIEW (HERO CARD) --- */}
+      {/* --- BUDGET OVERVIEW (Keep as is) --- */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-         
-         {/* WAR CHEST (Total Budget) */}
          <Card className="lg:col-span-2 bg-gradient-to-br from-card to-secondary/50 border-border rounded-[40px] relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] group-hover:bg-primary/10 transition-all"></div>
             <CardContent className="p-8 md:p-10 relative z-10 flex flex-col justify-between h-full">
@@ -98,7 +113,6 @@ export default function PlanningPage() {
             </CardContent>
          </Card>
 
-         {/* QUICK STATS */}
          <div className="space-y-6">
             <Card className="bg-card border rounded-[32px] flex-1">
                 <CardContent className="p-6 flex items-center gap-4">
@@ -118,7 +132,7 @@ export default function PlanningPage() {
                     </div>
                     <div>
                         <p className="text-muted-foreground text-xs font-bold uppercase">Programs</p>
-                        <p className="text-2xl font-black text-foreground">{PROGRAMS.length} Items</p>
+                        <p className="text-2xl font-black text-foreground">{TIMELINE.length} Months</p>
                     </div>
                 </CardContent>
             </Card>
@@ -138,53 +152,38 @@ export default function PlanningPage() {
             </TabsList>
         </div>
 
-        {/* TAB 1: ROADMAP (TIMELINE VIEW) */}
+        {/* TAB 1: ROADMAP (TIMELINE VIEW) - MODIFIED */}
         <TabsContent value="roadmap">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {PROGRAMS.map((prog) => (
-                    <Card key={prog.id} className="group bg-card border-border rounded-[32px] hover:border-primary/50 transition-all hover:-translate-y-1">
-                        <CardHeader className="p-6 pb-2">
-                            <div className="flex justify-between items-start mb-4">
-                                <Badge variant="outline" className="border-border text-muted-foreground text-[10px] font-bold uppercase tracking-widest px-3 py-1">
-                                    {prog.division}
-                                </Badge>
-                                {prog.status === 'APPROVED' ? <CheckCircle2 className="w-5 h-5 text-green-500"/> : <Clock className="w-5 h-5 text-yellow-500"/>}
-                            </div>
-                            <CardTitle className="text-xl font-black text-foreground leading-tight group-hover:text-primary transition-colors">
-                                {prog.name}
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-6 pt-4">
-                            <div className="bg-secondary/50 p-4 rounded-2xl border mb-4">
-                                <div className="text-xs text-muted-foreground font-bold uppercase mb-1">Est. Cost</div>
-                                <div className="text-lg font-mono font-bold text-foreground">Rp {prog.cost.toLocaleString('id-ID', {notation: 'compact'})}</div>
-                            </div>
-                            
-                            <div className="space-y-2">
-                                <div className="flex justify-between text-xs font-bold text-muted-foreground uppercase">
-                                    <span>{prog.date}</span>
-                                    <span>{prog.progress}% Ready</span>
-                                </div>
-                                <Progress value={prog.progress} className="h-1.5 bg-secondary rounded-full" indicatorClassName={cn(prog.progress === 100 ? "bg-green-500" : "bg-primary")}/>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
-                
-                {/* Add New Placeholder */}
-                <button 
-                    onClick={() => setIsAddOpen(true)}
-                    className="group border-2 border-dashed border-border rounded-[32px] flex flex-col items-center justify-center gap-4 hover:bg-secondary hover:border-primary/50 transition-all h-[280px]"
-                >
-                    <div className="w-16 h-16 bg-card rounded-full border flex items-center justify-center text-muted-foreground group-hover:bg-primary group-hover:text-white transition-colors">
-                        <Plus className="w-8 h-8"/>
-                    </div>
-                    <span className="text-muted-foreground font-bold uppercase tracking-widest text-sm group-hover:text-foreground">Add Program</span>
-                </button>
+            <div className="relative pl-6 after:absolute after:inset-y-0 after:w-px after:bg-border after:left-6">
+              {TIMELINE.map((item, index) => (
+                <div key={item.month} className="relative pl-10 pb-8 last:pb-0">
+                  <div className="absolute left-[23px] -translate-x-1/2 w-3 h-3 bg-primary rounded-full mt-1.5 ring-4 ring-background" />
+                  <Card className="bg-card/50 backdrop-blur border-border/20 rounded-3xl shadow-sm hover:border-primary/30 transition-colors">
+                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <div className="space-y-1">
+                          <CardDescription className="text-primary font-bold text-xs uppercase tracking-widest">Bulan {item.month}</CardDescription>
+                          <CardTitle className="font-headline text-lg">{item.title}</CardTitle>
+                        </div>
+                        <div className="p-3 bg-secondary rounded-xl text-muted-foreground font-mono text-2xl font-black">
+                            {item.month}
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <ul className="space-y-2 mt-4 text-muted-foreground text-sm">
+                            {item.focus.map((f, i) => (
+                                <li key={i} className="flex items-center gap-2">
+                                    <CheckSquare className="w-4 h-4 text-green-500" /> {f}
+                                </li>
+                            ))}
+                        </ul>
+                      </CardContent>
+                  </Card>
+                </div>
+              ))}
             </div>
         </TabsContent>
 
-        {/* TAB 2: BUDGET SHEET (TABLE VIEW) */}
+        {/* TAB 2: BUDGET SHEET (TABLE VIEW) - Kept as is */}
         <TabsContent value="budget">
             <Card className="bg-card border-border rounded-[32px] overflow-hidden">
                 <CardHeader className="p-8 border-b">
@@ -225,7 +224,7 @@ export default function PlanningPage() {
         </TabsContent>
       </Tabs>
 
-      {/* --- ADD PROGRAM MODAL --- */}
+      {/* --- ADD PROGRAM MODAL (Keep as is) --- */}
       <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
         <DialogContent className="bg-card text-foreground rounded-[40px] max-w-lg p-0 overflow-hidden shadow-2xl">
             <div className="p-8 border-b bg-secondary/50">
@@ -272,7 +271,6 @@ export default function PlanningPage() {
             </div>
         </DialogContent>
       </Dialog>
-
     </div>
   );
 }
