@@ -133,7 +133,7 @@ export default function MentalEvaluationPage() {
               <div className="space-y-6">
                   <ObservationScale label="Mudah menangis saat gagal" scale={scale} />
                   <ObservationScale label="Mudah marah saat kalah" scale={scale} />
-                  <ObservationScale label="Bisa tenang kembali < 2 menit" scale={scale} />
+                  <ObservationScale label="Bisa tenang kembali &lt; 2 menit" scale={scale} />
                   <ObservationScale label="Bertahan fokus ≥5 menit" scale={scale} />
                   <ObservationScale label="Konflik dengan teman" scale={scale} />
               </div>
@@ -205,7 +205,7 @@ export default function MentalEvaluationPage() {
                       <RatingSlider label="Tingkat Stres Umum (Luar Lapangan)" value={scores.stress} onValueChange={(v) => handleScoreChange('stress', v)} max={10} />
                       <div className="space-y-2 pt-4 border-t">
                           <Label>Goal Orientation</Label>
-                          <Select><SelectTrigger className="h-12"><SelectValue placeholder="Pilih Orientasi..."/></SelectTrigger><SelectContent><SelectItem value="task">Task-oriented (Fokus pada proses & self-improvement)</SelectItem><SelectItem value="ego">Ego-oriented (Fokus pada hasil & mengalahkan orang lain)</SelectItem></SelectContent></Select>
+                          <Select><SelectTrigger className="h-12"><SelectValue placeholder="Pilih Orientasi..."/></SelectTrigger><SelectContent><SelectItem value="task">Task-oriented (Fokus pada proses &amp; self-improvement)</SelectItem><SelectItem value="ego">Ego-oriented (Fokus pada hasil &amp; mengalahkan orang lain)</SelectItem></SelectContent></Select>
                       </div>
                   </div>
               </SectionCard>
