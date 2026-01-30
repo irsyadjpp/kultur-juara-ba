@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -180,7 +179,7 @@ export default function DispatchPage() {
            <Card>
               <CardContent className="p-0">
                  {data.units.map((unit: any, i:number) => (
-                    <div key={unit.id} className={`flex items-center justify-between p-4 border-b last:border-0 ${unit.status === 'BUSY' ? 'bg-secondary/50 opacity-60' : ''}`}>
+                    <div key={unit.id} className={`flex items-center justify-between p-4 border-b last:border-0 ${unit.status === 'BUSY' ? 'bg-secondary opacity-60' : ''}`}>
                        <div className="flex items-center gap-3">
                           <div className={`w-2 h-2 rounded-full ${unit.status === 'IDLE' ? 'bg-green-500 shadow-[0_0_8px_#22c55e]' : 'bg-red-500'}`}></div>
                           <div>

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from "react";
@@ -201,7 +200,7 @@ export default function DigitalMandatePage() {
                         <div className="space-y-2">
                             <label className="text-xs font-bold uppercase text-muted-foreground ml-1">1. Divisi / Role (SOP)</label>
                             <Select onValueChange={setSelectedRole}>
-                                <SelectTrigger className="bg-secondary h-14 rounded-2xl"><SelectValue placeholder="Pilih Divisi..." /></SelectTrigger>
+                                <SelectTrigger className="border bg-secondary h-14 rounded-2xl"><SelectValue placeholder="Pilih Divisi..." /></SelectTrigger>
                                 <SelectContent>
                                     {Object.keys(ROLE_DEFINITIONS).map((key) => (
                                         <SelectItem key={key} value={key}>
@@ -215,7 +214,7 @@ export default function DigitalMandatePage() {
                         <div className="space-y-2">
                             <label className="text-xs font-bold uppercase text-muted-foreground ml-1">2. Nomor Surat</label>
                             <div className="flex gap-2">
-                                <Input value={letterNo} onChange={(e) => setLetterNo(e.target.value)} className="bg-secondary h-14 rounded-2xl font-mono text-sm" />
+                                <Input value={letterNo} onChange={(e) => setLetterNo(e.target.value)} className="border bg-secondary h-14 rounded-2xl font-mono text-sm" />
                                 <Button size="icon" variant="outline" className="h-14 w-14 rounded-2xl hover:bg-secondary"><Copy className="w-5 h-5"/></Button>
                             </div>
                         </div>

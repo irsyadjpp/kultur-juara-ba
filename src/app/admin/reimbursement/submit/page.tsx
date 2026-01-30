@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from "react";
@@ -67,9 +66,9 @@ export default function ReimbursementRequestPage() {
 
   const getStatusColor = (s: string) => {
     switch(s) {
-        case 'PAID': return "text-emerald-500 bg-emerald-500/10 border-emerald-500/20";
-        case 'REJECTED': return "text-red-500 bg-red-500/10 border-red-500/20";
-        default: return "text-yellow-500 bg-yellow-500/10 border-yellow-500/20";
+        case 'PAID': return "text-emerald-600 bg-emerald-500/10 border-emerald-500/20";
+        case 'REJECTED': return "text-red-600 bg-red-500/10 border-red-500/20";
+        default: return "text-yellow-600 bg-yellow-500/10 border-yellow-500/20";
     }
   };
 
@@ -207,7 +206,7 @@ export default function ReimbursementRequestPage() {
                         <Input 
                             type="number" 
                             placeholder="0" 
-                            className="bg-secondary h-20 rounded-[24px] pl-16 text-4xl font-black font-mono text-foreground focus:ring-sky-500 focus:border-sky-500 placeholder:text-muted-foreground/30" 
+                            className="bg-secondary border h-20 rounded-[24px] pl-16 text-4xl font-black font-mono text-foreground focus:ring-sky-500 focus:border-sky-500 placeholder:text-muted-foreground/30" 
                         />
                     </div>
                 </div>
@@ -215,13 +214,13 @@ export default function ReimbursementRequestPage() {
                 {/* Details */}
                 <div className="space-y-2">
                     <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Keperluan</label>
-                    <Input placeholder="Cth: Beli Aqua Galon" className="bg-secondary h-14 rounded-2xl text-lg font-bold" />
+                    <Input placeholder="Cth: Beli Aqua Galon" className="bg-secondary border h-14 rounded-2xl text-lg font-bold" />
                 </div>
 
                 <div className="space-y-2">
                     <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Kategori</label>
                     <Select>
-                        <SelectTrigger className="bg-secondary h-14 rounded-2xl"><SelectValue placeholder="Pilih Kategori" /></SelectTrigger>
+                        <SelectTrigger className="bg-secondary border h-14 rounded-2xl"><SelectValue placeholder="Pilih Kategori" /></SelectTrigger>
                         <SelectContent>
                             {CATEGORIES.map(c => <SelectItem key={c.id} value={c.id}>{c.label}</SelectItem>)}
                         </SelectContent>
