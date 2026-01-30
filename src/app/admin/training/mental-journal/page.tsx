@@ -58,18 +58,18 @@ const EmojiSelector = ({ label, onValueChange }: { label: string, onValueChange:
 )
 
 const RatingSlider = ({ label, value, onValueChange, max = 5, step = 1 }: { label: string, value: number, onValueChange: (value: number) => void, max?: number, step?: number }) => (
-    <div className="space-y-3">
-      <div className="flex justify-between items-center">
-        <Label>{label}</Label>
-        <span className="font-mono font-bold text-lg text-primary w-8 text-center">{value}</span>
-      </div>
-      <Slider
-        defaultValue={[value]}
-        max={max}
-        min={1}
-        step={step}
-        onValueChange={(v) => onValueChange(v[0])}
-        className="[&>span:first-child]:h-1"
+  <div className="space-y-3">
+    <div className="flex justify-between items-center">
+      <Label>{label}</Label>
+      <span className="font-mono font-bold text-lg text-primary w-8 text-center">{value}</span>
+    </div>
+    <Slider
+      defaultValue={[value]}
+      max={max}
+      min={1}
+      step={step}
+      onValueChange={(v) => onValueChange(v[0])}
+      className="[&>span:first-child]:h-1"
     />
   </div>
 );

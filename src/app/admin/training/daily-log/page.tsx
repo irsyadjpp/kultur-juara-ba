@@ -133,7 +133,7 @@ export default function TrainingLogPage() {
             <SectionCard title="Catatan Pelatih" icon={StickyNote}>
                 <Textarea placeholder="Observasi, feedback, atau rencana untuk sesi berikutnya..." className="rounded-xl h-32"/>
             </SectionCard>
-            <SectionCard title="Catatan Atlet" icon={User}>
+            <SectionCard title="Catatan Atlet" icon={UserSquare}>
                 <Textarea placeholder="Bagaimana perasaan Anda hari ini? Apa yang dirasakan selama latihan? (Self-report)" className="rounded-xl h-32"/>
             </SectionCard>
         </div>
