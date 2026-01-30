@@ -1,17 +1,17 @@
 
-
 'use client';
 
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { FileText, Users, Network, ShieldAlert, Clock, ArrowDown, Target, CheckCircle, Info, Calendar, Gavel, Trophy, Shuffle, Scale } from 'lucide-react';
+import { FileText, Users, Network, ShieldAlert, CheckCircle, Info, Calendar, Gavel, Trophy, Shuffle, Scale, BookOpen, HardHat, Database, Bot } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CourtLines } from '@/components/ui/court-lines';
 import { cn } from "@/lib/utils";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
-// --- SUB-COMPONENTS ---
 
 const RuleCard = ({ title, icon: Icon, children, className }: { title: string, icon: React.ElementType, children: React.ReactNode, className?: string }) => (
   <Card className={cn("bg-card/80 backdrop-blur-md border-border/50 rounded-[2.5rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500", className)}>
@@ -42,99 +42,143 @@ const RuleListItem = ({ text }: { text: string }) => (
 const PublicRules = () => (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
         <div className="space-y-8">
-            <RuleCard title="Informasi Umum" icon={Info}>
+            <RuleCard title="Tujuan" icon={Target}>
+                <p>Aturan ini disusun sebagai pedoman resmi penerimaan atlet Persatuan Bulutangkis (PB) dalam rangka pembinaan jangka panjang, pembentukan karakter, serta persiapan atlet usia dini menuju pembinaan prestasi yang berjenjang dan berkelanjutan.</p>
+            </RuleCard>
+            <RuleCard title="Prinsip Pembinaan" icon={Scale}>
                 <ul className="space-y-3">
-                    <RuleListItem text="Nama Event: Badmintour Open #1" />
-                    <RuleListItem text="Jenis Event: Turnamen Badminton Antar Komunitas (Open)" />
-                    <RuleListItem text="Kategori: BEGINNER" />
-                    <RuleListItem text="Jenis Ganda: MD / WD / XD (digabung)" />
+                    <RuleListItem text="Pembinaan jangka panjang (Long Term Athlete Development)" />
+                    <RuleListItem text="Kesetaraan kesempatan bagi anak dari berbagai latar belakang sosial" />
+                    <RuleListItem text="Keselamatan, kesehatan, dan perkembangan psikologis atlet" />
+                    <RuleListItem text="Pendidikan karakter melalui olahraga" />
+                    <RuleListItem text="Prestasi sebagai proses, bukan tujuan instan" />
                 </ul>
             </RuleCard>
-            <RuleCard title="Format Pertandingan" icon={Network}>
-                <div>
-                    <h4 className="font-bold text-foreground mb-2">Fase Grup (Round Robin)</h4>
-                    <ul className="list-disc pl-5 text-sm space-y-1">
-                        <li>1 grup berisi 4–5 pasangan.</li>
-                        <li>Semua pasangan dalam grup saling bertemu.</li>
-                        <li>Peringkat ditentukan oleh: 1. Jumlah menang, 2. Selisih poin, 3. Head-to-head, 4. Fair play.</li>
-                        <li>32 pasangan terbaik lolos ke fase eliminasi.</li>
-                    </ul>
-                </div>
-                 <div>
-                    <h4 className="font-bold text-foreground mb-2">Fase Eliminasi</h4>
-                    <ul className="list-disc pl-5 text-sm space-y-1">
-                        <li>Menggunakan sistem gugur (knockout).</li>
-                        <li>Babak: 32 Besar → 16 Besar → 8 Besar → Semifinal → Final.</li>
-                    </ul>
-                </div>
+            <RuleCard title="Syarat Administrasi" icon={FileText}>
+                 <ul className="space-y-3">
+                    <RuleListItem text="Fotokopi Akta Kelahiran / Kartu Keluarga" />
+                    <RuleListItem text="Pas foto terbaru" />
+                    <RuleListItem text="Formulir pendaftaran atlet PB" />
+                    <RuleListItem text="Surat izin orang tua/wali" />
+                    <RuleListItem text="Surat keterangan kesehatan (jika diminta)" />
+                </ul>
+            </RuleCard>
+             <RuleCard title="Ketentuan Khusus Sosial" icon={Users}>
+                <p className="mb-2">PB memberikan kesempatan khusus bagi atlet dari keluarga kurang mampu atau kondisi rentan, dengan dukungan dapat berupa:</p>
+                 <ul className="list-disc pl-5 text-sm space-y-1">
+                    <li>Keringanan iuran</li>
+                    <li>Skema subsidi silang</li>
+                    <li>Program pembinaan berbasis komitmen</li>
+                </ul>
+                <p className="mt-2 text-xs font-bold">Atlet penerima dukungan wajib menunjukkan disiplin dan komitmen sebagai bentuk tanggung jawab.</p>
             </RuleCard>
         </div>
         <div className="space-y-8">
-            <RuleCard title="Status Peserta & Pasangan" icon={Users}>
-                 <ul className="space-y-3">
-                    <RuleListItem text="Peserta mendaftar sebagai PASANGAN dari komunitas." />
-                    <RuleListItem text="Level pemain dinilai per individu." />
-                    <RuleListItem text="Gelar juara ditetapkan sebagai pasangan, bukan individu." />
-                </ul>
+            <RuleCard title="Kriteria Usia Atlet" icon={Calendar}>
+                <p>PB menerima atlet usia dini dan usia pembinaan awal, ditentukan berdasarkan tahun kelahiran sesuai ketentuan PBSI.</p>
+                <div className="mt-4">
+                  <h4 className="font-bold text-foreground mb-2">Kategori Usia Prioritas</h4>
+                  <Table>
+                    <TableHeader><TableRow><TableHead>Kategori</TableHead><TableHead>Tahun Lahir</TableHead></TableRow></TableHeader>
+                    <TableBody>
+                      <TableRow><TableCell>U9</TableCell><TableCell>2018 ke atas</TableCell></TableRow>
+                      <TableRow><TableCell>U11</TableCell><TableCell>2016–2017</TableCell></TableRow>
+                    </TableBody>
+                  </Table>
+                </div>
+                <div className="mt-4">
+                  <h4 className="font-bold text-foreground mb-2">Kategori Bersyarat</h4>
+                  <Table>
+                    <TableHeader><TableRow><TableHead>Kategori</TableHead><TableHead>Tahun Lahir</TableHead><TableHead>Ketentuan</TableHead></TableRow></TableHeader>
+                    <TableBody>
+                      <TableRow><TableCell>U13</TableCell><TableCell>2014–2015</TableCell><TableCell>Evaluasi khusus</TableCell></TableRow>
+                    </TableBody>
+                  </Table>
+                </div>
             </RuleCard>
-            <RuleCard title="Fair Play & Keputusan" icon={Gavel}>
-                 <ul className="space-y-3">
-                    <RuleListItem text="Setiap peserta dan tim wajib menjunjung tinggi sportivitas dan etika pertandingan." />
-                    <RuleListItem text="Pelanggaran berat terhadap aturan fair play dapat berujung pada diskualifikasi." />
-                    <RuleListItem text="Semua keputusan panitia yang dibuat berdasarkan regulasi resmi bersifat final dan mengikat." />
+            <RuleCard title="Proses Seleksi" icon={Gavel}>
+                 <p>Seleksi bukan bertujuan mencari juara instan, tetapi menilai potensi dan kesiapan pembinaan melalui:</p>
+                 <ul className="list-disc pl-5 text-sm space-y-1 mt-2">
+                    <li>Observasi fisik dasar</li>
+                    <li>Koordinasi dan motorik</li>
+                    <li>Minat dan sikap terhadap latihan</li>
                 </ul>
+                <p className="mt-2 text-xs font-bold">Keputusan penerimaan ditetapkan oleh pelatih utama dan pengurus PB.</p>
             </RuleCard>
+            <div className="grid grid-cols-2 gap-4">
+                <Card className="bg-card/50 p-4 rounded-xl border">
+                    <h4 className="font-bold text-sm mb-2">Hak Atlet</h4>
+                    <ul className="list-disc pl-4 text-xs space-y-1">
+                        <li>Mengikuti program latihan</li>
+                        <li>Mendapat pembinaan</li>
+                        <li>Evaluasi berkala</li>
+                        <li>Kesempatan ikut event</li>
+                    </ul>
+                </Card>
+                 <Card className="bg-card/50 p-4 rounded-xl border">
+                    <h4 className="font-bold text-sm mb-2">Kewajiban Atlet</h4>
+                    <ul className="list-disc pl-4 text-xs space-y-1">
+                        <li>Disiplin latihan</li>
+                        <li>Menjaga etika</li>
+                        <li>Menghormati sesama</li>
+                        <li>Menjaga nama baik PB</li>
+                    </ul>
+                </Card>
+            </div>
         </div>
     </div>
 );
 
-const TechnicalRules = () => (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-        <div className="space-y-8">
-            <RuleCard title="Struktur Otoritas" icon={Users}>
-                <ul className="space-y-3">
-                    <RuleListItem text="Penyelenggara: Badmintour." />
-                    <RuleListItem text="Tim Teknis: Tim Verifikasi Teknis (TVT) bertugas melakukan verifikasi level individu (B1-B3), audit teknis, dan validasi pasangan." />
-                </ul>
-            </RuleCard>
-             <RuleCard title="Sistem Level Beginner" icon={Scale}>
-                <ul className="space-y-3">
-                    <RuleListItem text="B1: Beginner Bawah" />
-                    <RuleListItem text="B2: Beginner Tengah" />
-                    <RuleListItem text="B3: Beginner Atas (dengan sub-level L/M/H untuk seeding)" />
-                    <RuleListItem text="Penilaian menggunakan skor rubrik 1-5 per aspek teknis." />
-                </ul>
-            </RuleCard>
-            <RuleCard title="Seeding & Drawing" icon={Shuffle}>
-                 <ul className="space-y-3">
-                    <RuleListItem text="Seeding ditentukan berdasarkan level individu dan keseimbangan pasangan." />
-                    <RuleListItem text="MD, WD, dan XD diperlakukan setara dalam proses drawing." />
-                </ul>
-            </RuleCard>
-        </div>
-        <div className="space-y-8">
-             <RuleCard title="Form Teknis" icon={FileText}>
-                <ul className="space-y-3">
-                    <RuleListItem text="Form TVT / Audit Individu: Menentukan level pemain (Internal, tidak dipublikasikan)." />
-                    <RuleListItem text="Form H (Pair Synergy): Verifikasi awal pasangan (Internal)." />
-                </ul>
-            </RuleCard>
-            <RuleCard title="Pengawasan & Sanksi" icon={ShieldAlert}>
-                <ul className="space-y-3">
-                    <RuleListItem text="Manipulasi level → diskualifikasi." />
-                    <RuleListItem text="Ganti pasangan tanpa izin → diskualifikasi." />
-                    <RuleListItem text="Pelanggaran berulang → blacklist event berikutnya." />
-                </ul>
-            </RuleCard>
-             <RuleCard title="Dokumentasi Internal" icon={FileText}>
-                <ul className="space-y-3">
-                    <RuleListItem text="Lembar Audit Individu" />
-                    <RuleListItem text="Form H" />
-                    <RuleListItem text="Form Pendaftaran Pasangan" />
-                    <RuleListItem text="Rekap Grup & Eliminasi" />
-                </ul>
-            </RuleCard>
-        </div>
+const InternalDocs = () => (
+    <div className="max-w-4xl mx-auto mt-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <Accordion type="single" collapsible className="w-full space-y-4">
+            <AccordionItem value="item-1" className="bg-card/80 border-border/50 rounded-2xl">
+                <AccordionTrigger className="p-6 text-lg font-bold hover:no-underline">Lampiran Program 1 Tahun</AccordionTrigger>
+                <AccordionContent className="p-6 pt-0">
+                  <p className="text-muted-foreground text-sm mb-4">Lampiran ini digunakan untuk persiapan proposal CSR dan bahan evaluasi internal.</p>
+                  <h4 className="font-bold mb-2">Timeline Bulanan</h4>
+                  <Table>
+                    <TableHeader><TableRow><TableHead>Bulan</TableHead><TableHead>Fokus Utama</TableHead></TableRow></TableHeader>
+                    <TableBody>
+                        <TableRow><TableCell>1</TableCell><TableCell>Pendataan atlet & orang tua, Tes fisik dasar (fun), Sosialisasi aturan</TableCell></TableRow>
+                        <TableRow><TableCell>2</TableCell><TableCell>Latihan teknik dasar rutin, Edukasi disiplin waktu, Program Lapangan Bersih</TableCell></TableRow>
+                        <TableRow><TableCell>3</TableCell><TableCell>Evaluasi fisik ringan, Mini challenge internal, Dokumentasi progres</TableCell></TableRow>
+                        <TableRow><TableCell>...</TableCell><TableCell>...</TableCell></TableRow>
+                        <TableRow><TableCell>12</TableCell><TableCell>Penyusunan laporan tahunan, Pameran foto, Perencanaan tahun berikutnya</TableCell></TableRow>
+                    </TableBody>
+                  </Table>
+                </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2" className="bg-card/80 border-border/50 rounded-2xl">
+                <AccordionTrigger className="p-6 text-lg font-bold hover:no-underline">Program Terpadu CSR</AccordionTrigger>
+                <AccordionContent className="p-6 pt-0">
+                    <p className="text-muted-foreground text-sm mb-4">Program "Tangguh Berprestasi" dirancang untuk memenuhi berbagai pilar CSR, dari olahraga, karakter, lingkungan, hingga literasi keuangan.</p>
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Card className="bg-background"><CardHeader><CardTitle className="text-base">Pilar 1: Atlet Tangguh</CardTitle></CardHeader><CardContent className="text-xs">Fokus pembinaan anak usia dini dari keluarga prasejahtera.</CardContent></Card>
+                        <Card className="bg-background"><CardHeader><CardTitle className="text-base">Pilar 2: Cinta Lingkungan</CardTitle></CardHeader><CardContent className="text-xs">Mengintegrasikan nilai petualangan, alam, dan kepedulian lingkungan.</CardContent></Card>
+                        <Card className="bg-background"><CardHeader><CardTitle className="text-base">Pilar 3: Literasi Keuangan</CardTitle></CardHeader><CardContent className="text-xs">Membentuk kebiasaan finansial sehat sejak dini.</CardContent></Card>
+                        <Card className="bg-background"><CardHeader><CardTitle className="text-base">Pilar 4: Kemandirian PB</CardTitle></CardHeader><CardContent className="text-xs">Penguatan tata kelola PB & ekonomi pendukung.</CardContent></Card>
+                     </div>
+                </AccordionContent>
+            </AccordionItem>
+             <AccordionItem value="item-3" className="bg-card/80 border-border/50 rounded-2xl">
+                <AccordionTrigger className="p-6 text-lg font-bold hover:no-underline">Sistem Monitoring & Evaluasi (MEP)</AccordionTrigger>
+                <AccordionContent className="p-6 pt-0">
+                    <p className="text-muted-foreground text-sm mb-4">Blueprint sistem digital PB untuk menunjukkan tata kelola modern, transparan, dan berbasis data kepada sponsor.</p>
+                    <h4 className="font-bold mb-2">Prinsip Desain</h4>
+                     <ul className="list-disc pl-5 text-sm space-y-1 mb-4">
+                        <li>**Transparan:** Semua data dapat diaudit</li>
+                        <li>**Berkelanjutan:** Data historis tersimpan</li>
+                        <li>**Terukur:** Indikator kuantitatif & kualitatif</li>
+                        <li>**Scalable:** Bisa dikembangkan dengan ML/AI</li>
+                    </ul>
+                    <div className="p-4 bg-blue-900/10 border border-blue-500/20 rounded-lg text-sm text-blue-300 flex items-center gap-3">
+                        <Bot className="w-5 h-5 shrink-0" />
+                        <span>Sistem ini membuka potensi **analisis prediktif** untuk risiko putus latihan dan rekomendasi program.</span>
+                    </div>
+                </AccordionContent>
+            </AccordionItem>
+        </Accordion>
     </div>
 );
 
@@ -158,13 +202,13 @@ export default function RulesPage() {
             {/* Header */}
             <div className="text-center mb-16 space-y-6">
                 <Badge variant="outline" className="px-4 py-1.5 border-primary/30 text-primary font-bold tracking-[0.2em] uppercase bg-primary/5 rounded-full">
-                    Official Rulebook 2026
+                    Official PB Rulebook
                 </Badge>
                 <h1 className="text-6xl md:text-8xl font-black font-headline uppercase tracking-tighter text-foreground drop-shadow-sm">
-                    Regulasi <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-500">Resmi</span>
+                    ATURAN <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-500">RESMI</span>
                 </h1>
                 <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-medium leading-relaxed">
-                    Panduan lengkap mengenai peraturan, format, dan sistem pertandingan Badmintour Open #1.
+                    Panduan lengkap mengenai peraturan, program, dan sistem pembinaan di PB Kultur Juara.
                 </p>
             </div>
 
@@ -176,20 +220,20 @@ export default function RulesPage() {
                             value="public" 
                             className="text-sm md:text-base font-bold rounded-full px-6 py-3 md:px-8 md:py-4 capitalize data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
                         >
-                            Untuk Peserta (Publik)
+                            Aturan Penerimaan (Publik)
                         </TabsTrigger>
                         <TabsTrigger 
                             value="technical" 
                             className="text-sm md:text-base font-bold rounded-full px-6 py-3 md:px-8 md:py-4 capitalize data-[state=active]:bg-zinc-800 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
                         >
-                            Untuk Panitia (Teknis)
+                            Struktur Program (Internal)
                         </TabsTrigger>
                     </TabsList>
                 </div>
 
                 <div className="min-h-[500px]">
                     <TabsContent value="public"><PublicRules /></TabsContent>
-                    <TabsContent value="technical"><TechnicalRules /></TabsContent>
+                    <TabsContent value="technical"><InternalDocs /></TabsContent>
                 </div>
             </Tabs>
         </div>
