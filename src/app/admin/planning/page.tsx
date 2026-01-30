@@ -5,7 +5,7 @@ import { useState } from "react";
 import { 
   TrendingUp, TrendingDown, Calendar, Plus, 
   Target, DollarSign, Wallet, PieChart, 
-  ArrowRight, CheckCircle2, Clock, AlertCircle, FileText, CheckSquare, Sparkles, HandHeart, Leaf, BookCopy, Bot, HardHat, CalendarDays, BarChart3, ClipboardCheck
+  ArrowRight, CheckCircle2, Clock, AlertCircle, FileText, CheckSquare, Sparkles, HandHeart, Leaf, BookCopy, Bot, HardHat, CalendarDays, BarChart3, ClipboardCheck, Network
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -286,20 +286,23 @@ export default function PlanningPage() {
             </div>
              <Card className="rounded-3xl">
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-3 text-lg font-bold"><Wallet className="w-5 h-5 text-primary"/>Alur Sistem (End-to-End)</CardTitle>
+                    <CardTitle className="flex items-center gap-3 text-lg font-bold"><Network className="w-5 h-5 text-primary"/>Alur Sistem (End-to-End)</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  {SYSTEM_FLOW.map((item, index) => (
-                    <div key={item.step} className={cn("flex items-start gap-4 p-4 rounded-xl", index < SYSTEM_FLOW.length -1 && "border-b border-dashed")}>
-                        <div className="flex flex-col items-center gap-1">
-                          <div className="w-10 h-10 rounded-full bg-secondary text-primary flex items-center justify-center text-lg font-bold font-mono">{item.step}</div>
+                 <CardContent className="space-y-4">
+                  {SYSTEM_FLOW.map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <div key={item.step} className="flex items-start gap-4 p-4 rounded-xl bg-secondary/50 border">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary shrink-0">
+                                <Icon className="h-6 w-6" />
+                            </div>
+                            <div>
+                              <h4 className="font-bold text-base text-foreground">{item.title}</h4>
+                              <p className="text-xs text-muted-foreground font-mono">{item.details}</p>
+                            </div>
                         </div>
-                        <div>
-                          <h4 className="font-bold text-base text-foreground">{item.title}</h4>
-                          <p className="text-xs text-muted-foreground font-mono">{item.details}</p>
-                        </div>
-                    </div>
-                  ))}
+                      )
+                  })}
                 </CardContent>
             </Card>
         </TabsContent>
@@ -395,3 +398,5 @@ export default function PlanningPage() {
     </div>
   );
 }
+
+    
