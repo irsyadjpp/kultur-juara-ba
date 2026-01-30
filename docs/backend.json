@@ -17,166 +17,132 @@
       "required": ["name", "email", "role", "status"]
     },
     "Athlete": {
-      "title": "Athlete",
+      "title": "Atlet",
       "type": "object",
       "description": "Represents an athlete in the academy.",
       "properties": {
-        "id": { "type": "string", "description": "Unique identifier for the athlete." },
-        "fullName": { "type": "string", "description": "Full name of the athlete." },
-        "nickname": { "type": "string", "description": "Nickname of the athlete." },
-        "pob": { "type": "string", "description": "Place of birth." },
-        "dob": { "type": "string", "format": "date", "description": "Date of birth." },
-        "gender": { "type": "string", "enum": ["Laki-laki", "Perempuan"], "description": "Gender of the athlete." },
-        "dominantHand": { "type": "string", "enum": ["Kanan", "Kiri"], "description": "Dominant hand of the athlete." },
-        "phone": { "type": "string", "description": "Phone number." },
-        "email": { "type": "string", "format": "email", "description": "Email address." },
-        "address": { "type": "string", "description": "Current address." },
-        "schoolOrWork": { "type": "string", "description": "Current school or place of work." },
-        "guardianName": { "type": "string", "description": "Name of guardian (optional)." },
-        "emergencyContact": { "type": "string", "description": "Emergency contact number." },
-        "category": { "type": "string", "enum": ["Pra-usia dini", "Usia dini", "Anak", "Remaja", "Dewasa", "Veteran"], "description": "Age category." },
-        "level": { "type": "string", "enum": ["Beginner", "Intermediate", "Advanced", "Elite"], "description": "Skill level." },
-        "pbsiNumber": { "type": "string", "description": "PBSI number (if any)." },
-        "startYear": { "type": "string", "description": "Year started playing badminton." },
-        "careerTarget": { "type": "string", "enum": ["Rekreasi", "Prestasi", "Profesional"], "description": "Career target." }
+        "atlet_id": { "type": "string", "description": "Unique identifier for the athlete." },
+        "nama": { "type": "string", "description": "Full name of the athlete." },
+        "tanggal_lahir": { "type": "string", "format": "date", "description": "Date of birth." },
+        "jenis_kelamin": { "type": "string", "enum": ["Laki-laki", "Perempuan"], "description": "Gender of the athlete." },
+        "kategori_usia": { "type": "string", "description": "Age category." },
+        "latar_belakang_sosial": { "type": "string", "description": "Social background information." },
+        "status_aktif": { "type": "string", "enum": ["AKTIF", "NON-AKTIF"], "description": "Athlete's status." },
+        "tanggal_masuk": { "type": "string", "format": "date", "description": "Registration date." }
       },
-      "required": ["fullName", "nickname", "pob", "dob", "gender", "dominantHand", "phone", "email", "address", "schoolOrWork", "emergencyContact", "category", "level", "startYear", "careerTarget"]
+      "required": ["nama", "tanggal_lahir", "jenis_kelamin", "kategori_usia", "status_aktif", "tanggal_masuk"]
     },
-    "PhysicalEvaluation": {
-      "title": "Physical Evaluation",
-      "type": "object",
-      "description": "Monthly physical evaluation data for an athlete.",
-      "properties": {
-        "height": { "type": "number", "description": "Height in cm." },
-        "weight": { "type": "number", "description": "Weight in kg." },
-        "armLength": { "type": "number", "description": "Arm length in cm." },
-        "armSpan": { "type": "number", "description": "Arm span in cm." },
-        "legLength": { "type": "number", "description": "Leg length in cm." },
-        "vo2Max": { "type": "number", "description": "VO2Max in ml/kg/min (optional)." },
-        "verticalJump": { "type": "number", "description": "Vertical jump height in cm." },
-        "standingBroadJump": { "type": "number", "description": "Standing broad jump length in cm." },
-        "pushUps": { "type": "number", "description": "Push-ups in 1 minute." },
-        "sitUps": { "type": "number", "description": "Sit-ups in 1 minute." },
-        "bleepTestLevel": { "type": "number", "description": "Bleep test level." },
-        "yoYoTestScore": { "type": "number", "description": "Yo-Yo test score." },
-        "maxRally": { "type": "number", "description": "Maximum rally duration in seconds." },
-        "sprint10m": { "type": "number", "description": "10m sprint time in seconds." },
-        "illinoisAgilityTest": { "type": "number", "description": "Illinois agility test time in seconds." },
-        "shuttleRunTime": { "type": "number", "description": "Shuttle run time in seconds." },
-        "sitAndReach": { "type": "number", "description": "Sit and reach distance in cm." },
-        "shoulderMobility": { "type": "number", "description": "Shoulder mobility in degrees." },
-        "summary": { "type": "string", "description": "Coach's summary and recommendations." }
-      }
-    },
-    "TechnicalEvaluation": {
-      "title": "Technical Evaluation",
-      "type": "object",
-      "description": "Technical stroke and skill assessment for an athlete.",
-      "properties": {
-        "servisPendek": { "type": "number", "description": "Rating for short serve (1-5)." },
-        "servisPanjang": { "type": "number", "description": "Rating for long serve (1-5)." },
-        "netting": { "type": "number", "description": "Rating for netting (1-5)." },
-        "lob": { "type": "number", "description": "Rating for lob (1-5)." },
-        "dropshot": { "type": "number", "description": "Rating for dropshot (1-5)." },
-        "smash": { "type": "number", "description": "Rating for smash (1-5)." },
-        "drive": { "type": "number", "description": "Rating for drive (1-5)." },
-        "defense": { "type": "number", "description": "Rating for defense (1-5)." },
-        "footwork": { "type": "number", "description": "Rating for footwork (1-5)." },
-        "smashAccuracy": { "type": "number", "description": "Smash accuracy in percentage." },
-        "errorRate": { "type": "number", "description": "Error rate per game." },
-        "rallyConsistency": { "type": "number", "description": "Rally consistency in number of shots." },
-        "recoveryFootworkTime": { "type": "number", "description": "Recovery footwork time in seconds." },
-        "summary": { "type": "string", "description": "Coach's summary and recommendations." }
-      }
-    },
-    "TacticalEvaluation": {
-      "title": "Tactical Evaluation",
-      "type": "object",
-      "description": "Tactical and game sense assessment for an athlete.",
-      "properties": {
-        "dominantPattern": { "type": "string", "enum": ["agresif", "rally", "counter"], "description": "Dominant playing style." },
-        "decisionSpeed": { "type": "number", "description": "Rating for decision making speed (1-5)." },
-        "adaptation": { "type": "number", "description": "Rating for opponent adaptation (1-5)." },
-        "shotSelection": { "type": "number", "description": "Rating for shot selection quality (1-5)." },
-        "positioning": { "type": "number", "description": "Rating for awareness and positioning (1-5)." },
-        "analysis": { "type": "string", "description": "Coach's analysis and development plan." }
-      }
-    },
-    "MentalEvaluation": {
-      "title": "Mental Evaluation",
-      "type": "object",
-      "description": "Age-specific mental and psychological evaluation.",
-      "properties": {
-        "ageGroup": { "type": "string", "enum": ["3-6", "7-9", "10-12", "13-15", "16-20"], "description": "Age group for the evaluation." },
-        "evaluationDate": { "type": "string", "format": "date", "description": "Date of evaluation." },
-        "coachAssessor": { "type": "string", "description": "Name of the assessing coach." },
-        "formResponses": { "type": "object", "description": "Dynamic object to store form responses based on age group." },
-        "psychologistNotes": { "type": "string", "description": "Notes from the psychologist or mental coach." }
-      }
-    },
-    "TrainingLog": {
-      "title": "Training Log",
-      "type": "object",
-      "description": "Daily training log for an athlete.",
-      "properties": {
-        "trainingDate": { "type": "string", "format": "date", "description": "Date of training session." },
-        "trainingType": { "type": "string", "enum": ["Teknik", "Fisik", "Game"], "description": "Type of training." },
-        "duration": { "type": "number", "description": "Duration in minutes." },
-        "intensity": { "type": "number", "description": "RPE intensity rating (1-10)." },
-        "sets": { "type": "number", "description": "Number of sets." },
-        "avgRally": { "type": "number", "description": "Average rally count." },
-        "hrAvg": { "type": "number", "description": "Average heart rate." },
-        "hrMax": { "type": "number", "description": "Maximum heart rate." },
-        "coachNotes": { "type": "string", "description": "Coach's observations." },
-        "athleteNotes": { "type": "string", "description": "Athlete's self-report." }
-      }
-    },
-    "MatchLog": {
-      "title": "Match Log",
-      "type": "object",
-      "description": "Log of official tournament matches for an athlete.",
-      "properties": {
-        "tournamentName": { "type": "string", "description": "Name of the tournament." },
-        "competitionLevel": { "type": "string", "enum": ["internal", "kota", "provinsi", "nasional"], "description": "Level of competition." },
-        "matchDate": { "type": "string", "format": "date", "description": "Date of the match." },
-        "matchId": { "type": "string", "description": "Official match ID." },
-        "opponentName": { "type": "string", "description": "Name of the opponent." },
-        "result": { "type": "string", "enum": ["WIN", "LOSS"], "description": "Match result." },
-        "scores": { "type": "string", "description": "Scores of the match (e.g., 21-19, 18-21, 21-15)." },
-        "duration": { "type": "number", "description": "Match duration in minutes." },
-        "errors": { "type": "number", "description": "Number of unforced errors." },
-        "winners": { "type": "number", "description": "Number of winning shots." },
-        "physicalCondition": { "type": "number", "description": "Athlete's physical condition rating (1-10)." },
-        "mentalCondition": { "type": "number", "description": "Athlete's mental condition rating (1-10)." }
-      }
-    },
-    "NutritionRecoveryLog": {
-      "title": "Nutrition and Recovery Log",
-      "type": "object",
-      "description": "Daily log for nutrition and recovery.",
-      "properties": {
-        "logDate": { "type": "string", "format": "date", "description": "Date of the log." },
-        "dietLog": { "type": "string", "description": "Log of daily meals and snacks." },
-        "waterIntake": { "type": "number", "description": "Water intake in liters." },
-        "supplements": { "type": "string", "description": "Supplements consumed." },
-        "sleepDuration": { "type": "number", "description": "Sleep duration in hours." },
-        "sleepQuality": { "type": "number", "description": "Sleep quality rating (1-10)." },
-        "domsLevel": { "type": "number", "description": "DOMS (muscle soreness) level (1-10)." }
-      }
-    },
-    "MentalJournal": {
-        "title": "Mental Journal (AMEL)",
+    "OrangTua": {
+        "title": "Orang Tua",
         "type": "object",
-        "description": "Athlete Mental Expression Log.",
+        "description": "Represents the parent or guardian of an athlete.",
         "properties": {
-            "logDate": { "type": "string", "format": "date" },
-            "mood": { "type": "string", "enum": ["sad", "neutral", "happy", "focused"] },
-            "mentalEnergy": { "type": "number" },
-            "mentalLoad": { "type": "string", "enum": ["Ringan", "Sedang", "Berat"] },
-            "mainActivity": { "type": "string", "enum": ["Latihan", "Sekolah/Kuliah", "Tanding", "Libur"] },
-            "promptResponse1": { "type": "string", "description": "Response to the first guided prompt." },
-            "promptResponse2": { "type": "string", "description": "Response to the second guided prompt." },
-            "safetyCheck": { "type": "array", "items": { "type": "string" }, "description": "Items checked in the safety check section." }
+            "orang_tua_id": { "type": "string" },
+            "nama": { "type": "string" },
+            "pekerjaan": { "type": "string" },
+            "penghasilan_range": { "type": "string" },
+            "kontak": { "type": "string" },
+            "atlet_id": { "type": "string" }
+        }
+    },
+    "Program": {
+        "title": "Program",
+        "type": "object",
+        "description": "Represents a training or development program.",
+        "properties": {
+            "program_id": { "type": "string" },
+            "nama_program": { "type": "string" },
+            "pilar_program": { "type": "string" },
+            "sponsor_target": { "type": "string" },
+            "tahun": { "type": "string" },
+            "status": { "type": "string" }
+        }
+    },
+    "Kegiatan": {
+        "title": "Kegiatan",
+        "type": "object",
+        "description": "Represents a specific activity within a program.",
+        "properties": {
+            "kegiatan_id": { "type": "string" },
+            "program_id": { "type": "string" },
+            "tanggal": { "type": "string", "format": "date" },
+            "jenis_kegiatan": { "type": "string" },
+            "lokasi": { "type": "string" },
+            "deskripsi": { "type": "string" }
+        }
+    },
+    "Kehadiran": {
+        "title": "Kehadiran",
+        "type": "object",
+        "description": "Tracks athlete attendance for activities.",
+        "properties": {
+            "kehadiran_id": { "type": "string" },
+            "atlet_id": { "type": "string" },
+            "kegiatan_id": { "type": "string" },
+            "status_hadir": { "type": "string", "enum": ["HADIR", "IZIN", "SAKIT", "ALPA"] },
+            "alasan_tidak_hadir": { "type": "string" }
+        }
+    },
+    "Evaluasi": {
+        "title": "Evaluasi",
+        "type": "object",
+        "description": "Represents an evaluation of an athlete.",
+        "properties": {
+            "evaluasi_id": { "type": "string" },
+            "atlet_id": { "type": "string" },
+            "tanggal": { "type": "string", "format": "date" },
+            "domain": { "type": "string", "enum": ["fisik", "mental", "teknik", "karakter"] },
+            "skor_numerik": { "type": "number" },
+            "catatan_pelatih": { "type": "string" }
+        }
+    },
+    "LiterasiKeuangan": {
+        "title": "Literasi Keuangan",
+        "type": "object",
+        "description": "Tracks financial literacy metrics for an athlete.",
+        "properties": {
+            "literasi_id": { "type": "string" },
+            "atlet_id": { "type": "string" },
+            "bulan": { "type": "string" },
+            "kebiasaan_menabung": { "type": "boolean" },
+            "nominal_tabungan": { "type": "number" },
+            "pemahaman_keuangan": { "type": "number", "description": "Scale from 1-5" }
+        }
+    },
+    "Lingkungan": {
+        "title": "Lingkungan",
+        "type": "object",
+        "description": "Represents an environmental activity.",
+        "properties": {
+            "lingkungan_id": { "type": "string" },
+            "kegiatan_id": { "type": "string" },
+            "jenis_aksi": { "type": "string" },
+            "partisipasi_atlet": { "type": "number" },
+            "dampak_deskriptif": { "type": "string" }
+        }
+    },
+    "Dokumentasi": {
+        "title": "Dokumentasi",
+        "type": "object",
+        "description": "Represents documentation for an activity.",
+        "properties": {
+            "dokumentasi_id": { "type": "string" },
+            "kegiatan_id": { "type": "string" },
+            "tipe": { "type": "string", "enum": ["foto", "video"] },
+            "url_file": { "type": "string", "format": "uri" },
+            "keterangan": { "type": "string" }
+        }
+    },
+    "Laporan": {
+        "title": "Laporan",
+        "type": "object",
+        "description": "Represents a monthly or yearly report.",
+        "properties": {
+            "laporan_id": { "type": "string" },
+            "periode": { "type": "string" },
+            "jenis_laporan": { "type": "string", "enum": ["bulanan", "tahunan"] },
+            "ringkasan_dampak": { "type": "string" },
+            "file_url": { "type": "string", "format": "uri" }
         }
     }
   },
@@ -192,37 +158,41 @@
       "schema": { "$ref": "#/entities/Athlete" },
       "description": "Stores individual athlete profiles."
     },
-    "/athletes/{athleteId}/physical_evaluations/{evalId}": {
-      "schema": { "$ref": "#/entities/PhysicalEvaluation" },
-      "description": "Stores periodic physical evaluations for an athlete."
+    "/parents/{parentId}": {
+      "schema": { "$ref": "#/entities/OrangTua" },
+      "description": "Stores parent/guardian information."
     },
-    "/athletes/{athleteId}/technical_evaluations/{evalId}": {
-      "schema": { "$ref": "#/entities/TechnicalEvaluation" },
-      "description": "Stores periodic technical evaluations for an athlete."
+    "/programs/{programId}": {
+      "schema": { "$ref": "#/entities/Program" },
+      "description": "Stores program details."
     },
-    "/athletes/{athleteId}/tactical_evaluations/{evalId}": {
-      "schema": { "$ref": "#/entities/TacticalEvaluation" },
-      "description": "Stores periodic tactical evaluations for an athlete."
+    "/programs/{programId}/activities/{activityId}": {
+      "schema": { "$ref": "#/entities/Kegiatan" },
+      "description": "Stores activities for a program."
     },
-    "/athletes/{athleteId}/mental_evaluations/{evalId}": {
-      "schema": { "$ref": "#/entities/MentalEvaluation" },
-      "description": "Stores periodic mental evaluations for an athlete."
+    "/activities/{activityId}/attendance/{attendanceId}": {
+      "schema": { "$ref": "#/entities/Kehadiran" },
+      "description": "Stores attendance for an activity."
     },
-     "/athletes/{athleteId}/training_logs/{logId}": {
-      "schema": { "$ref": "#/entities/TrainingLog" },
-      "description": "Stores daily training logs for an athlete."
+    "/athletes/{athleteId}/evaluations/{evalId}": {
+      "schema": { "$ref": "#/entities/Evaluasi" },
+      "description": "Stores periodic evaluations for an athlete."
     },
-    "/athletes/{athleteId}/match_logs/{logId}": {
-      "schema": { "$ref": "#/entities/MatchLog" },
-      "description": "Stores logs of official matches for an athlete."
+    "/athletes/{athleteId}/financial_literacy/{logId}": {
+      "schema": { "$ref": "#/entities/LiterasiKeuangan" },
+      "description": "Stores financial literacy logs for an athlete."
     },
-    "/athletes/{athleteId}/nutrition_logs/{logId}": {
-      "schema": { "$ref": "#/entities/NutritionRecoveryLog" },
-      "description": "Stores daily nutrition and recovery logs for an athlete."
+    "/activities/{activityId}/environment/{envId}": {
+      "schema": { "$ref": "#/entities/Lingkungan" },
+      "description": "Stores environmental impact of an activity."
     },
-    "/athletes/{athleteId}/mental_journals/{journalId}": {
-      "schema": { "$ref": "#/entities/MentalJournal" },
-      "description": "Stores private mental expression logs for an athlete."
+    "/activities/{activityId}/documentation/{docId}": {
+      "schema": { "$ref": "#/entities/Dokumentasi" },
+      "description": "Stores documentation for an activity."
+    },
+    "/reports/{reportId}": {
+      "schema": { "$ref": "#/entities/Laporan" },
+      "description": "Stores generated reports."
     }
   }
 }

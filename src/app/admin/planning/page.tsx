@@ -5,7 +5,7 @@ import { useState } from "react";
 import { 
   TrendingUp, TrendingDown, Calendar, Plus, 
   Target, DollarSign, Wallet, PieChart, 
-  ArrowRight, CheckCircle2, Clock, AlertCircle, FileText, CheckSquare, Sparkles, HandHeart, Leaf, BookCopy
+  ArrowRight, CheckCircle2, Clock, AlertCircle, FileText, CheckSquare, Sparkles, HandHeart, Leaf, BookCopy, Bot, HardHat
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -65,6 +65,14 @@ const DOC_CHECKLIST = {
     "Akhir Tahun": ["Laporan tahunan", "Video perjalanan", "Arsip foto terkurasi"]
 };
 
+
+const MEP_PRINCIPLES = [
+    { title: "Transparan", desc: "Semua data dapat diaudit oleh pihak berkepentingan.", icon: CheckSquare},
+    { title: "Berkelanjutan", desc: "Data historis tersimpan untuk analisis jangka panjang.", icon: TrendingUp},
+    { title: "Terukur", desc: "Menggunakan indikator kuantitatif & kualitatif yang jelas.", icon: PieChart},
+    { title: "Scalable", desc: "Siap dikembangkan dengan Machine Learning & AI.", icon: Bot},
+    { title: "Human-Centered", desc: "Tidak membebani pelatih dengan input data yang rumit.", icon: HandHeart},
+]
 
 export default function PlanningPage() {
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -158,14 +166,17 @@ export default function PlanningPage() {
       {/* --- TABS SECTION --- */}
       <Tabs defaultValue="roadmap" className="w-full">
         <div className="flex justify-center mb-8">
-            <TabsList className="bg-secondary p-1.5 rounded-full h-16 w-full max-w-lg border">
-                <TabsTrigger value="roadmap" className="rounded-full h-full w-1/3 font-bold text-base data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-md">
+            <TabsList className="bg-secondary p-1.5 rounded-full h-16 w-full max-w-2xl border grid grid-cols-4">
+                <TabsTrigger value="roadmap" className="rounded-full h-full font-bold text-base data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-md">
                     <Calendar className="w-4 h-4 mr-2"/> ROADMAP
                 </TabsTrigger>
-                <TabsTrigger value="csr" className="rounded-full h-full w-1/3 font-bold text-base data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-md">
+                <TabsTrigger value="csr" className="rounded-full h-full font-bold text-base data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-md">
                     <Sparkles className="w-4 h-4 mr-2"/> PROGRAM CSR
                 </TabsTrigger>
-                <TabsTrigger value="budget" className="rounded-full h-full w-1/3 font-bold text-base data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-md">
+                <TabsTrigger value="mep" className="rounded-full h-full font-bold text-base data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-md">
+                    <HardHat className="w-4 h-4 mr-2"/> SISTEM MEP
+                </TabsTrigger>
+                <TabsTrigger value="budget" className="rounded-full h-full font-bold text-base data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-md">
                     <DollarSign className="w-4 h-4 mr-2"/> BUDGET
                 </TabsTrigger>
             </TabsList>
@@ -245,8 +256,36 @@ export default function PlanningPage() {
             </Card>
         </TabsContent>
 
+        {/* TAB 3: SISTEM MEP */}
+        <TabsContent value="mep" className="space-y-8">
+            <div className="text-center">
+                <h3 className="text-3xl font-black font-headline uppercase text-foreground">Blueprint Sistem MEP</h3>
+                <p className="text-muted-foreground max-w-2xl mx-auto">Sistem Monitoring, Evaluasi & Perencanaan Program (MEP) menunjukkan tata kelola modern, transparan, dan berbasis data.</p>
+            </div>
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {MEP_PRINCIPLES.map((pillar, idx) => (
+                    <Card key={idx} className="rounded-3xl shadow-md border-t-4 border-primary">
+                        <CardHeader>
+                             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4"><pillar.icon className="w-6 h-6"/></div>
+                            <CardTitle className="text-lg font-bold">{pillar.title}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                           <p className="text-sm text-muted-foreground">{pillar.desc}</p>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+             <Card className="rounded-3xl">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-3 text-lg font-bold"><Wallet className="w-5 h-5 text-primary"/>Alur Sistem (End-to-End)</CardTitle>
+                </CardHeader>
+                <CardContent>
+                     <p className="text-sm text-muted-foreground">Flow data mulai dari perencanaan hingga pelaporan.</p>
+                </CardContent>
+            </Card>
+        </TabsContent>
 
-        {/* TAB 3: BUDGET SHEET (TABLE VIEW) */}
+        {/* TAB 4: BUDGET SHEET (TABLE VIEW) */}
         <TabsContent value="budget">
             <Card className="bg-card border-border rounded-[32px] overflow-hidden">
                 <CardHeader className="p-8 border-b">
