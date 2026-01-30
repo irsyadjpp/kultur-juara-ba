@@ -5,7 +5,7 @@ import { useState } from "react";
 import { 
   TrendingUp, TrendingDown, Calendar, Plus, 
   Target, DollarSign, Wallet, PieChart, 
-  ArrowRight, CheckCircle2, Clock, AlertCircle, FileText, CheckSquare
+  ArrowRight, CheckCircle2, Clock, AlertCircle, FileText, CheckSquare, Sparkles, HandHeart, Leaf, BookCopy
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 // MOCK DATA - Financial Overview (can be kept)
 const BUDGET_STATS = {
@@ -49,6 +50,21 @@ const PROGRAMS = [
   { id: 3, name: "Hadiah Uang Tunai (Prize Pool)", division: "FINANCE", cost: 150000000, date: "Jul 2026", status: "PLANNED", progress: 0 },
   { id: 4, name: "Promosi Iklan Instagram", division: "MEDIA", cost: 15000000, date: "Apr 2026", status: "APPROVED", progress: 80 },
 ];
+
+// NEW DATA FOR CSR PROGRAM
+const CSR_PILLARS = [
+    { title: "Pilar 1: Atlet Tangguh & Berkarakter", icon: Sparkles, activities: ["Latihan rutin & pembinaan mental", "Mini challenge disiplin & sportivitas", "Evaluasi fisik & karakter"] },
+    { title: "Pilar 2: Cinta Lingkungan & Gaya Hidup Aktif", icon: Leaf, activities: ["Program Lapangan Bersih", "Pengurangan sampah plastik (botol minum pribadi)", "Fun games luar ruang"] },
+    { title: "Pilar 3: Literasi Keuangan", icon: Wallet, activities: ["Edukasi menabung atlet (target mikro)", "Edukasi keuangan orang tua", "Simulasi keuangan sederhana"] },
+    { title: "Pilar 4: Kemandirian Komunitas PB", icon: HandHeart, activities: ["Pelatihan manajemen PB sederhana", "Pelibatan UMKM orang tua", "Transparansi laporan & dokumentasi"] },
+];
+
+const DOC_CHECKLIST = {
+    "Setiap Kegiatan": ["Foto kegiatan (5–10)", "Video pendek (30–60 detik)", "Catatan tanggal & kegiatan"],
+    "Setiap Bulan": ["Rekap kehadiran", "Laporan 1 halaman", "Backup file (cloud/drive)"],
+    "Akhir Tahun": ["Laporan tahunan", "Video perjalanan", "Arsip foto terkurasi"]
+};
+
 
 export default function PlanningPage() {
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -143,16 +159,19 @@ export default function PlanningPage() {
       <Tabs defaultValue="roadmap" className="w-full">
         <div className="flex justify-center mb-8">
             <TabsList className="bg-secondary p-1.5 rounded-full h-16 w-full max-w-lg border">
-                <TabsTrigger value="roadmap" className="rounded-full h-full w-1/2 font-bold text-base data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-md">
+                <TabsTrigger value="roadmap" className="rounded-full h-full w-1/3 font-bold text-base data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-md">
                     <Calendar className="w-4 h-4 mr-2"/> ROADMAP
                 </TabsTrigger>
-                <TabsTrigger value="budget" className="rounded-full h-full w-1/2 font-bold text-base data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-md">
-                    <DollarSign className="w-4 h-4 mr-2"/> BUDGET SHEET
+                <TabsTrigger value="csr" className="rounded-full h-full w-1/3 font-bold text-base data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-md">
+                    <Sparkles className="w-4 h-4 mr-2"/> PROGRAM CSR
+                </TabsTrigger>
+                <TabsTrigger value="budget" className="rounded-full h-full w-1/3 font-bold text-base data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-md">
+                    <DollarSign className="w-4 h-4 mr-2"/> BUDGET
                 </TabsTrigger>
             </TabsList>
         </div>
 
-        {/* TAB 1: ROADMAP (TIMELINE VIEW) - MODIFIED */}
+        {/* TAB 1: ROADMAP (TIMELINE VIEW) */}
         <TabsContent value="roadmap">
             <div className="relative pl-6 after:absolute after:inset-y-0 after:w-px after:bg-border after:left-6">
               {TIMELINE.map((item, index) => (
@@ -183,7 +202,51 @@ export default function PlanningPage() {
             </div>
         </TabsContent>
 
-        {/* TAB 2: BUDGET SHEET (TABLE VIEW) - Kept as is */}
+        {/* TAB 2: CSR PROGRAM */}
+        <TabsContent value="csr" className="space-y-8">
+            <div className="text-center">
+                <h3 className="text-3xl font-black font-headline uppercase text-foreground">Program Terpadu CSR: "Tangguh Berprestasi"</h3>
+                <p className="text-muted-foreground max-w-2xl mx-auto">Satu kegiatan inti untuk memenuhi berbagai pilar CSR, dari olahraga, karakter, lingkungan, hingga literasi keuangan.</p>
+            </div>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {CSR_PILLARS.map((pillar, idx) => (
+                    <Card key={idx} className="rounded-3xl shadow-md">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-3 text-lg font-bold"><pillar.icon className="w-5 h-5 text-primary"/>{pillar.title}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-sm font-bold text-muted-foreground mb-2">Aktivitas Utama:</p>
+                            <ul className="list-disc pl-5 space-y-1 text-sm">
+                                {pillar.activities.map((act, i) => <li key={i}>{act}</li>)}
+                            </ul>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+            <Card className="rounded-3xl">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-3 text-lg font-bold"><BookCopy className="w-5 h-5 text-primary"/>Checklist Dokumentasi Wajib</CardTitle>
+                    <CardDescription>Panduan standar untuk pelaporan ke sponsor.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Accordion type="single" collapsible className="w-full">
+                        {Object.entries(DOC_CHECKLIST).map(([title, items], idx) => (
+                            <AccordionItem key={idx} value={`item-${idx}`} className={idx === 0 ? "border-t-0" : ""}>
+                                <AccordionTrigger className="font-bold">{title}</AccordionTrigger>
+                                <AccordionContent>
+                                    <ul className="list-disc pl-5 space-y-2 text-sm">
+                                        {items.map((item, i) => <li key={i}>{item}</li>)}
+                                    </ul>
+                                </AccordionContent>
+                            </AccordionItem>
+                        ))}
+                    </Accordion>
+                </CardContent>
+            </Card>
+        </TabsContent>
+
+
+        {/* TAB 3: BUDGET SHEET (TABLE VIEW) */}
         <TabsContent value="budget">
             <Card className="bg-card border-border rounded-[32px] overflow-hidden">
                 <CardHeader className="p-8 border-b">
