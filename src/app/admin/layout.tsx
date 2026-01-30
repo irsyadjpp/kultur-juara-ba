@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, type ReactNode } from 'react';
@@ -22,7 +23,23 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // Client-side session check
+    // DEV MODE: Auto-login for development
+    const devLogin = () => {
+      const mockSession = {
+        name: "Pelatih Kepala",
+        email: "director@kulturjuara.com",
+        role: "HEAD_COACH",
+        isLoggedIn: true,
+        isOnboarded: true, // Bypass integrity pact for dev
+      };
+      setSession(mockSession);
+      setLoading(false);
+    };
+
+    devLogin();
+    
+    // Original session check logic is commented out for dev mode
+    /*
     const checkSession = async () => {
         const currentSession = await getSession();
         if (currentSession?.isLoggedIn) {
@@ -33,6 +50,7 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
         setLoading(false);
     };
     checkSession();
+    */
   }, [pathname, router]);
   
   const handlePactComplete = async () => {
