@@ -5,7 +5,7 @@ import { useState } from "react";
 import { 
   TrendingUp, TrendingDown, Calendar, Plus, 
   Target, DollarSign, Wallet, PieChart, 
-  ArrowRight, CheckCircle2, Clock, AlertCircle, FileText, CheckSquare, Sparkles, HandHeart, Leaf, BookCopy, Bot, HardHat
+  ArrowRight, CheckCircle2, Clock, AlertCircle, FileText, CheckSquare, Sparkles, HandHeart, Leaf, BookCopy, Bot, HardHat, CalendarDays, BarChart3, ClipboardCheck
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -73,6 +73,15 @@ const MEP_PRINCIPLES = [
     { title: "Scalable", desc: "Siap dikembangkan dengan Machine Learning & AI.", icon: Bot},
     { title: "Human-Centered", desc: "Tidak membebani pelatih dengan input data yang rumit.", icon: HandHeart},
 ]
+
+const SYSTEM_FLOW = [
+  { step: 1, title: "Perencanaan Program", details: "Admin → Input Program → Tentukan Pilar → Tentukan Indikator", icon: Target },
+  { step: 2, title: "Pelaksanaan Kegiatan", details: "Pelatih → Input Kegiatan → Absensi Atlet → Upload Dokumentasi", icon: CalendarDays },
+  { step: 3, title: "Monitoring Harian & Bulanan", details: "Sistem → Rekap Kehadiran → Rekap Evaluasi → Dashboard", icon: BarChart3 },
+  { step: 4, title: "Evaluasi & Scoring", details: "Sistem → Hitung Skor Per Atlet → Hitung Dampak Program", icon: ClipboardCheck },
+  { step: 5, title: "Pelaporan & Transparansi", details: "Admin → Generate Laporan → Akses Sponsor (Read-Only)", icon: FileText }
+];
+
 
 export default function PlanningPage() {
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -279,8 +288,18 @@ export default function PlanningPage() {
                 <CardHeader>
                     <CardTitle className="flex items-center gap-3 text-lg font-bold"><Wallet className="w-5 h-5 text-primary"/>Alur Sistem (End-to-End)</CardTitle>
                 </CardHeader>
-                <CardContent>
-                     <p className="text-sm text-muted-foreground">Flow data mulai dari perencanaan hingga pelaporan.</p>
+                <CardContent className="space-y-4">
+                  {SYSTEM_FLOW.map((item, index) => (
+                    <div key={item.step} className={cn("flex items-start gap-4 p-4 rounded-xl", index < SYSTEM_FLOW.length -1 && "border-b border-dashed")}>
+                        <div className="flex flex-col items-center gap-1">
+                          <div className="w-10 h-10 rounded-full bg-secondary text-primary flex items-center justify-center text-lg font-bold font-mono">{item.step}</div>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-base text-foreground">{item.title}</h4>
+                          <p className="text-xs text-muted-foreground font-mono">{item.details}</p>
+                        </div>
+                    </div>
+                  ))}
                 </CardContent>
             </Card>
         </TabsContent>
