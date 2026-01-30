@@ -2,7 +2,7 @@
 
 import { 
   Users, ShieldCheck, Star, 
-  BarChart, Activity, Award, Leaf, ClipboardCheck
+  BarChart, Activity, Award, Leaf, ClipboardCheck, Wallet, Landmark
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -34,6 +34,7 @@ const recentActivities = [
 const impactIndicators = {
   social: ["Keluarga Prasejahtera", "Konsistensi Kehadiran", "Kepercayaan Diri"],
   character: ["Sportivitas", "Kerja Sama Tim", "Tanggung Jawab"],
+  finance: ["Kebiasaan Menabung", "Pemahaman Keuangan", "Partisipasi Orang Tua"],
   environment: ["Pengurangan Sampah Plastik", "Kebersihan Lapangan", "Partisipasi Aksi Lingkungan"],
   governance: ["Jadwal Konsisten", "Laporan Rutin", "Pelibatan Orang Tua"],
 }
@@ -168,7 +169,7 @@ export default function AcademyDashboard() {
             <Card className="bg-card/80 backdrop-blur-sm border rounded-[40px] sticky top-24">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg text-foreground">
-                    Indikator Dampak (Bulanan)
+                    Pilar Dampak Program (CSR)
                   </CardTitle>
                   <CardDescription>Ringkasan pencapaian program untuk sponsor.</CardDescription>
                 </CardHeader>
@@ -189,11 +190,27 @@ export default function AcademyDashboard() {
                         ))}
                       </ul>
                   </div>
+                   <div className="space-y-3 p-4 bg-secondary/50 rounded-2xl border">
+                      <h4 className="font-bold flex items-center gap-2 text-foreground text-sm"><Wallet className="w-4 h-4 text-purple-500" /> Pilar Literasi Keuangan</h4>
+                      <ul className="space-y-2 text-xs text-muted-foreground">
+                        {impactIndicators.finance.map(item => (
+                          <li key={item} className="flex justify-between items-center"><span>{item}</span> <Badge variant="outline" className="font-mono">60%</Badge></li>
+                        ))}
+                      </ul>
+                  </div>
                   <div className="space-y-3 p-4 bg-secondary/50 rounded-2xl border">
                       <h4 className="font-bold flex items-center gap-2 text-foreground text-sm"><Leaf className="w-4 h-4 text-green-500" /> Pilar Lingkungan</h4>
                       <ul className="space-y-2 text-xs text-muted-foreground">
                         {impactIndicators.environment.map(item => (
                           <li key={item} className="flex justify-between items-center"><span>{item}</span> <Badge variant="outline" className="font-mono">70%</Badge></li>
+                        ))}
+                      </ul>
+                  </div>
+                   <div className="space-y-3 p-4 bg-secondary/50 rounded-2xl border">
+                      <h4 className="font-bold flex items-center gap-2 text-foreground text-sm"><Landmark className="w-4 h-4 text-gray-500" /> Pilar Tata Kelola</h4>
+                      <ul className="space-y-2 text-xs text-muted-foreground">
+                        {impactIndicators.governance.map(item => (
+                          <li key={item} className="flex justify-between items-center"><span>{item}</span> <Badge variant="outline" className="font-mono">OK</Badge></li>
                         ))}
                       </ul>
                   </div>
