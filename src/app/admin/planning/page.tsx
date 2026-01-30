@@ -289,10 +289,11 @@ export default function PlanningPage() {
                     <CardTitle className="flex items-center gap-3 text-lg font-bold"><Network className="w-5 h-5 text-primary"/>Alur Sistem (End-to-End)</CardTitle>
                 </CardHeader>
                  <CardContent className="space-y-4">
-                  {SYSTEM_FLOW.map((item) => {
+                  {SYSTEM_FLOW.map((item, index) => {
                       const Icon = item.icon;
                       return (
-                        <div key={item.step} className="flex items-start gap-4 p-4 rounded-xl bg-secondary/50 border">
+                        <div key={item.step} className="flex items-start gap-4 p-4 rounded-xl bg-secondary/50 border relative">
+                           <div className="absolute top-1/2 -left-3 w-6 h-6 rounded-full bg-background border flex items-center justify-center font-bold text-primary text-sm">{index + 1}</div>
                             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary shrink-0">
                                 <Icon className="h-6 w-6" />
                             </div>
