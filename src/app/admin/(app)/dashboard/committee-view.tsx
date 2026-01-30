@@ -1,4 +1,3 @@
-
 'use client';
 
 import { 
@@ -7,6 +6,7 @@ import {
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 // MOCK DATA FOR ACADEMY DASHBOARD
 const ACADEMY_STATS = {
@@ -16,11 +16,19 @@ const ACADEMY_STATS = {
   upcomingEvaluations: 5,
 };
 
+const attendanceToday = {
+  rate: 90,
+  absent: [
+    { name: 'Siti Fadia', reason: 'Sakit', avatar: 'SF' },
+    { name: 'Budi Santoso', reason: 'Izin', avatar: 'BS' },
+  ]
+};
+
 const recentActivities = [
-    { type: "NEW_ATHLETE", desc: "Registrasi Baru: Budi Santoso (U-13)", time: "15m ago", status: "NEW"},
-    { type: "EVALUATION", desc: "Evaluasi Fisik: Kevin Sanjaya", time: "1h ago", status: "COMPLETED"},
-    { type: "LOG", desc: "Log Latihan: Siti Fadia (Teknik)", time: "2h ago", status: "LOGGED"},
-    { type: "ALERT", desc: "Mental Journal: Indikasi burnout terdeteksi pada 1 atlet.", time: "4h ago", status: "FLAGGED"},
+    { type: "EVAL_MENTAL", desc: "Jurnal Mental Baru: 'Merasa lelah & kurang motivasi'", time: "5m ago", status: "FLAGGED", user: "Psikolog" },
+    { type: "ATTENDANCE", desc: "Siti Fadia ditandai 'Sakit' untuk sesi pagi.", time: "15m ago", status: "LOGGED", user: "Coach A." },
+    { type: "EVAL_FISIK", desc: "Evaluasi Fisik U-13 Selesai (5 atlet)", time: "1h ago", status: "COMPLETED", user: "Coach B." },
+    { type: "TRAINING_LOG", desc: "Log Latihan Teknik: Kevin Sanjaya (Netting)", time: "2h ago", status: "LOGGED", user: "Coach C." },
 ];
 
 const impactIndicators = {
@@ -39,8 +47,8 @@ export default function AcademyDashboard() {
         <p className="text-muted-foreground">Ringkasan aktivitas dan data atlet di Kultur Juara Academy.</p>
       </div>
       
+      {/* STAT CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Updated Stat Cards with a lighter theme */}
         <Card className="bg-card/80 backdrop-blur-sm border p-2 rounded-[28px] overflow-hidden relative group">
           <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-all"></div>
           <CardContent className="p-4 flex items-center gap-4 relative z-10">
@@ -91,81 +99,108 @@ export default function AcademyDashboard() {
         </Card>
       </div>
 
-      <Card className="bg-card/80 backdrop-blur-sm border rounded-[40px]">
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg text-foreground">
-                    <Activity className="w-5 h-5"/>
-                    Aktivitas Terbaru
-                </CardTitle>
-                <CardDescription>Log kejadian penting dari sistem akademi.</CardDescription>
-            </CardHeader>
-            <CardContent className="p-6 pt-0">
-                <div className="space-y-3">
-                {recentActivities.map((act, i) => (
-                    <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-secondary/50 border shadow-sm">
-                        <div>
-                            <div className="font-bold text-foreground text-sm">{act.desc}</div>
-                            <div className="text-xs text-muted-foreground">{act.time}</div>
-                        </div>
-                        <div>
-                            {act.status === 'NEW' && <Badge variant="outline" className="text-blue-600 border-blue-200 bg-blue-50">{act.type}</Badge>}
-                            {act.status === 'COMPLETED' && <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50">{act.type}</Badge>}
-                            {act.status === 'LOGGED' && <Badge variant="secondary">{act.type}</Badge>}
-                            {act.status === 'FLAGGED' && <Badge variant="destructive">{act.type}</Badge>}
-                        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        {/* Left column for main monitoring cards */}
+        <div className="lg:col-span-2 space-y-8">
+            
+            {/* New Daily Attendance Card */}
+            <Card className="bg-card/80 backdrop-blur-sm border rounded-[40px]">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-lg text-foreground">
+                        <ClipboardCheck className="w-5 h-5 text-green-500"/>
+                        Monitoring Kehadiran Harian
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <div className="flex flex-col items-center justify-center bg-secondary/50 p-6 rounded-2xl border h-full">
+                        <div className="text-6xl font-black text-green-500">{attendanceToday.rate}%</div>
+                        <div className="text-sm font-bold text-muted-foreground mt-1">Tingkat Kehadiran Hari Ini</div>
                     </div>
-                ))}
-                </div>
-            </CardContent>
-        </Card>
+                    <div className="space-y-3">
+                        <h4 className="font-bold text-sm text-muted-foreground">Atlet Tidak Hadir:</h4>
+                        {attendanceToday.absent.map((atlet, i) => (
+                            <div key={i} className="flex items-center justify-between bg-secondary p-3 rounded-lg">
+                                <div className="flex items-center gap-3">
+                                    <Avatar className="h-8 w-8 text-xs"><AvatarFallback>{atlet.avatar}</AvatarFallback></Avatar>
+                                    <span className="text-sm font-bold">{atlet.name}</span>
+                                </div>
+                                <Badge variant={atlet.reason === 'Sakit' ? 'destructive' : 'secondary'}>{atlet.reason}</Badge>
+                            </div>
+                        ))}
+                    </div>
+                </CardContent>
+            </Card>
 
-      <Card className="bg-card/80 backdrop-blur-sm border rounded-[40px]">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg text-foreground">
-            Indikator Dampak Program (ESG/CSR)
-          </CardTitle>
-          <CardDescription>Ringkasan pencapaian program untuk stakeholder & sponsor.</CardDescription>
-        </CardHeader>
-        <CardContent className="p-6 pt-0 grid grid-cols-1 md:grid-cols-2 gap-6">
-          
-          <div className="space-y-3 p-4 bg-secondary/50 rounded-2xl border">
-              <h4 className="font-bold flex items-center gap-2 text-foreground"><Users className="w-4 h-4 text-blue-500" /> Pilar Sosial</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                {impactIndicators.social.map(item => (
-                  <li key={item} className="flex justify-between items-center"><span>{item}</span> <Badge variant="outline" className="font-mono">85%</Badge></li>
-                ))}
-              </ul>
-          </div>
-          
-          <div className="space-y-3 p-4 bg-secondary/50 rounded-2xl border">
-              <h4 className="font-bold flex items-center gap-2 text-foreground"><Award className="w-4 h-4 text-yellow-500" /> Pilar Pendidikan Karakter</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                {impactIndicators.character.map(item => (
-                  <li key={item} className="flex justify-between items-center"><span>{item}</span> <Badge variant="outline" className="font-mono">Baik</Badge></li>
-                ))}
-              </ul>
-          </div>
-          
-          <div className="space-y-3 p-4 bg-secondary/50 rounded-2xl border">
-              <h4 className="font-bold flex items-center gap-2 text-foreground"><Leaf className="w-4 h-4 text-green-500" /> Pilar Lingkungan</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                {impactIndicators.environment.map(item => (
-                  <li key={item} className="flex justify-between items-center"><span>{item}</span> <Badge variant="outline" className="font-mono">70%</Badge></li>
-                ))}
-              </ul>
-          </div>
-          
-          <div className="space-y-3 p-4 bg-secondary/50 rounded-2xl border">
-              <h4 className="font-bold flex items-center gap-2 text-foreground"><ClipboardCheck className="w-4 h-4 text-purple-500" /> Pilar Tata Kelola</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                {impactIndicators.governance.map(item => (
-                  <li key={item} className="flex justify-between items-center"><span>{item}</span> <Badge variant="outline" className="font-mono">✓</Badge></li>
-                ))}
-              </ul>
-          </div>
+            {/* Recent Activity Log */}
+            <Card className="bg-card/80 backdrop-blur-sm border rounded-[40px]">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-lg text-foreground">
+                        <Activity className="w-5 h-5"/>
+                        Log Aktivitas Terbaru
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6 pt-0">
+                    <div className="space-y-3">
+                    {recentActivities.map((act, i) => (
+                        <div key={i} className="flex items-start justify-between p-4 rounded-2xl bg-secondary/50 border shadow-sm">
+                            <div className="flex gap-4">
+                                <Avatar className="h-10 w-10 text-xs"><AvatarFallback>{act.user.substring(0, 2)}</AvatarFallback></Avatar>
+                                <div>
+                                    <p className="font-bold text-foreground text-sm">{act.desc}</p>
+                                    <p className="text-xs text-muted-foreground">by {act.user} • {act.time}</p>
+                                </div>
+                            </div>
+                            <div>
+                                {act.status === 'FLAGGED' && <Badge variant="destructive">{act.type}</Badge>}
+                                {act.status === 'COMPLETED' && <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50">{act.type}</Badge>}
+                                {act.status === 'LOGGED' && <Badge variant="secondary">{act.type}</Badge>}
+                            </div>
+                        </div>
+                    ))}
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
 
-        </CardContent>
-      </Card>
+        {/* Right column for static/summary info */}
+        <div className="lg:col-span-1">
+            <Card className="bg-card/80 backdrop-blur-sm border rounded-[40px] sticky top-24">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg text-foreground">
+                    Indikator Dampak (Bulanan)
+                  </CardTitle>
+                  <CardDescription>Ringkasan pencapaian program untuk sponsor.</CardDescription>
+                </CardHeader>
+                <CardContent className="p-6 pt-0 grid grid-cols-1 gap-4">
+                  <div className="space-y-3 p-4 bg-secondary/50 rounded-2xl border">
+                      <h4 className="font-bold flex items-center gap-2 text-foreground text-sm"><Users className="w-4 h-4 text-blue-500" /> Pilar Sosial</h4>
+                      <ul className="space-y-2 text-xs text-muted-foreground">
+                        {impactIndicators.social.map(item => (
+                          <li key={item} className="flex justify-between items-center"><span>{item}</span> <Badge variant="outline" className="font-mono">85%</Badge></li>
+                        ))}
+                      </ul>
+                  </div>
+                  <div className="space-y-3 p-4 bg-secondary/50 rounded-2xl border">
+                      <h4 className="font-bold flex items-center gap-2 text-foreground text-sm"><Award className="w-4 h-4 text-yellow-500" /> Pilar Karakter</h4>
+                      <ul className="space-y-2 text-xs text-muted-foreground">
+                        {impactIndicators.character.map(item => (
+                          <li key={item} className="flex justify-between items-center"><span>{item}</span> <Badge variant="outline" className="font-mono">Baik</Badge></li>
+                        ))}
+                      </ul>
+                  </div>
+                  <div className="space-y-3 p-4 bg-secondary/50 rounded-2xl border">
+                      <h4 className="font-bold flex items-center gap-2 text-foreground text-sm"><Leaf className="w-4 h-4 text-green-500" /> Pilar Lingkungan</h4>
+                      <ul className="space-y-2 text-xs text-muted-foreground">
+                        {impactIndicators.environment.map(item => (
+                          <li key={item} className="flex justify-between items-center"><span>{item}</span> <Badge variant="outline" className="font-mono">70%</Badge></li>
+                        ))}
+                      </ul>
+                  </div>
+                </CardContent>
+            </Card>
+        </div>
+      </div>
     </div>
   );
 }
