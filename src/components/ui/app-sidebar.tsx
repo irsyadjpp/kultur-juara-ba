@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from "react"
@@ -16,7 +15,8 @@ import {
   ClipboardCheck,
   Trophy,
   HeartPulse,
-  Target
+  Target,
+  FileText
 } from "lucide-react"
 
 import {
@@ -47,6 +47,9 @@ const data = {
   ],
   navStrategis: [
     { title: "Masterplan", url: "/admin/planning", icon: Target },
+  ],
+  navPelaporan: [
+    { title: "Laporan Bulanan", url: "/admin/reports/monthly", icon: FileText },
   ],
   navAtlet: [
     { title: "Registrasi Atlet Baru", url: "/admin/athletes/register", icon: UserPlus },
@@ -106,6 +109,7 @@ export function AppSidebar({ onLogout, ...props }: React.ComponentProps<typeof S
         
         <NavGroup label="UTAMA" items={data.navUtama} currentPath={pathname} />
         <NavGroup label="STRATEGIS" items={data.navStrategis} currentPath={pathname} />
+        <NavGroup label="PELAPORAN" items={data.navPelaporan} currentPath={pathname} />
         <NavGroup label="MANAJEMEN ATLET" items={data.navAtlet} currentPath={pathname} />
         <NavGroup label="EVALUASI" items={data.navEvaluasi} currentPath={pathname} />
         <NavGroup label="LOG LATIHAN" items={data.navLatihan} currentPath={pathname} />
