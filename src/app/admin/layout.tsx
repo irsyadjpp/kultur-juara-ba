@@ -1,11 +1,10 @@
-
 'use client';
 
 import { useState, useEffect, type ReactNode } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { LogOut } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { logout, signIntegrityPact } from '../actions'; 
+import { logout, signIntegrityPact, getSession } from '../actions'; 
 import { IntegrityPactModal } from '@/components/admin/integrity-pact-modal';
 import { EmergencyButton } from '@/components/admin/emergency-button';
 import { Toaster } from "@/components/ui/toaster";
@@ -23,37 +22,27 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    const sessionStr = sessionStorage.getItem('kultur_juara_session');
-    if (sessionStr) {
-        try {
-            const storedSession = JSON.parse(sessionStr);
-            if (storedSession && storedSession.isLoggedIn) {
-                setSession(storedSession);
-            } else {
-                router.push('/login');
-            }
-        } catch (error) {
-            console.error("Failed to parse session", error);
-            sessionStorage.removeItem('kultur_juara_session');
+    // Client-side session check
+    const checkSession = async () => {
+        const currentSession = await getSession();
+        if (currentSession?.isLoggedIn) {
+            setSession(currentSession);
+        } else {
             router.push('/login');
         }
-    } else {
-        router.push('/login');
-    }
-    setLoading(false);
+        setLoading(false);
+    };
+    checkSession();
   }, [pathname, router]);
   
-  const handlePactComplete = () => {
-    if (!session) return;
+  const handlePactComplete = async () => {
+    await signIntegrityPact(); 
     const updatedSession = { ...session, isOnboarded: true };
     setSession(updatedSession);
-    sessionStorage.setItem('kultur_juara_session', JSON.stringify(updatedSession));
-    signIntegrityPact(); 
   };
 
   const handleLogout = async () => {
     await logout();
-    sessionStorage.removeItem('kultur_juara_session');
     setSession(null);
     toast({ title: "Logout Berhasil" });
     router.push('/');
@@ -61,7 +50,7 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
   
   if (loading) {
     return (
-        <div className="min-h-screen w-full flex items-center justify-center bg-zinc-950">
+        <div className="min-h-screen w-full flex items-center justify-center bg-background">
             <div className="w-8 h-8 animate-spin text-primary" />
         </div>
     );
@@ -70,11 +59,22 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
   if (!session?.isLoggedIn) {
     return null;
   }
+  
+  // Show integrity pact modal if not onboarded
+  if (!session.isOnboarded) {
+    return (
+        <IntegrityPactModal 
+            isOpen={true}
+            userName={session.name}
+            onComplete={handlePactComplete}
+        />
+    );
+  }
 
   return (
     <SidebarProvider defaultOpen={true}>
       
-      <AppSidebar onLogout={handleLogout} className="z-50 border-r border-white/5" />
+      <AppSidebar onLogout={handleLogout} className="z-50" />
       
       <SidebarInset className="relative flex flex-col min-h-screen bg-transparent overflow-hidden">
         
@@ -82,11 +82,11 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
             <AdminBackground />
         </div>
 
-        <header className="flex h-16 shrink-0 items-center justify-between gap-2 px-4 bg-black/40 backdrop-blur-md border-b border-white/5 sticky top-0 z-40 transition-all">
+        <header className="flex h-16 shrink-0 items-center justify-between gap-2 px-4 bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-40 transition-all">
             <div className="flex items-center gap-2">
-                <SidebarTrigger className="text-zinc-400 hover:text-white hover:bg-white/10 rounded-full w-10 h-10 transition-all" />
-                <Separator orientation="vertical" className="mr-2 h-4 bg-zinc-700" />
-                <span className="text-sm font-black text-zinc-200 hidden md:block tracking-widest uppercase font-headline">
+                <SidebarTrigger className="text-muted-foreground hover:text-foreground hover:bg-secondary rounded-full w-10 h-10 transition-all" />
+                <Separator orientation="vertical" className="mr-2 h-4" />
+                <span className="text-sm font-black text-foreground hidden md:block tracking-widest uppercase font-headline">
                   KULTUR JUARA PWN | ADMIN
                 </span>
             </div>
