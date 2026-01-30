@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from "react";
+import Link from 'next/link';
 import { 
   TrendingUp, TrendingDown, Calendar, Plus, 
   Target, DollarSign, Wallet, PieChart, 
@@ -12,9 +13,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -84,7 +82,6 @@ const SYSTEM_FLOW = [
 
 
 export default function PlanningPage() {
-  const [isAddOpen, setIsAddOpen] = useState(false);
 
   return (
     <div className="space-y-8 p-4 md:p-0">
@@ -105,11 +102,10 @@ export default function PlanningPage() {
             </p>
         </div>
 
-        <Button 
-            onClick={() => setIsAddOpen(true)}
-            className="h-14 rounded-full px-8 bg-foreground text-background hover:bg-zinc-800 font-bold text-lg shadow-lg"
-        >
+        <Button asChild className="h-14 rounded-full px-8 bg-foreground text-background hover:bg-zinc-800 font-bold text-lg shadow-lg">
+          <Link href="/admin/planning/new">
             <Plus className="mr-2 w-5 h-5"/> NEW PROGRAM
+          </Link>
         </Button>
       </div>
 
@@ -348,80 +344,6 @@ export default function PlanningPage() {
             </Card>
         </TabsContent>
       </Tabs>
-
-      {/* --- ADD PROGRAM MODAL (Keep as is) --- */}
-      <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-        <DialogContent className="bg-card text-foreground rounded-[40px] max-w-lg p-0 overflow-hidden shadow-2xl">
-            <div className="p-8 border-b bg-secondary/50">
-                <DialogHeader>
-                    <DialogTitle className="text-2xl font-black font-headline uppercase flex items-center gap-2">
-                        <Plus className="w-6 h-6 text-primary"/> New Program
-                    </DialogTitle>
-                    <DialogDescription>Tambahkan rencana kerja baru ke dalam masterplan.</DialogDescription>
-                </DialogHeader>
-            </div>
-            
-            <div className="p-8 space-y-6">
-                <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Nama Program</label>
-                    <Input placeholder="Cth: Sewa Lighting Stage" className="bg-secondary border h-14 rounded-2xl text-lg font-bold" />
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                     <div className="space-y-2">
-                        <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Pilar Program (CSR)</label>
-                        <Select>
-                            <SelectTrigger className="bg-secondary border h-14 rounded-2xl"><SelectValue placeholder="Pilih Pilar..." /></SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="atlet">Atlet Tangguh & Berkarakter</SelectItem>
-                                <SelectItem value="lingkungan">Cinta Lingkungan</SelectItem>
-                                <SelectItem value="keuangan">Literasi Keuangan</SelectItem>
-                                <SelectItem value="komunitas">Kemandirian Komunitas</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Target Sponsor</label>
-                        <Select>
-                            <SelectTrigger className="bg-secondary border h-14 rounded-2xl"><SelectValue placeholder="Pilih Target..." /></SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="olahraga">CSR Olahraga</SelectItem>
-                                <SelectItem value="bank">CSR Bank</SelectItem>
-                                <SelectItem value="umum">Umum / Lainnya</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                        <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Divisi</label>
-                        <Select>
-                            <SelectTrigger className="bg-secondary border h-14 rounded-2xl"><SelectValue placeholder="Pilih" /></SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="LOGISTICS">Logistics</SelectItem>
-                                <SelectItem value="MEDIA">Media & Creative</SelectItem>
-                                <SelectItem value="MATCH">Match Control</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Estimasi Biaya</label>
-                        <Input type="number" placeholder="Rp 0" className="bg-secondary border h-14 rounded-2xl font-mono" />
-                    </div>
-                </div>
-
-                <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Target Tanggal</label>
-                    <Input type="month" className="bg-secondary border h-14 rounded-2xl" />
-                </div>
-
-                <Button className="w-full h-16 rounded-full font-black text-lg bg-primary hover:bg-primary/90 text-primary-foreground mt-4 shadow-xl shadow-primary/20">
-                    SAVE TO MASTERPLAN
-                </Button>
-            </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
