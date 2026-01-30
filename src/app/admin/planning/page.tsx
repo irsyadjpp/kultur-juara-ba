@@ -365,6 +365,32 @@ export default function PlanningPage() {
                     <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Nama Program</label>
                     <Input placeholder="Cth: Sewa Lighting Stage" className="bg-secondary border h-14 rounded-2xl text-lg font-bold" />
                 </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Pilar Program (CSR)</label>
+                        <Select>
+                            <SelectTrigger className="bg-secondary border h-14 rounded-2xl"><SelectValue placeholder="Pilih Pilar..." /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="atlet">Atlet Tangguh & Berkarakter</SelectItem>
+                                <SelectItem value="lingkungan">Cinta Lingkungan</SelectItem>
+                                <SelectItem value="keuangan">Literasi Keuangan</SelectItem>
+                                <SelectItem value="komunitas">Kemandirian Komunitas</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Target Sponsor</label>
+                        <Select>
+                            <SelectTrigger className="bg-secondary border h-14 rounded-2xl"><SelectValue placeholder="Pilih Target..." /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="olahraga">CSR Olahraga</SelectItem>
+                                <SelectItem value="bank">CSR Bank</SelectItem>
+                                <SelectItem value="umum">Umum / Lainnya</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
 
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -398,5 +424,3 @@ export default function PlanningPage() {
     </div>
   );
 }
-
-    
