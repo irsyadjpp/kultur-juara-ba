@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { 
   FileSignature, Save, Calendar, Target, Loader2
@@ -16,6 +16,14 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { saveTrainingProgram } from "./actions";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const SectionCard = ({ icon: Icon, title, description, children, badge }: { icon: React.ElementType, title: string, description?: string, children: React.ReactNode, badge?: string }) => (
   <Card className="rounded-3xl shadow-xl bg-card/80 backdrop-blur-sm border">
@@ -49,19 +57,37 @@ function SubmitButton() {
     )
 }
 
+const initialWeeklyPlan = [
+    { day: "Senin", focus: "", material: "", intensity: "Sedang", duration: "120m" },
+    { day: "Selasa", focus: "", material: "", intensity: "Tinggi", duration: "90m" },
+    { day: "Rabu", focus: "", material: "", intensity: "Sedang", duration: "120m" },
+    { day: "Kamis", focus: "", material: "", intensity: "Tinggi", duration: "120m" },
+    { day: "Jumat", focus: "", material: "", intensity: "Sedang", duration: "90m" },
+    { day: "Sabtu", focus: "", material: "", intensity: "Tinggi", duration: "120m" },
+    { day: "Minggu", focus: "Recovery", material: "Stretching / Libur", intensity: "Rendah", duration: "45m" },
+];
+
 export default function ProgramBuilderPage() {
   const { toast } = useToast();
   const [state, formAction] = useActionState(saveTrainingProgram, initialState);
+  const [weeklyPlan, setWeeklyPlan] = useState(initialWeeklyPlan);
 
   useEffect(() => {
     if (state.message) {
       if (state.success) {
         toast({ title: "Berhasil!", description: state.message, className: "bg-green-600 text-white" });
+        // Optionally reset form here
       } else {
         toast({ title: "Gagal", description: state.message, variant: "destructive" });
       }
     }
   }, [state, toast]);
+
+  const handlePlanChange = (index: number, field: keyof typeof weeklyPlan[0], value: string) => {
+    const updatedPlan = [...weeklyPlan];
+    updatedPlan[index] = { ...updatedPlan[index], [field]: value };
+    setWeeklyPlan(updatedPlan);
+  };
 
   return (
     <div className="space-y-8 p-4 md:p-0">
@@ -143,12 +169,55 @@ export default function ProgramBuilderPage() {
             </SectionCard>
             
             <SectionCard title="3. Rencana Mingguan (Mikrosiklus)" icon={Calendar} description="Isi detail rencana latihan untuk satu minggu ke depan.">
-                <Textarea
-                    name="weeklyPlan"
-                    rows={15}
-                    className="font-mono text-xs bg-secondary border-2 border-transparent focus:border-primary rounded-2xl"
-                    placeholder="Gunakan format tabel atau daftar untuk detail harian. Contoh:&#10;&#10;| Hari  | Fokus  | Materi                | Intensitas | Durasi |&#10;|-------|--------|-----------------------|------------|--------|&#10;| Senin | Teknik | Clear, drop, lob attack | Sedang     | 120m   |&#10;| Selasa| Fisik  | Speed & Agility Drill | Tinggi     | 90m    |"
-                />
+                <Textarea name="weeklyPlan" value={JSON.stringify(weeklyPlan)} className="hidden" readOnly />
+                <div className="border rounded-2xl overflow-hidden">
+                    <Table>
+                        <TableHeader className="bg-secondary/50">
+                            <TableRow>
+                                <TableHead className="w-[100px]">Hari</TableHead>
+                                <TableHead>Fokus</TableHead>
+                                <TableHead>Materi</TableHead>
+                                <TableHead>Intensitas</TableHead>
+                                <TableHead className="w-[100px]">Durasi</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {weeklyPlan.map((row, index) => (
+                                <TableRow key={index}>
+                                    <TableCell className="font-bold">{row.day}</TableCell>
+                                    <TableCell>
+                                        <Select value={row.focus} onValueChange={(value) => handlePlanChange(index, "focus", value)}>
+                                            <SelectTrigger className="h-10 rounded-lg bg-background border-border/50"><SelectValue placeholder="Pilih..." /></SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="Teknik">Teknik</SelectItem>
+                                                <SelectItem value="Fisik">Fisik</SelectItem>
+                                                <SelectItem value="Taktik">Taktik</SelectItem>
+                                                <SelectItem value="Game">Game</SelectItem>
+                                                <SelectItem value="Recovery">Recovery</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Input value={row.material} onChange={(e) => handlePlanChange(index, "material", e.target.value)} placeholder="Drill, pola, game..." className="h-10 rounded-lg bg-background border-border/50"/>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Select value={row.intensity} onValueChange={(value) => handlePlanChange(index, "intensity", value)}>
+                                            <SelectTrigger className="h-10 rounded-lg bg-background border-border/50"><SelectValue placeholder="Pilih..." /></SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="Rendah">Rendah</SelectItem>
+                                                <SelectItem value="Sedang">Sedang</SelectItem>
+                                                <SelectItem value="Tinggi">Tinggi</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Input value={row.duration} onChange={(e) => handlePlanChange(index, "duration", e.target.value)} placeholder="cth: 120m" className="h-10 rounded-lg bg-background border-border/50"/>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
             </SectionCard>
 
             <div className="flex justify-end pt-6 border-t border-border">
