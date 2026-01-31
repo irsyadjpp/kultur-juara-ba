@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -14,7 +13,7 @@ interface MandateQRDialogProps {
 
 export function MandateQRDialog({ isOpen, onClose, mandateData }: MandateQRDialogProps) {
   // URL Publik (Ganti domain saat production)
-  const verifyUrl = `https://badmintour.site/verify/mandate/${mandateData.id}`; // ID ini tokennya
+  const verifyUrl = `https://kulturjuara.org/verify/mandate/${mandateData.id}`; // ID ini tokennya
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

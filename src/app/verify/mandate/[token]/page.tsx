@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -16,7 +15,7 @@ const getMandateData = async (token: string) => {
   if (token === "SPT-001") {
     return {
       isValid: true,
-      noSurat: "002/SPT-TPF/BTOUR/XII/2025",
+      noSurat: "002/SPT-TPF/KJ/XII/2025",
       type: "TIM PENCARI FAKTA (TPF)",
       issuedDate: "08 Desember 2025",
       expiredDate: "30 Juli 2026",
@@ -120,8 +119,7 @@ export default function MandateVerifyPage({ params }: { params: { token: string 
             {/* FOOTER */}
             <div className="text-center pt-2">
                 <p className="text-[10px] text-zinc-600">
-                    Dokumen ini sah secara digital dan dikeluarkan oleh Panitia Badmintour Open #1.<br/>
-                    Otorisasi: <span className="text-zinc-400 font-bold">{data.signer}</span>
+                    Dokumen ini sah secara digital dan dikeluarkan oleh Panitia Kultur Juara.
                 </p>
             </div>
 
