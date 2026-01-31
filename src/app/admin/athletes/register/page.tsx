@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { UserPlus, Loader2, User, Ruler, Shirt } from 'lucide-react';
+import { UserPlus, Loader2, User, Ruler, Shirt, Weight } from 'lucide-react';
 import { registerAthlete } from './actions';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -90,6 +90,7 @@ export default function RegisterAthletePage() {
       guardianName: "",
       emergencyContact: "",
       height: "",
+      weight: "",
       chestWidth: "",
       category: undefined,
       level: undefined,
@@ -157,9 +158,9 @@ export default function RegisterAthletePage() {
           <Card className="rounded-3xl shadow-xl">
             <CardHeader className="p-8 pb-4">
               <CardTitle className="text-xl font-headline flex items-center gap-3">
-                <User className="w-5 h-5 text-primary"/> A. Data Pribadi & Antropometri
+                <User className="w-5 h-5 text-primary"/> A. Data Pribadi
               </CardTitle>
-              <CardDescription>Informasi dasar sesuai identitas resmi dan pengukuran fisik untuk jersey.</CardDescription>
+              <CardDescription>Informasi dasar sesuai identitas resmi atlet.</CardDescription>
             </CardHeader>
             <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField control={form.control} name="fullName" render={({ field }) => (
@@ -186,14 +187,6 @@ export default function RegisterAthletePage() {
                         <FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Kiri" id="left" /></FormControl><Label htmlFor="left">Kiri</Label></FormItem>
                     </RadioGroup></FormControl><FormMessage /></FormItem>
                 )} />
-                <div className="md:col-span-2 border-t pt-6 grid grid-cols-2 gap-6">
-                    <FormField control={form.control} name="height" render={({ field }) => (
-                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Tinggi Badan (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 170"/></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="chestWidth" render={({ field }) => (
-                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Lebar Dada (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 48"/></FormControl><FormMessage /></FormItem>
-                    )} />
-                </div>
                  <FormField control={form.control} name="phone" render={({ field }) => (
                     <FormItem><FormLabel>Nomor HP</FormLabel><FormControl><Input type="tel" {...field} className="h-12 rounded-xl"/></FormControl><FormMessage /></FormItem>
                 )} />
@@ -218,7 +211,27 @@ export default function RegisterAthletePage() {
           <Card className="rounded-3xl shadow-xl">
             <CardHeader className="p-8 pb-4">
               <CardTitle className="text-xl font-headline flex items-center gap-3">
-                 <Target className="w-5 h-5 text-primary"/> B. Status Kepelatihan
+                <Ruler className="w-5 h-5 text-primary"/> B. Antropometri
+              </CardTitle>
+              <CardDescription>Pengukuran fisik untuk jersey dan analisis awal.</CardDescription>
+            </CardHeader>
+            <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <FormField control={form.control} name="height" render={({ field }) => (
+                    <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Tinggi Badan (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 170"/></FormControl><FormMessage /></FormItem>
+                )} />
+                 <FormField control={form.control} name="weight" render={({ field }) => (
+                    <FormItem><FormLabel className="flex items-center gap-2"><Weight className="w-4 h-4"/>Berat Badan (kg)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 65"/></FormControl><FormMessage /></FormItem>
+                )} />
+                <FormField control={form.control} name="chestWidth" render={({ field }) => (
+                    <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Lebar Dada (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 48"/></FormControl><FormMessage /></FormItem>
+                )} />
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-3xl shadow-xl">
+            <CardHeader className="p-8 pb-4">
+              <CardTitle className="text-xl font-headline flex items-center gap-3">
+                 <Target className="w-5 h-5 text-primary"/> C. Status Kepelatihan
               </CardTitle>
               <CardDescription>Informasi terkait jenjang dan tujuan atlet di akademi.</CardDescription>
             </CardHeader>
@@ -253,7 +266,7 @@ export default function RegisterAthletePage() {
           <Card className="rounded-3xl shadow-xl">
             <CardHeader className="p-8 pb-4">
               <CardTitle className="text-xl font-headline flex items-center gap-3">
-                 <Shirt className="w-5 h-5 text-primary"/> C. Ukuran Jersey
+                 <Shirt className="w-5 h-5 text-primary"/> D. Ukuran Jersey
               </CardTitle>
               <CardDescription>Ukuran jersey direkomendasikan secara otomatis berdasarkan tinggi dan lebar dada. Toleransi 1-2cm.</CardDescription>
             </CardHeader>

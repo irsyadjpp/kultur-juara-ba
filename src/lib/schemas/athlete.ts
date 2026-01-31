@@ -14,7 +14,10 @@ export const athleteRegistrationSchema = z.object({
   schoolOrWork: z.string().min(3, "Sekolah/Pekerjaan wajib diisi."),
   guardianName: z.string().optional(),
   emergencyContact: z.string().min(10, "Kontak darurat tidak valid.").regex(/^\d+$/, "Hanya angka."),
+  
+  // Antropometri
   height: z.string().min(1, "Tinggi badan wajib diisi."),
+  weight: z.string().min(1, "Berat badan wajib diisi."),
   chestWidth: z.string().min(1, "Lebar dada wajib diisi."),
   
   // B. Status Kepelatihan
