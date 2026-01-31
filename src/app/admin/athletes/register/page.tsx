@@ -100,7 +100,7 @@ export default function RegisterAthletePage() {
     },
   });
 
-  const { watch } = form;
+  const { watch, setValue } = form;
   const height = watch('height');
   const chestWidth = watch('chestWidth');
 
@@ -164,16 +164,16 @@ export default function RegisterAthletePage() {
             </CardHeader>
             <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField control={form.control} name="fullName" render={({ field }) => (
-                    <FormItem className="md:col-span-2"><FormLabel>Nama Lengkap</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl" /></FormControl><FormMessage /></FormItem>
+                    <FormItem className="md:col-span-2"><FormLabel>Nama Lengkap</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary/50 border-2 border-transparent focus-visible:border-primary" /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="nickname" render={({ field }) => (
-                    <FormItem><FormLabel>Nama Panggilan</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl"/></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel>Nama Panggilan</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary/50 border-2 border-transparent focus-visible:border-primary"/></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="pob" render={({ field }) => (
-                    <FormItem><FormLabel>Tempat Lahir</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl"/></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel>Tempat Lahir</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary/50 border-2 border-transparent focus-visible:border-primary"/></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="dob" render={({ field }) => (
-                    <FormItem><FormLabel>Tanggal Lahir</FormLabel><FormControl><Input type="date" {...field} className="h-12 rounded-xl"/></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel>Tanggal Lahir</FormLabel><FormControl><Input type="date" {...field} className="h-12 rounded-xl bg-secondary/50 border-2 border-transparent focus-visible:border-primary"/></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="gender" render={({ field }) => (
                     <FormItem><FormLabel>Jenis Kelamin</FormLabel><FormControl><RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4 pt-2">
@@ -188,22 +188,22 @@ export default function RegisterAthletePage() {
                     </RadioGroup></FormControl><FormMessage /></FormItem>
                 )} />
                  <FormField control={form.control} name="phone" render={({ field }) => (
-                    <FormItem><FormLabel>Nomor HP</FormLabel><FormControl><Input type="tel" {...field} className="h-12 rounded-xl"/></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel>Nomor HP</FormLabel><FormControl><Input type="tel" {...field} className="h-12 rounded-xl bg-secondary/50 border-2 border-transparent focus-visible:border-primary"/></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="email" render={({ field }) => (
-                    <FormItem><FormLabel>Email</FormLabel><FormControl><Input type="email" {...field} className="h-12 rounded-xl"/></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel>Email</FormLabel><FormControl><Input type="email" {...field} className="h-12 rounded-xl bg-secondary/50 border-2 border-transparent focus-visible:border-primary"/></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="address" render={({ field }) => (
-                    <FormItem className="md:col-span-2"><FormLabel>Alamat</FormLabel><FormControl><Textarea {...field} className="rounded-xl"/></FormControl><FormMessage /></FormItem>
+                    <FormItem className="md:col-span-2"><FormLabel>Alamat</FormLabel><FormControl><Textarea {...field} className="rounded-xl bg-secondary/50 border-2 border-transparent focus-visible:border-primary"/></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="schoolOrWork" render={({ field }) => (
-                    <FormItem><FormLabel>Sekolah / Pekerjaan</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl"/></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel>Sekolah / Pekerjaan</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary/50 border-2 border-transparent focus-visible:border-primary"/></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="guardianName" render={({ field }) => (
-                    <FormItem><FormLabel>Orang Tua / Wali (Opsional)</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl"/></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel>Orang Tua / Wali (Opsional)</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary/50 border-2 border-transparent focus-visible:border-primary"/></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="emergencyContact" render={({ field }) => (
-                    <FormItem className="md:col-span-2"><FormLabel>Kontak Darurat</FormLabel><FormControl><Input type="tel" {...field} className="h-12 rounded-xl"/></FormControl><FormMessage /></FormItem>
+                    <FormItem className="md:col-span-2"><FormLabel>Kontak Darurat</FormLabel><FormControl><Input type="tel" {...field} className="h-12 rounded-xl bg-secondary/50 border-2 border-transparent focus-visible:border-primary"/></FormControl><FormMessage /></FormItem>
                 )} />
             </CardContent>
           </Card>
@@ -217,10 +217,10 @@ export default function RegisterAthletePage() {
             </CardHeader>
             <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField control={form.control} name="height" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Tinggi Badan (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 170"/></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Tinggi Badan (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary/50 border-2 border-transparent focus-visible:border-primary" placeholder="cth: 170"/></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="weight" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center gap-2"><Weight className="w-4 h-4"/>Berat Badan (kg)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 65"/></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel className="flex items-center gap-2"><Weight className="w-4 h-4"/>Berat Badan (kg)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary/50 border-2 border-transparent focus-visible:border-primary" placeholder="cth: 65"/></FormControl><FormMessage /></FormItem>
                 )} />
             </CardContent>
           </Card>
@@ -235,13 +235,13 @@ export default function RegisterAthletePage() {
             <CardContent className="p-8 pt-0 space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <FormField control={form.control} name="height" render={({ field }) => (
-                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Tinggi Badan (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 170"/></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Tinggi Badan (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary/50 border-2 border-transparent focus-visible:border-primary" placeholder="cth: 170"/></FormControl><FormMessage /></FormItem>
                     )} />
                     <FormField control={form.control} name="chestWidth" render={({ field }) => (
-                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Lebar Dada (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 48"/></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Lebar Dada (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary/50 border-2 border-transparent focus-visible:border-primary" placeholder="cth: 48"/></FormControl><FormMessage /></FormItem>
                     )} />
                     <FormField control={form.control} name="waistCircumference" render={({ field }) => (
-                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Lingkar Pinggang (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 75"/></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Lingkar Pinggang (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary/50 border-2 border-transparent focus-visible:border-primary" placeholder="cth: 75"/></FormControl><FormMessage /></FormItem>
                     )} />
                 </div>
                 <div className="text-center bg-secondary/50 rounded-2xl p-6 border">
@@ -262,30 +262,30 @@ export default function RegisterAthletePage() {
             <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField control={form.control} name="category" render={({ field }) => (
                   <FormItem><FormLabel>Kategori Usia</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl><SelectTrigger className="h-12 rounded-xl"><SelectValue placeholder="Pilih Kategori" /></SelectTrigger></FormControl>
+                      <FormControl><SelectTrigger className="h-12 rounded-xl bg-secondary/50 border-2 border-transparent focus:border-primary data-[state=open]:border-primary"><SelectValue placeholder="Pilih Kategori" /></SelectTrigger></FormControl>
                       <SelectContent>
-                        <SelectItem value="Pra-usia dini">Pra-usia dini</SelectItem>
-                        <SelectItem value="Usia dini">Usia dini</SelectItem>
-                        <SelectItem value="Anak">Anak</SelectItem>
-                        <SelectItem value="Remaja">Remaja</SelectItem>
+                        <SelectItem value="Pra-usia dini">Pra-usia dini (U-9)</SelectItem>
+                        <SelectItem value="Usia dini">Usia dini (U-11)</SelectItem>
+                        <SelectItem value="Anak">Anak-anak (U-13)</SelectItem>
+                        <SelectItem value="Remaja">Pemula & Remaja (U-15, U-17)</SelectItem>
                       </SelectContent>
                   </Select><FormMessage /></FormItem>
               )} />
               <FormField control={form.control} name="level" render={({ field }) => (
                   <FormItem><FormLabel>Level Atlet</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl><SelectTrigger className="h-12 rounded-xl"><SelectValue placeholder="Pilih Level" /></SelectTrigger></FormControl>
+                      <FormControl><SelectTrigger className="h-12 rounded-xl bg-secondary/50 border-2 border-transparent focus:border-primary data-[state=open]:border-primary"><SelectValue placeholder="Pilih Level" /></SelectTrigger></FormControl>
                       <SelectContent><SelectItem value="Beginner">Beginner</SelectItem><SelectItem value="Intermediate">Intermediate</SelectItem><SelectItem value="Advanced">Advanced</SelectItem><SelectItem value="Elite">Elite</SelectItem></SelectContent>
                   </Select><FormMessage /></FormItem>
               )} />
               <FormField control={form.control} name="pbsiNumber" render={({ field }) => (
-                  <FormItem><FormLabel>Nomor PBSI (Jika Ada)</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl"/></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>Nomor PBSI (Jika Ada)</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary/50 border-2 border-transparent focus-visible:border-primary"/></FormControl><FormMessage /></FormItem>
               )} />
               <FormField control={form.control} name="startYear" render={({ field }) => (
-                  <FormItem><FormLabel>Tahun Mulai Badminton</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl"/></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>Tahun Mulai Badminton</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-secondary/50 border-2 border-transparent focus-visible:border-primary"/></FormControl><FormMessage /></FormItem>
               )} />
               <FormField control={form.control} name="careerTarget" render={({ field }) => (
                   <FormItem className="md:col-span-2"><FormLabel>Target Karier</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl><SelectTrigger className="h-12 rounded-xl"><SelectValue placeholder="Pilih Target" /></SelectTrigger></FormControl>
+                      <FormControl><SelectTrigger className="h-12 rounded-xl bg-secondary/50 border-2 border-transparent focus:border-primary data-[state=open]:border-primary"><SelectValue placeholder="Pilih Target" /></SelectTrigger></FormControl>
                       <SelectContent><SelectItem value="Rekreasi">Rekreasi</SelectItem><SelectItem value="Prestasi">Prestasi</SelectItem><SelectItem value="Profesional">Profesional</SelectItem></SelectContent>
                   </Select><FormMessage /></FormItem>
               )} />
@@ -300,3 +300,5 @@ export default function RegisterAthletePage() {
     </div>
   );
 }
+
+    
