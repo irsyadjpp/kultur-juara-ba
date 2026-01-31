@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useActionState, useEffect, useState } from "react";
@@ -36,7 +35,6 @@ export default function UnifiedLoginPage() {
     if (state.success && state.redirectUrl) {
       toast({ title: "Login Berhasil", description: "Mengalihkan ke dashboard...", className: "bg-green-600 text-white" });
       router.push(state.redirectUrl);
-      router.refresh(); // Important to re-fetch layout data based on new cookie
     }
     if (state.message && !state.success) {
        toast({ title: "Gagal", description: state.message, variant: "destructive" });
@@ -134,5 +132,3 @@ export default function UnifiedLoginPage() {
     </div>
   );
 }
-
-    
