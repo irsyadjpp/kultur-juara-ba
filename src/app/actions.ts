@@ -5,9 +5,15 @@ import { cookies } from 'next/headers';
 // MOCK USER DATABASE FOR ALL ROLES
 const MOCK_DB_USERS = [
   { 
+    email: "admin@kulturjuara.com", 
+    name: "System Admin", 
+    role: "ADMIN",
+    pin: "000000"
+  },
+  { 
     email: process.env.DIRECTOR_EMAIL || "director@kulturjuara.com", 
     name: "Pelatih Kepala", 
-    role: "HEAD_COACH", // or DIRECTOR
+    role: "HEAD_COACH",
     pin: "123456"
   },
   { 

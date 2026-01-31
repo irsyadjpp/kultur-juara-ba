@@ -26,11 +26,13 @@ import { useFirestore, useCollection, useMemoFirebase, useUser } from '@/firebas
 import { inviteUser, updateUser, deleteUser } from './actions';
 
 const ROLES = [
-  { id: "SUPER_ADMIN", label: "Super Admin", color: "text-sky-500 border-sky-500/30 bg-sky-500/10", desc: "Full System Access" },
-  { id: "COACH", label: "Coach", color: "text-blue-500 border-blue-500/30 bg-blue-500/10", desc: "Manages athletes and logs." },
-  { id: "PSYCHOLOGIST", label: "Psychologist", color: "text-pink-500 border-pink-500/30 bg-pink-500/10", desc: "Access to mental journals." },
-  { id: "STAFF", label: "Staff / Logistics", color: "text-orange-500 border-orange-500/30 bg-orange-500/10", desc: "Inventory & Check-in" },
+    { id: "ADMIN", label: "Admin", color: "text-sky-500 border-sky-500/30 bg-sky-500/10", desc: "Full System Access" },
+    { id: "HEAD_COACH", label: "Head Coach", color: "text-red-500 border-red-500/30 bg-red-500/10", desc: "Manages all coaching staff & programs" },
+    { id: "COACH", label: "Coach", color: "text-blue-500 border-blue-500/30 bg-blue-500/10", desc: "Manages athletes and logs." },
+    { id: "PSYCHOLOGIST", label: "Psychologist", color: "text-pink-500 border-pink-500/30 bg-pink-500/10", desc: "Access to mental journals." },
+    { id: "STAFF", label: "Staff / Logistics", color: "text-orange-500 border-orange-500/30 bg-orange-500/10", desc: "Inventory & Check-in" },
 ];
+
 
 export default function UserManagementPage() {
   const { toast } = useToast();
@@ -340,17 +342,17 @@ export default function UserManagementPage() {
                 <div className="p-8 space-y-6">
                     <div className="space-y-2">
                         <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Email Address</label>
-                        <Input name="email" type="email" required placeholder="user@kulturjuara.com" className="bg-secondary border h-14 rounded-2xl text-lg" />
+                        <Input name="email" type="email" required placeholder="user@kulturjuara.com" className="bg-secondary border-2 h-14 rounded-2xl text-lg" />
                     </div>
                     <div className="space-y-2">
                         <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Full Name</label>
-                        <Input name="name" required placeholder="Nama Lengkap" className="bg-secondary border h-14 rounded-2xl" />
+                        <Input name="name" required placeholder="Nama Lengkap" className="bg-secondary border-2 h-14 rounded-2xl" />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                             <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Role / Access</label>
                             <Select name="role" required>
-                                <SelectTrigger className="bg-secondary border h-14 rounded-2xl"><SelectValue placeholder="Select..." /></SelectTrigger>
+                                <SelectTrigger className="bg-secondary border-2 h-14 rounded-2xl"><SelectValue placeholder="Select..." /></SelectTrigger>
                                 <SelectContent>
                                     {ROLES.map(r => <SelectItem key={r.id} value={r.id}>{r.label}</SelectItem>)}
                                 </SelectContent>
@@ -359,13 +361,13 @@ export default function UserManagementPage() {
                         <div className="space-y-2">
                             <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Department</label>
                             <Select name="dept" required>
-                                <SelectTrigger className="bg-secondary border h-14 rounded-2xl"><SelectValue placeholder="Unit..." /></SelectTrigger>
+                                <SelectTrigger className="bg-secondary border-2 h-14 rounded-2xl"><SelectValue placeholder="Unit..." /></SelectTrigger>
                                 <SelectContent>
+                                    <SelectItem value="Administration">Administration</SelectItem>
+                                    <SelectItem value="Coaching">Coaching</SelectItem>
+                                    <SelectItem value="Psychology">Psychology</SelectItem>
                                     <SelectItem value="IT & System">IT & System</SelectItem>
-                                    <SelectItem value="Match Control">Match Control</SelectItem>
                                     <SelectItem value="Logistics">Logistics</SelectItem>
-                                    <SelectItem value="Security">Security</SelectItem>
-                                    <SelectItem value="Media & Creative">Media & Creative</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
