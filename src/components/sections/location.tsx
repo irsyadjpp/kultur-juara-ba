@@ -1,4 +1,3 @@
-
 'use client';
 
 import { MapPin, Navigation } from "lucide-react";
@@ -18,20 +17,20 @@ export function LocationSection() {
                             <MapPin className="w-5 h-5 text-primary" /> Official Venue
                         </div>
                         <h2 className="text-4xl md:text-5xl font-black font-headline mb-6">
-                            GOR Sutta
+                            GSG Parakan Indah
                         </h2>
                         <p className="text-muted-foreground text-lg mb-8 max-w-md leading-relaxed">
-                            Lapangan karpet standar internasional dengan pencahayaan pro-grade. Lokasi strategis di Batununggal.
+                            Fasilitas olahraga serbaguna dengan lapangan badminton berkualitas di komplek perumahan Parakan Indah.
                         </p>
 
                         <div className="space-y-4">
                             <div className="p-4 bg-secondary rounded-2xl border">
                                 <p className="text-sm text-secondary-foreground">
-                                    Gumuruh, Kec. Batununggal, Kota Bandung, Jawa Barat 40275
+                                    Jl. Parakan Indah No.1, Batununggal, Kota Bandung, Jawa Barat 40266
                                 </p>
                             </div>
                             <Button asChild size="lg" className="rounded-full h-14 px-8 text-lg font-bold bg-primary hover:bg-primary/90 w-full sm:w-auto">
-                                <Link href="https://maps.app.goo.gl/FeXHuny1aopLRj68A" target="_blank">
+                                <Link href="https://maps.app.goo.gl/kE8b2vjH1x4BqQjZ8" target="_blank">
                                     <Navigation className="w-5 h-5 mr-2" /> Petunjuk Arah
                                 </Link>
                             </Button>
@@ -41,7 +40,7 @@ export function LocationSection() {
                     {/* MAP VISUAL */}
                     <div className="relative h-[300px] lg:h-full bg-secondary">
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.5461019255263!2d107.637495!3d-6.944720500000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e927c18d8317%3A0x64aceb67a11e79f4!2sGOR%20Sutta!5e0!3m2!1sid!2sid!4v1765469782111!5m2!1sid!2sid"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.551695125439!2d107.6534015759161!3d-6.944061467963402!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e81561a34079%3A0x13a63529b63489e5!2sGSG%20Parakan%20Indah!5e0!3m2!1sid!2sid!4v1721035212345!5m2!1sid!2sid"
                             width="100%"
                             height="100%"
                             style={{ border: 0 }}
