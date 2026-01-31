@@ -17,13 +17,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { saveTrainingProgram } from "./actions";
 import { useToast } from "@/hooks/use-toast";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 const SectionCard = ({ icon: Icon, title, description, children, badge }: { icon: React.ElementType, title: string, description?: string, children: React.ReactNode, badge?: string }) => (
   <Card className="rounded-3xl shadow-xl bg-card/80 backdrop-blur-sm border">
@@ -170,24 +168,21 @@ export default function ProgramBuilderPage() {
             
             <SectionCard title="3. Rencana Mingguan (Mikrosiklus)" icon={Calendar} description="Isi detail rencana latihan untuk satu minggu ke depan.">
                 <Textarea name="weeklyPlan" value={JSON.stringify(weeklyPlan)} className="hidden" readOnly />
-                <div className="border rounded-2xl overflow-hidden">
-                    <Table>
-                        <TableHeader className="bg-secondary/50">
-                            <TableRow>
-                                <TableHead className="w-[100px]">Hari</TableHead>
-                                <TableHead>Fokus</TableHead>
-                                <TableHead>Materi</TableHead>
-                                <TableHead>Intensitas</TableHead>
-                                <TableHead className="w-[100px]">Durasi</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {weeklyPlan.map((row, index) => (
-                                <TableRow key={index}>
-                                    <TableCell className="font-bold">{row.day}</TableCell>
-                                    <TableCell>
+                <Accordion type="single" collapsible className="w-full space-y-2">
+                    {weeklyPlan.map((row, index) => (
+                        <AccordionItem key={index} value={`item-${index}`} className="border-border/30 bg-secondary/30 rounded-2xl shadow-inner data-[state=open]:border-primary/50">
+                            <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-10 h-10 rounded-lg bg-background border flex items-center justify-center font-bold">{row.day.substring(0, 1)}</div>
+                                    <span className="font-bold text-lg text-foreground">{row.day}</span>
+                                </div>
+                            </AccordionTrigger>
+                            <AccordionContent className="p-6 pt-2 bg-background/30 rounded-b-2xl">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label>Fokus</Label>
                                         <Select value={row.focus} onValueChange={(value) => handlePlanChange(index, "focus", value)}>
-                                            <SelectTrigger className="h-10 rounded-lg bg-background border-border/50"><SelectValue placeholder="Pilih..." /></SelectTrigger>
+                                            <SelectTrigger className="h-12 rounded-xl bg-background border-border/50"><SelectValue placeholder="Pilih..." /></SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="Teknik">Teknik</SelectItem>
                                                 <SelectItem value="Fisik">Fisik</SelectItem>
@@ -196,28 +191,31 @@ export default function ProgramBuilderPage() {
                                                 <SelectItem value="Recovery">Recovery</SelectItem>
                                             </SelectContent>
                                         </Select>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Input value={row.material} onChange={(e) => handlePlanChange(index, "material", e.target.value)} placeholder="Drill, pola, game..." className="h-10 rounded-lg bg-background border-border/50"/>
-                                    </TableCell>
-                                    <TableCell>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Intensitas</Label>
                                         <Select value={row.intensity} onValueChange={(value) => handlePlanChange(index, "intensity", value)}>
-                                            <SelectTrigger className="h-10 rounded-lg bg-background border-border/50"><SelectValue placeholder="Pilih..." /></SelectTrigger>
+                                            <SelectTrigger className="h-12 rounded-xl bg-background border-border/50"><SelectValue placeholder="Pilih..." /></SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="Rendah">Rendah</SelectItem>
                                                 <SelectItem value="Sedang">Sedang</SelectItem>
                                                 <SelectItem value="Tinggi">Tinggi</SelectItem>
                                             </SelectContent>
                                         </Select>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Input value={row.duration} onChange={(e) => handlePlanChange(index, "duration", e.target.value)} placeholder="cth: 120m" className="h-10 rounded-lg bg-background border-border/50"/>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </div>
+                                    </div>
+                                    <div className="md:col-span-2 space-y-2">
+                                        <Label>Materi Latihan</Label>
+                                        <Input value={row.material} onChange={(e) => handlePlanChange(index, "material", e.target.value)} placeholder="Drill, pola, game..." className="h-12 rounded-xl bg-background border-border/50"/>
+                                    </div>
+                                    <div className="md:col-span-2 space-y-2">
+                                        <Label>Durasi</Label>
+                                        <Input value={row.duration} onChange={(e) => handlePlanChange(index, "duration", e.target.value)} placeholder="cth: 120m" className="h-12 rounded-xl bg-background border-border/50"/>
+                                    </div>
+                                </div>
+                            </AccordionContent>
+                        </AccordionItem>
+                    ))}
+                </Accordion>
             </SectionCard>
 
             <div className="flex justify-end pt-6 border-t border-border">
