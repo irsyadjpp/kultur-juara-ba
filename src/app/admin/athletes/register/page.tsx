@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -234,7 +233,10 @@ export default function RegisterAthletePage() {
               <CardDescription>Masukkan pengukuran untuk mendapatkan rekomendasi ukuran jersey. Sistem akan membulatkan ke atas jika perlu.</CardDescription>
             </CardHeader>
             <CardContent className="p-8 pt-0 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <FormField control={form.control} name="height" render={({ field }) => (
+                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Tinggi Badan (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 170"/></FormControl><FormMessage /></FormItem>
+                    )} />
                     <FormField control={form.control} name="chestWidth" render={({ field }) => (
                         <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Lebar Dada (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 48"/></FormControl><FormMessage /></FormItem>
                     )} />
