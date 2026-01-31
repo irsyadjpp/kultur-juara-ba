@@ -81,23 +81,23 @@ export default function ProgramBuilderPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div className="space-y-2">
                         <Label>Nama PB</Label>
-                        <Input name="pbName" defaultValue="Kultur Juara PWN" className="h-12 rounded-xl bg-secondary border"/>
+                        <Input name="pbName" defaultValue="Kultur Juara PWN" className="h-14 rounded-2xl bg-secondary border-2 border-transparent focus:border-primary"/>
                     </div>
                     <div className="space-y-2">
                         <Label>Kelompok Usia</Label>
-                        <Select name="ageGroup"><SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Usia..." /></SelectTrigger><SelectContent><SelectItem value="U13">U-13</SelectItem><SelectItem value="U15">U-15</SelectItem><SelectItem value="U17">U-17</SelectItem></SelectContent></Select>
+                        <Select name="ageGroup"><SelectTrigger className="h-14 rounded-2xl bg-secondary border-2 border-transparent focus:border-primary"><SelectValue placeholder="Pilih Usia..." /></SelectTrigger><SelectContent><SelectItem value="U13">U-13</SelectItem><SelectItem value="U15">U-15</SelectItem><SelectItem value="U17">U-17</SelectItem></SelectContent></Select>
                     </div>
                     <div className="space-y-2">
                         <Label>Level Atlet</Label>
-                        <Select name="athleteLevel"><SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Level..." /></SelectTrigger><SelectContent><SelectItem value="pemula">Pemula</SelectItem><SelectItem value="pratanding">Pratanding</SelectItem><SelectItem value="prestasi">Prestasi</SelectItem></SelectContent></Select>
+                        <Select name="athleteLevel"><SelectTrigger className="h-14 rounded-2xl bg-secondary border-2 border-transparent focus:border-primary"><SelectValue placeholder="Pilih Level..." /></SelectTrigger><SelectContent><SelectItem value="pemula">Pemula</SelectItem><SelectItem value="pratanding">Pratanding</SelectItem><SelectItem value="prestasi">Prestasi</SelectItem></SelectContent></Select>
                     </div>
                     <div className="space-y-2">
                         <Label>Periode Program</Label>
-                        <Input name="period" type="month" placeholder="Bulan / Tahun" className="h-12 rounded-xl bg-secondary border"/>
+                        <Input name="period" type="month" placeholder="Bulan / Tahun" className="h-14 rounded-2xl bg-secondary border-2 border-transparent focus:border-primary"/>
                     </div>
                     <div className="space-y-2">
                         <Label>Fase Periodisasi</Label>
-                        <Select name="phase"><SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Fase..." /></SelectTrigger><SelectContent>
+                        <Select name="phase"><SelectTrigger className="h-14 rounded-2xl bg-secondary border-2 border-transparent focus:border-primary"><SelectValue placeholder="Pilih Fase..." /></SelectTrigger><SelectContent>
                             <SelectItem value="GP">General Preparation (GP)</SelectItem>
                             <SelectItem value="SP">Specific Preparation (SP)</SelectItem>
                             <SelectItem value="PC">Pre-Competition (PC)</SelectItem>
@@ -107,7 +107,7 @@ export default function ProgramBuilderPage() {
                     </div>
                     <div className="space-y-2">
                         <Label>Pelatih Kepala</Label>
-                        <Input name="coachName" placeholder="Nama Pelatih" className="h-12 rounded-xl bg-secondary border"/>
+                        <Input name="coachName" placeholder="Nama Pelatih" className="h-14 rounded-2xl bg-secondary border-2 border-transparent focus:border-primary"/>
                     </div>
                 </div>
             </SectionCard>
@@ -116,18 +116,28 @@ export default function ProgramBuilderPage() {
                 <div className="space-y-4">
                     <div>
                         <Label className="text-base font-bold">Tujuan Utama</Label>
-                        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mt-2">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mt-2">
                             {['Teknik', 'Fisik', 'Taktik', 'Mental', 'Kombinasi'].map(obj => (
-                                <div key={obj} className="flex items-center gap-2 p-3 bg-secondary rounded-lg border">
-                                    <Checkbox id={`obj-${obj}`} name="mainObjectives" value={obj} />
-                                    <Label htmlFor={`obj-${obj}`} className="cursor-pointer">{obj}</Label>
+                                <div key={obj}>
+                                    <Checkbox
+                                        id={`obj-${obj}`}
+                                        name="mainObjectives"
+                                        value={obj}
+                                        className="peer sr-only"
+                                    />
+                                    <Label
+                                        htmlFor={`obj-${obj}`}
+                                        className="flex items-center justify-center gap-2 px-3 py-3 rounded-2xl border-2 cursor-pointer transition-all peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 font-semibold bg-secondary border-transparent hover:border-primary/50"
+                                    >
+                                        {obj}
+                                    </Label>
                                 </div>
                             ))}
                         </div>
                     </div>
                     <div className="space-y-2 pt-4 border-t">
                         <Label className="text-base font-bold">Penjabaran Tujuan (1-3 Poin Utama)</Label>
-                        <Textarea name="objectiveDetails" placeholder="Contoh:&#10;1. Meningkatkan endurance rally di atas 30 pukulan.&#10;2. Konsistensi clear & drop silang.&#10;3. Disiplin footwork recovery ke tengah." className="h-28 rounded-xl bg-secondary border"/>
+                        <Textarea name="objectiveDetails" placeholder="Contoh:&#10;1. Meningkatkan endurance rally di atas 30 pukulan.&#10;2. Konsistensi clear & drop silang.&#10;3. Disiplin footwork recovery ke tengah." className="h-28 rounded-2xl bg-secondary border-2 border-transparent focus:border-primary"/>
                     </div>
                 </div>
             </SectionCard>
@@ -136,7 +146,7 @@ export default function ProgramBuilderPage() {
                 <Textarea
                     name="weeklyPlan"
                     rows={15}
-                    className="font-mono text-xs bg-secondary border rounded-xl"
+                    className="font-mono text-xs bg-secondary border-2 border-transparent focus:border-primary rounded-2xl"
                     placeholder="Gunakan format tabel atau daftar untuk detail harian. Contoh:&#10;&#10;| Hari  | Fokus  | Materi                | Intensitas | Durasi |&#10;|-------|--------|-----------------------|------------|--------|&#10;| Senin | Teknik | Clear, drop, lob attack | Sedang     | 120m   |&#10;| Selasa| Fisik  | Speed & Agility Drill | Tinggi     | 90m    |"
                 />
             </SectionCard>
