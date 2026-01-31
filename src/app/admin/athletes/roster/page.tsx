@@ -1,14 +1,17 @@
+
 'use client';
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
+import { useFormState } from 'react-dom';
 import { 
   Users, Shield, Trophy, Search, 
   Plus, MapPin, Mail, Phone, Edit3, 
   Crown, Star, UserPlus, Briefcase, 
   MoreHorizontal,
   ShieldCheck,
-  Loader2 // Import Loader2
+  Loader2,
+  Database,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,6 +22,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { cn } from "@/lib/utils";
 import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
 import { collection } from 'firebase/firestore';
+import { useToast } from "@/hooks/use-toast";
+import { seedAthletes } from "./actions";
 
 // Define the type for an athlete based on Firestore data
 interface Athlete {
@@ -30,21 +35,41 @@ interface Athlete {
   avatar?: string;
 }
 
-const MOCK_NEW_ATHLETES: Athlete[] = [
-  { id: 'KJA-MOCK-001', fullName: 'Ghaina Khansa Putri', category: 'Anak-anak (U-13)', level: 'Beginner', status_aktif: 'AKTIF' },
-  { id: 'KJA-MOCK-002', fullName: 'Fajarina Ayyatul Husna', category: 'Anak-anak (U-13)', level: 'Beginner', status_aktif: 'AKTIF' },
-  { id: 'KJA-MOCK-003', fullName: 'Cecilya Anggraeni Nugraha', category: 'Anak-anak (U-13)', level: 'Beginner', status_aktif: 'AKTIF' },
-  { id: 'KJA-MOCK-004', fullName: 'Mega Astari Febriana', category: 'Anak-anak (U-13)', level: 'Beginner', status_aktif: 'AKTIF' },
-  { id: 'KJA-MOCK-005', fullName: 'Muhammad Azzam Rayana', category: 'Anak-anak (U-13)', level: 'Beginner', status_aktif: 'AKTIF' },
-  { id: 'KJA-MOCK-006', fullName: 'Muhammad Wildan Kurniawan', category: 'Anak-anak (U-13)', level: 'Beginner', status_aktif: 'AKTIF' },
-  { id: 'KJA-MOCK-007', fullName: 'Reno Apriliandi', category: 'Anak-anak (U-13)', level: 'Beginner', status_aktif: 'AKTIF' },
-  { id: 'KJA-MOCK-008', fullName: 'Fabian Aufa Putra Andyana', category: 'Anak-anak (U-13)', level: 'Beginner', status_aktif: 'AKTIF' },
-];
+const initialState = {
+  success: false,
+  message: "",
+};
 
+function SeedButton() {
+    const { pending } = useFormState();
+    return (
+        <Button
+            type="submit"
+            variant="outline"
+            className="h-14 rounded-full px-8 font-bold text-lg"
+            disabled={pending}
+        >
+            {pending ? <Loader2 className="mr-2 w-5 h-5 animate-spin"/> : <Database className="mr-2 w-5 h-5"/>}
+            {pending ? "Seeding..." : "Seed Athletes"}
+        </Button>
+    )
+}
 
 export default function AthleteRosterPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const firestore = useFirestore();
+  const { toast } = useToast();
+  const [seedState, seedAction] = useFormState(seedAthletes, initialState);
+
+  useEffect(() => {
+    if (seedState.message) {
+        toast({
+            title: seedState.success ? "Success" : "Info",
+            description: seedState.message,
+            className: seedState.success ? "bg-green-600 text-white" : "",
+        });
+    }
+  }, [seedState, toast]);
 
   const athletesQuery = useMemoFirebase(() => {
     if (!firestore) return null;
@@ -53,25 +78,17 @@ export default function AthleteRosterPage() {
 
   const { data: athletesData, isLoading } = useCollection<Athlete>(athletesQuery);
 
-  const combinedAthletes = useMemo(() => {
-    const firestoreAthletes = athletesData || [];
-    // Combine with mock data, avoiding duplicates based on fullName
-    const existingNames = new Set(firestoreAthletes.map(a => a.fullName.toLowerCase()));
-    const newMocks = MOCK_NEW_ATHLETES.filter(mock => !existingNames.has(mock.fullName.toLowerCase()));
-    return [...firestoreAthletes, ...newMocks];
-  }, [athletesData]);
-
   const filteredAthletes = useMemo(() => {
-    if (!combinedAthletes) return [];
-    return combinedAthletes.filter(athlete => 
+    if (!athletesData) return [];
+    return athletesData.filter(athlete => 
       athlete.fullName.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [combinedAthletes, searchQuery]);
+  }, [athletesData, searchQuery]);
   
-  const totalAthletes = combinedAthletes?.length || 0;
-  const activeAthletes = combinedAthletes?.filter(a => a.status_aktif === 'AKTIF').length || 0;
+  const totalAthletes = athletesData?.length || 0;
+  const activeAthletes = athletesData?.filter(a => a.status_aktif === 'AKTIF').length || 0;
   // This is a simplification. "Junior" would need to be determined by age category.
-  const juniorAthletes = combinedAthletes?.filter(a => a.category.includes('U-')).length || 0;
+  const juniorAthletes = athletesData?.filter(a => a.category.includes('U-')).length || 0;
 
 
   return (
@@ -92,15 +109,19 @@ export default function AthleteRosterPage() {
                 Lihat dan kelola semua atlet yang terdaftar di Kultur Juara Academy.
             </p>
         </div>
-
-        <Button 
-            asChild
-            className="h-14 rounded-full px-8 bg-sky-600 hover:bg-sky-700 text-white font-bold text-lg shadow-lg transition-transform active:scale-95"
-        >
-            <Link href="/admin/athletes/register">
-              <UserPlus className="mr-2 w-5 h-5"/> DAFTARKAN ATLET BARU
-            </Link>
-        </Button>
+        <div className="flex items-center gap-4">
+            <form action={seedAction}>
+                <SeedButton/>
+            </form>
+            <Button 
+                asChild
+                className="h-14 rounded-full px-8 bg-sky-600 hover:bg-sky-700 text-white font-bold text-lg shadow-lg transition-transform active:scale-95"
+            >
+                <Link href="/admin/athletes/register">
+                  <UserPlus className="mr-2 w-5 h-5"/> DAFTARKAN ATLET BARU
+                </Link>
+            </Button>
+        </div>
       </div>
 
       {/* --- STATS CARDS --- */}
