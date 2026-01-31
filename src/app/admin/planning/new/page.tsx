@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState, useEffect } from 'react';
+import { useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -31,7 +31,7 @@ function SubmitButton() {
 export default function NewProgramPage() {
     const router = useRouter();
     const { toast } = useToast();
-    const [state, formAction] = useFormState(submitProgram, initialState);
+    const [state, formAction] = useActionState(submitProgram, initialState);
 
     useEffect(() => {
         if (state.success) {
