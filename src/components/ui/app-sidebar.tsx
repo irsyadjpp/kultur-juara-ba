@@ -17,7 +17,8 @@ import {
   HeartPulse,
   Target,
   FileText,
-  FileSignature
+  FileSignature,
+  Crown
 } from "lucide-react"
 
 import {
@@ -42,6 +43,9 @@ const data = {
     role: "Head Coach",
     avatar: "/avatars/irsyad.jpg",
   },
+  navSuperAdmin: [
+    { title: "Superadmin Deck", url: "/admin/super", icon: Crown },
+  ],
   navUtama: [
     { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
     { title: "Profil Saya", url: "/admin/profile", icon: User },
@@ -102,6 +106,8 @@ export function AppSidebar({ onLogout, ...props }: React.ComponentProps<typeof S
 
       <SidebarContent className="px-3 py-4 space-y-4 bg-background/50 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted">
         
+        <NavGroup label="SUPER ADMIN" items={data.navSuperAdmin} currentPath={pathname} />
+
         <NavGroup label="UTAMA" items={data.navUtama} currentPath={pathname} />
 
         <SidebarGroup>

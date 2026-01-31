@@ -8,7 +8,7 @@
       "properties": {
         "name": { "type": "string", "description": "Full name of the user." },
         "email": { "type": "string", "format": "email", "description": "Login email for the user." },
-        "role": { "type": "string", "enum": ["GUEST", "ADMIN", "HEAD_COACH", "COACH", "PSYCHOLOGIST", "STAFF"], "description": "Access role of the user." },
+        "role": { "type": "string", "enum": ["GUEST", "ADMIN", "HEAD_COACH", "COACH", "PSYCHOLOGIST", "STAFF", "SUPER_ADMIN"], "description": "Access role of the user." },
         "dept": { "type": "string", "description": "Department or division the user belongs to." },
         "status": { "type": "string", "enum": ["ACTIVE", "SUSPENDED"], "description": "Account status." },
         "avatar": { "type": "string", "format": "uri", "description": "URL to the user's avatar image." },

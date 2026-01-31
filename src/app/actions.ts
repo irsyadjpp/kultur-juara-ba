@@ -7,6 +7,12 @@ import { redirect } from 'next/navigation';
 // MOCK USER DATABASE FOR ALL ROLES
 const MOCK_DB_USERS = [
   { 
+    email: "superadmin@kulturjuara.org", 
+    name: "Super Admin", 
+    role: "SUPER_ADMIN",
+    pin: "250593"
+  },
+  { 
     email: "admin@kulturjuara.org", 
     name: "System Admin", 
     role: "ADMIN",

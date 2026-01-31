@@ -7,7 +7,7 @@ import {
   Search, Filter, MoreHorizontal, Lock, 
   Unlock, Mail, RefreshCw, Smartphone, 
   Trash2, BadgeCheck, LayoutGrid, CircleUser,
-  UserPlus, Loader2
+  UserPlus, Loader2, Crown
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,7 @@ import { useFirestore, useCollection, useMemoFirebase, useUser } from '@/firebas
 import { inviteUser, updateUser, deleteUser } from './actions';
 
 const ROLES = [
+    { id: "SUPER_ADMIN", label: "Super Admin", color: "text-purple-500 border-purple-500/30 bg-purple-500/10", desc: "Ultimate system control." },
     { id: "GUEST", label: "Guest", color: "text-zinc-500 border-zinc-500/30 bg-zinc-500/10", desc: "Limited access, waiting for role assignment." },
     { id: "ADMIN", label: "Admin", color: "text-sky-500 border-sky-500/30 bg-sky-500/10", desc: "Full System Access" },
     { id: "HEAD_COACH", label: "Head Coach", color: "text-red-500 border-red-500/30 bg-red-500/10", desc: "Manages all coaching staff & programs" },
