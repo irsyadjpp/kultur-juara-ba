@@ -23,14 +23,17 @@ service cloud.firestore {
       allow read, write: if isSignedIn();
     }
 
-    // Athletes collection
+    // Athletes collection rules
+    match /athletes {
+      // Allow authenticated users to query/list the collection
+      allow list: if isSignedIn();
+    }
+    
     match /athletes/{athleteId} {
       // Only authenticated users can create an athlete profile
       allow create: if isSignedIn();
-      // Anyone can read athlete profiles (for rosters, etc.)
-      allow read: if true;
-      // Only authenticated users can update/delete (future admin/owner roles)
-      allow update, delete: if isSignedIn();
+      // Only authenticated users can read, update, or delete profiles
+      allow read, update, delete: if isSignedIn();
 
       // Subcollections for athlete data
       match /{subcollection}/{docId} {
