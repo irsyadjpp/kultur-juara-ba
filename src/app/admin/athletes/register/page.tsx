@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { UserPlus, Loader2, User, Ruler, Shirt, Weight } from 'lucide-react';
+import { UserPlus, Loader2, User, Ruler, Shirt, Weight, Edit } from 'lucide-react';
 import { registerAthlete } from './actions';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -35,40 +35,45 @@ function SubmitButton() {
 
 // Helper function to calculate shirt size
 const calculateShirtSize = (tb: number, ld: number, lp: number): string => {
+    // This function seems to use athlete height (tb), chest width (ld), and waist circumference (lp)
     const sizeChart = [
-        { size: 'S', ld: 40, tb: 60, lp: 20 },
-        { size: 'M', ld: 42, tb: 62, lp: 21 },
-        { size: 'L', ld: 44, tb: 62, lp: 21.5 },
-        { size: 'XL', ld: 46, tb: 66, lp: 22 },
-        { size: 'XXL', ld: 48, tb: 68, lp: 23 },
+        { size: 'S', ld: 40, tb: 160, lp: 70 },
+        { size: 'M', ld: 42, tb: 165, lp: 75 },
+        { size: 'L', ld: 44, tb: 170, lp: 80 },
+        { size: 'XL', ld: 46, tb: 175, lp: 85 },
+        { size: 'XXL', ld: 48, tb: 180, lp: 90 },
     ];
-
-    // Find the smallest size that fits all measurements
     for (const item of sizeChart) {
         if (ld <= item.ld && tb <= item.tb && lp <= item.lp) {
             return item.size;
         }
     }
+    return "Custom"; // Fallback
+};
 
-    // Handle sizes larger than XXL
-    let lastSize = sizeChart[sizeChart.length - 1];
-    let currentLd = lastSize.ld;
-    let currentTb = lastSize.tb;
-    let currentLp = lastSize.lp;
-    let sizeCounter = 2; // Starts from XXL
-    
-    while(sizeCounter < 10) { // Safety break
-        sizeCounter++;
-        currentLd += 2;
-        currentTb += 2;
-        currentLp += 1;
-        if(ld <= currentLd && tb <= currentTb && lp <= currentLp){
-            return `${'X'.repeat(sizeCounter-1)}L`;
+const generateBackName = (fullName: string, option: 'initials' | 'lastName'): string => {
+    if (!fullName) return '';
+    const names = fullName.trim().toUpperCase().split(' ').filter(n => n);
+    if (names.length === 0) return '';
+
+    if (option === 'lastName') {
+        if (names.length > 1) {
+            return names[names.length - 1].substring(0, 12);
         }
+        return names[0].substring(0, 12);
     }
 
-    return "Custom"; // Fallback for very large sizes
+    if (option === 'initials') {
+        if (names.length === 1) return names[0].substring(0, 12);
+        const firstName = names[0];
+        const initials = names.slice(1).map(n => n.charAt(0)).join(' ');
+        const result = `${firstName} ${initials}`;
+        return result.substring(0, 12);
+    }
+
+    return '';
 };
+
 
 export default function RegisterAthletePage() {
   const { toast } = useToast();
@@ -94,6 +99,8 @@ export default function RegisterAthletePage() {
       weight: "",
       chestWidth: "",
       waistCircumference: "",
+      jerseyNameOption: undefined,
+      jerseyName: "",
       category: "Pra-usia dini (U-9)",
       level: "Beginner",
       pbsiNumber: "",
@@ -106,6 +113,8 @@ export default function RegisterAthletePage() {
   const height = watch('height');
   const chestWidth = watch('chestWidth');
   const waistCircumference = watch('waistCircumference');
+  const fullName = watch('fullName');
+  const jerseyNameOption = watch('jerseyNameOption');
 
   useEffect(() => {
     const tb = parseFloat(height || '0');
@@ -119,6 +128,14 @@ export default function RegisterAthletePage() {
         setRecommendedSize('-');
     }
   }, [height, chestWidth, waistCircumference]);
+  
+  useEffect(() => {
+    if (fullName && jerseyNameOption) {
+        const suggestedName = generateBackName(fullName, jerseyNameOption);
+        setValue('jerseyName', suggestedName);
+    }
+  }, [fullName, jerseyNameOption, setValue]);
+
 
   useEffect(() => {
     if (state.message) {
@@ -234,18 +251,15 @@ export default function RegisterAthletePage() {
               <CardTitle className="text-xl font-headline flex items-center gap-3">
                  <Shirt className="w-5 h-5 text-primary"/> C. Pengukuran & Ukuran Jersey
               </CardTitle>
-              <CardDescription>Masukkan pengukuran untuk mendapatkan rekomendasi ukuran jersey. Sistem akan membulatkan ke atas jika perlu.</CardDescription>
+              <CardDescription>Masukkan pengukuran untuk mendapatkan rekomendasi ukuran jersey.</CardDescription>
             </CardHeader>
             <CardContent className="p-8 pt-0 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <FormField control={form.control} name="height" render={({ field }) => (
-                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Tinggi Badan (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary border" placeholder="cth: 170"/></FormControl><FormMessage /></FormItem>
-                    )} />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField control={form.control} name="chestWidth" render={({ field }) => (
-                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Lebar Dada (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary border" placeholder="cth: 48"/></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Lingkar Dada (LD) (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary border" placeholder="cth: 90"/></FormControl><FormMessage /></FormItem>
                     )} />
                     <FormField control={form.control} name="waistCircumference" render={({ field }) => (
-                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Lebar Pinggang (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary border" placeholder="cth: 21"/></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Lingkar Perut (LP) (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary border" placeholder="cth: 75"/></FormControl><FormMessage /></FormItem>
                     )} />
                 </div>
                 <div className="text-center bg-secondary/50 rounded-2xl p-6 border">
@@ -255,11 +269,31 @@ export default function RegisterAthletePage() {
                 </div>
             </CardContent>
           </Card>
+          
+          <Card className="rounded-3xl shadow-xl">
+            <CardHeader className="p-8 pb-4">
+              <CardTitle className="text-xl font-headline flex items-center gap-3">
+                 <Edit className="w-5 h-5 text-primary"/> D. Nama Punggung Jersey
+              </CardTitle>
+              <CardDescription>Pilih format penulisan nama di punggung jersey sesuai aturan resmi (maks. 12 karakter).</CardDescription>
+            </CardHeader>
+            <CardContent className="p-8 pt-0 space-y-6">
+                 <FormField control={form.control} name="jerseyNameOption" render={({ field }) => (
+                    <FormItem><FormLabel>Pilihan Format</FormLabel><FormControl><RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 gap-4">
+                        <FormItem className="flex items-center space-x-3 rounded-xl border p-4 bg-secondary"><FormControl><RadioGroupItem value="initials" id="initials" /></FormControl><Label htmlFor="initials" className="font-bold">Nama Depan + Inisial</Label></FormItem>
+                        <FormItem className="flex items-center space-x-3 rounded-xl border p-4 bg-secondary"><FormControl><RadioGroupItem value="lastName" id="lastName" /></FormControl><Label htmlFor="lastName" className="font-bold">Nama Belakang</Label></FormItem>
+                    </RadioGroup></FormControl><FormMessage /></FormItem>
+                )} />
+                 <FormField control={form.control} name="jerseyName" render={({ field }) => (
+                    <FormItem><FormLabel>Hasil Nama Punggung</FormLabel><FormControl><Input {...field} className="h-14 rounded-xl bg-secondary border text-center font-black text-2xl uppercase tracking-widest font-mono" /></FormControl><FormMessage /></FormItem>
+                )} />
+            </CardContent>
+          </Card>
 
           <Card className="rounded-3xl shadow-xl">
             <CardHeader className="p-8 pb-4">
               <CardTitle className="text-xl font-headline flex items-center gap-3">
-                 <Target className="w-5 h-5 text-primary"/> D. Status Kepelatihan
+                 <Target className="w-5 h-5 text-primary"/> E. Status Kepelatihan
               </CardTitle>
               <CardDescription>Informasi terkait jenjang dan tujuan atlet di akademi.</CardDescription>
             </CardHeader>

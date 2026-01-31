@@ -15,13 +15,19 @@ export const athleteRegistrationSchema = z.object({
   guardianName: z.string().optional(),
   emergencyContact: z.string().min(10, "Kontak darurat tidak valid.").regex(/^\d+$/, "Hanya angka."),
   
-  // Antropometri
+  // B. Antropometri
   height: z.string().min(1, "Tinggi badan wajib diisi."),
   weight: z.string().min(1, "Berat badan wajib diisi."),
-  chestWidth: z.string().min(1, "Lebar dada wajib diisi."),
-  waistCircumference: z.string().min(1, "Lingkar pinggang wajib diisi."),
   
-  // B. Status Kepelatihan
+  // C. Pengukuran Jersey
+  chestWidth: z.string().min(1, "Lingkar Dada (LD) wajib diisi."),
+  waistCircumference: z.string().min(1, "Lingkar Perut (LP) wajib diisi."),
+
+  // D. Nama Punggung
+  jerseyNameOption: z.enum(["initials", "lastName"], { required_error: "Pilih format nama punggung."}),
+  jerseyName: z.string().max(12, "Nama punggung maksimal 12 karakter.").min(1, "Nama punggung wajib diisi."),
+
+  // E. Status Kepelatihan
   category: z.enum(["Pra-usia dini (U-9)", "Usia dini (U-11)", "Anak-anak (U-13)", "Pemula & Remaja (U-15, U-17)"], { required_error: "Pilih kategori usia." }),
   level: z.enum(["Beginner", "Intermediate", "Advanced", "Elite"], { required_error: "Pilih level atlet." }),
   pbsiNumber: z.string().optional(),
@@ -30,5 +36,3 @@ export const athleteRegistrationSchema = z.object({
 });
 
 export type AthleteRegistrationFormValues = z.infer<typeof athleteRegistrationSchema>;
-
-    
