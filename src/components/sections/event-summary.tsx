@@ -56,8 +56,20 @@ export function EventSummarySection() {
                   <CalendarClock className="w-6 h-6 text-primary" />
                </div>
                <div className="z-10 mt-auto">
-                   <h3 className="text-3xl font-black font-headline">SELASA & KAMIS</h3>
-                   <p className="text-lg font-medium text-muted-foreground">16:00 - 18:00 WIB</p>
+                    <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+                        <div>
+                            <h4 className="text-lg font-bold">Senin & Rabu</h4>
+                            <p className="text-sm text-muted-foreground">15:00 - 19:00 WIB</p>
+                        </div>
+                         <div>
+                            <h4 className="text-lg font-bold">Jumat</h4>
+                            <p className="text-sm text-muted-foreground">13:00 - 17:00 WIB</p>
+                        </div>
+                        <div>
+                            <h4 className="text-lg font-bold">Sabtu</h4>
+                            <p className="text-sm text-muted-foreground">08:00 - 12:00 WIB</p>
+                        </div>
+                    </div>
                </div>
           </div>
 
