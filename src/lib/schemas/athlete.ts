@@ -22,7 +22,7 @@ export const athleteRegistrationSchema = z.object({
   waistCircumference: z.string().min(1, "Lingkar pinggang wajib diisi."),
   
   // B. Status Kepelatihan
-  category: z.enum(["Pra-usia dini", "Usia dini", "Anak", "Remaja", "Dewasa", "Veteran"], { required_error: "Pilih kategori usia." }),
+  category: z.enum(["Pra-usia dini", "Usia dini", "Anak", "Remaja"], { required_error: "Pilih kategori usia." }),
   level: z.enum(["Beginner", "Intermediate", "Advanced", "Elite"], { required_error: "Pilih level atlet." }),
   pbsiNumber: z.string().optional(),
   startYear: z.string().length(4, "Tahun harus 4 digit.").regex(/^\d+$/, "Tahun hanya boleh angka."),

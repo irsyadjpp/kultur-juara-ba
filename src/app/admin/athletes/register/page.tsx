@@ -263,7 +263,12 @@ export default function RegisterAthletePage() {
               <FormField control={form.control} name="category" render={({ field }) => (
                   <FormItem><FormLabel>Kategori Usia</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl><SelectTrigger className="h-12 rounded-xl"><SelectValue placeholder="Pilih Kategori" /></SelectTrigger></FormControl>
-                      <SelectContent><SelectItem value="Pra-usia dini">Pra-usia dini</SelectItem><SelectItem value="Usia dini">Usia dini</SelectItem><SelectItem value="Anak">Anak</SelectItem><SelectItem value="Remaja">Remaja</SelectItem><SelectItem value="Dewasa">Dewasa</SelectItem><SelectItem value="Veteran">Veteran</SelectItem></SelectContent>
+                      <SelectContent>
+                        <SelectItem value="Pra-usia dini">Pra-usia dini</SelectItem>
+                        <SelectItem value="Usia dini">Usia dini</SelectItem>
+                        <SelectItem value="Anak">Anak</SelectItem>
+                        <SelectItem value="Remaja">Remaja</SelectItem>
+                      </SelectContent>
                   </Select><FormMessage /></FormItem>
               )} />
               <FormField control={form.control} name="level" render={({ field }) => (
