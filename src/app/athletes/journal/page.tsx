@@ -211,7 +211,7 @@ export default function AthleteSelfMonitoringPage() {
                             <SelectItem value="lutut">Lutut</SelectItem>
                             <SelectItem value="bahu">Bahu</SelectItem>
                             <SelectItem value="punggung">Punggung / Pinggang</SelectItem>
-                            <SelectItem value="lain">Lainnya</s-select-item>
+                            <SelectItem value="lain">Lainnya</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
