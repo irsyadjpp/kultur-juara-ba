@@ -29,6 +29,12 @@ const MOCK_DB_USERS = [
     name: "Psikolog Olahraga",
     role: "PSYCHOLOGIST",
     pin: "445566"
+  },
+  { 
+    email: "new.admin@kulturjuara.org", 
+    name: "New Admin", 
+    role: "ADMIN",
+    pin: "110395"
   }
 ];
 
