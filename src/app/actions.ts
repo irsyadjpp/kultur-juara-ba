@@ -1,3 +1,4 @@
+
 'use server';
 
 import { cookies } from 'next/headers';
@@ -5,25 +6,25 @@ import { cookies } from 'next/headers';
 // MOCK USER DATABASE FOR ALL ROLES
 const MOCK_DB_USERS = [
   { 
-    email: "admin@kulturjuara.com", 
+    email: "admin@kulturjuara.org", 
     name: "System Admin", 
     role: "ADMIN",
     pin: "000000"
   },
   { 
-    email: process.env.DIRECTOR_EMAIL || "director@kulturjuara.com", 
+    email: process.env.DIRECTOR_EMAIL || "director@kulturjuara.org", 
     name: "Pelatih Kepala", 
     role: "HEAD_COACH",
     pin: "123456"
   },
   { 
-    email: "coach@kulturjuara.com", 
+    email: "coach@kulturjuara.org", 
     name: "Pelatih Teknik", 
     role: "COACH", 
     pin: "112233"
   },
   {
-    email: "psychologist@kulturjuara.com",
+    email: "psychologist@kulturjuara.org",
     name: "Psikolog Olahraga",
     role: "PSYCHOLOGIST",
     pin: "445566"
@@ -34,19 +35,18 @@ export async function unifiedGoogleLogin() {
   // 1. Simulasi data dari Google Auth
   // In a real app, you'd get this from the Firebase Auth callback
   const googleUser = {
-    email: "new.coach@gmail.com",
-    name: "Pelatih Baru",
+    email: "new.guest@gmail.com",
+    name: "Tamu Baru",
     avatar: "https://github.com/shadcn.png"
   };
 
-  // 2. Determine role based on email or a database lookup
-  // For this demo, let's assign a default role of 'COACH'
-  const userRole = "COACH";
+  // 2. Assign GUEST role by default for new registrations
+  const userRole = "GUEST";
 
   const userPayload = {
       ...googleUser,
       role: userRole,
-      isOnboarded: true, // Assume onboarded for simplicity
+      isOnboarded: false, // Guests are not onboarded until role is assigned
   };
 
   // 3. Create Session with the determined role
@@ -57,11 +57,11 @@ export async function unifiedGoogleLogin() {
 
   cookies().set('kultur_juara_session', sessionData, { httpOnly: true, path: '/' });
 
-  // 4. Redirect based on role
-  // This redirect will be handled client-side after the action completes
-  const redirectUrl = userRole === "HEAD_COACH" ? '/admin/dashboard' : '/portal/dashboard'; // Example redirect
+  // 4. Redirect to the main admin dashboard.
+  // The layout will handle redirecting GUEST users to the waiting room.
+  const redirectUrl = '/admin/dashboard';
   
-  return { success: true, redirectUrl: '/admin/dashboard', user: userPayload };
+  return { success: true, redirectUrl, user: userPayload };
 }
 
 

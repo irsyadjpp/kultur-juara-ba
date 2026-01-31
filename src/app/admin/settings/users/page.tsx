@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect } from "react";
@@ -26,6 +27,7 @@ import { useFirestore, useCollection, useMemoFirebase, useUser } from '@/firebas
 import { inviteUser, updateUser, deleteUser } from './actions';
 
 const ROLES = [
+    { id: "GUEST", label: "Guest", color: "text-zinc-500 border-zinc-500/30 bg-zinc-500/10", desc: "Limited access, waiting for role assignment." },
     { id: "ADMIN", label: "Admin", color: "text-sky-500 border-sky-500/30 bg-sky-500/10", desc: "Full System Access" },
     { id: "HEAD_COACH", label: "Head Coach", color: "text-red-500 border-red-500/30 bg-red-500/10", desc: "Manages all coaching staff & programs" },
     { id: "COACH", label: "Coach", color: "text-blue-500 border-blue-500/30 bg-blue-500/10", desc: "Manages athletes and logs." },
@@ -342,7 +344,7 @@ export default function UserManagementPage() {
                 <div className="p-8 space-y-6">
                     <div className="space-y-2">
                         <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Email Address</label>
-                        <Input name="email" type="email" required placeholder="user@kulturjuara.com" className="bg-secondary border-2 h-14 rounded-2xl text-lg" />
+                        <Input name="email" type="email" required placeholder="user@kulturjuara.org" className="bg-secondary border-2 h-14 rounded-2xl text-lg" />
                     </div>
                     <div className="space-y-2">
                         <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Full Name</label>

@@ -3,9 +3,8 @@
 
 import { useState, useEffect, type ReactNode } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { LogOut } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { logout, signIntegrityPact, getSession } from '../actions'; 
+import { getSession, logout, signIntegrityPact } from '../actions';
+import { Loader2 } from 'lucide-react';
 import { IntegrityPactModal } from '@/components/admin/integrity-pact-modal';
 import { EmergencyButton } from '@/components/admin/emergency-button';
 import { Toaster } from "@/components/ui/toaster";
@@ -14,6 +13,7 @@ import { AdminBackground } from "@/components/admin/admin-background";
 import { Separator } from '@/components/ui/separator';
 import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar"
 import { AppSidebar } from '@/components/ui/app-sidebar';
+import { useToast } from '@/hooks/use-toast';
 
 export default function AdminRootLayout({ children }: { children: ReactNode }) {
   const { toast } = useToast();
@@ -23,34 +23,27 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // DEV MODE: Auto-login for development
-    const devLogin = () => {
-      const mockSession = {
-        name: "Pelatih Kepala",
-        email: "director@kulturjuara.com",
-        role: "HEAD_COACH",
-        isLoggedIn: true,
-        isOnboarded: true, // Bypass integrity pact for dev
-      };
-      setSession(mockSession);
+    const checkSession = async () => {
+      const currentSession = await getSession();
+      
+      if (!currentSession?.isLoggedIn) {
+        router.push('/login');
+        return; 
+      }
+      
+      if (currentSession.role === 'GUEST' && pathname !== '/admin/waiting-room') {
+        router.push('/admin/waiting-room');
+        // We still set the session to avoid a flash of the login page
+        setSession(currentSession);
+        setLoading(false);
+        return;
+      }
+      
+      setSession(currentSession);
       setLoading(false);
     };
 
-    devLogin();
-    
-    // Original session check logic is commented out for dev mode
-    /*
-    const checkSession = async () => {
-        const currentSession = await getSession();
-        if (currentSession?.isLoggedIn) {
-            setSession(currentSession);
-        } else {
-            router.push('/login');
-        }
-        setLoading(false);
-    };
     checkSession();
-    */
   }, [pathname, router]);
   
   const handlePactComplete = async () => {
@@ -69,16 +62,28 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
   if (loading) {
     return (
         <div className="min-h-screen w-full flex items-center justify-center bg-background">
-            <div className="w-8 h-8 animate-spin text-primary" />
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
     );
   }
 
   if (!session?.isLoggedIn) {
+    // Should be handled by useEffect redirect, but as a fallback.
     return null;
   }
   
-  // Show integrity pact modal if not onboarded
+  // If guest, render a minimal layout only for the waiting room page.
+  if (session.role === 'GUEST') {
+      return (
+        // The waiting room has its own simple layout, so we don't need the admin shell.
+        <>
+          {children}
+          <Toaster />
+        </>
+      );
+  }
+  
+  // Show integrity pact modal if not onboarded (for non-guests)
   if (!session.isOnboarded) {
     return (
         <IntegrityPactModal 
@@ -89,41 +94,34 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
     );
   }
 
+  // Full admin layout for authenticated, onboarded, non-guest users
   return (
     <SidebarProvider defaultOpen={true}>
-      
       <AppSidebar onLogout={handleLogout} className="z-50" />
-      
       <SidebarInset className="relative flex flex-col min-h-screen bg-transparent overflow-hidden">
-        
         <div className="fixed inset-0 -z-50 pointer-events-none">
             <AdminBackground />
         </div>
-
         <header className="flex h-16 shrink-0 items-center justify-between gap-2 px-4 bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-40 transition-all">
             <div className="flex items-center gap-2">
                 <SidebarTrigger className="text-muted-foreground hover:text-foreground hover:bg-secondary rounded-full w-10 h-10 transition-all" />
                 <Separator orientation="vertical" className="mr-2 h-4" />
                 <span className="text-sm font-black text-foreground hidden md:block tracking-widest uppercase font-headline">
-                  KULTUR JUARA PWN | ADMIN
+                  KULTUR JUARA | ADMIN
                 </span>
             </div>
-
             <div className="flex items-center gap-4">
                 <NotificationBell />
             </div>
         </header>
-
         <div className="flex-1 overflow-auto relative z-10 scroll-smooth">
             <div className="p-4 md:p-6 lg:p-8">
                 {children}
             </div>
         </div>
-        
         <EmergencyButton /> 
         <Toaster />
-
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }
