@@ -1,58 +1,77 @@
-
-"use client";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle2, Dumbbell, BrainCircuit, Activity } from "lucide-react";
-import { cn } from "@/lib/utils";
-
-export function LevelingGuideSection() {
-  const philosophies = [
-    {
-      title: "Teknik Fundamental",
-      description: "Penguasaan grip, footwork, dan body balance sebagai fondasi utama setiap pukulan.",
-      icon: Dumbbell,
-      color: "border-green-500",
-    },
-    {
-      title: "Kecerdasan Taktis",
-      description: "Kemampuan membaca permainan, mengatur tempo, dan mengeksekusi strategi yang efektif.",
-      icon: BrainCircuit,
-      color: "border-blue-500",
-    },
-    {
-      title: "Kondisi Fisik Prima",
-      description: "Program latihan fisik terpadu untuk meningkatkan stamina, kecepatan, dan power.",
-      icon: Activity,
-      color: "border-orange-500",
-    },
-  ];
-
-  return (
-    <section id="levels" className="py-24 bg-secondary/30">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-black font-headline text-foreground mb-6">
-            Filosofi Latihan Kami
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Kami percaya juara sejati dibentuk dari tiga pilar utama: Teknik, Taktik, dan Fisik.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {philosophies.map((item, idx) => (
-            <Card key={idx} className={cn("border-t-8 shadow-xl hover:-translate-y-2 transition-transform duration-300 rounded-[2rem] overflow-hidden bg-card text-center", item.color)}>
-              <CardContent className="p-8">
-                <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mx-auto mb-6">
-                  <item.icon className="w-8 h-8 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold font-headline mb-3">{item.title}</h3>
-                <p className="text-muted-foreground">{item.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+{
+  "name": "nextn",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack -p 9002",
+    "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
+    "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
+    "build": "NODE_ENV=production next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@genkit-ai/google-genai": "^1.20.0",
+    "@genkit-ai/next": "^1.20.0",
+    "@hookform/resolvers": "^3.9.0",
+    "@radix-ui/react-accordion": "^1.2.3",
+    "@radix-ui/react-alert-dialog": "^1.1.6",
+    "@radix-ui/react-avatar": "^1.1.3",
+    "@radix-ui/react-checkbox": "^1.1.4",
+    "@radix-ui/react-collapsible": "^1.1.11",
+    "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-dropdown-menu": "^2.1.6",
+    "@radix-ui/react-label": "^2.1.2",
+    "@radix-ui/react-menubar": "^1.1.6",
+    "@radix-ui/react-popover": "^1.1.6",
+    "@radix-ui/react-progress": "^1.1.2",
+    "@radix-ui/react-radio-group": "^1.2.3",
+    "@radix-ui/react-scroll-area": "^1.2.3",
+    "@radix-ui/react-select": "^2.1.6",
+    "@radix-ui/react-separator": "^1.1.2",
+    "@radix-ui/react-slider": "^1.2.3",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-switch": "^1.1.3",
+    "@radix-ui/react-tabs": "^1.1.3",
+    "@radix-ui/react-toast": "^1.2.6",
+    "@radix-ui/react-toggle-group": "^1.1.0",
+    "@radix-ui/react-tooltip": "^1.1.8",
+    "canvas-confetti": "^1.9.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.0.0",
+    "date-fns": "^3.6.0",
+    "dotenv": "^16.5.0",
+    "embla-carousel-react": "^8.6.0",
+    "firebase": "^11.9.1",
+    "genkit": "^1.20.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
+    "lucide-react": "^0.475.0",
+    "next": "15.3.8",
+    "next-themes": "^0.3.0",
+    "patch-package": "^8.0.0",
+    "qrcode.react": "^3.1.0",
+    "react": "^18.3.1",
+    "react-day-picker": "^8.10.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.52.1",
+    "react-qr-code": "^2.0.12",
+    "tailwind-merge": "^3.0.1",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/canvas-confetti": "^1.6.4",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "9.39.1",
+    "eslint-config-next": "16.0.8",
+    "genkit-cli": "^1.20.0",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
 }

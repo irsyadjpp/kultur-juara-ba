@@ -1,89 +1,77 @@
-
-'use server';
-
-import { revalidatePath } from "next/cache";
-
-// Mock Data Insiden
-let activeIncidents: any[] = [
-  { id: 'SOS-001', type: 'MEDIS', location: 'Lapangan 3', status: 'OPEN', time: '10:45', reportedBy: 'Kevin Ops' },
-  { id: 'SOS-002', type: 'SECURITY', location: 'Pintu Tribun B', status: 'ASSIGNED', time: '10:50', reportedBy: 'System', handler: 'Sarah Security' }
-];
-
-// Mock Data Staff Available
-const availableUnits = [
-  { id: 'STF-01', name: 'Sarah Security', status: 'BUSY', role: 'SECURITY' },
-  { id: 'STF-02', name: 'Budi Medis', status: 'IDLE', role: 'MEDIS' },
-  { id: 'STF-03', name: 'Joko Teknis', status: 'IDLE', role: 'TEKNIS' },
-  { id: 'STF-04', name: 'Tim Mop', status: 'IDLE', role: 'LOGISTICS' },
-  { id: 'STF-05', name: 'Petugas Shuttlecock', status: 'IDLE', role: 'LOGISTICS' },
-];
-
-export async function getDispatchData() {
-  return { incidents: activeIncidents, units: availableUnits };
-}
-
-export async function assignIncident(incidentId: string, unitId: string) {
-  // Logic update database
-  await new Promise(r => setTimeout(r, 1000));
-  
-  // Update mock data local (untuk demo)
-  const incident = activeIncidents.find(i => i.id === incidentId);
-  if (incident) {
-    incident.status = 'ASSIGNED';
-    // @ts-ignore
-    incident.handler = unitId; // Di real app simpan nama unit
+{
+  "name": "nextn",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack -p 9002",
+    "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
+    "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
+    "build": "NODE_ENV=production next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@genkit-ai/google-genai": "^1.20.0",
+    "@genkit-ai/next": "^1.20.0",
+    "@hookform/resolvers": "^3.9.0",
+    "@radix-ui/react-accordion": "^1.2.3",
+    "@radix-ui/react-alert-dialog": "^1.1.6",
+    "@radix-ui/react-avatar": "^1.1.3",
+    "@radix-ui/react-checkbox": "^1.1.4",
+    "@radix-ui/react-collapsible": "^1.1.11",
+    "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-dropdown-menu": "^2.1.6",
+    "@radix-ui/react-label": "^2.1.2",
+    "@radix-ui/react-menubar": "^1.1.6",
+    "@radix-ui/react-popover": "^1.1.6",
+    "@radix-ui/react-progress": "^1.1.2",
+    "@radix-ui/react-radio-group": "^1.2.3",
+    "@radix-ui/react-scroll-area": "^1.2.3",
+    "@radix-ui/react-select": "^2.1.6",
+    "@radix-ui/react-separator": "^1.1.2",
+    "@radix-ui/react-slider": "^1.2.3",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-switch": "^1.1.3",
+    "@radix-ui/react-tabs": "^1.1.3",
+    "@radix-ui/react-toast": "^1.2.6",
+    "@radix-ui/react-toggle-group": "^1.1.0",
+    "@radix-ui/react-tooltip": "^1.1.8",
+    "canvas-confetti": "^1.9.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.0.0",
+    "date-fns": "^3.6.0",
+    "dotenv": "^16.5.0",
+    "embla-carousel-react": "^8.6.0",
+    "firebase": "^11.9.1",
+    "genkit": "^1.20.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
+    "lucide-react": "^0.475.0",
+    "next": "15.3.8",
+    "next-themes": "^0.3.0",
+    "patch-package": "^8.0.0",
+    "qrcode.react": "^3.1.0",
+    "react": "^18.3.1",
+    "react-day-picker": "^8.10.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.52.1",
+    "react-qr-code": "^2.0.12",
+    "tailwind-merge": "^3.0.1",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/canvas-confetti": "^1.6.4",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "9.39.1",
+    "eslint-config-next": "16.0.8",
+    "genkit-cli": "^1.20.0",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
   }
-  
-  revalidatePath('/admin/dispatch');
-  return { success: true, message: `Unit ${unitId} dispatched to ${incidentId}` };
 }
-
-export async function resolveIncident(incidentId: string, notes: string) {
-  await new Promise(r => setTimeout(r, 1000));
-  
-  // Remove from active list or mark resolved
-  activeIncidents = activeIncidents.filter(i => i.id !== incidentId);
-  
-  revalidatePath('/admin/dispatch');
-  return { success: true, message: "Insiden diselesaikan. Good job!" };
-}
-
-// Function to handle service requests from referees
-export async function requestService(court: string, serviceType: 'MOP' | 'SHUTTLE' | 'MEDIC') {
-    await new Promise(r => setTimeout(r, 800));
-
-    const newIncident = {
-        id: `REQ-${Date.now()}`,
-        type: serviceType,
-        location: `Court ${court}`,
-        status: 'OPEN' as 'OPEN' | 'ASSIGNED',
-        time: new Date().toISOString(), // Use ISO string for consistency
-        reportedBy: `Umpire C${court}`,
-    };
-
-    activeIncidents.unshift(newIncident);
-    revalidatePath('/admin/dispatch');
-
-    return { success: true, message: `Request for ${serviceType} on Court ${court} logged.` };
-}
-
-export async function triggerSOS(type: string, location: string) {
-    await new Promise(r => setTimeout(r, 800));
-
-    const newIncident = {
-        id: `SOS-${Date.now()}`,
-        type: type.toUpperCase(),
-        location: location,
-        status: 'OPEN' as 'OPEN' | 'ASSIGNED',
-        time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
-        reportedBy: 'Emergency Button',
-    };
-
-    activeIncidents.unshift(newIncident);
-    revalidatePath('/admin/dispatch');
-
-    return { success: true, message: `SOS for ${type} at ${location} logged.` };
-}
-    
-
-    

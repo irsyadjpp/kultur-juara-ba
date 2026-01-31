@@ -48,7 +48,7 @@ const data = {
   ],
   navAkademiPerencanaan: [
       { title: "Masterplan CSR", url: "/admin/planning", icon: Target },
-      { title: "Program Latihan", url: "/admin/training/program-builder", icon: FileSignature },
+      { title: "Program Builder", url: "/admin/training/program-builder", icon: FileSignature },
   ],
   navAkademiAtlet: [
       { title: "Registrasi Atlet", url: "/admin/athletes/register", icon: UserPlus },
@@ -66,9 +66,6 @@ const data = {
       { title: "Evaluasi Mental", url: "/admin/evaluations/mental", icon: Brain },
   ],
   navOperasional: [
-      { title: "Inventaris", url: "/admin/logistics/inventory", icon: Box },
-      { title: "Stok Kok", url: "/admin/logistics/shuttlecock", icon: Package },
-      { title: "Barang Habis Pakai", url: "/admin/logistics/consumables", icon: Layers },
       { title: "Log Aktivitas CSR", url: "/admin/reports/monthly", icon: FileText },
   ],
   navSistem: [

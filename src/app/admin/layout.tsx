@@ -6,7 +6,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import { getSession, logout, signIntegrityPact } from '../actions';
 import { Loader2 } from 'lucide-react';
 import { IntegrityPactModal } from '@/components/admin/integrity-pact-modal';
-import { EmergencyButton } from '@/components/admin/emergency-button';
 import { Toaster } from "@/components/ui/toaster";
 import { NotificationBell } from '@/components/admin/notification-bell';
 import { AdminBackground } from "@/components/admin/admin-background"; 
@@ -119,7 +118,6 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
                 {children}
             </div>
         </div>
-        <EmergencyButton /> 
         <Toaster />
       </SidebarInset>
     </SidebarProvider>

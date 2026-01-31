@@ -1,67 +1,77 @@
-
-"use client";
-
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Moon, Bell, LogOut, Shield, Smartphone } from "lucide-react";
-
-export default function SettingsPage() {
-  return (
-    <div className="min-h-screen bg-background pb-24 px-6 pt-8">
-      <h1 className="font-headline text-3xl mb-8">SET<span className="text-primary">TINGS</span></h1>
-
-      <div className="space-y-8">
-        {/* APPEARANCE */}
-        <section className="space-y-4">
-           <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Tampilan</h3>
-           <div className="bg-card rounded-3xl p-5 flex items-center justify-between shadow-m3-1">
-              <div className="flex items-center gap-3">
-                 <div className="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600">
-                    <Moon size={20} />
-                 </div>
-                 <div>
-                    <p className="font-bold">Dark Mode</p>
-                    <p className="text-xs text-muted-foreground">Tema gelap untuk malam hari</p>
-                 </div>
-              </div>
-              <Switch />
-           </div>
-        </section>
-
-        {/* NOTIFICATIONS */}
-        <section className="space-y-4">
-           <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Notifikasi</h3>
-           <div className="bg-card rounded-[2rem] p-2 shadow-m3-1 space-y-1">
-              <div className="p-4 flex items-center justify-between">
-                 <div className="flex items-center gap-3">
-                    <Bell size={20} className="text-muted-foreground" />
-                    <Label className="font-medium">Jadwal Pertandingan</Label>
-                 </div>
-                 <Switch defaultChecked />
-              </div>
-              <Separator />
-              <div className="p-4 flex items-center justify-between">
-                 <div className="flex items-center gap-3">
-                    <Smartphone size={20} className="text-muted-foreground" />
-                    <Label className="font-medium">Push Notification</Label>
-                 </div>
-                 <Switch defaultChecked />
-              </div>
-           </div>
-        </section>
-
-        {/* ACCOUNT */}
-        <section>
-           <Button variant="destructive" className="w-full h-14 rounded-pill font-bold shadow-lg shadow-red-500/20">
-              <LogOut className="mr-2 h-5 w-5" /> Log Out
-           </Button>
-           <p className="text-center text-[10px] text-muted-foreground mt-4 font-mono">
-             Version 1.0.2 (Build 2025)
-           </p>
-        </section>
-      </div>
-    </div>
-  );
+{
+  "name": "nextn",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack -p 9002",
+    "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
+    "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
+    "build": "NODE_ENV=production next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@genkit-ai/google-genai": "^1.20.0",
+    "@genkit-ai/next": "^1.20.0",
+    "@hookform/resolvers": "^3.9.0",
+    "@radix-ui/react-accordion": "^1.2.3",
+    "@radix-ui/react-alert-dialog": "^1.1.6",
+    "@radix-ui/react-avatar": "^1.1.3",
+    "@radix-ui/react-checkbox": "^1.1.4",
+    "@radix-ui/react-collapsible": "^1.1.11",
+    "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-dropdown-menu": "^2.1.6",
+    "@radix-ui/react-label": "^2.1.2",
+    "@radix-ui/react-menubar": "^1.1.6",
+    "@radix-ui/react-popover": "^1.1.6",
+    "@radix-ui/react-progress": "^1.1.2",
+    "@radix-ui/react-radio-group": "^1.2.3",
+    "@radix-ui/react-scroll-area": "^1.2.3",
+    "@radix-ui/react-select": "^2.1.6",
+    "@radix-ui/react-separator": "^1.1.2",
+    "@radix-ui/react-slider": "^1.2.3",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-switch": "^1.1.3",
+    "@radix-ui/react-tabs": "^1.1.3",
+    "@radix-ui/react-toast": "^1.2.6",
+    "@radix-ui/react-toggle-group": "^1.1.0",
+    "@radix-ui/react-tooltip": "^1.1.8",
+    "canvas-confetti": "^1.9.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.0.0",
+    "date-fns": "^3.6.0",
+    "dotenv": "^16.5.0",
+    "embla-carousel-react": "^8.6.0",
+    "firebase": "^11.9.1",
+    "genkit": "^1.20.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
+    "lucide-react": "^0.475.0",
+    "next": "15.3.8",
+    "next-themes": "^0.3.0",
+    "patch-package": "^8.0.0",
+    "qrcode.react": "^3.1.0",
+    "react": "^18.3.1",
+    "react-day-picker": "^8.10.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.52.1",
+    "react-qr-code": "^2.0.12",
+    "tailwind-merge": "^3.0.1",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/canvas-confetti": "^1.6.4",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "9.39.1",
+    "eslint-config-next": "16.0.8",
+    "genkit-cli": "^1.20.0",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
 }

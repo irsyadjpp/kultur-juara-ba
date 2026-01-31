@@ -1,122 +1,77 @@
-
-"use client";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { QrCode, CheckCircle2, Loader2, MapPin } from "lucide-react";
-import { useState, useEffect } from "react";
-
-interface QRCheckInProps {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-}
-
-export function QRCheckInDialog({ isOpen, onOpenChange }: QRCheckInProps) {
-  const [status, setStatus] = useState<'scanning' | 'processing' | 'success'>('scanning');
-
-  // Simulasi scan process
-  const handleSimulateScan = () => {
-    setStatus('processing');
-    setTimeout(() => {
-      setStatus('success');
-    }, 2000);
-  };
-
-  // Reset saat dialog ditutup
-  useEffect(() => {
-    if (!isOpen) {
-      setTimeout(() => setStatus('scanning'), 300);
-    }
-  }, [isOpen]);
-
-  return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md rounded-[2rem] border-none bg-background p-0 overflow-hidden shadow-2xl">
-        <DialogHeader className="sr-only">
-          <DialogTitle>Venue Check-in</DialogTitle>
-          <DialogDescription>Scan QR code at the registration desk to check in.</DialogDescription>
-        </DialogHeader>
-        
-        {/* Header Visual dengan Gradient Sport */}
-        <div className="h-32 bg-gradient-sport flex items-center justify-center relative">
-          <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay"></div>
-          <div className="text-center text-white z-10">
-            <h2 className="font-headline text-2xl tracking-widest">VENUE CHECK-IN</h2>
-            <p className="text-xs opacity-90 font-mono">GOR KONI BANDUNG</p>
-          </div>
-        </div>
-
-        <div className="p-6">
-          {status === 'scanning' && (
-            <div className="flex flex-col items-center animate-in fade-in zoom-in duration-300">
-              <div className="relative h-64 w-64 bg-black rounded-3xl overflow-hidden mb-6 border-4 border-foreground/10">
-                {/* Simulasi Kamera Viewfinder */}
-                <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/50">
-                  <span className="text-xs">Camera Feed</span>
-                </div>
-                
-                {/* Scanning Line Animation */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-primary shadow-[0_0_20px_rgba(255,0,0,0.8)] animate-[scan_2s_ease-in-out_infinite]" />
-                
-                {/* Corner Markers */}
-                <div className="absolute top-4 left-4 w-8 h-8 border-t-4 border-l-4 border-white rounded-tl-xl" />
-                <div className="absolute top-4 right-4 w-8 h-8 border-t-4 border-r-4 border-white rounded-tr-xl" />
-                <div className="absolute bottom-4 left-4 w-8 h-8 border-b-4 border-l-4 border-white rounded-bl-xl" />
-                <div className="absolute bottom-4 right-4 w-8 h-8 border-b-4 border-r-4 border-white rounded-br-xl" />
-              </div>
-              
-              <p className="text-center text-muted-foreground text-sm mb-6 max-w-[200px]">
-                Arahkan kamera ke QR Code yang ada di meja registrasi.
-              </p>
-
-              <Button onClick={handleSimulateScan} className="w-full rounded-pill h-12 font-bold" size="lg">
-                <QrCode className="mr-2 h-4 w-4" /> Scan QR Manual
-              </Button>
-            </div>
-          )}
-
-          {status === 'processing' && (
-            <div className="h-64 flex flex-col items-center justify-center space-y-4 animate-in fade-in duration-300">
-              <Loader2 className="h-12 w-12 text-primary animate-spin" />
-              <p className="font-headline text-lg animate-pulse">VERIFYING...</p>
-            </div>
-          )}
-
-          {status === 'success' && (
-            <div className="flex flex-col items-center justify-center py-4 animate-in fade-in zoom-in duration-500">
-              <div className="h-24 w-24 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 mb-4 shadow-lg">
-                <CheckCircle2 className="h-12 w-12" />
-              </div>
-              <h3 className="font-headline text-2xl text-center mb-1">YOU ARE IN!</h3>
-              <p className="text-muted-foreground text-center text-sm mb-6">
-                Kehadiran Anda telah dicatat.<br/>Selamat bertanding!
-              </p>
-              
-              <div className="bg-secondary/50 rounded-2xl p-4 w-full mb-6">
-                <div className="flex items-start gap-3">
-                  <MapPin className="h-5 w-5 text-primary mt-0.5" />
-                  <div>
-                    <p className="text-xs font-bold uppercase text-muted-foreground">Location</p>
-                    <p className="text-sm font-semibold">GOR Koni, Court 3</p>
-                    <p className="text-xs text-muted-foreground mt-1">Check-in: 08:42 AM</p>
-                  </div>
-                </div>
-              </div>
-
-              <Button onClick={() => onOpenChange(false)} className="w-full rounded-pill" variant="outline">
-                Tutup
-              </Button>
-            </div>
-          )}
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
+{
+  "name": "nextn",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack -p 9002",
+    "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
+    "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
+    "build": "NODE_ENV=production next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@genkit-ai/google-genai": "^1.20.0",
+    "@genkit-ai/next": "^1.20.0",
+    "@hookform/resolvers": "^3.9.0",
+    "@radix-ui/react-accordion": "^1.2.3",
+    "@radix-ui/react-alert-dialog": "^1.1.6",
+    "@radix-ui/react-avatar": "^1.1.3",
+    "@radix-ui/react-checkbox": "^1.1.4",
+    "@radix-ui/react-collapsible": "^1.1.11",
+    "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-dropdown-menu": "^2.1.6",
+    "@radix-ui/react-label": "^2.1.2",
+    "@radix-ui/react-menubar": "^1.1.6",
+    "@radix-ui/react-popover": "^1.1.6",
+    "@radix-ui/react-progress": "^1.1.2",
+    "@radix-ui/react-radio-group": "^1.2.3",
+    "@radix-ui/react-scroll-area": "^1.2.3",
+    "@radix-ui/react-select": "^2.1.6",
+    "@radix-ui/react-separator": "^1.1.2",
+    "@radix-ui/react-slider": "^1.2.3",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-switch": "^1.1.3",
+    "@radix-ui/react-tabs": "^1.1.3",
+    "@radix-ui/react-toast": "^1.2.6",
+    "@radix-ui/react-toggle-group": "^1.1.0",
+    "@radix-ui/react-tooltip": "^1.1.8",
+    "canvas-confetti": "^1.9.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.0.0",
+    "date-fns": "^3.6.0",
+    "dotenv": "^16.5.0",
+    "embla-carousel-react": "^8.6.0",
+    "firebase": "^11.9.1",
+    "genkit": "^1.20.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
+    "lucide-react": "^0.475.0",
+    "next": "15.3.8",
+    "next-themes": "^0.3.0",
+    "patch-package": "^8.0.0",
+    "qrcode.react": "^3.1.0",
+    "react": "^18.3.1",
+    "react-day-picker": "^8.10.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.52.1",
+    "react-qr-code": "^2.0.12",
+    "tailwind-merge": "^3.0.1",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/canvas-confetti": "^1.6.4",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "9.39.1",
+    "eslint-config-next": "16.0.8",
+    "genkit-cli": "^1.20.0",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
 }

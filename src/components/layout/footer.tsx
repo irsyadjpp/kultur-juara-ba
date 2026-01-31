@@ -20,8 +20,7 @@ export function Footer() {
             <h3 className="font-headline text-lg font-bold mb-4 text-primary">Tautan Penting</h3>
             <ul className="space-y-2 text-muted-foreground">
               <li><Link href="/about" className="hover:text-primary transition-colors">Tentang Akademi</Link></li>
-              <li><Link href="/leveling-guide" className="hover:text-primary transition-colors">Filosofi Latihan</Link></li>
-              <li><Link href="/rules/drawing" className="hover:text-primary transition-colors">Program Kami</Link></li>
+              <li><Link href="/#programs" className="hover:text-primary transition-colors">Program Kami</Link></li>
             </ul>
           </div>
            {/* Kolom 3: Kontak */}

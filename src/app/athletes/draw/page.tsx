@@ -1,125 +1,77 @@
-
-"use client";
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from "@/components/ui/table";
-import { Trophy, Shield, Minus, Check } from "lucide-react";
-
-// Komponen Bracket Node Sederhana
-const BracketMatch = ({ r1, r2, score }: any) => (
-  <div className="flex flex-col justify-center gap-0 w-40 shrink-0 relative">
-    <div className="border border-border bg-card p-2 rounded-t-xl flex justify-between items-center text-xs font-bold">
-      <span className="truncate w-24">{r1}</span>
-      <span className="bg-secondary px-1.5 rounded">{score?.[0] || '-'}</span>
-    </div>
-    <div className="h-px bg-border w-full"></div>
-    <div className="border border-border bg-card p-2 rounded-b-xl flex justify-between items-center text-xs font-bold">
-      <span className="truncate w-24">{r2}</span>
-      <span className="bg-secondary px-1.5 rounded">{score?.[1] || '-'}</span>
-    </div>
-    {/* Connector Lines (Visual Only) */}
-    <div className="absolute top-1/2 -right-4 w-4 h-px bg-border"></div>
-  </div>
-);
-
-export default function DrawPage() {
-  return (
-    <div className="min-h-screen bg-background pb-24 px-4 pt-8">
-       <div className="mb-6 px-2">
-        <h1 className="font-headline text-3xl">TOURNAMENT <span className="text-primary">DRAW</span></h1>
-        <p className="text-xs text-muted-foreground">Pantau posisi grup dan jalur menuju juara.</p>
-      </div>
-
-      <Tabs defaultValue="group" className="w-full">
-        <div className="overflow-x-auto pb-2 mb-4 scrollbar-hide">
-           <TabsList className="inline-flex h-10 items-center justify-center rounded-full bg-secondary/50 p-1">
-              <TabsTrigger value="group" className="rounded-full px-6 text-xs font-bold">Group Stage</TabsTrigger>
-              <TabsTrigger value="bracket" className="rounded-full px-6 text-xs font-bold">Knockout</TabsTrigger>
-           </TabsList>
-        </div>
-
-        {/* GROUP STAGE VIEW */}
-        <TabsContent value="group" className="space-y-6">
-          {['GROUP A', 'GROUP B'].map((group) => (
-            <div key={group} className="bg-card rounded-3xl p-5 shadow-m3-1 border border-transparent hover:border-border transition-colors">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="font-headline text-xl">{group}</h3>
-                <Badge variant="outline">MD - Intermediate</Badge>
-              </div>
-              
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-b border-dashed border-border hover:bg-transparent">
-                    <TableHead className="w-[10px] text-[10px] font-bold">#</TableHead>
-                    <TableHead className="text-[10px] font-bold">PLAYER</TableHead>
-                    <TableHead className="text-right text-[10px] font-bold">W-L</TableHead>
-                    <TableHead className="text-right text-[10px] font-bold">PTS</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {[1, 2, 3, 4].map((pos) => (
-                    <TableRow key={pos} className="border-b border-dashed border-border/50 last:border-0 hover:bg-secondary/30">
-                      <TableCell className="font-mono text-xs font-bold">
-                         {pos === 1 ? <Trophy size={14} className="text-yellow-500" /> : pos}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-col">
-                          <span className={`font-bold text-xs ${pos <= 2 ? 'text-foreground' : 'text-muted-foreground'}`}>
-                            Player Pair {pos}
-                          </span>
-                          {pos === 1 && <span className="text-[8px] text-green-600 font-bold uppercase">Qualified</span>}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right font-mono text-xs">3-0</TableCell>
-                      <TableCell className="text-right font-headline text-sm">{10 - pos * 2}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          ))}
-        </TabsContent>
-
-        {/* BRACKET VIEW (Horizontal Scroll) */}
-        <TabsContent value="bracket">
-          <div className="bg-gradient-to-br from-secondary/20 to-background rounded-[2rem] border border-border p-6 overflow-x-auto">
-            <div className="flex gap-8 min-w-[600px]">
-              {/* Round of 16 */}
-              <div className="flex flex-col justify-around gap-8">
-                <div className="text-center text-[10px] font-bold uppercase tracking-widest mb-2 text-muted-foreground">Quarter Final</div>
-                <BracketMatch r1="Kevin/Marcus" r2="Fajar/Rian" score={[21, 19]} />
-                <BracketMatch r1="Ahsan/Hendra" r2="Leo/Daniel" score={[0, 0]} />
-              </div>
-              
-              {/* Semi Final */}
-              <div className="flex flex-col justify-around gap-8 pt-12">
-                 <div className="text-center text-[10px] font-bold uppercase tracking-widest mb-2 text-muted-foreground">Semi Final</div>
-                 <BracketMatch r1="Kevin/Marcus" r2="TBD" />
-              </div>
-
-               {/* Final */}
-               <div className="flex flex-col justify-center gap-8 pt-6">
-                 <div className="text-center text-[10px] font-bold uppercase tracking-widest mb-2 text-primary">Grand Final</div>
-                 <div className="bg-gradient-sport p-1 rounded-xl shadow-lg shadow-red-500/20">
-                   <div className="bg-background rounded-lg p-4 w-40 text-center">
-                      <Trophy className="mx-auto text-yellow-500 mb-2 h-8 w-8" />
-                      <p className="font-headline text-sm">CHAMPION</p>
-                      <p className="text-xs text-muted-foreground">??</p>
-                   </div>
-                 </div>
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
+{
+  "name": "nextn",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack -p 9002",
+    "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
+    "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
+    "build": "NODE_ENV=production next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@genkit-ai/google-genai": "^1.20.0",
+    "@genkit-ai/next": "^1.20.0",
+    "@hookform/resolvers": "^3.9.0",
+    "@radix-ui/react-accordion": "^1.2.3",
+    "@radix-ui/react-alert-dialog": "^1.1.6",
+    "@radix-ui/react-avatar": "^1.1.3",
+    "@radix-ui/react-checkbox": "^1.1.4",
+    "@radix-ui/react-collapsible": "^1.1.11",
+    "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-dropdown-menu": "^2.1.6",
+    "@radix-ui/react-label": "^2.1.2",
+    "@radix-ui/react-menubar": "^1.1.6",
+    "@radix-ui/react-popover": "^1.1.6",
+    "@radix-ui/react-progress": "^1.1.2",
+    "@radix-ui/react-radio-group": "^1.2.3",
+    "@radix-ui/react-scroll-area": "^1.2.3",
+    "@radix-ui/react-select": "^2.1.6",
+    "@radix-ui/react-separator": "^1.1.2",
+    "@radix-ui/react-slider": "^1.2.3",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-switch": "^1.1.3",
+    "@radix-ui/react-tabs": "^1.1.3",
+    "@radix-ui/react-toast": "^1.2.6",
+    "@radix-ui/react-toggle-group": "^1.1.0",
+    "@radix-ui/react-tooltip": "^1.1.8",
+    "canvas-confetti": "^1.9.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.0.0",
+    "date-fns": "^3.6.0",
+    "dotenv": "^16.5.0",
+    "embla-carousel-react": "^8.6.0",
+    "firebase": "^11.9.1",
+    "genkit": "^1.20.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
+    "lucide-react": "^0.475.0",
+    "next": "15.3.8",
+    "next-themes": "^0.3.0",
+    "patch-package": "^8.0.0",
+    "qrcode.react": "^3.1.0",
+    "react": "^18.3.1",
+    "react-day-picker": "^8.10.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.52.1",
+    "react-qr-code": "^2.0.12",
+    "tailwind-merge": "^3.0.1",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/canvas-confetti": "^1.6.4",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "9.39.1",
+    "eslint-config-next": "16.0.8",
+    "genkit-cli": "^1.20.0",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
 }
