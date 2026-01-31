@@ -35,7 +35,7 @@ export function Footer() {
               </li>
               <li className="flex items-center justify-center md:justify-start">
                 <Phone className="w-4 h-4 mr-2 text-primary/70" />
-                <a href="https://wa.me/628123456789" target="_blank" className="hover:text-primary transition-colors">
+                <a href="https://wa.me/6285121374644" target="_blank" className="hover:text-primary transition-colors">
                   WhatsApp Admin
                 </a>
               </li>
