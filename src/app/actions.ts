@@ -18,9 +18,9 @@ const MOCK_DB_USERS = [
     pin: "123456"
   },
   { 
-    email: "coach@kulturjuara.org", 
-    name: "Pelatih Teknik", 
-    role: "COACH", 
+    email: "athlete.dummy@kulturjuara.org", 
+    name: "Atlet Uji Coba", 
+    role: "ATHLETE", 
     pin: "112233"
   },
   {
@@ -83,7 +83,10 @@ export async function loginByCode(prevState: any, formData: FormData) {
   });
 
   cookies().set('kultur_juara_session', sessionData, { httpOnly: true, path: '/' });
-  return { success: true, message: "Login berhasil!", redirectUrl: '/admin/dashboard' };
+
+  const redirectUrl = dbUser.role === 'ATHLETE' ? '/athletes/dashboard' : '/admin/dashboard';
+
+  return { success: true, message: "Login berhasil!", redirectUrl };
 }
 
 export async function logout() {
