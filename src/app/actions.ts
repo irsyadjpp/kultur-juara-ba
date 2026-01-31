@@ -2,6 +2,7 @@
 'use server';
 
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 // MOCK USER DATABASE FOR ALL ROLES
 const MOCK_DB_USERS = [
@@ -86,7 +87,7 @@ export async function loginByCode(prevState: any, formData: FormData) {
 
   const redirectUrl = dbUser.role === 'ATHLETE' ? '/athletes/dashboard' : '/admin/dashboard';
 
-  return { success: true, message: "Login berhasil!", redirectUrl };
+  redirect(redirectUrl);
 }
 
 export async function logout() {

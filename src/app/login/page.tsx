@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useActionState, useEffect, useState } from "react";
@@ -29,14 +30,11 @@ export default function UnifiedLoginPage() {
   const { toast } = useToast();
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   
-  const [state, formAction] = useActionState(loginByCode, { success: false, message: '', redirectUrl: '' });
+  const [state, formAction] = useActionState(loginByCode, { success: false, message: '' });
 
   useEffect(() => {
-    if (state.success && state.redirectUrl) {
-      toast({ title: "Login Berhasil", description: "Mengalihkan ke dashboard...", className: "bg-green-600 text-white" });
-      // Use full page navigation to ensure the new cookie is sent with the next request.
-      window.location.assign(state.redirectUrl);
-    }
+    // The success case is now handled by the server-side redirect.
+    // This useEffect only needs to handle the failure case.
     if (state.message && !state.success) {
        toast({ title: "Gagal", description: state.message, variant: "destructive" });
     }
