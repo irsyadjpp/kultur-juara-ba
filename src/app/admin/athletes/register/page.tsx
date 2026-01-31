@@ -227,11 +227,25 @@ export default function RegisterAthletePage() {
                 )} />
             </CardContent>
           </Card>
+          
+          <Card className="rounded-3xl shadow-xl">
+            <CardHeader className="p-8 pb-4">
+              <CardTitle className="text-xl font-headline flex items-center gap-3">
+                 <Shirt className="w-5 h-5 text-primary"/> C. Ukuran Jersey
+              </CardTitle>
+              <CardDescription>Ukuran jersey direkomendasikan secara otomatis berdasarkan tinggi dan lebar dada. Toleransi 1-2cm.</CardDescription>
+            </CardHeader>
+            <CardContent className="p-8 pt-0 text-center">
+                <p className="text-sm text-muted-foreground font-bold uppercase">Rekomendasi Ukuran</p>
+                <div className="text-8xl font-black font-mono text-primary my-2 animate-in fade-in zoom-in duration-500">{recommendedSize}</div>
+                <p className="text-xs text-muted-foreground">Sistem akan membulatkan ke ukuran terdekat ke atas jika perlu.</p>
+            </CardContent>
+          </Card>
 
           <Card className="rounded-3xl shadow-xl">
             <CardHeader className="p-8 pb-4">
               <CardTitle className="text-xl font-headline flex items-center gap-3">
-                 <Target className="w-5 h-5 text-primary"/> C. Status Kepelatihan
+                 <Target className="w-5 h-5 text-primary"/> D. Status Kepelatihan
               </CardTitle>
               <CardDescription>Informasi terkait jenjang dan tujuan atlet di akademi.</CardDescription>
             </CardHeader>
@@ -260,20 +274,6 @@ export default function RegisterAthletePage() {
                       <SelectContent><SelectItem value="Rekreasi">Rekreasi</SelectItem><SelectItem value="Prestasi">Prestasi</SelectItem><SelectItem value="Profesional">Profesional</SelectItem></SelectContent>
                   </Select><FormMessage /></FormItem>
               )} />
-            </CardContent>
-          </Card>
-          
-          <Card className="rounded-3xl shadow-xl">
-            <CardHeader className="p-8 pb-4">
-              <CardTitle className="text-xl font-headline flex items-center gap-3">
-                 <Shirt className="w-5 h-5 text-primary"/> D. Ukuran Jersey
-              </CardTitle>
-              <CardDescription>Ukuran jersey direkomendasikan secara otomatis berdasarkan tinggi dan lebar dada. Toleransi 1-2cm.</CardDescription>
-            </CardHeader>
-            <CardContent className="p-8 pt-0 text-center">
-                <p className="text-sm text-muted-foreground font-bold uppercase">Rekomendasi Ukuran</p>
-                <div className="text-8xl font-black font-mono text-primary my-2 animate-in fade-in zoom-in duration-500">{recommendedSize}</div>
-                <p className="text-xs text-muted-foreground">Sistem akan membulatkan ke ukuran terdekat ke atas jika perlu.</p>
             </CardContent>
           </Card>
 
