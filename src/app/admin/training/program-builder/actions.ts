@@ -1,6 +1,7 @@
+
 'use server';
 
-import { addDocumentNonBlocking } from '@/firebase';
+import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { getFirestore, collection } from 'firebase/firestore';
 import { initializeFirebase } from '@/firebase';
 import { revalidatePath } from 'next/cache';
@@ -18,6 +19,11 @@ export async function saveTrainingProgram(prevState: any, formData: FormData) {
     weeklyPlan: formData.get('weeklyPlan'),
     createdAt: new Date().toISOString(),
   };
+
+  // Simple validation
+  if (!data.pbName || !data.ageGroup || !data.athleteLevel || !data.period || !data.phase || !data.coachName) {
+      return { success: false, message: "Mohon isi semua field identitas program." };
+  }
 
   try {
     const { firestore } = initializeFirebase();

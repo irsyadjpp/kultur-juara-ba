@@ -61,17 +61,17 @@
     "TrainingProgram": {
         "title": "Training Program",
         "type": "object",
-        "description": "Represents a structured training program created by a coach.",
+        "description": "Represents a structured training program created by a coach based on periodization principles.",
         "properties": {
-            "pbName": { "type": "string" },
-            "ageGroup": { "type": "string" },
-            "athleteLevel": { "type": "string" },
-            "period": { "type": "string" },
-            "phase": { "type": "string" },
-            "coachName": { "type": "string" },
-            "mainObjectives": { "type": "array", "items": { "type": "string" } },
-            "objectiveDetails": { "type": "string" },
-            "weeklyPlan": { "type": "string" }
+            "pbName": { "type": "string", "description": "Name of the Badminton Club/Academy." },
+            "ageGroup": { "type": "string", "description": "The target age group for the program (e.g., U13, U15)." },
+            "athleteLevel": { "type": "string", "description": "The skill level of the athletes (e.g., Pemula, Pratanding, Prestasi)." },
+            "period": { "type": "string", "description": "The time period of the program (e.g., YYYY-MM)." },
+            "phase": { "type": "string", "description": "The periodization phase (e.g., General Preparation, Competition)." },
+            "coachName": { "type": "string", "description": "Name of the head coach responsible." },
+            "mainObjectives": { "type": "array", "items": { "type": "string" }, "description": "Main goals like Teknik, Fisik, Taktik, Mental." },
+            "objectiveDetails": { "type": "string", "description": "Detailed breakdown of the main objectives." },
+            "weeklyPlan": { "type": "string", "description": "The detailed weekly training plan (microcycle)." }
         }
     },
     "Kegiatan": {
