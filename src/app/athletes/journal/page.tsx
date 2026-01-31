@@ -1,8 +1,9 @@
+
 'use client';
 
 import { useState } from "react";
 import { 
-  UserSquare, Save, Smile, Meh, Frown, BrainCircuit, Heart, AlertTriangle, BookHeart, Moon, Sun, Dumbbell
+  User, Save, Calendar, Utensils, Moon, Dumbbell, Zap, Brain, HeartPulse, Shield, AlertTriangle, BookHeart, Footprints, Clock, Check
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,129 +14,218 @@ import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 
-// Reusable Components
-const SectionCard = ({ icon: Icon, title, description, children }: { icon: React.ElementType, title: string, description?: string, children: React.ReactNode }) => (
-  <Card className="rounded-3xl shadow-xl">
-    <CardHeader className="p-8 pb-4">
-      <CardTitle className="text-xl font-headline flex items-center gap-3">
-        <Icon className="w-6 h-6 text-primary"/> {title}
-      </CardTitle>
-      {description && <CardDescription className="pt-1">{description}</CardDescription>}
+// --- Reusable Components ---
+const SectionCard = ({ icon: Icon, title, description, children, badge }: { icon: React.ElementType, title: string, description?: string, children: React.ReactNode, badge?:string }) => (
+  <Card className="rounded-3xl shadow-lg border">
+    <CardHeader className="p-6 md:p-8 pb-4">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <Icon className="w-6 h-6"/>
+          </div>
+          <div>
+            <CardTitle className="text-xl font-headline"> {title} </CardTitle>
+            {description && <CardDescription className="pt-1">{description}</CardDescription>}
+          </div>
+        </div>
+        {badge && <Badge variant="outline">{badge}</Badge>}
+      </div>
     </CardHeader>
-    <CardContent className="p-8 pt-0">
+    <CardContent className="p-6 md:p-8 pt-0">
       {children}
     </CardContent>
   </Card>
 );
 
-const EmojiSelector = ({ label, onValueChange }: { label: string, onValueChange: (value: string) => void }) => (
-    <div className="space-y-3">
-        <Label>{label}</Label>
-        <RadioGroup onValueChange={onValueChange} className="grid grid-cols-4 gap-2">
-            {[
-                { icon: Frown, label: 'Lelah/Sedih', color: 'text-red-500', value: 'sad' },
-                { icon: Meh, label: 'Biasa Saja', color: 'text-yellow-500', value: 'neutral' },
-                { icon: Smile, label: 'Bersemangat', color: 'text-green-500', value: 'happy' },
-                { icon: BrainCircuit, label: 'Sangat Fokus', color: 'text-blue-500', value: 'focused' },
-            ].map((emoji, index) => {
-                const Icon = emoji.icon;
-                return (
-                    <div key={index}>
-                        <RadioGroupItem value={emoji.value} id={`${label}-${index}`} className="sr-only" />
-                        <Label htmlFor={`${label}-${index}`} className={cn("flex flex-col items-center justify-center gap-2 p-4 rounded-2xl border-2 border-transparent bg-secondary hover:border-primary/50 cursor-pointer data-[state=checked]:border-primary data-[state=checked]:bg-primary/10", emoji.color)}>
-                           <Icon className="w-10 h-10" />
-                           <span className="text-xs font-bold text-muted-foreground">{emoji.label}</span>
-                        </Label>
-                    </div>
-                )
-            })}
-        </RadioGroup>
-    </div>
-)
-
-const RatingSlider = ({ label, value, onValueChange, max = 10, step = 1, icon: Icon }: { label: string, value: number, onValueChange: (value: number) => void, max?: number, step?: number, icon?: React.ElementType }) => (
+const RatingSlider = ({ label, value, onValueChange, min=1, max = 5, step = 1 }: { label: string, value: number, onValueChange: (value: number) => void, min?: number, max?: number, step?: number }) => (
   <div className="space-y-3">
     <div className="flex justify-between items-center">
-      <Label className="flex items-center gap-2 text-base">
-        {Icon && <Icon className="w-5 h-5 text-muted-foreground" />}
-        {label}
-      </Label>
-      <span className="font-mono font-bold text-lg text-primary w-8 text-center">{value}</span>
+      <Label>{label}</Label>
+      <span className="font-mono font-bold text-lg text-primary w-10 text-center bg-secondary rounded-lg px-2 py-1">{value}</span>
     </div>
-    <Slider
-      defaultValue={[value]}
-      max={max}
-      min={1}
-      step={step}
-      onValueChange={(v) => onValueChange(v[0])}
-      className="[&>span:first-child]:h-1.5"
-    />
+    <Slider defaultValue={[value]} min={min} max={max} step={step} onValueChange={(v) => onValueChange(v[0])} />
   </div>
 );
 
+const DomainSwitch = ({ label, icon: Icon }: { label: string, icon: React.ElementType }) => (
+    <div className="flex items-center justify-between p-4 rounded-xl bg-secondary/50 border">
+        <Label htmlFor={label} className="flex items-center gap-3 cursor-pointer">
+            <Icon className="w-5 h-5 text-muted-foreground" />
+            <span className="font-semibold text-foreground">{label}</span>
+        </Label>
+        <Switch id={label} />
+    </div>
+)
 
-export default function AthleteJournalPage() {
-  const [mentalEnergy, setMentalEnergy] = useState(7);
-  const [sleepQuality, setSleepQuality] = useState(7);
-  const [physicalReady, setPhysicalReady] = useState(7);
-  const [safetyFlag, setSafetyFlag] = useState(false);
 
+export default function AthleteSelfMonitoringPage() {
+  const [scores, setScores] = useState({
+    sleepQuality: 3,
+    morningFatigue: 3,
+    trainingIntensity: 3,
+    trainingFocus: 3,
+    trainingAttitude: 3,
+    obeyedInstructions: 3,
+    mood: 3,
+    motivation: 3,
+    confidence: 3,
+    painLevel: 0,
+  });
+
+  const handleScoreChange = (skill: keyof typeof scores, value: number) => {
+    setScores(prev => ({ ...prev, [skill]: value }));
+  };
+
+  const selfTrainingTypes = ["stretching", "footwork", "core", "skipping", "shadow"];
+  
   return (
-    <div className="space-y-8">
-      <div className="space-y-2">
+    <div className="space-y-8 max-w-4xl mx-auto">
+      <div className="space-y-2 text-center pt-8">
         <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5">SELF-MONITORING</Badge>
         <h1 className="text-3xl md:text-4xl font-black font-headline uppercase tracking-tighter text-foreground">
-            My Daily Journal (AMEL)
+            Daily Athlete Log
         </h1>
-        <p className="text-muted-foreground max-w-xl text-lg">
-            Ruang aman untuk mencatat kondisi fisik dan mentalmu setiap hari. Isilah dengan jujur.
+        <p className="text-muted-foreground max-w-xl text-lg mx-auto">
+            Isi setiap hari untuk memantau progres dan kondisimu. Kejujuranmu adalah kunci prestasimu.
         </p>
       </div>
 
       <form className="space-y-8">
         
-        <SectionCard title="1. Quick Check-in" icon={Heart} description="Bagaimana kondisimu hari ini? (Skala 1-10)">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <EmojiSelector label="Mood Hari Ini" onValueChange={() => {}} />
-                <div className="space-y-8">
-                    <RatingSlider label="Kualitas Tidur" value={sleepQuality} onValueChange={setSleepQuality} icon={Moon} />
-                    <RatingSlider label="Kesiapan Fisik" value={physicalReady} onValueChange={setPhysicalReady} icon={Dumbbell} />
-                    <RatingSlider label="Energi Mental" value={mentalEnergy} onValueChange={setMentalEnergy} icon={BrainCircuit} />
+        <SectionCard icon={Calendar} title="Metadata Log" description="Informasi dasar untuk pencatatan harian.">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                    <Label>Tanggal</Label>
+                    <Input type="date" defaultValue={new Date().toISOString().split('T')[0]} className="h-12 rounded-xl" />
                 </div>
-            </div>
-        </SectionCard>
-
-        <SectionCard title="2. Guided Journal" icon={BookHeart} description="Ceritakan lebih dalam. Jawabanmu bersifat rahasia dan hanya dapat dilihat oleh psikolog.">
-            <div className="space-y-6">
-                <div>
-                    <Label className="font-bold text-base block mb-2">Apa yang kamu syukuri hari ini?</Label>
-                    <Textarea placeholder="Contoh: Bersyukur bisa latihan tanpa cedera, atau senang bisa belajar pukulan baru..." className="rounded-xl h-24 bg-secondary" />
-                </div>
-                 <div>
-                    <Label className="font-bold text-base block mb-2">Adakah tantangan atau kesulitan yang kamu hadapi hari ini (di dalam atau luar lapangan)?</Label>
-                    <Textarea placeholder="Contoh: Merasa kurang fokus karena tugas sekolah, atau ada teknik yang sulit dikuasai." className="rounded-xl h-24 bg-secondary" />
+                <div className="space-y-2">
+                    <Label>Jenis Hari</Label>
+                    <Select>
+                        <SelectTrigger className="h-12 rounded-xl"><SelectValue placeholder="Pilih Jenis Hari..." /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="latihan_PB">Latihan di PB</SelectItem>
+                            <SelectItem value="latihan_rumah">Latihan di Rumah</SelectItem>
+                            <SelectItem value="libur">Libur / Istirahat</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
             </div>
         </SectionCard>
         
-        <SectionCard title="3. Safety Check" icon={AlertTriangle} description="Centang jika kamu merasakan salah satu dari hal ini. Psikolog kami akan segera menghubungimu.">
-            <div className="space-y-3">
-                {['Sulit tidur atau mimpi buruk', 'Kehilangan nafsu makan', 'Merasa sangat cemas atau tertekan', 'Kehilangan minat untuk latihan', 'Ingin menyakiti diri sendiri'].map(item => (
-                     <div key={item} className="flex items-center space-x-3 p-4 rounded-xl border bg-secondary/50">
-                        <Checkbox id={item} onCheckedChange={(checked) => checked && setSafetyFlag(true)} />
-                        <label htmlFor={item} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            {item}
-                        </label>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <SectionCard icon={Utensils} title="Domain Nutrisi">
+                <div className="space-y-3">
+                    <DomainSwitch label="Makan Pagi" icon={Check} />
+                    <DomainSwitch label="Makan Siang" icon={Check} />
+                    <DomainSwitch label="Makan Malam" icon={Check} />
+                    <DomainSwitch label="Minum Air Cukup (≥6 Gelas)" icon={Check} />
+                    <DomainSwitch label="Makan Buah" icon={Check} />
+                    <DomainSwitch label="Snack Sehat" icon={Check} />
+                </div>
+            </SectionCard>
+            
+            <SectionCard icon={Moon} title="Domain Tidur & Recovery">
+                 <div className="space-y-6">
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2"><Label>Jam Tidur</Label><Input type="time" className="h-12 rounded-xl"/></div>
+                        <div className="space-y-2"><Label>Jam Bangun</Label><Input type="time" className="h-12 rounded-xl"/></div>
                     </div>
-                ))}
-                {safetyFlag && <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl text-sm font-bold">Terima kasih telah jujur. Psikolog kami akan segera menghubungimu secara personal. Kamu tidak sendirian.</div>}
+                    <DomainSwitch label="Tidur Sebelum Pukul 22:00" icon={Clock} />
+                    <RatingSlider label="Kualitas Tidur" value={scores.sleepQuality} onValueChange={v => handleScoreChange('sleepQuality', v)} />
+                    <RatingSlider label="Rasa Lelah di Pagi Hari" value={scores.morningFatigue} onValueChange={v => handleScoreChange('morningFatigue', v)} />
+                 </div>
+            </SectionCard>
+        </div>
+
+        <SectionCard icon={Dumbbell} title="Domain Latihan Utama (di PB)">
+            <div className="space-y-6">
+                <DomainSwitch label="Hadir Latihan" icon={Check} />
+                <div className="space-y-2">
+                    <Label>Durasi Latihan (menit)</Label>
+                    <Input type="number" placeholder="cth: 120" className="h-12 rounded-xl" />
+                </div>
+                <RatingSlider label="Intensitas Latihan" value={scores.trainingIntensity} onValueChange={v => handleScoreChange('trainingIntensity', v)} />
+                <RatingSlider label="Fokus Saat Latihan" value={scores.trainingFocus} onValueChange={v => handleScoreChange('trainingFocus', v)} />
+                <DomainSwitch label="Mengikuti Program Pelatih" icon={Check} />
             </div>
         </SectionCard>
 
-        <div className="flex justify-end pt-6 border-t border-border">
-            <Button size="lg" className="h-16 rounded-full font-bold text-lg px-10 shadow-lg shadow-primary/20">
-                <Save className="w-6 h-6 mr-3"/> Simpan Jurnal Hari Ini
+        <SectionCard icon={Footprints} title="Domain Latihan Mandiri (di Rumah)">
+            <div className="space-y-6">
+                <DomainSwitch label="Melakukan Latihan Mandiri" icon={Check} />
+                 <div>
+                    <Label className="mb-3 block">Jenis Latihan Mandiri</Label>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {selfTrainingTypes.map(item => (
+                        <div key={item} className="flex items-center space-x-2 p-3 rounded-lg border bg-secondary/50">
+                            <Checkbox id={`self-${item}`} value={item} />
+                            <Label htmlFor={`self-${item}`} className="text-sm font-medium capitalize">{item}</Label>
+                        </div>
+                    ))}
+                    </div>
+                </div>
+                <div className="space-y-2">
+                    <Label>Durasi Latihan Mandiri (menit)</Label>
+                    <Input type="number" placeholder="cth: 30" className="h-12 rounded-xl" />
+                </div>
+            </div>
+        </SectionCard>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <SectionCard icon={Shield} title="Domain Kedisiplinan">
+                <div className="space-y-3">
+                    <DomainSwitch label="Datang Tepat Waktu" icon={Clock} />
+                    <DomainSwitch label="Atribut Latihan Lengkap" icon={Check} />
+                    <DomainSwitch label="Bebas Rokok" icon={Check} />
+                    <RatingSlider label="Sikap Saat Latihan" value={scores.trainingAttitude} onValueChange={v => handleScoreChange('trainingAttitude', v)} />
+                    <RatingSlider label="Patuh Instruksi Pelatih" value={scores.obeyedInstructions} onValueChange={v => handleScoreChange('obeyedInstructions', v)} />
+                </div>
+            </SectionCard>
+            <SectionCard icon={Brain} title="Domain Mental Positif">
+                 <div className="space-y-6">
+                    <RatingSlider label="Mood Hari Ini" value={scores.mood} onValueChange={v => handleScoreChange('mood', v)} />
+                    <RatingSlider label="Motivasi Latihan" value={scores.motivation} onValueChange={v => handleScoreChange('motivation', v)} />
+                    <RatingSlider label="Kepercayaan Diri" value={scores.confidence} onValueChange={v => handleScoreChange('confidence', v)} />
+                    <div className="space-y-2">
+                        <Label>Hal positif yang terjadi hari ini?</Label>
+                        <Textarea placeholder="Contoh: berhasil melakukan smash silang, dipuji pelatih, dll." className="rounded-xl" />
+                    </div>
+                 </div>
+            </SectionCard>
+        </div>
+
+        <SectionCard icon={HeartPulse} title="Domain Keluhan Fisik">
+            <div className="space-y-6">
+                <DomainSwitch label="Ada Keluhan Fisik?" icon={AlertTriangle} />
+                <div className="space-y-2">
+                    <Label>Lokasi Keluhan</Label>
+                    <Select>
+                        <SelectTrigger className="h-12 rounded-xl"><SelectValue placeholder="Pilih Lokasi..." /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="tidak_ada">Tidak Ada</SelectItem>
+                            <SelectItem value="kaki">Kaki (Engkel/Telapak)</SelectItem>
+                            <SelectItem value="lutut">Lutut</SelectItem>
+                            <SelectItem value="bahu">Bahu</SelectItem>
+                            <SelectItem value="punggung">Punggung / Pinggang</SelectItem>
+                            <SelectItem value="lain">Lainnya</s-select-item>
+                        </SelectContent>
+                    </Select>
+                </div>
+                 <RatingSlider label="Tingkat Nyeri (0 jika tidak ada)" value={scores.painLevel} onValueChange={v => handleScoreChange('painLevel', v)} min={0} max={10} />
+                <div className="space-y-2">
+                    <Label>Catatan Tambahan (Opsional)</Label>
+                    <Textarea placeholder="Jelaskan lebih detail keluhanmu atau catatan lain untuk pelatih/psikolog." className="rounded-xl" />
+                </div>
+            </div>
+        </SectionCard>
+
+        <div className="flex justify-center pt-6 border-t border-border">
+            <Button size="lg" className="h-16 rounded-full font-bold text-lg px-12 shadow-lg shadow-primary/20 w-full max-w-md">
+                <Save className="w-6 h-6 mr-3"/> Simpan Laporan Hari Ini
             </Button>
         </div>
       </form>

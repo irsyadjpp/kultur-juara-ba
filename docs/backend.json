@@ -32,6 +32,51 @@
       },
       "required": ["nama", "tanggal_lahir", "jenis_kelamin", "kategori_usia", "status_aktif", "tanggal_masuk"]
     },
+    "DailyLog": {
+      "title": "Daily Athlete Log",
+      "description": "A comprehensive daily self-monitoring log for athletes.",
+      "type": "object",
+      "properties": {
+          "athlete_id": { "type": "string", "description": "Reference to the athlete's user ID." },
+          "log_date": { "type": "string", "format": "date", "description": "The date the log is for." },
+          "day_type": { "type": "string", "enum": ["latihan_PB", "latihan_rumah", "libur"], "description": "Type of day based on activity." },
+          "ate_breakfast": { "type": "boolean" },
+          "ate_lunch": { "type": "boolean" },
+          "ate_dinner": { "type": "boolean" },
+          "had_healthy_snack": { "type": "boolean" },
+          "ate_fruit": { "type": "boolean" },
+          "drank_enough_water": { "type": "boolean" },
+          "eating_quality": { "type": "string", "enum": ["buruk", "cukup", "baik"], "description": "Optional self-assessed eating quality." },
+          "sleep_time": { "type": "string", "format": "time" },
+          "wakeup_time": { "type": "string", "format": "time" },
+          "sleep_duration_hours": { "type": "number", "description": "Auto-calculated sleep duration." },
+          "slept_before_22": { "type": "boolean" },
+          "sleep_quality": { "type": "number", "description": "Scale 1-5" },
+          "morning_fatigue": { "type": "number", "description": "Scale 1-5" },
+          "attended_training": { "type": "boolean", "description": "If the day type is 'latihan_PB'." },
+          "training_duration_minutes": { "type": "number" },
+          "training_intensity": { "type": "number", "description": "Scale 1-5" },
+          "training_focus": { "type": "number", "description": "Scale 1-5" },
+          "followed_coach_program": { "type": "boolean" },
+          "did_self_training": { "type": "boolean" },
+          "self_training_types": { "type": "array", "items": { "type": "string", "enum": ["stretching", "footwork", "core", "skipping", "shadow"] } },
+          "self_training_duration_minutes": { "type": "number" },
+          "arrived_on_time": { "type": "boolean" },
+          "had_full_attributes": { "type": "boolean" },
+          "training_attitude": { "type": "number", "description": "Scale 1-5" },
+          "obeyed_coach_instructions": { "type": "number", "description": "Scale 1-5" },
+          "is_smoke_free": { "type": "boolean" },
+          "mood_today": { "type": "number", "description": "Scale 1-5" },
+          "training_motivation": { "type": "number", "description": "Scale 1-5" },
+          "self_confidence": { "type": "number", "description": "Scale 1-5" },
+          "positive_thing_today": { "type": "string", "description": "Max 255 chars." },
+          "has_physical_complaint": { "type": "boolean" },
+          "complaint_location": { "type": "string", "enum": ["tidak_ada", "kaki", "lutut", "bahu", "punggung", "lain"] },
+          "pain_level": { "type": "number", "description": "Scale 0-10" },
+          "athlete_notes": { "type": "string" },
+          "daily_score": { "type": "number", "description": "Auto-calculated score 0-100" }
+      }
+    },
     "OrangTua": {
         "title": "Orang Tua",
         "type": "object",
@@ -173,6 +218,10 @@
     "/athletes/{athleteId}": {
       "schema": { "$ref": "#/entities/Athlete" },
       "description": "Stores individual athlete profiles."
+    },
+    "/athletes/{athleteId}/daily-logs/{logId}": {
+        "schema": { "$ref": "#/entities/DailyLog" },
+        "description": "Stores daily self-monitoring logs for an athlete."
     },
     "/parents/{parentId}": {
       "schema": { "$ref": "#/entities/OrangTua" },
