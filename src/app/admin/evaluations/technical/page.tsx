@@ -51,7 +51,7 @@ const StatInput = ({ label, unit }: { label: string, unit: string }) => (
   <div className="space-y-2">
     <Label>{label}</Label>
     <div className="flex items-center gap-2">
-      <Input type="number" className="h-12 rounded-xl font-mono" />
+      <Input type="number" className="h-12 rounded-xl font-mono bg-secondary border" />
       <span className="text-sm font-mono text-muted-foreground">{unit}</span>
     </div>
   </div>
@@ -96,15 +96,15 @@ export default function TechnicalEvaluationPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2 md:col-span-2">
                     <Label>Nama Atlet</Label>
-                    <Select><SelectTrigger className="h-14 rounded-xl text-base"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP</SelectItem></SelectContent></Select>
+                    <Select><SelectTrigger className="h-14 rounded-xl text-base bg-secondary border"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP</SelectItem></SelectContent></Select>
                 </div>
                  <div className="space-y-2">
                     <Label>Tanggal Evaluasi</Label>
-                    <Input type="date" placeholder="Tanggal" className="h-14 rounded-xl"/>
+                    <Input type="date" placeholder="Tanggal" className="h-14 rounded-xl bg-secondary border"/>
                 </div>
                 <div className="space-y-2">
                     <Label>Pelatih Penilai</Label>
-                    <Input placeholder="Nama Pelatih" className="h-14 rounded-xl"/>
+                    <Input placeholder="Nama Pelatih" className="h-14 rounded-xl bg-secondary border"/>
                 </div>
             </div>
         </SectionCard>
@@ -142,7 +142,7 @@ export default function TechnicalEvaluationPage() {
 
         {/* REKOMENDASI PELATIH */}
         <SectionCard title="Kesimpulan & Analisis" icon={Target}>
-            <Textarea placeholder="Analisa kekuatan dan kelemahan utama. Tentukan fokus latihan teknis untuk siklus berikutnya..." className="rounded-xl h-32"/>
+            <Textarea placeholder="Analisa kekuatan dan kelemahan utama. Tentukan fokus latihan teknis untuk siklus berikutnya..." className="rounded-xl h-32 bg-secondary border"/>
         </SectionCard>
         
         {/* SUBMIT */}

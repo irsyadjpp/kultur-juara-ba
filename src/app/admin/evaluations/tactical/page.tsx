@@ -80,15 +80,15 @@ export default function TacticalEvaluationPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2 md:col-span-2">
                     <Label>Nama Atlet</Label>
-                    <Select><SelectTrigger className="h-14 rounded-xl text-base"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP</SelectItem></SelectContent></Select>
+                    <Select><SelectTrigger className="h-14 rounded-xl text-base bg-secondary border"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP</SelectItem></SelectContent></Select>
                 </div>
                  <div className="space-y-2">
                     <Label>Tanggal Evaluasi</Label>
-                    <Input type="date" placeholder="Tanggal" className="h-14 rounded-xl"/>
+                    <Input type="date" placeholder="Tanggal" className="h-14 rounded-xl bg-secondary border"/>
                 </div>
                 <div className="space-y-2">
                     <Label>Pelatih Penilai</Label>
-                    <Input placeholder="Nama Pelatih" className="h-14 rounded-xl"/>
+                    <Input placeholder="Nama Pelatih" className="h-14 rounded-xl bg-secondary border"/>
                 </div>
             </div>
         </SectionCard>
@@ -100,7 +100,7 @@ export default function TacticalEvaluationPage() {
                 <Label>Pola Bermain Dominan</Label>
                 <Select>
                     <FormControl>
-                      <SelectTrigger className="h-12 rounded-xl">
+                      <SelectTrigger className="h-12 rounded-xl bg-secondary border">
                         <SelectValue placeholder="Pilih pola bermain..." />
                       </SelectTrigger>
                     </FormControl>
@@ -120,7 +120,7 @@ export default function TacticalEvaluationPage() {
 
         {/* REKOMENDASI PELATIH */}
         <SectionCard title="Analisis & Rencana Pengembangan" icon={Target}>
-            <Textarea placeholder="Analisa pola permainan dan tentukan area fokus untuk pengembangan taktik selanjutnya..." className="rounded-xl h-32"/>
+            <Textarea placeholder="Analisa pola permainan dan tentukan area fokus untuk pengembangan taktik selanjutnya..." className="rounded-xl h-32 bg-secondary border"/>
         </SectionCard>
         
         {/* SUBMIT */}

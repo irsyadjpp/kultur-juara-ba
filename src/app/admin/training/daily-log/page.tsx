@@ -33,7 +33,7 @@ const MetricInput = ({ label, unit, ...props }: { label: string, unit: string } 
   <div className="space-y-2">
     <Label>{label}</Label>
     <div className="flex items-center gap-2">
-      <Input type="number" step="0.1" className="h-12 rounded-xl font-mono" {...props} />
+      <Input type="number" step="0.1" className="h-12 rounded-xl font-mono bg-secondary border" {...props} />
       <span className="text-sm font-mono text-muted-foreground">{unit}</span>
     </div>
   </div>
@@ -81,15 +81,15 @@ export default function TrainingLogPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2 md:col-span-2">
                     <Label>Nama Atlet</Label>
-                    <Select><SelectTrigger className="h-14 rounded-xl text-base"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP</SelectItem></SelectContent></Select>
+                    <Select><SelectTrigger className="h-14 rounded-xl text-base bg-secondary border"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP</SelectItem></SelectContent></Select>
                 </div>
                  <div className="space-y-2">
                     <Label>Tanggal Latihan</Label>
-                    <Input type="date" placeholder="Tanggal" className="h-14 rounded-xl"/>
+                    <Input type="date" placeholder="Tanggal" className="h-14 rounded-xl bg-secondary border"/>
                 </div>
                 <div className="space-y-2">
                     <Label>Pelatih Penilai</Label>
-                    <Input placeholder="Nama Pelatih" className="h-14 rounded-xl"/>
+                    <Input placeholder="Nama Pelatih" className="h-14 rounded-xl bg-secondary border"/>
                 </div>
             </div>
         </SectionCard>
@@ -101,7 +101,7 @@ export default function TrainingLogPage() {
                 <div className="space-y-2">
                     <Label>Jenis Latihan</Label>
                     <Select>
-                        <SelectTrigger className="h-12 rounded-xl">
+                        <SelectTrigger className="h-12 rounded-xl bg-secondary border">
                           <SelectValue placeholder="Pilih jenis..." />
                         </SelectTrigger>
                         <SelectContent>
@@ -131,10 +131,10 @@ export default function TrainingLogPage() {
         {/* CATATAN */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <SectionCard title="Catatan Pelatih" icon={StickyNote}>
-                <Textarea placeholder="Observasi, feedback, atau rencana untuk sesi berikutnya..." className="rounded-xl h-32"/>
+                <Textarea placeholder="Observasi, feedback, atau rencana untuk sesi berikutnya..." className="rounded-xl h-32 bg-secondary border"/>
             </SectionCard>
             <SectionCard title="Catatan Atlet" icon={UserSquare}>
-                <Textarea placeholder="Bagaimana perasaan Anda hari ini? Apa yang dirasakan selama latihan? (Self-report)" className="rounded-xl h-32"/>
+                <Textarea placeholder="Bagaimana perasaan Anda hari ini? Apa yang dirasakan selama latihan? (Self-report)" className="rounded-xl h-32 bg-secondary border"/>
             </SectionCard>
         </div>
         

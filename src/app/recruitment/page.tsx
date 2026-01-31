@@ -1,6 +1,6 @@
 
 
-"use client";
+'use client';
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -203,15 +203,15 @@ export default function VolunteerPage() {
                 <CardContent className="p-8 space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <FormField control={form.control} name="fullName" render={({ field }) => (
-                            <FormItem><FormLabel>Nama Lengkap (Sesuai KTP)</FormLabel><FormControl><Input placeholder="Isi nama lengkap..." className="h-12 rounded-xl" {...field} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel>Nama Lengkap (Sesuai KTP)</FormLabel><FormControl><Input placeholder="Isi nama lengkap..." className="h-12 rounded-xl bg-secondary border" {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
                         <FormField control={form.control} name="nickname" render={({ field }) => (
-                            <FormItem><FormLabel>Nama Panggilan</FormLabel><FormControl><Input placeholder="Nama sapaan..." className="h-12 rounded-xl" {...field} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel>Nama Panggilan</FormLabel><FormControl><Input placeholder="Nama sapaan..." className="h-12 rounded-xl bg-secondary border" {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <FormField control={form.control} name="dob" render={({ field }) => (
-                            <FormItem><FormLabel>Tanggal Lahir</FormLabel><FormControl><Input type="date" className="h-12 rounded-xl" {...field} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel>Tanggal Lahir</FormLabel><FormControl><Input type="date" className="h-12 rounded-xl bg-secondary border" {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
                         <FormField control={form.control} name="gender" render={({ field }) => (
                             <FormItem className="space-y-3">
@@ -219,7 +219,7 @@ export default function VolunteerPage() {
                                 <FormControl>
                                     <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4">
                                         {['Laki-laki', 'Perempuan'].map((g) => (
-                                             <FormItem key={g} className="flex items-center space-x-2 border rounded-xl p-3 px-4 hover:bg-secondary cursor-pointer transition-colors">
+                                             <FormItem key={g} className="flex items-center space-x-2 border rounded-xl p-3 px-4 hover:bg-secondary cursor-pointer transition-colors bg-secondary">
                                                 <FormControl><RadioGroupItem value={g} /></FormControl>
                                                 <FormLabel className="font-normal cursor-pointer">{g}</FormLabel>
                                             </FormItem>
@@ -238,7 +238,7 @@ export default function VolunteerPage() {
                                 {["S", "M", "L", "XL", "XXL", "XXXL"].map((size) => (
                                     <div key={size} onClick={() => field.onChange(size)} 
                                         className={`cursor-pointer px-4 py-2 rounded-lg border-2 font-bold transition-all 
-                                        ${field.value === size ? "bg-primary text-white border-primary shadow-lg scale-105" : "bg-transparent border-input hover:border-primary/50"}`}>
+                                        ${field.value === size ? "bg-primary text-white border-primary shadow-lg scale-105" : "bg-secondary border hover:border-primary/50"}`}>
                                         {size}
                                     </div>
                                 ))}
@@ -249,17 +249,17 @@ export default function VolunteerPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                        <FormField control={form.control} name="whatsapp" render={({ field }) => (
-                            <FormItem><FormLabel>Nomor WhatsApp Aktif</FormLabel><FormControl><Input type="tel" className="h-12 rounded-xl" {...field} /></FormControl><FormDescription>Pastikan nomor ini terhubung dengan WA.</FormDescription><FormMessage /></FormItem>
+                            <FormItem><FormLabel>Nomor WhatsApp Aktif</FormLabel><FormControl><Input type="tel" className="h-12 rounded-xl bg-secondary border" {...field} /></FormControl><FormDescription>Pastikan nomor ini terhubung dengan WA.</FormDescription><FormMessage /></FormItem>
                         )} />
                         <FormField control={form.control} name="email" render={({ field }) => (
-                            <FormItem><FormLabel>Alamat Email</FormLabel><FormControl><Input type="email" className="h-12 rounded-xl" {...field} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel>Alamat Email</FormLabel><FormControl><Input type="email" className="h-12 rounded-xl bg-secondary border" {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
                     </div>
                     <FormField control={form.control} name="address" render={({ field }) => (
-                        <FormItem><FormLabel>Alamat Domisili di Bandung</FormLabel><FormControl><Textarea placeholder="Sebutkan Kecamatan & Kelurahan." className="rounded-xl resize-none" rows={3} {...field} /></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel>Alamat Domisili di Bandung</FormLabel><FormControl><Textarea placeholder="Sebutkan Kecamatan & Kelurahan." className="rounded-xl resize-none bg-secondary border" rows={3} {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                     <FormField control={form.control} name="instagram" render={({ field }) => (
-                        <FormItem><FormLabel>Username Instagram</FormLabel><FormControl><Input placeholder="@username (Jangan diprivate)" className="h-12 rounded-xl" {...field} /></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel>Username Instagram</FormLabel><FormControl><Input placeholder="@username (Jangan diprivate)" className="h-12 rounded-xl bg-secondary border" {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                 </CardContent>
               </Card>
@@ -278,7 +278,7 @@ export default function VolunteerPage() {
                             <FormItem>
                                 <FormLabel>Pendidikan Terakhir</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl><SelectTrigger className="h-12 rounded-xl"><SelectValue placeholder="Pilih Jenjang" /></SelectTrigger></FormControl>
+                                    <FormControl><SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Jenjang" /></SelectTrigger></FormControl>
                                     <SelectContent>
                                         <SelectItem value="SMA/SMK">SMA / SMK / Sederajat</SelectItem>
                                         <SelectItem value="Diploma">Diploma (D3 / D4)</SelectItem>
@@ -290,11 +290,11 @@ export default function VolunteerPage() {
                             </FormItem>
                         )} />
                          <FormField control={form.control} name="institution" render={({ field }) => (
-                            <FormItem><FormLabel>Nama Institusi / Sekolah</FormLabel><FormControl><Input placeholder="Contoh: ITB, UNPAD, SMAN 3..." className="h-12 rounded-xl" {...field} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel>Nama Institusi / Sekolah</FormLabel><FormControl><Input placeholder="Contoh: ITB, UNPAD, SMAN 3..." className="h-12 rounded-xl bg-secondary border" {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
                      </div>
                      <FormField control={form.control} name="major" render={({ field }) => (
-                        <FormItem><FormLabel>Jurusan / Prodi</FormLabel><FormControl><Input placeholder="Contoh: Manajemen, DKV..." className="h-12 rounded-xl" {...field} /></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel>Jurusan / Prodi</FormLabel><FormControl><Input placeholder="Contoh: Manajemen, DKV..." className="h-12 rounded-xl bg-secondary border" {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                     
                     <FormField control={form.control} name="status" render={({ field }) => (
@@ -303,7 +303,7 @@ export default function VolunteerPage() {
                             <FormControl>
                                 <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     {["Mahasiswa / Pelajar", "Belum Bekerja / Fresh Graduate", "Karyawan / Profesional", "Freelancer"].map((item) => (
-                                        <FormItem key={item} className="flex items-center space-x-3 space-y-0 border-2 border-transparent bg-secondary/30 p-4 rounded-xl hover:bg-secondary hover:border-primary/20 transition-all [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5">
+                                        <FormItem key={item} className="flex items-center space-x-3 space-y-0 border-2 border-transparent bg-secondary p-4 rounded-xl hover:border-primary/20 transition-all [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5">
                                             <FormControl><RadioGroupItem value={item} /></FormControl>
                                             <FormLabel className="font-semibold cursor-pointer w-full text-foreground">{item}</FormLabel>
                                         </FormItem>
@@ -314,7 +314,7 @@ export default function VolunteerPage() {
                         </FormItem>
                     )} />
                      <FormField control={form.control} name="expertise" render={({ field }) => (
-                        <FormItem><FormLabel>Bidang Keahlian Utama</FormLabel><FormControl><Input placeholder="Contoh: Desain Grafis, Medis, Networking..." className="h-12 rounded-xl" {...field} /></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel>Bidang Keahlian Utama</FormLabel><FormControl><Input placeholder="Contoh: Desain Grafis, Medis, Networking..." className="h-12 rounded-xl bg-secondary border" {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                 </CardContent>
               </Card>
@@ -334,7 +334,7 @@ export default function VolunteerPage() {
                             <FormItem>
                                 <FormLabel className="text-primary font-bold">Pilihan 1 (Prioritas)</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl><SelectTrigger className="h-14 rounded-xl font-bold bg-primary/5 border-primary/20"><SelectValue placeholder="Pilih Divisi Utama" /></SelectTrigger></FormControl>
+                                    <FormControl><SelectTrigger className="h-14 rounded-xl font-bold bg-primary/5 border-primary/20 border"><SelectValue placeholder="Pilih Divisi Utama" /></SelectTrigger></FormControl>
                                     <SelectContent>{VOLUNTEER_DIVISIONS.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -344,7 +344,7 @@ export default function VolunteerPage() {
                             <FormItem>
                                 <FormLabel>Pilihan 2 (Cadangan)</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl><SelectTrigger className="h-14 rounded-xl"><SelectValue placeholder="Pilih Divisi Cadangan" /></SelectTrigger></FormControl>
+                                    <FormControl><SelectTrigger className="h-14 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Divisi Cadangan" /></SelectTrigger></FormControl>
                                     <SelectContent>{VOLUNTEER_DIVISIONS.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -366,7 +366,7 @@ export default function VolunteerPage() {
                     <FormField control={form.control} name="experience" render={({ field }) => (
                         <FormItem>
                             <FormLabel>Pengalaman Organisasi / Event (Khususnya Olahraga)</FormLabel>
-                            <FormControl><Textarea {...field} rows={5} className="rounded-xl leading-relaxed" placeholder="Ceritakan dengan detail: Nama Event, Tahun, Posisi, dan Jobdesc singkat..." /></FormControl>
+                            <FormControl><Textarea {...field} rows={5} className="rounded-xl leading-relaxed bg-secondary border" placeholder="Ceritakan dengan detail: Nama Event, Tahun, Posisi, dan Jobdesc singkat..." /></FormControl>
                             <FormMessage />
                         </FormItem>
                     )} />
@@ -377,7 +377,7 @@ export default function VolunteerPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {["Fotografi/Videografi (Punya Kamera)", "Desain Grafis (Canva/Adobe)", "Public Speaking/MC", "Microsoft Office/Excel (Advanced)", "P3K/Fisioterapi Dasar", "Instalasi Jaringan/IT", "Setir Mobil (SIM A)"].map((item) => (
                                     <FormField key={item} control={form.control} name="skills" render={({ field }) => (
-                                        <FormItem className="flex flex-row items-center space-x-3 space-y-0 border p-3 rounded-lg hover:bg-secondary transition-colors">
+                                        <FormItem className="flex flex-row items-center space-x-3 space-y-0 border p-3 rounded-lg hover:bg-secondary transition-colors bg-secondary">
                                             <FormControl>
                                                 <Checkbox checked={field.value?.includes(item)} onCheckedChange={(checked) => checked ? field.onChange([...(field.value || []), item]) : field.onChange((field.value || []).filter((v) => v !== item))} />
                                             </FormControl>
@@ -394,7 +394,7 @@ export default function VolunteerPage() {
                             <FormItem>
                                 <FormLabel>Punya Motor?</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl><SelectTrigger className="h-12 rounded-xl"><SelectValue placeholder="Pilih" /></SelectTrigger></FormControl>
+                                    <FormControl><SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih" /></SelectTrigger></FormControl>
                                     <SelectContent><SelectItem value="Ya">Ya</SelectItem><SelectItem value="Tidak">Tidak</SelectItem></SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -404,7 +404,7 @@ export default function VolunteerPage() {
                             <FormItem>
                                 <FormLabel>Punya Laptop?</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl><SelectTrigger className="h-12 rounded-xl"><SelectValue placeholder="Pilih" /></SelectTrigger></FormControl>
+                                    <FormControl><SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih" /></SelectTrigger></FormControl>
                                     <SelectContent><SelectItem value="Ya">Ya</SelectItem><SelectItem value="Tidak">Tidak</SelectItem></SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -455,14 +455,14 @@ export default function VolunteerPage() {
                         <FormField control={form.control} name="caseStudy1" render={({ field }) => (
                             <FormItem>
                                 <FormLabel className="font-bold text-lg leading-snug block mb-2">Kasus 1: <span className="font-normal text-base">Teman sesama panitia terlihat duduk santai & main HP padahal antrian peserta di meja registrasi sedang membludak. Apa yang kamu lakukan?</span></FormLabel>
-                                <FormControl><Textarea {...field} className="rounded-xl bg-secondary/20 border-2 focus:border-primary" placeholder="Tindakan saya..." rows={3} /></FormControl>
+                                <FormControl><Textarea {...field} className="rounded-xl bg-secondary border-2 focus:border-primary" placeholder="Tindakan saya..." rows={3} /></FormControl>
                                 <FormMessage />
                             </FormItem>
                         )} />
                         <FormField control={form.control} name="caseStudy2" render={({ field }) => (
                             <FormItem>
                                 <FormLabel className="font-bold text-lg leading-snug block mb-2">Kasus 2: <span className="font-normal text-base">Ada peserta VIP marah-marah karena dilarang masuk ke area lapangan (steril) karena tidak memakai ID Card. Bagaimana cara kamu menanganinya?</span></FormLabel>
-                                <FormControl><Textarea {...field} className="rounded-xl bg-secondary/20 border-2 focus:border-primary" placeholder="Solusi konkret Anda..." rows={3} /></FormControl>
+                                <FormControl><Textarea {...field} className="rounded-xl bg-secondary border-2 focus:border-primary" placeholder="Solusi konkret Anda..." rows={3} /></FormControl>
                                 <FormMessage />
                             </FormItem>
                         )} />

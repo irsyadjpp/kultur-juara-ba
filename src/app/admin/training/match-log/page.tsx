@@ -35,7 +35,7 @@ const MetricInput = ({ label, unit, ...props }: { label: string, unit: string } 
   <div className="space-y-2">
     <Label>{label}</Label>
     <div className="flex items-center gap-2">
-      <Input type="number" step="0.1" className="h-12 rounded-xl font-mono" {...props} />
+      <Input type="number" step="0.1" className="h-12 rounded-xl font-mono bg-secondary border" {...props} />
       <span className="text-sm font-mono text-muted-foreground">{unit}</span>
     </div>
   </div>
@@ -84,16 +84,16 @@ export default function MatchLogPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2 md:col-span-2">
                     <Label>Nama Atlet</Label>
-                    <Select><SelectTrigger className="h-14 rounded-xl text-base"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP</SelectItem></SelectContent></Select>
+                    <Select><SelectTrigger className="h-14 rounded-xl text-base bg-secondary border"><SelectValue placeholder="Pilih Atlet..." /></SelectTrigger><SelectContent><SelectItem value="irsyad">Irsyad JPP</SelectItem></SelectContent></Select>
                 </div>
                  <div className="space-y-2">
                     <Label>Nama Turnamen</Label>
-                    <Input placeholder="Cth: Sirnas A Bandung" className="h-14 rounded-xl"/>
+                    <Input placeholder="Cth: Sirnas A Bandung" className="h-14 rounded-xl bg-secondary border"/>
                 </div>
                 <div className="space-y-2">
                     <Label>Level Kompetisi</Label>
                     <Select>
-                        <SelectTrigger className="h-14 rounded-xl text-base"><SelectValue placeholder="Pilih Level..." /></SelectTrigger>
+                        <SelectTrigger className="h-14 rounded-xl text-base bg-secondary border"><SelectValue placeholder="Pilih Level..." /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="internal">Internal</SelectItem>
                             <SelectItem value="kota">Kota</SelectItem>
@@ -104,11 +104,11 @@ export default function MatchLogPage() {
                 </div>
                  <div className="space-y-2">
                     <Label>Tanggal Pertandingan</Label>
-                    <Input type="date" className="h-14 rounded-xl"/>
+                    <Input type="date" className="h-14 rounded-xl bg-secondary border"/>
                 </div>
                 <div className="space-y-2">
                     <Label>Nomor Pertandingan (Match ID)</Label>
-                    <Input placeholder="cth: M-032" className="h-14 rounded-xl"/>
+                    <Input placeholder="cth: M-032" className="h-14 rounded-xl bg-secondary border"/>
                 </div>
             </div>
         </SectionCard>
@@ -119,12 +119,12 @@ export default function MatchLogPage() {
                 <div className="space-y-4">
                     <div className="space-y-2">
                         <Label>Nama Lawan</Label>
-                        <Input placeholder="Cth: Taufik Hidayat" className="h-12 rounded-xl"/>
+                        <Input placeholder="Cth: Taufik Hidayat" className="h-12 rounded-xl bg-secondary border"/>
                     </div>
                      <div className="grid grid-cols-3 gap-2">
-                        <Input placeholder="Set 1 (Anda-Lawan)" className="h-12 rounded-xl text-center"/>
-                        <Input placeholder="Set 2" className="h-12 rounded-xl text-center"/>
-                        <Input placeholder="Set 3 (Ops)" className="h-12 rounded-xl text-center"/>
+                        <Input placeholder="Set 1 (Anda-Lawan)" className="h-12 rounded-xl text-center bg-secondary border"/>
+                        <Input placeholder="Set 2" className="h-12 rounded-xl text-center bg-secondary border"/>
+                        <Input placeholder="Set 3 (Ops)" className="h-12 rounded-xl text-center bg-secondary border"/>
                     </div>
                     <RadioGroup className="flex pt-2">
                         <Label className="flex items-center gap-2 p-3 bg-green-500/10 border border-green-500/20 rounded-lg cursor-pointer">

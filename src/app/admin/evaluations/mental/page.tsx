@@ -242,7 +242,7 @@ export default function MentalEvaluationPage() {
                 <div className="space-y-2 md:col-span-2">
                     <Label>Nama Atlet</Label>
                     <Select onValueChange={(v) => setSelectedAthleteAge(Number(v))}>
-                      <SelectTrigger className="h-14 rounded-xl text-base">
+                      <SelectTrigger className="h-14 rounded-xl text-base bg-secondary border">
                         <SelectValue placeholder="Pilih Atlet..." />
                       </SelectTrigger>
                       <SelectContent>
@@ -256,11 +256,11 @@ export default function MentalEvaluationPage() {
                 </div>
                  <div className="space-y-2">
                     <Label>Tanggal Evaluasi</Label>
-                    <Input type="date" placeholder="Tanggal" className="h-14 rounded-xl"/>
+                    <Input type="date" placeholder="Tanggal" className="h-14 rounded-xl bg-secondary border"/>
                 </div>
                 <div className="space-y-2">
                     <Label>Pelatih Penilai</Label>
-                    <Input placeholder="Nama Pelatih" className="h-14 rounded-xl"/>
+                    <Input placeholder="Nama Pelatih" className="h-14 rounded-xl bg-secondary border"/>
                 </div>
             </div>
         </SectionCard>
@@ -274,7 +274,7 @@ export default function MentalEvaluationPage() {
         {ageGroup && (
           <>
             <SectionCard title="Catatan Psikolog / Pelatih Mental" icon={Brain}>
-                <Textarea placeholder="Tulis catatan observasi, rekomendasi latihan mental, atau area yang perlu perhatian khusus..." className="rounded-xl h-32"/>
+                <Textarea placeholder="Tulis catatan observasi, rekomendasi latihan mental, atau area yang perlu perhatian khusus..." className="rounded-xl h-32 bg-secondary border"/>
             </SectionCard>
             
             <div className="flex justify-end pt-6 border-t border-border">
