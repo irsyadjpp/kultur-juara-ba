@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -24,7 +23,7 @@ export function FaqSection() {
         },
         {
             q: "Berapa biaya bulanan dan apa saja yang termasuk?",
-            a: "Biaya bulanan adalah Rp 500.000 per atlet. Biaya ini sudah termasuk 8 sesi latihan terjadwal setiap bulan dan shuttlecock yang digunakan selama latihan."
+            a: "Biaya bulanan adalah Rp 200.000 per atlet. Biaya ini sudah termasuk 12 sesi latihan terjadwal setiap bulan dan shuttlecock yang digunakan selama latihan."
         }
     ]
 

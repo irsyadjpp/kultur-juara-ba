@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Card } from "@/components/ui/card";
@@ -43,7 +42,7 @@ export function EventSummarySection() {
                         IDR 200K <span className="text-lg text-muted-foreground font-medium">/atlet</span>
                       </p>
                        <p className="text-sm text-muted-foreground mt-1 bg-secondary w-fit px-3 py-1 rounded-full">
-                         Termasuk 8x Sesi Latihan & Shuttlecock
+                         Termasuk 12x Sesi Latihan & Shuttlecock
                       </p>
                   </div>
               </Card>
