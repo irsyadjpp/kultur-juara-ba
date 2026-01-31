@@ -1,9 +1,8 @@
-
 'use client';
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useActionState } from "react";
 import Link from "next/link";
-import { useFormState } from 'react-dom';
+import { useFormStatus } from 'react-dom';
 import { 
   Users, Shield, Trophy, Search, 
   Plus, MapPin, Mail, Phone, Edit3, 
@@ -41,7 +40,7 @@ const initialState = {
 };
 
 function SeedButton() {
-    const { pending } = useFormState();
+    const { pending } = useFormStatus();
     return (
         <Button
             type="submit"
@@ -59,7 +58,7 @@ export default function AthleteRosterPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const firestore = useFirestore();
   const { toast } = useToast();
-  const [seedState, seedAction] = useFormState(seedAthletes, initialState);
+  const [seedState, seedAction] = useActionState(seedAthletes, initialState);
 
   useEffect(() => {
     if (seedState.message) {
