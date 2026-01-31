@@ -1,77 +1,80 @@
-{
-  "name": "nextn",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev --turbopack -p 9002",
-    "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
-    "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
-    "build": "NODE_ENV=production next build",
-    "start": "next start",
-    "lint": "next lint",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@genkit-ai/google-genai": "^1.20.0",
-    "@genkit-ai/next": "^1.20.0",
-    "@hookform/resolvers": "^3.9.0",
-    "@radix-ui/react-accordion": "^1.2.3",
-    "@radix-ui/react-alert-dialog": "^1.1.6",
-    "@radix-ui/react-avatar": "^1.1.3",
-    "@radix-ui/react-checkbox": "^1.1.4",
-    "@radix-ui/react-collapsible": "^1.1.11",
-    "@radix-ui/react-dialog": "^1.1.6",
-    "@radix-ui/react-dropdown-menu": "^2.1.6",
-    "@radix-ui/react-label": "^2.1.2",
-    "@radix-ui/react-menubar": "^1.1.6",
-    "@radix-ui/react-popover": "^1.1.6",
-    "@radix-ui/react-progress": "^1.1.2",
-    "@radix-ui/react-radio-group": "^1.2.3",
-    "@radix-ui/react-scroll-area": "^1.2.3",
-    "@radix-ui/react-select": "^2.1.6",
-    "@radix-ui/react-separator": "^1.1.2",
-    "@radix-ui/react-slider": "^1.2.3",
-    "@radix-ui/react-slot": "^1.2.3",
-    "@radix-ui/react-switch": "^1.1.3",
-    "@radix-ui/react-tabs": "^1.1.3",
-    "@radix-ui/react-toast": "^1.2.6",
-    "@radix-ui/react-toggle-group": "^1.1.0",
-    "@radix-ui/react-tooltip": "^1.1.8",
-    "canvas-confetti": "^1.9.3",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "cmdk": "^1.0.0",
-    "date-fns": "^3.6.0",
-    "dotenv": "^16.5.0",
-    "embla-carousel-react": "^8.6.0",
-    "firebase": "^11.9.1",
-    "genkit": "^1.20.0",
-    "html2canvas": "^1.4.1",
-    "jspdf": "^2.5.1",
-    "lucide-react": "^0.475.0",
-    "next": "15.3.8",
-    "next-themes": "^0.3.0",
-    "patch-package": "^8.0.0",
-    "qrcode.react": "^3.1.0",
-    "react": "^18.3.1",
-    "react-day-picker": "^8.10.1",
-    "react-dom": "^18.3.1",
-    "react-hook-form": "^7.52.1",
-    "react-qr-code": "^2.0.12",
-    "tailwind-merge": "^3.0.1",
-    "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.24.2"
-  },
-  "devDependencies": {
-    "@types/canvas-confetti": "^1.6.4",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "eslint": "9.39.1",
-    "eslint-config-next": "16.0.8",
-    "genkit-cli": "^1.20.0",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5"
-  }
+'use client';
+
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Users, Dumbbell, Calendar, BarChartHorizontalBig } from "lucide-react";
+import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
+import { collection } from 'firebase/firestore';
+
+export default function CommitteeDashboard() {
+  const firestore = useFirestore();
+
+  const athletesQuery = useMemoFirebase(() => firestore ? collection(firestore, 'athletes') : null, [firestore]);
+  const programsQuery = useMemoFirebase(() => firestore ? collection(firestore, 'training-programs') : null, [firestore]);
+
+  const { data: athletesData } = useCollection(athletesQuery);
+  const { data: programsData } = useCollection(programsQuery);
+
+  const activeAthletes = athletesData?.filter(a => a.status_aktif === 'AKTIF').length || 0;
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-black font-headline tracking-tight uppercase">Dashboard Utama</h1>
+        <p className="text-muted-foreground text-lg">Selamat datang di Panel Admin Kultur Juara.</p>
+      </div>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Card className="rounded-[2rem]">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Total Atlet Aktif
+            </CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-4xl font-black">{activeAthletes}</div>
+            <p className="text-xs text-muted-foreground">
+              Atlet terdaftar di akademi.
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="rounded-[2rem]">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Sesi Latihan Terjadwal
+            </CardTitle>
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-4xl font-black">32</div>
+            <p className="text-xs text-muted-foreground">
+              Total sesi untuk bulan ini.
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="rounded-[2rem]">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Program Latihan</CardTitle>
+            <BarChartHorizontalBig className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-4xl font-black">{programsData?.length || 0}</div>
+            <p className="text-xs text-muted-foreground">
+              Program latihan telah dibuat.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+      <div>
+        <Card className="rounded-[2rem]">
+          <CardHeader>
+            <CardTitle>Aktivitas Terbaru</CardTitle>
+            <CardDescription>Log aktivitas dari seluruh sistem akan muncul di sini.</CardDescription>
+          </CardHeader>
+          <CardContent className="min-h-[200px] flex items-center justify-center">
+            <p className="text-muted-foreground text-sm font-medium">Belum ada aktivitas terbaru.</p>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
 }
