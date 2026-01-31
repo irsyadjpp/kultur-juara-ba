@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useActionState, useEffect, useState } from "react";
@@ -33,11 +34,9 @@ export default function UnifiedLoginPage() {
 
   useEffect(() => {
     if (state.success && state.redirectUrl) {
-      const sessionData = { isLoggedIn: true, ...state };
-      sessionStorage.setItem('kultur_juara_session', JSON.stringify(sessionData));
       toast({ title: "Login Berhasil", description: "Mengalihkan ke dashboard...", className: "bg-green-600 text-white" });
-      router.push(state.redirectUrl); 
-      router.refresh();
+      router.push(state.redirectUrl);
+      router.refresh(); // Important to re-fetch layout data based on new cookie
     }
     if (state.message && !state.success) {
        toast({ title: "Gagal", description: state.message, variant: "destructive" });
@@ -48,12 +47,6 @@ export default function UnifiedLoginPage() {
     setIsGoogleLoading(true);
     const res = await unifiedGoogleLogin();
     if(res.success){
-        const sessionData = {
-            ...res.user,
-            isLoggedIn: true
-        };
-        sessionStorage.setItem('kultur_juara_session', JSON.stringify(sessionData));
-
         toast({ title: "Google Login Berhasil", description: "Selamat datang!", className: "bg-green-600 text-white" });
         router.push(res.redirectUrl || '/admin/dashboard');
         router.refresh();
@@ -141,3 +134,5 @@ export default function UnifiedLoginPage() {
     </div>
   );
 }
+
+    
