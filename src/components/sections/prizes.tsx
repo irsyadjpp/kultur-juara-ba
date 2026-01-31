@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Trophy, Star, Award } from "lucide-react";
@@ -10,19 +9,19 @@ const achievements = [
     event: "Kejurda Jabar 2025",
     winner: "Andi Pratama",
     category: "Juara 1 - Tunggal Putra U-17",
-    image: "https://images.unsplash.com/photo-1521575107034-e0fa0b594529?q=80&w=2068&auto=format&fit=crop"
+    image: "/images/koni-1.jpg"
   },
   {
     event: "Sirnas A Bandung 2025",
     winner: "Siti & Bunga",
     category: "Juara 1 - Ganda Putri U-15",
-    image: "https://images.unsplash.com/photo-1612872087720-bb8f6e21a4f9?q=80&w=2070&auto=format&fit=crop"
+    image: "/images/koni-2.jpg"
   },
   {
     event: "Piala Gubernur 2024",
     winner: "Kevin Junior",
     category: "Juara 2 - Tunggal Putra U-13",
-    image: "https://images.unsplash.com/photo-1626252346592-7480a373456e?q=80&w=2070&auto=format&fit=crop"
+    image: "/images/koni-3.jpg"
   },
 ];
 
@@ -45,7 +44,7 @@ export function PrizesSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {achievements.map((item, i) => (
                 <div key={i} className="group relative rounded-[2rem] overflow-hidden aspect-[4/5] shadow-lg">
-                    <Image src={item.image} alt={item.winner} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <Image src={item.image} alt="Suasana pertandingan di GOR Koni" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                         <Badge className="bg-primary text-black font-bold mb-2">{item.event}</Badge>

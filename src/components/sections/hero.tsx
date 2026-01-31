@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from 'next/image';
@@ -55,8 +54,8 @@ export function HeroSection() {
             <div className="relative aspect-[4/5] w-full max-w-md mx-auto">
                 <div className="absolute inset-0 bg-card rounded-[2.5rem] shadow-2xl rotate-3 border overflow-hidden">
                     <Image 
-                        src="https://images.unsplash.com/photo-1579487784860-e4d42c385f09?q=80&w=1974&auto=format&fit=crop" 
-                        alt="Arena" 
+                        src="/images/koni-hero.jpg" 
+                        alt="Arena GOR Koni" 
                         fill 
                         className="object-cover opacity-80 hover:scale-110 transition-transform duration-700" 
                     />
