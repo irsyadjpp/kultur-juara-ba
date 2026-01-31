@@ -1,7 +1,7 @@
 
 'use server';
 
-import { initializeFirebase } from '@/firebase';
+import { initializeFirebaseServer } from '@/firebase/server-init';
 import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
 
@@ -16,9 +16,9 @@ const athletesToSeed = [
     { fullName: "Fabian Aufa Putra Andyana", size: "L", ld: "35", tb: "62", lp: "27", gender: "Laki-laki" }
 ];
 
-export async function seedAthletes() {
+export async function seedAthletes(prevState: any, formData: FormData) {
   try {
-    const { firestore } = initializeFirebase();
+    const { firestore } = initializeFirebaseServer();
     const athletesCollection = collection(firestore, 'athletes');
     let addedCount = 0;
 

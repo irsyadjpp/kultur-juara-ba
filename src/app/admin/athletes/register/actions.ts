@@ -2,9 +2,10 @@
 'use server';
 
 import { athleteRegistrationSchema } from "@/lib/schemas/athlete";
-import { addDocumentNonBlocking } from '@/firebase';
-import { getFirestore, collection } from 'firebase/firestore';
-import { initializeFirebase } from '@/firebase';
+import { collection, addDoc } from 'firebase/firestore';
+import { initializeFirebaseServer } from '@/firebase/server-init';
+import { revalidatePath } from "next/cache";
+
 
 const initialState = {
   success: false,
@@ -21,7 +22,7 @@ export async function registerAthlete(prevState: any, formData: FormData) {
   }
 
   try {
-    const { firestore } = initializeFirebase();
+    const { firestore } = initializeFirebaseServer();
     const athletesCollection = collection(firestore, 'athletes');
     
     // Add active status by default
@@ -30,8 +31,9 @@ export async function registerAthlete(prevState: any, formData: FormData) {
       status_aktif: 'AKTIF', 
     };
     
-    // Use the non-blocking function to add the document
-    addDocumentNonBlocking(athletesCollection, athleteData);
+    await addDoc(athletesCollection, athleteData);
+
+    revalidatePath('/admin/athletes/roster');
 
     return { success: true, message: `Atlet "${validatedFields.data.fullName}" berhasil didaftarkan.` };
 
