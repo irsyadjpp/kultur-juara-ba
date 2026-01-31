@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useMemo, useEffect, useActionState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
-import { useFormStatus } from 'react-dom';
 import { 
   Users, Shield, Trophy, Search, 
   Plus, MapPin, Mail, Phone, Edit3, 
@@ -20,9 +19,8 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
-import { collection } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import { useToast } from "@/hooks/use-toast";
-import { seedAthletes } from "./actions";
 
 // Define the type for an athlete based on Firestore data
 interface Athlete {
@@ -34,41 +32,23 @@ interface Athlete {
   avatar?: string;
 }
 
-const initialState = {
-  success: false,
-  message: "",
-};
+const athletesToSeed = [
+    { fullName: "Ghaina Khansa Putri", size: "XL", ld: "34", tb: "63", lp: "27", gender: "Perempuan" },
+    { fullName: "Fajarina Ayyatul Husna", size: "L", ld: "37", tb: "70", lp: "27", gender: "Perempuan" },
+    { fullName: "Cecilya Anggraeni Nugraha", size: "XL", ld: "48", tb: "61", lp: "23", gender: "Perempuan" },
+    { fullName: "Mega Astari Febriana", size: "L", ld: "45", tb: "66", lp: "22", gender: "Perempuan" },
+    { fullName: "Muhammad Azzam Rayana", size: "L", ld: "39", tb: "58", lp: "26", gender: "Laki-laki" },
+    { fullName: "Muhammad Wildan Kurniawan", size: "L", ld: "34", tb: "53", lp: "27", gender: "Laki-laki" },
+    { fullName: "Reno Apriliandi", size: "L", ld: "36", tb: "54", lp: "30", gender: "Laki-laki" },
+    { fullName: "Fabian Aufa Putra Andyana", size: "L", ld: "35", tb: "62", lp: "27", gender: "Laki-laki" }
+];
 
-function SeedButton() {
-    const { pending } = useFormStatus();
-    return (
-        <Button
-            type="submit"
-            variant="outline"
-            className="h-14 rounded-full px-8 font-bold text-lg"
-            disabled={pending}
-        >
-            {pending ? <Loader2 className="mr-2 w-5 h-5 animate-spin"/> : <Database className="mr-2 w-5 h-5"/>}
-            {pending ? "Seeding..." : "Seed Athletes"}
-        </Button>
-    )
-}
 
 export default function AthleteRosterPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const firestore = useFirestore();
   const { toast } = useToast();
-  const [seedState, seedAction] = useActionState(seedAthletes, initialState);
-
-  useEffect(() => {
-    if (seedState.message) {
-        toast({
-            title: seedState.success ? "Success" : "Info",
-            description: seedState.message,
-            className: seedState.success ? "bg-green-600 text-white" : "",
-        });
-    }
-  }, [seedState, toast]);
+  const [isSeeding, setIsSeeding] = useState(false);
 
   const athletesQuery = useMemoFirebase(() => {
     if (!firestore) return null;
@@ -88,6 +68,68 @@ export default function AthleteRosterPage() {
   const activeAthletes = athletesData?.filter(a => a.status_aktif === 'AKTIF').length || 0;
   // This is a simplification. "Junior" would need to be determined by age category.
   const juniorAthletes = athletesData?.filter(a => a.category.includes('U-')).length || 0;
+
+  const handleSeedAthletes = async () => {
+    if (!firestore) {
+      toast({ title: "Error", description: "Firestore is not available.", variant: "destructive" });
+      return;
+    }
+    setIsSeeding(true);
+    try {
+      const athletesCollection = collection(firestore, 'athletes');
+      let addedCount = 0;
+
+      for (const athlete of athletesToSeed) {
+        const q = query(athletesCollection, where("fullName", "==", athlete.fullName));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          const lastName = athlete.fullName.split(' ').slice(-1)[0] || athlete.fullName;
+          
+          const newAthleteData = {
+            fullName: athlete.fullName,
+            height: athlete.tb,
+            chestWidth: athlete.ld,
+            waistCircumference: athlete.lp,
+            gender: athlete.gender,
+            shirtSize: athlete.size,
+            nickname: athlete.fullName.split(' ')[0],
+            pob: "Bandung",
+            dob: "2010-01-01",
+            dominantHand: "Kanan",
+            phone: "081200000000",
+            email: `${lastName.toLowerCase().replace(/[^a-z0-9]/g, '')}@kulturjuara.org`,
+            address: "Bandung",
+            schoolOrWork: "Sekolah Atlet",
+            emergencyContact: "081211112222",
+            weight: "50",
+            jerseyNameOption: "lastName",
+            jerseyName: lastName.toUpperCase().substring(0, 12),
+            category: "Anak-anak (U-13)",
+            level: "Beginner",
+            startYear: "2023",
+            careerTarget: "Prestasi",
+            status_aktif: "AKTIF",
+          };
+
+          await addDoc(athletesCollection, newAthleteData);
+          addedCount++;
+        }
+      }
+      
+      if (addedCount > 0) {
+        toast({ title: "Success", description: `${addedCount} atlet berhasil ditambahkan ke database.`, className: "bg-green-600 text-white" });
+      } else {
+        toast({ title: "Info", description: "Semua data atlet sudah ada di database." });
+      }
+    } catch (error) {
+      console.error("Error seeding athletes:", error);
+      const errorMessage = error instanceof Error ? error.message : "Terjadi kesalahan pada server.";
+      toast({ title: "Error", description: errorMessage, variant: "destructive" });
+    } finally {
+      setIsSeeding(false);
+    }
+  };
 
 
   return (
@@ -109,9 +151,15 @@ export default function AthleteRosterPage() {
             </p>
         </div>
         <div className="flex items-center gap-4">
-            <form action={seedAction}>
-                <SeedButton/>
-            </form>
+            <Button
+                onClick={handleSeedAthletes}
+                variant="outline"
+                className="h-14 rounded-full px-8 font-bold text-lg"
+                disabled={isSeeding || isLoading}
+            >
+                {isSeeding ? <Loader2 className="mr-2 w-5 h-5 animate-spin"/> : <Database className="mr-2 w-5 h-5"/>}
+                {isSeeding ? "Seeding..." : "Seed Athletes"}
+            </Button>
             <Button 
                 asChild
                 className="h-14 rounded-full px-8 bg-sky-600 hover:bg-sky-700 text-white font-bold text-lg shadow-lg transition-transform active:scale-95"
