@@ -49,7 +49,7 @@ const data = {
     { title: "Masterplan", url: "/admin/planning", icon: Target },
   ],
   navPelaporan: [
-    { title: "Laporan Bulanan", url: "/admin/reports/monthly", icon: FileText },
+    { title: "Log Aktivitas CSR", url: "/admin/reports/monthly", icon: FileText },
   ],
   navAtlet: [
     { title: "Registrasi Atlet Baru", url: "/admin/athletes/register", icon: UserPlus },
