@@ -21,7 +21,7 @@ export function WhyJoinSection() {
     {
       icon: Dumbbell,
       title: "Fasilitas Standar",
-      desc: "Berlatih di GOR dengan lapangan karpet standar internasional, pencahayaan optimal, dan fasilitas pendukung yang lengkap.",
+      desc: "Berlatih di GSG Parakan Indah dengan lapangan karpet standar internasional, pencahayaan optimal, dan fasilitas pendukung yang lengkap.",
       bg: "bg-primary text-black",
     },
   ];

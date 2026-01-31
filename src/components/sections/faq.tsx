@@ -12,7 +12,7 @@ export function FaqSection() {
     const items = [
         {
             q: "Bagaimana cara mendaftar di Kultur Juara Academy?",
-            a: "Anda dapat menghubungi kami melalui formulir kontak di website ini atau datang langsung ke lokasi latihan kami di GOR Sutta saat jam operasional untuk pendaftaran dan informasi lebih lanjut."
+            a: "Anda dapat menghubungi kami melalui formulir kontak di website ini atau datang langsung ke lokasi latihan kami di GSG Parakan Indah saat jam operasional untuk pendaftaran dan informasi lebih lanjut."
         },
         {
             q: "Apakah tersedia kelas percobaan (trial class)?",

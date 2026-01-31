@@ -78,7 +78,7 @@ export function EventSummarySection() {
               <div className="bg-background border rounded-[2.5rem] p-8 flex flex-col justify-between hover:border-primary/50 transition-colors">
                   <MapPin className="w-8 h-8 text-primary mb-4" />
                   <div>
-                      <h4 className="text-xl font-bold font-headline">GOR Sutta</h4>
+                      <h4 className="text-xl font-bold font-headline">GSG Parakan Indah</h4>
                       <p className="text-muted-foreground">Bandung, Jawa Barat</p>
                   </div>
               </div>
