@@ -66,7 +66,7 @@ export function HeroSection() {
                              <Trophy className="w-5 h-5 fill-current" />
                              <span className="font-bold tracking-wider">PROGRAM UNGGULAN</span>
                         </div>
-                        <p className="text-4xl font-black font-headline">KELAS INTENSIF U-17</p>
+                        <p className="text-4xl font-black font-headline">KELAS INTENSIF U-13 & U-15</p>
                         
                         <div className="mt-6 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20">
                            <ClientOnly>
