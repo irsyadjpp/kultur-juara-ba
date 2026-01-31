@@ -19,6 +19,7 @@ export const athleteRegistrationSchema = z.object({
   height: z.string().min(1, "Tinggi badan wajib diisi."),
   weight: z.string().min(1, "Berat badan wajib diisi."),
   chestWidth: z.string().min(1, "Lebar dada wajib diisi."),
+  waistCircumference: z.string().min(1, "Lingkar pinggang wajib diisi."),
   
   // B. Status Kepelatihan
   category: z.enum(["Pra-usia dini", "Usia dini", "Anak", "Remaja", "Dewasa", "Veteran"], { required_error: "Pilih kategori usia." }),

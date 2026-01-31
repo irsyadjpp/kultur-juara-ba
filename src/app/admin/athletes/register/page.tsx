@@ -92,6 +92,7 @@ export default function RegisterAthletePage() {
       height: "",
       weight: "",
       chestWidth: "",
+      waistCircumference: "",
       category: undefined,
       level: undefined,
       pbsiNumber: "",
@@ -213,17 +214,11 @@ export default function RegisterAthletePage() {
               <CardTitle className="text-xl font-headline flex items-center gap-3">
                 <Ruler className="w-5 h-5 text-primary"/> B. Antropometri
               </CardTitle>
-              <CardDescription>Pengukuran fisik untuk jersey dan analisis awal.</CardDescription>
+              <CardDescription>Pengukuran dasar komposisi tubuh.</CardDescription>
             </CardHeader>
-            <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <FormField control={form.control} name="height" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Tinggi Badan (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 170"/></FormControl><FormMessage /></FormItem>
-                )} />
-                 <FormField control={form.control} name="weight" render={({ field }) => (
+            <CardContent className="p-8 pt-0 grid grid-cols-1">
+                <FormField control={form.control} name="weight" render={({ field }) => (
                     <FormItem><FormLabel className="flex items-center gap-2"><Weight className="w-4 h-4"/>Berat Badan (kg)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 65"/></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="chestWidth" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Lebar Dada (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 48"/></FormControl><FormMessage /></FormItem>
                 )} />
             </CardContent>
           </Card>
@@ -231,14 +226,27 @@ export default function RegisterAthletePage() {
           <Card className="rounded-3xl shadow-xl">
             <CardHeader className="p-8 pb-4">
               <CardTitle className="text-xl font-headline flex items-center gap-3">
-                 <Shirt className="w-5 h-5 text-primary"/> C. Ukuran Jersey
+                 <Shirt className="w-5 h-5 text-primary"/> C. Pengukuran & Ukuran Jersey
               </CardTitle>
-              <CardDescription>Ukuran jersey direkomendasikan secara otomatis berdasarkan tinggi dan lebar dada. Toleransi 1-2cm.</CardDescription>
+              <CardDescription>Masukkan pengukuran untuk mendapatkan rekomendasi ukuran jersey. Sistem akan membulatkan ke atas jika perlu.</CardDescription>
             </CardHeader>
-            <CardContent className="p-8 pt-0 text-center">
-                <p className="text-sm text-muted-foreground font-bold uppercase">Rekomendasi Ukuran</p>
-                <div className="text-8xl font-black font-mono text-primary my-2 animate-in fade-in zoom-in duration-500">{recommendedSize}</div>
-                <p className="text-xs text-muted-foreground">Sistem akan membulatkan ke ukuran terdekat ke atas jika perlu.</p>
+            <CardContent className="p-8 pt-0 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <FormField control={form.control} name="height" render={({ field }) => (
+                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Tinggi Badan (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 170"/></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="chestWidth" render={({ field }) => (
+                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Lebar Dada (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 48"/></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="waistCircumference" render={({ field }) => (
+                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Lingkar Pinggang (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 75"/></FormControl><FormMessage /></FormItem>
+                    )} />
+                </div>
+                <div className="text-center bg-secondary/50 rounded-2xl p-6 border">
+                    <p className="text-sm text-muted-foreground font-bold uppercase">Rekomendasi Ukuran</p>
+                    <div className="text-8xl font-black font-mono text-primary my-2 animate-in fade-in zoom-in duration-500">{recommendedSize}</div>
+                    <p className="text-xs text-muted-foreground">Toleransi 1-2cm. Ukuran dapat disesuaikan manual oleh logistik.</p>
+                </div>
             </CardContent>
           </Card>
 
