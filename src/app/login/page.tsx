@@ -34,20 +34,21 @@ export default function UnifiedLoginPage() {
   useEffect(() => {
     if (state.success && state.redirectUrl) {
       toast({ title: "Login Berhasil", description: "Mengalihkan ke dashboard...", className: "bg-green-600 text-white" });
-      router.push(state.redirectUrl);
+      // Use full page navigation to ensure the new cookie is sent with the next request.
+      window.location.assign(state.redirectUrl);
     }
     if (state.message && !state.success) {
        toast({ title: "Gagal", description: state.message, variant: "destructive" });
     }
-  }, [state, router, toast]);
+  }, [state, toast]);
 
   const handleGoogleLogin = async () => {
     setIsGoogleLoading(true);
     const res = await unifiedGoogleLogin();
     if(res.success){
         toast({ title: "Google Login Berhasil", description: "Selamat datang!", className: "bg-green-600 text-white" });
-        router.push(res.redirectUrl || '/admin/dashboard');
-        router.refresh();
+        // Use full page navigation for consistency.
+        window.location.assign(res.redirectUrl || '/admin/dashboard');
     } else {
         setIsGoogleLoading(false);
         toast({ title: "Gagal", description: (res as any).message || "Gagal login dengan Google.", variant: "destructive" });
