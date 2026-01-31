@@ -30,6 +30,17 @@ interface Athlete {
   avatar?: string;
 }
 
+const MOCK_NEW_ATHLETES: Athlete[] = [
+  { id: 'KJA-MOCK-001', fullName: 'Ghaina Khansa Putri', category: 'Anak-anak (U-13)', level: 'Beginner', status_aktif: 'AKTIF' },
+  { id: 'KJA-MOCK-002', fullName: 'Fajarina Ayyatul Husna', category: 'Anak-anak (U-13)', level: 'Beginner', status_aktif: 'AKTIF' },
+  { id: 'KJA-MOCK-003', fullName: 'Cecilya Anggraeni Nugraha', category: 'Anak-anak (U-13)', level: 'Beginner', status_aktif: 'AKTIF' },
+  { id: 'KJA-MOCK-004', fullName: 'Mega Astari Febriana', category: 'Anak-anak (U-13)', level: 'Beginner', status_aktif: 'AKTIF' },
+  { id: 'KJA-MOCK-005', fullName: 'Muhammad Azzam Rayana', category: 'Anak-anak (U-13)', level: 'Beginner', status_aktif: 'AKTIF' },
+  { id: 'KJA-MOCK-006', fullName: 'Muhammad Wildan Kurniawan', category: 'Anak-anak (U-13)', level: 'Beginner', status_aktif: 'AKTIF' },
+  { id: 'KJA-MOCK-007', fullName: 'Reno Apriliandi', category: 'Anak-anak (U-13)', level: 'Beginner', status_aktif: 'AKTIF' },
+  { id: 'KJA-MOCK-008', fullName: 'Fabian Aufa Putra Andyana', category: 'Anak-anak (U-13)', level: 'Beginner', status_aktif: 'AKTIF' },
+];
+
 
 export default function AthleteRosterPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -42,17 +53,25 @@ export default function AthleteRosterPage() {
 
   const { data: athletesData, isLoading } = useCollection<Athlete>(athletesQuery);
 
+  const combinedAthletes = useMemo(() => {
+    const firestoreAthletes = athletesData || [];
+    // Combine with mock data, avoiding duplicates based on fullName
+    const existingNames = new Set(firestoreAthletes.map(a => a.fullName.toLowerCase()));
+    const newMocks = MOCK_NEW_ATHLETES.filter(mock => !existingNames.has(mock.fullName.toLowerCase()));
+    return [...firestoreAthletes, ...newMocks];
+  }, [athletesData]);
+
   const filteredAthletes = useMemo(() => {
-    if (!athletesData) return [];
-    return athletesData.filter(athlete => 
+    if (!combinedAthletes) return [];
+    return combinedAthletes.filter(athlete => 
       athlete.fullName.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [athletesData, searchQuery]);
+  }, [combinedAthletes, searchQuery]);
   
-  const totalAthletes = athletesData?.length || 0;
-  const activeAthletes = athletesData?.filter(a => a.status_aktif === 'AKTIF').length || 0;
+  const totalAthletes = combinedAthletes?.length || 0;
+  const activeAthletes = combinedAthletes?.filter(a => a.status_aktif === 'AKTIF').length || 0;
   // This is a simplification. "Junior" would need to be determined by age category.
-  const juniorAthletes = athletesData?.filter(a => a.category.includes('U-')).length || 0;
+  const juniorAthletes = combinedAthletes?.filter(a => a.category.includes('U-')).length || 0;
 
 
   return (
