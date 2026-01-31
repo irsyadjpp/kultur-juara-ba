@@ -38,5 +38,11 @@ service cloud.firestore {
         allow read, write: if isSignedIn();
       }
     }
+    
+    // Training Programs collection
+    match /training-programs/{programId} {
+      // Coaches and admins can create, read, and manage programs
+      allow read, write: if isSignedIn();
+    }
   }
 }

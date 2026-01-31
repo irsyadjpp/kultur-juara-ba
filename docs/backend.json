@@ -58,6 +58,22 @@
             "status": { "type": "string" }
         }
     },
+    "TrainingProgram": {
+        "title": "Training Program",
+        "type": "object",
+        "description": "Represents a structured training program created by a coach.",
+        "properties": {
+            "pbName": { "type": "string" },
+            "ageGroup": { "type": "string" },
+            "athleteLevel": { "type": "string" },
+            "period": { "type": "string" },
+            "phase": { "type": "string" },
+            "coachName": { "type": "string" },
+            "mainObjectives": { "type": "array", "items": { "type": "string" } },
+            "objectiveDetails": { "type": "string" },
+            "weeklyPlan": { "type": "string" }
+        }
+    },
     "Kegiatan": {
         "title": "Kegiatan",
         "type": "object",
@@ -165,6 +181,10 @@
     "/programs/{programId}": {
       "schema": { "$ref": "#/entities/Program" },
       "description": "Stores program details."
+    },
+    "/training-programs/{programId}": {
+      "schema": { "$ref": "#/entities/TrainingProgram" },
+      "description": "Stores structured training programs."
     },
     "/programs/{programId}/activities/{activityId}": {
       "schema": { "$ref": "#/entities/Kegiatan" },

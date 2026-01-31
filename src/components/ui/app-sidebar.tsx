@@ -16,7 +16,8 @@ import {
   Trophy,
   HeartPulse,
   Target,
-  FileText
+  FileText,
+  FileSignature
 } from "lucide-react"
 
 import {
@@ -63,6 +64,7 @@ const data = {
     { title: "Evaluasi Mental", url: "/admin/evaluations/mental", icon: Brain },
   ],
   navLatihan: [
+    { title: "Program Builder", url: "/admin/training/program-builder", icon: FileSignature },
     { title: "Daily Training Log", url: "/admin/training/daily-log", icon: ClipboardCheck },
     { title: "Log Pertandingan", url: "/admin/training/match-log", icon: Trophy },
     { title: "Log Nutrisi & Recovery", url: "/admin/training/nutrition-log", icon: HeartPulse },
