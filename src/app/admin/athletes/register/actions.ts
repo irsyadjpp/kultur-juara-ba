@@ -24,8 +24,14 @@ export async function registerAthlete(prevState: any, formData: FormData) {
     const { firestore } = initializeFirebase();
     const athletesCollection = collection(firestore, 'athletes');
     
+    // Add active status by default
+    const athleteData = {
+      ...validatedFields.data,
+      status_aktif: 'AKTIF', 
+    };
+    
     // Use the non-blocking function to add the document
-    addDocumentNonBlocking(athletesCollection, validatedFields.data);
+    addDocumentNonBlocking(athletesCollection, athleteData);
 
     return { success: true, message: `Atlet "${validatedFields.data.fullName}" berhasil didaftarkan.` };
 
