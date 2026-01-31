@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from "react"
@@ -10,7 +11,6 @@ import {
   Box, Package, Layers, Upload, UserCog,
   LogOut,
   Swords,
-  BrainCircuit,
   Brain,
   ClipboardCheck,
   Trophy,
@@ -46,38 +46,34 @@ const data = {
     { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
     { title: "Profil Saya", url: "/admin/profile", icon: User },
   ],
-  navStrategis: [
-    { title: "Masterplan", url: "/admin/planning", icon: Target },
+  navAkademiPerencanaan: [
+      { title: "Masterplan CSR", url: "/admin/planning", icon: Target },
+      { title: "Program Latihan", url: "/admin/training/program-builder", icon: FileSignature },
   ],
-  navPelaporan: [
-    { title: "Log Aktivitas CSR", url: "/admin/reports/monthly", icon: FileText },
+  navAkademiAtlet: [
+      { title: "Registrasi Atlet", url: "/admin/athletes/register", icon: UserPlus },
+      { title: "Roster Atlet", url: "/admin/athletes/roster", icon: Users },
+      { title: "Verifikasi Dokumen", url: "/admin/athletes/verification", icon: CheckSquare },
   ],
-  navAtlet: [
-    { title: "Registrasi Atlet Baru", url: "/admin/athletes/register", icon: UserPlus },
-    { title: "Roster Atlet", url: "/admin/athletes/roster", icon: Users },
-    { title: "Verifikasi Dokumen", url: "/admin/athletes/verification", icon: CheckSquare },
-  ],
-  navEvaluasi: [
-    { title: "Evaluasi Fisik", url: "/admin/evaluations/physical", icon: Dumbbell },
-    { title: "Evaluasi Teknik", url: "/admin/evaluations/technical", icon: Swords },
-    { title: "Evaluasi Taktik", url: "/admin/evaluations/tactical", icon: BrainCircuit },
-    { title: "Evaluasi Mental", url: "/admin/evaluations/mental", icon: Brain },
-  ],
-  navLatihan: [
-    { title: "Program Builder", url: "/admin/training/program-builder", icon: FileSignature },
-    { title: "Daily Training Log", url: "/admin/training/daily-log", icon: ClipboardCheck },
-    { title: "Log Pertandingan", url: "/admin/training/match-log", icon: Trophy },
-    { title: "Log Nutrisi & Recovery", url: "/admin/training/nutrition-log", icon: HeartPulse },
-    { title: "Mental Journal", url: "/admin/training/mental-journal", icon: BrainCircuit },
+  navAkademiLogEvaluasi: [
+      { title: "Log Latihan Harian", url: "/admin/training/daily-log", icon: ClipboardCheck },
+      { title: "Log Pertandingan", url: "/admin/training/match-log", icon: Trophy },
+      { title: "Log Nutrisi & Recovery", url: "/admin/training/nutrition-log", icon: HeartPulse },
+      { title: "Mental Journal", url: "/admin/training/mental-journal", icon: Brain },
+      { title: "Evaluasi Fisik", url: "/admin/evaluations/physical", icon: Dumbbell },
+      { title: "Evaluasi Teknik", url: "/admin/evaluations/technical", icon: Swords },
+      { title: "Evaluasi Taktik", url: "/admin/evaluations/tactical", icon: Brain },
+      { title: "Evaluasi Mental", url: "/admin/evaluations/mental", icon: Brain },
   ],
   navOperasional: [
-    { title: "Inventaris Alat", url: "/admin/logistics/inventory", icon: Box },
-    { title: "Stok Shuttlecock", url: "/admin/logistics/shuttlecock", icon: Package },
-    { title: "Logistik Habis Pakai", url: "/admin/logistics/consumables", icon: Layers },
+      { title: "Inventaris", url: "/admin/logistics/inventory", icon: Box },
+      { title: "Stok Kok", url: "/admin/logistics/shuttlecock", icon: Package },
+      { title: "Barang Habis Pakai", url: "/admin/logistics/consumables", icon: Layers },
+      { title: "Log Aktivitas CSR", url: "/admin/reports/monthly", icon: FileText },
   ],
-  navAdministrasi: [
-    { title: "Reimbursement", url: "/admin/reimbursement/submit", icon: Upload },
-    { title: "Manajemen User", url: "/admin/settings/users", icon: UserCog },
+  navSistem: [
+      { title: "Manajemen User", url: "/admin/settings/users", icon: UserCog },
+      { title: "Reimbursement", url: "/admin/reimbursement/submit", icon: Upload },
   ]
 }
 
@@ -110,13 +106,16 @@ export function AppSidebar({ onLogout, ...props }: React.ComponentProps<typeof S
       <SidebarContent className="px-3 py-4 space-y-4 bg-background/50 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted">
         
         <NavGroup label="UTAMA" items={data.navUtama} currentPath={pathname} />
-        <NavGroup label="STRATEGIS" items={data.navStrategis} currentPath={pathname} />
-        <NavGroup label="PELAPORAN" items={data.navPelaporan} currentPath={pathname} />
-        <NavGroup label="MANAJEMEN ATLET" items={data.navAtlet} currentPath={pathname} />
-        <NavGroup label="EVALUASI" items={data.navEvaluasi} currentPath={pathname} />
-        <NavGroup label="LOG LATIHAN" items={data.navLatihan} currentPath={pathname} />
+
+        <SidebarGroup>
+            <SidebarGroupLabel className="text-xs font-bold tracking-widest text-muted-foreground uppercase mb-2 px-3 group-data-[collapsible=icon]:hidden">AKADEMI</SidebarGroupLabel>
+            <NavGroup label="Perencanaan" items={data.navAkademiPerencanaan} currentPath={pathname} subGroup />
+            <NavGroup label="Manajemen Atlet" items={data.navAkademiAtlet} currentPath={pathname} subGroup />
+            <NavGroup label="Log & Evaluasi" items={data.navAkademiLogEvaluasi} currentPath={pathname} subGroup />
+        </SidebarGroup>
+        
         <NavGroup label="OPERASIONAL" items={data.navOperasional} currentPath={pathname} />
-        <NavGroup label="ADMINISTRASI" items={data.navAdministrasi} currentPath={pathname} />
+        <NavGroup label="SISTEM" items={data.navSistem} currentPath={pathname} />
 
       </SidebarContent>
 
@@ -141,13 +140,21 @@ export function AppSidebar({ onLogout, ...props }: React.ComponentProps<typeof S
   )
 }
 
-function NavGroup({ label, items, currentPath }: { label: string, items: any[], currentPath:string }) {
+function NavGroup({ label, items, currentPath, subGroup }: { label: string, items: any[], currentPath:string, subGroup?: boolean }) {
+  const groupLabel = (
+    <SidebarGroupLabel className={cn("text-xs font-bold tracking-widest text-muted-foreground uppercase mb-2 px-3", subGroup ? "group-data-[collapsible=icon]:hidden" : "group-data-[collapsible=icon]:text-center group-data-[collapsible=icon]:p-0")}>
+      {label}
+    </SidebarGroupLabel>
+  );
+
   return (
     <SidebarGroup>
-      <SidebarGroupLabel className="text-xs font-bold tracking-widest text-muted-foreground uppercase mb-2 px-3 group-data-[collapsible=icon]:hidden">
-        {label}
-      </SidebarGroupLabel>
-      <SidebarMenu className="space-y-1">
+      {subGroup ? (
+          <div className="group-data-[collapsible=icon]:hidden pl-3 pb-2 pt-1 border-l ml-3 border-dashed">
+            <span className="text-xs font-bold text-muted-foreground">{label}</span>
+          </div>
+      ) : groupLabel}
+      <SidebarMenu className={cn("space-y-1", subGroup && "border-l ml-3 pl-3 border-dashed")}>
         {items.map((item) => {
           const isActive = currentPath.startsWith(item.url);
           return (
