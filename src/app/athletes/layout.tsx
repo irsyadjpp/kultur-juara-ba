@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
   Home, User, Bell, Settings, 
-  Menu, LogOut, ChevronRight 
+  Menu, LogOut, ChevronRight, BookHeart
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
@@ -16,6 +16,7 @@ import { ClientOnly } from "@/components/client-only";
 const NAV_ITEMS = [
   { icon: Home, label: "Dashboard", href: "/athletes/dashboard" },
   { icon: User, label: "Profil & Penilaian", href: "/athletes/profile" },
+  { icon: BookHeart, label: "Daily Journal", href: "/athletes/journal" },
   { icon: Bell, label: "Notifikasi", href: "/notifications" },
 ];
 
