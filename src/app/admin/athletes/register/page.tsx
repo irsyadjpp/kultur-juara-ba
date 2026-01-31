@@ -4,7 +4,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { athleteRegistrationSchema, type AthleteRegistrationFormValues } from '@/lib/schemas/athlete';
-import { useActionState, useEffect } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { UserPlus, Loader2, User } from 'lucide-react';
+import { UserPlus, Loader2, User, Ruler, Shirt } from 'lucide-react';
 import { registerAthlete } from './actions';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -34,9 +34,45 @@ function SubmitButton() {
   );
 }
 
+// Helper function to calculate shirt size
+const calculateShirtSize = (tb: number, ld: number): string => {
+    const sizeChart = [
+        { size: 'S', ld: 40, tb: 60 },
+        { size: 'M', ld: 42, tb: 62 },
+        { size: 'L', ld: 44, tb: 64 },
+        { size: 'XL', ld: 46, tb: 66 },
+        { size: 'XXL', ld: 48, tb: 68 },
+    ];
+
+    // Find the smallest size that fits the measurements
+    for (const item of sizeChart) {
+        if (ld <= item.ld && tb <= item.tb) {
+            return item.size;
+        }
+    }
+
+    // Handle sizes larger than XXL
+    let lastSize = sizeChart[sizeChart.length - 1];
+    let currentLd = lastSize.ld;
+    let currentTb = lastSize.tb;
+    let sizeCounter = 2; // Starts from XXL
+    
+    while(sizeCounter < 10) { // Safety break
+        sizeCounter++;
+        currentLd += 2;
+        currentTb += 2;
+        if(ld <= currentLd && tb <= currentTb){
+            return `${'X'.repeat(sizeCounter-1)}L`;
+        }
+    }
+
+    return "Custom"; // Fallback for very large sizes
+};
+
 export default function RegisterAthletePage() {
   const { toast } = useToast();
   const [state, formAction] = useActionState(registerAthlete, initialState);
+  const [recommendedSize, setRecommendedSize] = useState<string>('-');
 
   const form = useForm<AthleteRegistrationFormValues>({
     resolver: zodResolver(athleteRegistrationSchema),
@@ -53,6 +89,8 @@ export default function RegisterAthletePage() {
       schoolOrWork: "",
       guardianName: "",
       emergencyContact: "",
+      height: "",
+      chestWidth: "",
       category: undefined,
       level: undefined,
       pbsiNumber: "",
@@ -60,6 +98,22 @@ export default function RegisterAthletePage() {
       careerTarget: undefined,
     },
   });
+
+  const { watch } = form;
+  const height = watch('height');
+  const chestWidth = watch('chestWidth');
+
+  useEffect(() => {
+    const tb = parseFloat(height || '0');
+    const ld = parseFloat(chestWidth || '0');
+
+    if (tb > 0 && ld > 0) {
+        const size = calculateShirtSize(tb, ld);
+        setRecommendedSize(size);
+    } else {
+        setRecommendedSize('-');
+    }
+  }, [height, chestWidth]);
 
   useEffect(() => {
     if (state.message) {
@@ -103,9 +157,9 @@ export default function RegisterAthletePage() {
           <Card className="rounded-3xl shadow-xl">
             <CardHeader className="p-8 pb-4">
               <CardTitle className="text-xl font-headline flex items-center gap-3">
-                <User className="w-5 h-5 text-primary"/> A. Data Pribadi
+                <User className="w-5 h-5 text-primary"/> A. Data Pribadi & Antropometri
               </CardTitle>
-              <CardDescription>Informasi dasar sesuai identitas resmi.</CardDescription>
+              <CardDescription>Informasi dasar sesuai identitas resmi dan pengukuran fisik untuk jersey.</CardDescription>
             </CardHeader>
             <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField control={form.control} name="fullName" render={({ field }) => (
@@ -132,7 +186,15 @@ export default function RegisterAthletePage() {
                         <FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Kiri" id="left" /></FormControl><Label htmlFor="left">Kiri</Label></FormItem>
                     </RadioGroup></FormControl><FormMessage /></FormItem>
                 )} />
-                <FormField control={form.control} name="phone" render={({ field }) => (
+                <div className="md:col-span-2 border-t pt-6 grid grid-cols-2 gap-6">
+                    <FormField control={form.control} name="height" render={({ field }) => (
+                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Tinggi Badan (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 170"/></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="chestWidth" render={({ field }) => (
+                        <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4"/>Lebar Dada (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg" placeholder="cth: 48"/></FormControl><FormMessage /></FormItem>
+                    )} />
+                </div>
+                 <FormField control={form.control} name="phone" render={({ field }) => (
                     <FormItem><FormLabel>Nomor HP</FormLabel><FormControl><Input type="tel" {...field} className="h-12 rounded-xl"/></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="email" render={({ field }) => (
@@ -188,6 +250,20 @@ export default function RegisterAthletePage() {
             </CardContent>
           </Card>
           
+          <Card className="rounded-3xl shadow-xl">
+            <CardHeader className="p-8 pb-4">
+              <CardTitle className="text-xl font-headline flex items-center gap-3">
+                 <Shirt className="w-5 h-5 text-primary"/> C. Ukuran Jersey
+              </CardTitle>
+              <CardDescription>Ukuran jersey direkomendasikan secara otomatis berdasarkan tinggi dan lebar dada. Toleransi 1-2cm.</CardDescription>
+            </CardHeader>
+            <CardContent className="p-8 pt-0 text-center">
+                <p className="text-sm text-muted-foreground font-bold uppercase">Rekomendasi Ukuran</p>
+                <div className="text-8xl font-black font-mono text-primary my-2 animate-in fade-in zoom-in duration-500">{recommendedSize}</div>
+                <p className="text-xs text-muted-foreground">Sistem akan membulatkan ke ukuran terdekat ke atas jika perlu.</p>
+            </CardContent>
+          </Card>
+
           <div className="pt-4">
              <SubmitButton />
           </div>
