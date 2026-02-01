@@ -8,8 +8,8 @@ export function WhyJoinSection() {
   const points = [
     {
       icon: Award,
-      title: "Pelatih Berlisensi",
-      desc: "Dibimbing oleh pelatih profesional dengan sertifikasi PBSI untuk memastikan teknik dan strategi Anda berkembang pesat.",
+      title: "Pelatih Berdedikasi",
+      desc: "Dibimbing oleh pelatih yang penuh dedikasi dan berpengalaman untuk memastikan teknik dan semangat juang Anda berkembang.",
       bg: "bg-blue-500 text-white",
     },
     {
@@ -20,8 +20,8 @@ export function WhyJoinSection() {
     },
     {
       icon: Dumbbell,
-      title: "Fasilitas Standar",
-      desc: "Berlatih di GSG Parakan Indah dengan lapangan karpet standar internasional, pencahayaan optimal, dan fasilitas pendukung yang lengkap.",
+      title: "Fasilitas Memadai",
+      desc: "Berlatih di GSG Parakan Indah dengan fasilitas lapangan badminton yang memadai untuk mendukung proses latihan.",
       bg: "bg-primary text-black",
     },
   ];
@@ -43,16 +43,16 @@ export function WhyJoinSection() {
             <Card key={idx} className="group relative border-none overflow-hidden rounded-[2.5rem] bg-background shadow-xl hover:-translate-y-2 transition-all duration-300">
               <div className={`h-3 ${item.bg.split(' ')[0]} w-full`} />
               <CardContent className="p-8 pt-12 relative">
-                 <div className={`w-16 h-16 rounded-2xl ${item.bg} flex items-center justify-center mb-6 shadow-lg rotate-3 group-hover:rotate-6 transition-transform`}>
-                    <item.icon className="w-8 h-8" />
-                 </div>
-                 <h3 className="text-2xl font-bold font-headline mb-4">{item.title}</h3>
-                 <p className="text-muted-foreground leading-relaxed text-lg">
-                    {item.desc}
-                 </p>
-                 <div className="absolute bottom-0 right-0 p-8 opacity-5">
-                    <item.icon className="w-32 h-32" />
-                 </div>
+                <div className={`w-16 h-16 rounded-2xl ${item.bg} flex items-center justify-center mb-6 shadow-lg rotate-3 group-hover:rotate-6 transition-transform`}>
+                  <item.icon className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-bold font-headline mb-4">{item.title}</h3>
+                <p className="text-muted-foreground leading-relaxed text-lg">
+                  {item.desc}
+                </p>
+                <div className="absolute bottom-0 right-0 p-8 opacity-5">
+                  <item.icon className="w-32 h-32" />
+                </div>
               </CardContent>
             </Card>
           ))}

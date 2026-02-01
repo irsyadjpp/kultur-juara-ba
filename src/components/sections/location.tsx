@@ -20,7 +20,7 @@ export function LocationSection() {
                             GSG Parakan Indah
                         </h2>
                         <p className="text-muted-foreground text-lg mb-8 max-w-md leading-relaxed">
-                            Fasilitas olahraga serbaguna dengan lapangan badminton berkualitas di komplek perumahan Parakan Indah.
+                            Fasilitas olahraga serbaguna dengan lapangan badminton yang memadai di komplek perumahan Parakan Indah.
                         </p>
 
                         <div className="space-y-4">

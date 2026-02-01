@@ -23,14 +23,14 @@ export function Footer() {
               <li><Link href="/#programs" className="hover:text-primary transition-colors">Program Kami</Link></li>
             </ul>
           </div>
-           {/* Kolom 3: Kontak */}
-           <div>
-             <h3 className="font-headline text-lg font-bold mb-4 text-primary">Hubungi Kami</h3>
+          {/* Kolom 3: Kontak */}
+          <div>
+            <h3 className="font-headline text-lg font-bold mb-4 text-primary">Hubungi Kami</h3>
             <ul className="space-y-2 text-muted-foreground">
               <li className="flex items-center justify-center md:justify-start">
                 <Mail className="w-4 h-4 mr-2 text-primary/70" />
-                <a href="mailto:admin@kulturjuara.com" className="hover:text-primary transition-colors">
-                  admin@kulturjuara.com
+                <a href="mailto:admin@kulturjuara.org" className="hover:text-primary transition-colors">
+                  admin@kulturjuara.org
                 </a>
               </li>
               <li className="flex items-center justify-center md:justify-start">
@@ -43,7 +43,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-12 pt-8 border-t text-center">
-            <p className="mt-8 text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Kultur Juara PWN Indonesia Badminton Academy. All Rights Reserved.</p>
+          <p className="mt-8 text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Kultur Juara PWN Indonesia Badminton Academy. All Rights Reserved.</p>
         </div>
       </div>
     </footer>
