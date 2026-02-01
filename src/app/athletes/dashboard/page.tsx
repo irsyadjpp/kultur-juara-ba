@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Copy,
@@ -9,9 +9,10 @@ import {
   Trophy,
   Calendar,
   UserPlus,
-  Users,
   BookHeart,
   AlertTriangle,
+  Users,
+  Loader2,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -19,25 +20,31 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-
-const MOCK_PLAYER_DATA = {
-  name: 'Atlet Uji Coba',
-  athleteCode: 'KJA-2026-123',
-  skillAssessment: {
-    status: 'pending', // 'pending' | 'done'
-    level: 'Intermediate',
-    tier: 2,
-  },
-  nextSession: {
-    topic: 'Defensive Drills',
-    time: 'Besok, 16:00',
-  },
-};
+import { getSession } from '../../actions';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, where } from 'firebase/firestore';
 
 export default function AthleteDashboardPage() {
-  const data = MOCK_PLAYER_DATA;
   const { toast } = useToast();
   const [isCopied, setIsCopied] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const firestore = useFirestore();
+
+  useEffect(() => {
+    getSession().then((session) => {
+      if (session?.email) {
+        setUserEmail(session.email);
+      }
+    });
+  }, []);
+
+  const athletesQuery = useMemoFirebase(() => {
+    if (!firestore || !userEmail) return null;
+    return query(collection(firestore, 'athletes'), where('email', '==', userEmail));
+  }, [firestore, userEmail]);
+
+  const { data: athletes, isLoading } = useCollection(athletesQuery);
+  const athlete = athletes?.[0];
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -49,11 +56,25 @@ export default function AthleteDashboardPage() {
     setTimeout(() => setIsCopied(false), 2000);
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex h-[50vh] items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  // Use athlete data or fallbacks
+  const athleteName = athlete?.fullName || "Atlet";
+  const athleteId = athlete?.id || "-";
+  const skillLevel = athlete?.level;
+  const skillTier = athlete?.tier || athlete?.category;
+
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-black font-headline tracking-tight uppercase">
-          Welcome, {data.name}
+          Welcome, {athleteName}
         </h1>
         <p className="text-muted-foreground text-lg">
           Ringkasan aktivitas dan progres latihanmu.
@@ -68,7 +89,7 @@ export default function AthleteDashboardPage() {
           </CardHeader>
           <CardContent className="flex items-center gap-4">
             <div className="text-4xl font-black font-mono">
-              {data.athleteCode}
+              {athleteId}
             </div>
             <Button
               size="icon"
@@ -77,7 +98,7 @@ export default function AthleteDashboardPage() {
                 'h-10 w-10 rounded-full transition-all duration-300',
                 isCopied && 'bg-green-500/10 text-green-600 border-green-500/20'
               )}
-              onClick={() => copyToClipboard(data.athleteCode)}
+              onClick={() => copyToClipboard(athleteId)}
             >
               {isCopied ? <Check size={18} /> : <Copy size={16} />}
             </Button>
@@ -92,9 +113,10 @@ export default function AthleteDashboardPage() {
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.nextSession.topic}</div>
+            {/* Placeholder for Schedule - Assuming not yet implemented in backend */}
+            <div className="text-xl font-bold text-muted-foreground">Belum ada jadwal</div>
             <p className="text-xs text-muted-foreground">
-              {data.nextSession.time}
+              Hubungi pelatih untuk jadwal terbaru.
             </p>
           </CardContent>
         </Card>
@@ -142,7 +164,7 @@ export default function AthleteDashboardPage() {
               </p>
             </CardHeader>
             <CardContent className="space-y-4">
-              {data.skillAssessment.status === 'pending' ? (
+              {!skillLevel ? (
                 <div className="text-center py-4 text-sm text-muted-foreground">
                   <AlertTriangle className="mx-auto h-8 w-8 text-yellow-500 mb-2" />
                   <p className="font-bold text-foreground">Menunggu Penilaian</p>
@@ -155,11 +177,13 @@ export default function AthleteDashboardPage() {
                     Level Ditetapkan
                   </p>
                   <h3 className="font-headline text-3xl">
-                    {data.skillAssessment.level}
+                    {skillLevel}
                   </h3>
-                  <Badge variant="outline" className="mt-1">
-                    Tier {data.skillAssessment.tier}
-                  </Badge>
+                  {skillTier && (
+                    <Badge variant="outline" className="mt-1">
+                      {skillTier}
+                    </Badge>
+                  )}
                 </div>
               )}
             </CardContent>

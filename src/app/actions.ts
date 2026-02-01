@@ -6,28 +6,28 @@ import { redirect } from 'next/navigation';
 
 // MOCK USER DATABASE FOR ALL ROLES
 const MOCK_DB_USERS = [
-  { 
-    email: "superadmin@kulturjuara.org", 
-    name: "Super Admin", 
+  {
+    email: "superadmin@kulturjuara.org",
+    name: "Super Admin",
     role: "SUPER_ADMIN",
     pin: "250593"
   },
-  { 
-    email: "admin@kulturjuara.org", 
-    name: "System Admin", 
+  {
+    email: "admin@kulturjuara.org",
+    name: "System Admin",
     role: "ADMIN",
     pin: "000000"
   },
-  { 
-    email: process.env.DIRECTOR_EMAIL || "director@kulturjuara.org", 
-    name: "Pelatih Kepala", 
+  {
+    email: process.env.DIRECTOR_EMAIL || "director@kulturjuara.org",
+    name: "Pelatih Kepala",
     role: "HEAD_COACH",
     pin: "123456"
   },
-  { 
-    email: "athlete.dummy@kulturjuara.org", 
-    name: "Atlet Uji Coba", 
-    role: "ATHLETE", 
+  {
+    email: "athlete.dummy@kulturjuara.org",
+    name: "Atlet Uji Coba",
+    role: "ATHLETE",
     pin: "112233"
   },
   {
@@ -36,30 +36,35 @@ const MOCK_DB_USERS = [
     role: "PSYCHOLOGIST",
     pin: "445566"
   },
-  { 
-    email: "new.admin@kulturjuara.org", 
-    name: "New Admin", 
+  {
+    email: "new.admin@kulturjuara.org",
+    name: "New Admin",
     role: "ADMIN",
     pin: "110395"
   }
 ];
 
-export async function unifiedGoogleLogin() {
-  // 1. Simulasi data dari Google Auth
-  // In a real app, you'd get this from the Firebase Auth callback
+export async function unifiedGoogleLogin(userData: { email: string; name: string; avatar: string; uid: string }) {
+  // 1. Use real data from Google Auth passed from client
   const googleUser = {
-    email: "new.guest@gmail.com",
-    name: "Tamu Baru",
-    avatar: "https://github.com/shadcn.png"
+    email: userData.email,
+    name: userData.name,
+    avatar: userData.avatar,
+    uid: userData.uid
   };
 
   // 2. Assign GUEST role by default for new registrations
+  // The Super Admin will update this role later via the admin dashboard
   const userRole = "GUEST";
 
+  // 3. Auto-generate 6-digit PIN for new users
+  const generatedPin = Math.floor(100000 + Math.random() * 900000).toString();
+
   const userPayload = {
-      ...googleUser,
-      role: userRole,
-      isOnboarded: false, // Guests are not onboarded until role is assigned
+    ...googleUser,
+    role: userRole,
+    pin: generatedPin,
+    isOnboarded: false, // Guests are not onboarded until role is assigned
   };
 
   // 3. Create Session with the determined role
@@ -68,12 +73,12 @@ export async function unifiedGoogleLogin() {
     isLoggedIn: true,
   });
 
-  cookies().set('kultur_juara_session', sessionData, { httpOnly: true, path: '/' });
+  (await cookies()).set('kultur_juara_session', sessionData, { httpOnly: true, path: '/' });
 
   // 4. Redirect to the main admin dashboard.
   // The layout will handle redirecting GUEST users to the waiting room.
-  const redirectUrl = '/admin/dashboard';
-  
+  const redirectUrl = userRole === 'GUEST' ? '/guests/waiting-room' : '/admin/dashboard';
+
   return { success: true, redirectUrl, user: userPayload };
 }
 
@@ -95,7 +100,7 @@ export async function loginByCode(prevState: any, formData: FormData) {
     isOnboarded: true, // Assume already onboarded
   });
 
-  cookies().set('kultur_juara_session', sessionData, { httpOnly: true, path: '/' });
+  (await cookies()).set('kultur_juara_session', sessionData, { httpOnly: true, path: '/' });
 
   const redirectUrl = dbUser.role === 'ATHLETE' ? '/athletes/dashboard' : '/admin/dashboard';
 
@@ -103,12 +108,12 @@ export async function loginByCode(prevState: any, formData: FormData) {
 }
 
 export async function logout() {
-  cookies().delete('kultur_juara_session');
+  (await cookies()).delete('kultur_juara_session');
   // The redirect will be handled on the client side
 }
 
 export async function getSession() {
-  const session = cookies().get('kultur_juara_session');
+  const session = (await cookies()).get('kultur_juara_session');
   if (!session) return null;
   try {
     return JSON.parse(session.value);
@@ -124,7 +129,7 @@ export async function signIntegrityPact() {
 
   const updatedSession = { ...session, isOnboarded: true };
 
-  cookies().set('kultur_juara_session', JSON.stringify(updatedSession), {
+  (await cookies()).set('kultur_juara_session', JSON.stringify(updatedSession), {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 60 * 24 * 7,

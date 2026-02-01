@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,24 +14,76 @@ import {
   CardContent,
   CardDescription,
 } from '@/components/ui/card';
-import { Edit2, ShieldCheck, User, Camera } from 'lucide-react';
-
-const MOCK_USER_DATA = {
-  name: 'Atlet Uji Coba',
-  club: 'PB. Kultur Juara',
-  avatar: '/avatars/03.png',
-  skillLevel: 'Intermediate',
-  skillTier: 2,
-  skillScore: 82,
-  coachNotes:
-    'Footwork sangat baik, namun perlu peningkatan power pada smash belakang. Konsistensi defense sudah layak untuk level Intermediate.',
-  coachName: 'Coach Taufik S.',
-  whatsapp: '0812-3456-7890',
-  jerseySize: 'L',
-};
+import { Edit2, ShieldCheck, User, Camera, Loader2, AlertCircle } from 'lucide-react';
+import { getSession } from '../../actions';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, where } from 'firebase/firestore';
 
 export default function AthleteProfilePage() {
-  const data = MOCK_USER_DATA;
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const firestore = useFirestore();
+
+  useEffect(() => {
+    getSession().then((session) => {
+      if (session?.email) {
+        setUserEmail(session.email);
+      }
+    });
+  }, []);
+
+  const athletesQuery = useMemoFirebase(() => {
+    if (!firestore || !userEmail) return null;
+    return query(collection(firestore, 'athletes'), where('email', '==', userEmail));
+  }, [firestore, userEmail]);
+
+  const { data: athletes, isLoading } = useCollection(athletesQuery);
+  const athlete = athletes?.[0];
+
+  if (isLoading) {
+    return (
+      <div className="flex h-[50vh] items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (!userEmail) {
+    return (
+      <div className="flex h-[50vh] items-center justify-center text-muted-foreground">
+        Memuat sesi pengguna...
+      </div>
+    )
+  }
+
+  if (!athlete) {
+    return (
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-3xl font-black font-headline tracking-tight uppercase">
+            Profil & Penilaian
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            Kelola identitas dan pantau hasil evaluasi performa dari pelatih.
+          </p>
+        </div>
+        <Card className="p-8 flex flex-col items-center justify-center text-center">
+          <AlertCircle className="w-12 h-12 text-yellow-500 mb-4" />
+          <h2 className="text-xl font-bold">Data Atlet Tidak Ditemukan</h2>
+          <p className="text-muted-foreground max-w-md mt-2">
+            Kami tidak dapat menemukan data atlet yang terhubung dengan email <strong>{userEmail}</strong>.
+            Silakan hubungi administrator untuk verifikasi data Anda.
+          </p>
+        </Card>
+      </div>
+    );
+  }
+
+  // Fallbacks for optional fields
+  const skillScore = athlete.skillScore || 0;
+  const skillTier = athlete.tier || athlete.category || '-';
+  const coachNotes = athlete.coachNotes || "Belum ada catatan dari pelatih.";
+  const coachName = athlete.coachName || "Tim Pelatih";
+
   return (
     <div className="space-y-8">
       <div>
@@ -52,9 +105,9 @@ export default function AthleteProfilePage() {
             <CardContent className="flex flex-col items-center text-center">
               <div className="relative group mb-4">
                 <Avatar className="h-32 w-32 border-4 border-background shadow-lg">
-                  <AvatarImage src={data.avatar} />
+                  <AvatarImage src={athlete.avatar || "/avatars/default.png"} />
                   <AvatarFallback className="text-3xl font-bold">
-                    AU
+                    {athlete.fullName.substring(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <Button
@@ -65,8 +118,11 @@ export default function AthleteProfilePage() {
                   <Camera className="h-4 w-4" />
                 </Button>
               </div>
-              <h2 className="text-2xl font-bold">{data.name}</h2>
-              <p className="text-muted-foreground">{data.club}</p>
+              <h2 className="text-2xl font-bold">{athlete.fullName}</h2>
+              <p className="text-muted-foreground">PB. Kultur Juara</p>
+              <Badge variant="outline" className="mt-2 text-primary border-primary/20 bg-primary/5">
+                {athlete.status_aktif || 'NON-AKTIF'}
+              </Badge>
             </CardContent>
           </Card>
 
@@ -82,7 +138,7 @@ export default function AthleteProfilePage() {
                   Nomor WhatsApp
                 </Label>
                 <Input
-                  defaultValue={data.whatsapp}
+                  defaultValue={athlete.phone || '-'}
                   readOnly
                   className="bg-secondary border-none"
                 />
@@ -92,7 +148,17 @@ export default function AthleteProfilePage() {
                   Ukuran Jersey
                 </Label>
                 <Input
-                  defaultValue={data.jerseySize}
+                  defaultValue={athlete.shirtSize || athlete.jerseySize || '-'}
+                  readOnly
+                  className="bg-secondary border-none"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs text-muted-foreground">
+                  Tanggal Lahir
+                </Label>
+                <Input
+                  defaultValue={athlete.dob || '-'}
                   readOnly
                   className="bg-secondary border-none"
                 />
@@ -112,7 +178,11 @@ export default function AthleteProfilePage() {
                 <ShieldCheck className="w-5 h-5 text-primary" /> Hasil
                 Penilaian Pelatih
               </CardTitle>
-              <CardDescription>Update terakhir: 12 Desember 2024</CardDescription>
+              <CardDescription>
+                {athlete.lastAssessmentDate
+                  ? `Update terakhir: ${new Date(athlete.lastAssessmentDate).toLocaleDateString("id-ID")}`
+                  : "Belum ada penilaian"}
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-2 gap-6 p-6 rounded-2xl bg-card border">
@@ -121,14 +191,14 @@ export default function AthleteProfilePage() {
                     Level Kemampuan
                   </p>
                   <p className="font-headline text-3xl text-primary">
-                    {data.skillLevel}
+                    {athlete.level || 'Beginner'}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm uppercase tracking-widest text-muted-foreground mb-1">
-                    Tier Saat Ini
+                    Kategori / Tier
                   </p>
-                  <p className="font-headline text-3xl">Tier {data.skillTier}</p>
+                  <p className="font-headline text-3xl">{skillTier}</p>
                 </div>
               </div>
 
@@ -136,10 +206,10 @@ export default function AthleteProfilePage() {
                 <div className="flex justify-between text-sm font-bold mb-1">
                   <span className="text-muted-foreground">SKILL SCORE</span>
                   <span className="text-foreground">
-                    {data.skillScore}/100
+                    {skillScore}/100
                   </span>
                 </div>
-                <Progress value={data.skillScore} className="h-3" />
+                <Progress value={skillScore} className="h-3" />
               </div>
 
               <div className="bg-card/50 p-4 rounded-xl border">
@@ -147,16 +217,16 @@ export default function AthleteProfilePage() {
                   Catatan dari Pelatih:
                 </p>
                 <p className="text-sm text-muted-foreground italic">
-                  "{data.coachNotes}"
+                  "{coachNotes}"
                 </p>
                 <div className="mt-4 flex items-center gap-2 pt-3 border-t border-dashed">
                   <Avatar className="h-6 w-6">
                     <AvatarFallback className="bg-primary text-white text-[10px]">
-                      TS
+                      TP
                     </AvatarFallback>
                   </Avatar>
                   <span className="text-xs text-muted-foreground">
-                    Dinilai oleh: {data.coachName}
+                    Dinilai oleh: {coachName}
                   </span>
                 </div>
               </div>

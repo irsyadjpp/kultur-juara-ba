@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from "react";
-import { 
-  User, Save, Calendar, Utensils, Moon, Dumbbell, Zap, Brain, HeartPulse, Shield, AlertTriangle, BookHeart, Footprints, Clock, Check, Bed
+import { useState, useTransition } from "react";
+import {
+  User, Save, Calendar, Utensils, Moon, Dumbbell, Zap, Brain, HeartPulse, Shield, AlertTriangle, BookHeart, Footprints, Clock, Check, Bed, Loader2
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,9 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
+import { submitJournalEntry } from "../actions";
+import { useRouter } from "next/navigation";
 
 // --- Reusable Components (Modernized for Gen-Z/Sporty/MD3) ---
 
@@ -54,16 +57,20 @@ const RatingSlider = ({ label, value, onValueChange, min = 1, max = 5, step = 1 
 
 const CheckItem = ({ name, label, icon: Icon }: { name: string, label: string, icon: React.ElementType }) => (
   <div className="flex items-center justify-between p-4 rounded-2xl bg-secondary transition-colors border border-transparent has-[:checked]:bg-primary/10 has-[:checked]:border-primary/30">
-      <Label htmlFor={name} className="flex items-center gap-3 cursor-pointer">
-          <Icon className="w-5 h-5 text-muted-foreground" />
-          <span className="font-semibold text-foreground">{label}</span>
-      </Label>
-      <Switch id={name} name={name} />
+    <Label htmlFor={name} className="flex items-center gap-3 cursor-pointer">
+      <Icon className="w-5 h-5 text-muted-foreground" />
+      <span className="font-semibold text-foreground">{label}</span>
+    </Label>
+    <Switch id={name} name={name} />
   </div>
 )
 
 
 export default function AthleteSelfMonitoringPage() {
+  const { toast } = useToast();
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
   const [scores, setScores] = useState({
     sleepQuality: 3,
     morningFatigue: 3,
@@ -83,29 +90,66 @@ export default function AthleteSelfMonitoringPage() {
 
   const selfTrainingTypes = ["stretching", "footwork", "core", "skipping", "shadow"];
 
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    const payload: any = {
+      ...scores,
+      selfTrainingTypes: []
+    };
+
+    formData.forEach((value, key) => {
+      if (key === 'selfTrainingTypes') {
+        payload.selfTrainingTypes.push(value);
+      } else {
+        // Convert 'on' to true for switches, else keep string
+        payload[key] = value === 'on' ? true : value;
+      }
+    });
+
+    startTransition(async () => {
+      const result = await submitJournalEntry(payload);
+      if (result.success) {
+        toast({
+          title: "Berhasil",
+          description: "Laporan harian berhasil disimpan.",
+          className: "bg-green-600 text-white"
+        });
+        router.push('/athletes/dashboard');
+      } else {
+        toast({
+          title: "Gagal",
+          description: result.message,
+          variant: "destructive"
+        });
+      }
+    });
+  };
+
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
       <div className="space-y-2 text-center pt-8">
         <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5">SELF-MONITORING</Badge>
         <h1 className="text-3xl md:text-4xl font-black font-headline uppercase tracking-tighter text-foreground">
-            Daily Athlete Log
+          Daily Athlete Log
         </h1>
         <p className="text-muted-foreground max-w-xl text-lg mx-auto">
-            Isi setiap hari untuk memantau progres dan kondisimu. Kejujuranmu adalah kunci prestasimu.
+          Isi setiap hari untuk memantau progres dan kondisimu. Kejujuranmu adalah kunci prestasimu.
         </p>
       </div>
 
-      <form className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-8">
 
         <SectionCard icon={Calendar} title="1. Info Umum" description="Informasi dasar untuk pencatatan harian.">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label>Tanggal</Label>
-              <Input type="date" defaultValue={new Date().toISOString().split('T')[0]} className="h-12 rounded-xl bg-secondary border" />
+              <Input name="date" type="date" defaultValue={new Date().toISOString().split('T')[0]} className="h-12 rounded-xl bg-secondary border" required />
             </div>
             <div className="space-y-2">
               <Label>Jenis Hari</Label>
-              <Select>
+              <Select name="dayType" required>
                 <SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Jenis Hari..." /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="latihan_PB">Latihan di PB</SelectItem>
@@ -133,8 +177,8 @@ export default function AthleteSelfMonitoringPage() {
               <h3 className="font-bold text-muted-foreground flex items-center gap-2"><Bed className="w-4 h-4" /> Istirahat</h3>
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2"><Label>Jam Tidur</Label><Input type="time" className="h-12 rounded-xl bg-secondary border"/></div>
-                  <div className="space-y-2"><Label>Jam Bangun</Label><Input type="time" className="h-12 rounded-xl bg-secondary border"/></div>
+                  <div className="space-y-2"><Label>Jam Tidur</Label><Input name="sleepTime" type="time" className="h-12 rounded-xl bg-secondary border" /></div>
+                  <div className="space-y-2"><Label>Jam Bangun</Label><Input name="wakeTime" type="time" className="h-12 rounded-xl bg-secondary border" /></div>
                 </div>
                 <CheckItem name="tidur_awal" label="Tidur Sebelum Pukul 22:00" icon={Clock} />
                 <RatingSlider label="Kualitas Tidur" value={scores.sleepQuality} onValueChange={v => handleScoreChange('sleepQuality', v)} />
@@ -151,7 +195,7 @@ export default function AthleteSelfMonitoringPage() {
               <CheckItem name="hadir_latihan" label="Hadir Latihan" icon={Check} />
               <div className="space-y-2">
                 <Label>Durasi Latihan (menit)</Label>
-                <Input type="number" placeholder="cth: 120" className="h-12 rounded-xl bg-background border" />
+                <Input name="trainingDuration" type="number" placeholder="cth: 120" className="h-12 rounded-xl bg-background border" />
               </div>
               <RatingSlider label="Intensitas Latihan" value={scores.trainingIntensity} onValueChange={v => handleScoreChange('trainingIntensity', v)} />
               <RatingSlider label="Fokus Saat Latihan" value={scores.trainingFocus} onValueChange={v => handleScoreChange('trainingFocus', v)} />
@@ -166,7 +210,7 @@ export default function AthleteSelfMonitoringPage() {
                 <div className="flex flex-wrap gap-3">
                   {selfTrainingTypes.map(item => (
                     <div key={item}>
-                      <Checkbox id={`self-${item}`} value={item} className="sr-only peer" />
+                      <Checkbox id={`self-${item}`} name="selfTrainingTypes" value={item} className="sr-only peer" />
                       <Label
                         htmlFor={`self-${item}`}
                         className="inline-block px-4 py-2 rounded-full border-2 bg-background cursor-pointer capitalize font-semibold text-sm text-muted-foreground transition-all peer-data-[state=checked]:bg-primary/10 peer-data-[state=checked]:text-primary peer-data-[state=checked]:border-primary/50 hover:border-primary/50"
@@ -179,7 +223,7 @@ export default function AthleteSelfMonitoringPage() {
               </div>
               <div className="space-y-2">
                 <Label>Durasi Latihan Mandiri (menit)</Label>
-                <Input type="number" placeholder="cth: 30" className="h-12 rounded-xl bg-background border" />
+                <Input name="selfTrainingDuration" type="number" placeholder="cth: 30" className="h-12 rounded-xl bg-background border" />
               </div>
             </div>
           </div>
@@ -205,7 +249,7 @@ export default function AthleteSelfMonitoringPage() {
                 <RatingSlider label="Kepercayaan Diri" value={scores.confidence} onValueChange={v => handleScoreChange('confidence', v)} />
                 <div className="space-y-2">
                   <Label>Hal positif yang terjadi hari ini?</Label>
-                  <Textarea placeholder="Contoh: berhasil melakukan smash silang, dipuji pelatih, dll." className="rounded-xl bg-secondary border" />
+                  <Textarea name="positiveNote" placeholder="Contoh: berhasil melakukan smash silang, dipuji pelatih, dll." className="rounded-xl bg-secondary border" />
                 </div>
               </div>
             </div>
@@ -218,7 +262,7 @@ export default function AthleteSelfMonitoringPage() {
             <CheckItem name="ada_keluhan" label="Ada Keluhan Fisik?" icon={AlertTriangle} />
             <div className="space-y-2">
               <Label>Lokasi Keluhan</Label>
-              <Select>
+              <Select name="painLocation">
                 <SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Lokasi..." /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="tidak_ada">Tidak Ada</SelectItem>
@@ -233,14 +277,27 @@ export default function AthleteSelfMonitoringPage() {
             <RatingSlider label="Tingkat Nyeri (0 jika tidak ada)" value={scores.painLevel} onValueChange={v => handleScoreChange('painLevel', v)} min={0} max={10} />
             <div className="space-y-2">
               <Label>Catatan Tambahan (Opsional)</Label>
-              <Textarea placeholder="Jelaskan lebih detail keluhanmu atau catatan lain untuk pelatih/psikolog." className="rounded-xl bg-secondary border" />
+              <Textarea name="additionalNote" placeholder="Jelaskan lebih detail keluhanmu atau catatan lain untuk pelatih/psikolog." className="rounded-xl bg-secondary border" />
             </div>
           </div>
         </SectionCard>
 
         <div className="flex justify-center pt-6 border-t border-border">
-          <Button size="lg" className="h-16 rounded-full font-bold text-lg px-12 shadow-lg shadow-primary/20 w-full max-w-md">
-            <Save className="w-6 h-6 mr-3" /> Simpan Laporan Hari Ini
+          <Button
+            size="lg"
+            className="h-16 rounded-full font-bold text-lg px-12 shadow-lg shadow-primary/20 w-full max-w-md"
+            disabled={isPending}
+            type="submit"
+          >
+            {isPending ? (
+              <>
+                <Loader2 className="w-6 h-6 mr-3 animate-spin" /> Menyimpan...
+              </>
+            ) : (
+              <>
+                <Save className="w-6 h-6 mr-3" /> Simpan Laporan Hari Ini
+              </>
+            )}
           </Button>
         </div>
       </form>
