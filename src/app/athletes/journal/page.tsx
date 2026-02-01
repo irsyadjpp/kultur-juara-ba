@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { 
-  User, Save, Calendar, Utensils, Moon, Dumbbell, Zap, Brain, HeartPulse, Shield, AlertTriangle, BookHeart, Footprints, Clock, Check
+  User, Save, Calendar, Utensils, Moon, Dumbbell, Zap, Brain, HeartPulse, Shield, AlertTriangle, BookHeart, Footprints, Clock, Check, Bed
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,14 +17,15 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
 
 // --- Reusable Components ---
 const SectionCard = ({ icon: Icon, title, description, children, badge }: { icon: React.ElementType, title: string, description?: string, children: React.ReactNode, badge?:string }) => (
   <Card className="rounded-3xl shadow-lg border">
     <CardHeader className="p-6 md:p-8 pb-4">
       <div className="flex items-start justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
             <Icon className="w-6 h-6"/>
           </div>
           <div>
@@ -45,14 +46,14 @@ const RatingSlider = ({ label, value, onValueChange, min=1, max = 5, step = 1 }:
   <div className="space-y-3">
     <div className="flex justify-between items-center">
       <Label>{label}</Label>
-      <span className="font-mono font-bold text-lg text-primary w-10 text-center bg-secondary rounded-lg px-2 py-1">{value}</span>
+      <span className="font-mono font-bold text-lg text-primary w-10 text-center">{value}</span>
     </div>
     <Slider defaultValue={[value]} min={min} max={max} step={step} onValueChange={(v) => onValueChange(v[0])} />
   </div>
 );
 
 const DomainSwitch = ({ label, icon: Icon }: { label: string, icon: React.ElementType }) => (
-    <div className="flex items-center justify-between p-4 rounded-xl bg-secondary/50 border">
+    <div className="flex items-center justify-between p-3 rounded-xl bg-secondary transition-colors hover:bg-secondary/80">
         <Label htmlFor={label} className="flex items-center gap-3 cursor-pointer">
             <Icon className="w-5 h-5 text-muted-foreground" />
             <span className="font-semibold text-foreground">{label}</span>
@@ -96,16 +97,16 @@ export default function AthleteSelfMonitoringPage() {
 
       <form className="space-y-8">
         
-        <SectionCard icon={Calendar} title="Metadata Log" description="Informasi dasar untuk pencatatan harian.">
+        <SectionCard icon={Calendar} title="1. Info Umum" description="Informasi dasar untuk pencatatan harian.">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                     <Label>Tanggal</Label>
-                    <Input type="date" defaultValue={new Date().toISOString().split('T')[0]} className="h-12 rounded-xl" />
+                    <Input type="date" defaultValue={new Date().toISOString().split('T')[0]} className="h-12 rounded-xl bg-secondary border" />
                 </div>
                 <div className="space-y-2">
                     <Label>Jenis Hari</Label>
                     <Select>
-                        <SelectTrigger className="h-12 rounded-xl"><SelectValue placeholder="Pilih Jenis Hari..." /></SelectTrigger>
+                        <SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Jenis Hari..." /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="latihan_PB">Latihan di PB</SelectItem>
                             <SelectItem value="latihan_rumah">Latihan di Rumah</SelectItem>
@@ -116,95 +117,106 @@ export default function AthleteSelfMonitoringPage() {
             </div>
         </SectionCard>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <SectionCard icon={Utensils} title="Domain Nutrisi">
-                <div className="space-y-3">
-                    <DomainSwitch label="Makan Pagi" icon={Check} />
-                    <DomainSwitch label="Makan Siang" icon={Check} />
-                    <DomainSwitch label="Makan Malam" icon={Check} />
-                    <DomainSwitch label="Minum Air Cukup (≥6 Gelas)" icon={Check} />
-                    <DomainSwitch label="Makan Buah" icon={Check} />
-                    <DomainSwitch label="Snack Sehat" icon={Check} />
-                </div>
-            </SectionCard>
-            
-            <SectionCard icon={Moon} title="Domain Tidur & Recovery">
-                 <div className="space-y-6">
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2"><Label>Jam Tidur</Label><Input type="time" className="h-12 rounded-xl"/></div>
-                        <div className="space-y-2"><Label>Jam Bangun</Label><Input type="time" className="h-12 rounded-xl"/></div>
+        <SectionCard icon={Bed} title="2. Nutrisi & Istirahat">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                 <div className="space-y-4">
+                     <h3 className="font-bold text-muted-foreground flex items-center gap-2"><Utensils className="w-4 h-4"/> Nutrisi</h3>
+                     <div className="space-y-3">
+                        <DomainSwitch label="Makan Pagi" icon={Check} />
+                        <DomainSwitch label="Makan Siang" icon={Check} />
+                        <DomainSwitch label="Makan Malam" icon={Check} />
+                        <DomainSwitch label="Minum Air Cukup (≥6 Gelas)" icon={Check} />
+                        <DomainSwitch label="Makan Buah" icon={Check} />
+                        <DomainSwitch label="Snack Sehat" icon={Check} />
                     </div>
-                    <DomainSwitch label="Tidur Sebelum Pukul 22:00" icon={Clock} />
-                    <RatingSlider label="Kualitas Tidur" value={scores.sleepQuality} onValueChange={v => handleScoreChange('sleepQuality', v)} />
-                    <RatingSlider label="Rasa Lelah di Pagi Hari" value={scores.morningFatigue} onValueChange={v => handleScoreChange('morningFatigue', v)} />
                  </div>
-            </SectionCard>
-        </div>
-
-        <SectionCard icon={Dumbbell} title="Domain Latihan Utama (di PB)">
-            <div className="space-y-6">
-                <DomainSwitch label="Hadir Latihan" icon={Check} />
-                <div className="space-y-2">
-                    <Label>Durasi Latihan (menit)</Label>
-                    <Input type="number" placeholder="cth: 120" className="h-12 rounded-xl" />
-                </div>
-                <RatingSlider label="Intensitas Latihan" value={scores.trainingIntensity} onValueChange={v => handleScoreChange('trainingIntensity', v)} />
-                <RatingSlider label="Fokus Saat Latihan" value={scores.trainingFocus} onValueChange={v => handleScoreChange('trainingFocus', v)} />
-                <DomainSwitch label="Mengikuti Program Pelatih" icon={Check} />
-            </div>
-        </SectionCard>
-
-        <SectionCard icon={Footprints} title="Domain Latihan Mandiri (di Rumah)">
-            <div className="space-y-6">
-                <DomainSwitch label="Melakukan Latihan Mandiri" icon={Check} />
-                 <div>
-                    <Label className="mb-3 block">Jenis Latihan Mandiri</Label>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {selfTrainingTypes.map(item => (
-                        <div key={item} className="flex items-center space-x-2 p-3 rounded-lg border bg-secondary/50">
-                            <Checkbox id={`self-${item}`} value={item} />
-                            <Label htmlFor={`self-${item}`} className="text-sm font-medium capitalize">{item}</Label>
+                 <div className="space-y-4">
+                      <h3 className="font-bold text-muted-foreground flex items-center gap-2"><Moon className="w-4 h-4"/> Istirahat</h3>
+                      <div className="space-y-6">
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2"><Label>Jam Tidur</Label><Input type="time" className="h-12 rounded-xl bg-secondary border"/></div>
+                            <div className="space-y-2"><Label>Jam Bangun</Label><Input type="time" className="h-12 rounded-xl bg-secondary border"/></div>
                         </div>
-                    ))}
+                        <DomainSwitch label="Tidur Sebelum Pukul 22:00" icon={Clock} />
+                        <RatingSlider label="Kualitas Tidur" value={scores.sleepQuality} onValueChange={v => handleScoreChange('sleepQuality', v)} />
+                        <RatingSlider label="Rasa Lelah di Pagi Hari" value={scores.morningFatigue} onValueChange={v => handleScoreChange('morningFatigue', v)} />
+                    </div>
+                 </div>
+             </div>
+        </SectionCard>
+
+        <SectionCard icon={Dumbbell} title="3. Aktivitas Latihan">
+            <div className="space-y-6">
+                <h3 className="font-bold text-muted-foreground">Latihan Utama (di PB)</h3>
+                <div className="p-4 bg-secondary rounded-2xl space-y-6">
+                    <DomainSwitch label="Hadir Latihan" icon={Check} />
+                    <div className="space-y-2">
+                        <Label>Durasi Latihan (menit)</Label>
+                        <Input type="number" placeholder="cth: 120" className="h-12 rounded-xl bg-background border" />
+                    </div>
+                    <RatingSlider label="Intensitas Latihan" value={scores.trainingIntensity} onValueChange={v => handleScoreChange('trainingIntensity', v)} />
+                    <RatingSlider label="Fokus Saat Latihan" value={scores.trainingFocus} onValueChange={v => handleScoreChange('trainingFocus', v)} />
+                    <DomainSwitch label="Mengikuti Program Pelatih" icon={Check} />
+                </div>
+            </div>
+            <div className="space-y-6 mt-6">
+                <h3 className="font-bold text-muted-foreground">Latihan Mandiri (di Rumah)</h3>
+                <div className="p-4 bg-secondary rounded-2xl space-y-6">
+                    <DomainSwitch label="Melakukan Latihan Mandiri" icon={Check} />
+                    <div>
+                        <Label className="mb-3 block">Jenis Latihan Mandiri</Label>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        {selfTrainingTypes.map(item => (
+                            <div key={item} className="flex items-center space-x-2 p-3 rounded-lg border bg-background">
+                                <Checkbox id={`self-${item}`} value={item} />
+                                <Label htmlFor={`self-${item}`} className="text-sm font-medium capitalize cursor-pointer">{item}</Label>
+                            </div>
+                        ))}
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Durasi Latihan Mandiri (menit)</Label>
+                        <Input type="number" placeholder="cth: 30" className="h-12 rounded-xl bg-background border" />
                     </div>
                 </div>
-                <div className="space-y-2">
-                    <Label>Durasi Latihan Mandiri (menit)</Label>
-                    <Input type="number" placeholder="cth: 30" className="h-12 rounded-xl" />
+            </div>
+        </SectionCard>
+        
+        <SectionCard icon={Brain} title="4. Mental & Perilaku">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                <div className="space-y-4">
+                     <h3 className="font-bold text-muted-foreground flex items-center gap-2"><Shield className="w-4 h-4"/> Kedisiplinan</h3>
+                     <div className="space-y-3">
+                        <DomainSwitch label="Datang Tepat Waktu" icon={Clock} />
+                        <DomainSwitch label="Atribut Latihan Lengkap" icon={Check} />
+                        <DomainSwitch label="Bebas Rokok" icon={Check} />
+                        <RatingSlider label="Sikap Saat Latihan" value={scores.trainingAttitude} onValueChange={v => handleScoreChange('trainingAttitude', v)} />
+                        <RatingSlider label="Patuh Instruksi Pelatih" value={scores.obeyedInstructions} onValueChange={v => handleScoreChange('obeyedInstructions', v)} />
+                    </div>
+                </div>
+                <div className="space-y-4">
+                    <h3 className="font-bold text-muted-foreground flex items-center gap-2"><Brain className="w-4 h-4"/> Mental Positif</h3>
+                    <div className="space-y-6">
+                        <RatingSlider label="Mood Hari Ini" value={scores.mood} onValueChange={v => handleScoreChange('mood', v)} />
+                        <RatingSlider label="Motivasi Latihan" value={scores.motivation} onValueChange={v => handleScoreChange('motivation', v)} />
+                        <RatingSlider label="Kepercayaan Diri" value={scores.confidence} onValueChange={v => handleScoreChange('confidence', v)} />
+                        <div className="space-y-2">
+                            <Label>Hal positif yang terjadi hari ini?</Label>
+                            <Textarea placeholder="Contoh: berhasil melakukan smash silang, dipuji pelatih, dll." className="rounded-xl bg-secondary border" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </SectionCard>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <SectionCard icon={Shield} title="Domain Kedisiplinan">
-                <div className="space-y-3">
-                    <DomainSwitch label="Datang Tepat Waktu" icon={Clock} />
-                    <DomainSwitch label="Atribut Latihan Lengkap" icon={Check} />
-                    <DomainSwitch label="Bebas Rokok" icon={Check} />
-                    <RatingSlider label="Sikap Saat Latihan" value={scores.trainingAttitude} onValueChange={v => handleScoreChange('trainingAttitude', v)} />
-                    <RatingSlider label="Patuh Instruksi Pelatih" value={scores.obeyedInstructions} onValueChange={v => handleScoreChange('obeyedInstructions', v)} />
-                </div>
-            </SectionCard>
-            <SectionCard icon={Brain} title="Domain Mental Positif">
-                 <div className="space-y-6">
-                    <RatingSlider label="Mood Hari Ini" value={scores.mood} onValueChange={v => handleScoreChange('mood', v)} />
-                    <RatingSlider label="Motivasi Latihan" value={scores.motivation} onValueChange={v => handleScoreChange('motivation', v)} />
-                    <RatingSlider label="Kepercayaan Diri" value={scores.confidence} onValueChange={v => handleScoreChange('confidence', v)} />
-                    <div className="space-y-2">
-                        <Label>Hal positif yang terjadi hari ini?</Label>
-                        <Textarea placeholder="Contoh: berhasil melakukan smash silang, dipuji pelatih, dll." className="rounded-xl" />
-                    </div>
-                 </div>
-            </SectionCard>
-        </div>
 
-        <SectionCard icon={HeartPulse} title="Domain Keluhan Fisik">
+        <SectionCard icon={HeartPulse} title="5. Kondisi Fisik">
             <div className="space-y-6">
                 <DomainSwitch label="Ada Keluhan Fisik?" icon={AlertTriangle} />
                 <div className="space-y-2">
                     <Label>Lokasi Keluhan</Label>
                     <Select>
-                        <SelectTrigger className="h-12 rounded-xl"><SelectValue placeholder="Pilih Lokasi..." /></SelectTrigger>
+                        <SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Lokasi..." /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="tidak_ada">Tidak Ada</SelectItem>
                             <SelectItem value="kaki">Kaki (Engkel/Telapak)</SelectItem>
@@ -218,7 +230,7 @@ export default function AthleteSelfMonitoringPage() {
                  <RatingSlider label="Tingkat Nyeri (0 jika tidak ada)" value={scores.painLevel} onValueChange={v => handleScoreChange('painLevel', v)} min={0} max={10} />
                 <div className="space-y-2">
                     <Label>Catatan Tambahan (Opsional)</Label>
-                    <Textarea placeholder="Jelaskan lebih detail keluhanmu atau catatan lain untuk pelatih/psikolog." className="rounded-xl" />
+                    <Textarea placeholder="Jelaskan lebih detail keluhanmu atau catatan lain untuk pelatih/psikolog." className="rounded-xl bg-secondary border" />
                 </div>
             </div>
         </SectionCard>
@@ -232,3 +244,5 @@ export default function AthleteSelfMonitoringPage() {
     </div>
   );
 }
+
+    
