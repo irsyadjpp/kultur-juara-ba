@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from "react";
@@ -165,11 +164,16 @@ export default function AthleteSelfMonitoringPage() {
                     <DomainSwitch label="Melakukan Latihan Mandiri" icon={Check} />
                     <div>
                         <Label className="mb-3 block">Jenis Latihan Mandiri</Label>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        <div className="flex flex-wrap gap-3">
                         {selfTrainingTypes.map(item => (
-                            <div key={item} className="flex items-center space-x-2 p-3 rounded-lg border bg-background">
-                                <Checkbox id={`self-${item}`} value={item} />
-                                <Label htmlFor={`self-${item}`} className="text-sm font-medium capitalize cursor-pointer">{item}</Label>
+                            <div key={item}>
+                                <Checkbox id={`self-${item}`} value={item} className="sr-only peer" />
+                                <Label
+                                    htmlFor={`self-${item}`}
+                                    className="inline-block px-4 py-2 rounded-full border-2 bg-background cursor-pointer capitalize font-semibold text-sm text-muted-foreground transition-all peer-data-[state=checked]:bg-primary/10 peer-data-[state=checked]:text-primary peer-data-[state=checked]:border-primary/50 hover:border-primary/50"
+                                >
+                                    {item}
+                                </Label>
                             </div>
                         ))}
                         </div>
@@ -244,5 +248,3 @@ export default function AthleteSelfMonitoringPage() {
     </div>
   );
 }
-
-    
