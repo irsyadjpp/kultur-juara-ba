@@ -41,6 +41,24 @@ const MOCK_DB_USERS = [
     name: "New Admin",
     role: "ADMIN",
     pin: "110395"
+  },
+  {
+    email: "dummy.admin@kulturjuara.org",
+    name: "Dummy Admin",
+    role: "ADMIN",
+    pin: "999999"
+  },
+  {
+    email: "coach@kulturjuara.org",
+    name: "Pelatih Prestasi",
+    role: "COACH",
+    pin: "111111"
+  },
+  {
+    email: "assistant@kulturjuara.org",
+    name: "Asisten Pelatih",
+    role: "ASSISTANT_COACH",
+    pin: "222222"
   }
 ];
 

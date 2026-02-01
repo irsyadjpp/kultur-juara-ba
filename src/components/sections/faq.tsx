@@ -1,10 +1,10 @@
 'use client';
 
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
 } from "@/components/ui/accordion";
 
 export function FaqSection() {
@@ -19,7 +19,7 @@ export function FaqSection() {
         },
         {
             q: "Apa saja kelompok umur yang tersedia di akademi?",
-            a: "Saat ini kami membuka tiga kelompok utama: U-13 (Sekolah Dasar), U-17 (SMP-SMA), dan Kelas Dewasa untuk pemain hobi atau mereka yang ingin menjaga kebugaran."
+            a: "Kami menerima atlet mulai dari kategori U-9 (Usia Dini), U-11, U-13, hingga U-17. Selain itu, kami juga membuka Kelas Dewasa untuk umum yang ingin menjaga kebugaran."
         },
         {
             q: "Berapa biaya bulanan dan apa saja yang termasuk?",
@@ -27,26 +27,26 @@ export function FaqSection() {
         }
     ]
 
-  return (
-    <section className="py-24 bg-background">
-      <div className="container mx-auto px-4 max-w-3xl">
-        <h2 className="text-4xl font-black font-headline text-center mb-12 uppercase">
-            FAQ
-        </h2>
-        
-        <Accordion type="single" collapsible className="space-y-4">
-            {items.map((item, index) => (
-                <AccordionItem key={index} value={`item-${index}`} className="bg-secondary rounded-3xl border-none px-6">
-                    <AccordionTrigger className="text-lg font-bold py-6 hover:no-underline hover:text-primary text-left">
-                        {item.q}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-muted-foreground text-lg pb-6 leading-relaxed">
-                        {item.a}
-                    </AccordionContent>
-                </AccordionItem>
-            ))}
-        </Accordion>
-      </div>
-    </section>
-  );
+    return (
+        <section className="py-24 bg-background">
+            <div className="container mx-auto px-4 max-w-3xl">
+                <h2 className="text-4xl font-black font-headline text-center mb-12 uppercase">
+                    FAQ
+                </h2>
+
+                <Accordion type="single" collapsible className="space-y-4">
+                    {items.map((item, index) => (
+                        <AccordionItem key={index} value={`item-${index}`} className="bg-secondary rounded-3xl border-none px-6">
+                            <AccordionTrigger className="text-lg font-bold py-6 hover:no-underline hover:text-primary text-left">
+                                {item.q}
+                            </AccordionTrigger>
+                            <AccordionContent className="text-muted-foreground text-lg pb-6 leading-relaxed">
+                                {item.a}
+                            </AccordionContent>
+                        </AccordionItem>
+                    ))}
+                </Accordion>
+            </div>
+        </section>
+    );
 }

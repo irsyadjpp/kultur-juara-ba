@@ -79,7 +79,7 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
   // Full admin layout for authenticated, onboarded, non-guest users
   return (
     <SidebarProvider defaultOpen={true}>
-      <AppSidebar onLogout={handleLogout} className="z-50" />
+      <AppSidebar user={session} onLogout={handleLogout} className="z-50" />
       <SidebarInset className="relative flex flex-col min-h-screen bg-transparent overflow-hidden">
         <div className="fixed inset-0 -z-50 pointer-events-none">
           <AdminBackground />

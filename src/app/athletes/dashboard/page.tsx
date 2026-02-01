@@ -13,6 +13,9 @@ import {
   AlertTriangle,
   Users,
   Loader2,
+  Brain,
+  Dumbbell,
+  Utensils,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -147,6 +150,49 @@ export default function AthleteDashboardPage() {
                 <h3 className="font-bold text-lg">Lihat Profil & Penilaian</h3>
                 <p className="text-sm text-muted-foreground">
                   Cek hasil evaluasi dari pelatih.
+                </p>
+              </Link>
+              <Link
+                href="/athletes/training/mental-journal"
+                className="block p-6 rounded-2xl bg-secondary hover:bg-primary/10 hover:border-primary border border-transparent transition-all md:col-span-2 lg:col-span-1"
+              >
+                <Brain className="w-8 h-8 text-primary mb-3" />
+                <h3 className="font-bold text-lg">Log Mental (AMEL)</h3>
+                <p className="text-sm text-muted-foreground">
+                  Ekspresikan perasaan & kondisi mentalmu.
+                </p>
+              </Link>
+
+              <Link
+                href="/athletes/training/technical-log"
+                className="block p-6 rounded-2xl bg-secondary hover:bg-primary/10 hover:border-primary border border-transparent transition-all"
+              >
+                <Dumbbell className="w-8 h-8 text-primary mb-3" />
+                <h3 className="font-bold text-lg">Log Latihan</h3>
+                <p className="text-sm text-muted-foreground">
+                  Catat detail teknis latihan harian.
+                </p>
+              </Link>
+
+              <Link
+                href="/athletes/training/match-log"
+                className="block p-6 rounded-2xl bg-secondary hover:bg-primary/10 hover:border-primary border border-transparent transition-all"
+              >
+                <Trophy className="w-8 h-8 text-primary mb-3" />
+                <h3 className="font-bold text-lg">Log Pertandingan</h3>
+                <p className="text-sm text-muted-foreground">
+                  Catat hasil turnamen & sparring.
+                </p>
+              </Link>
+
+              <Link
+                href="/athletes/training/nutrition-log"
+                className="block p-6 rounded-2xl bg-secondary hover:bg-primary/10 hover:border-primary border border-transparent transition-all"
+              >
+                <Utensils className="w-8 h-8 text-primary mb-3" />
+                <h3 className="font-bold text-lg">Log Nutrisi</h3>
+                <p className="text-sm text-muted-foreground">
+                  Pantau asupan & kualitas tidur.
                 </p>
               </Link>
             </CardContent>

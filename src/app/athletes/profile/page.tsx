@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -163,8 +164,10 @@ export default function AthleteProfilePage() {
                   className="bg-secondary border-none"
                 />
               </div>
-              <Button variant="outline" className="w-full">
-                <Edit2 className="w-4 h-4 mr-2" /> Ajukan Perubahan Data
+              <Button variant="outline" className="w-full" asChild>
+                <Link href="https://wa.me/6285121374644?text=Halo%20Admin,%20saya%20ingin%20mengajukan%20perubahan%20data%20atlet." target="_blank">
+                  <Edit2 className="w-4 h-4 mr-2" /> Ajukan Perubahan Data
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -175,20 +178,19 @@ export default function AthleteProfilePage() {
           <Card className="rounded-[2.5rem] bg-secondary/30">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-primary" /> Hasil
-                Penilaian Pelatih
+                <ShieldCheck className="w-5 h-5 text-primary" /> Evaluasi Perkembangan
               </CardTitle>
               <CardDescription>
                 {athlete.lastAssessmentDate
                   ? `Update terakhir: ${new Date(athlete.lastAssessmentDate).toLocaleDateString("id-ID")}`
-                  : "Belum ada penilaian"}
+                  : "Belum ada evaluasi"}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-2 gap-6 p-6 rounded-2xl bg-card border">
                 <div>
                   <p className="text-sm uppercase tracking-widest text-muted-foreground mb-1">
-                    Level Kemampuan
+                    Level Saat Ini
                   </p>
                   <p className="font-headline text-3xl text-primary">
                     {athlete.level || 'Beginner'}
@@ -196,15 +198,15 @@ export default function AthleteProfilePage() {
                 </div>
                 <div>
                   <p className="text-sm uppercase tracking-widest text-muted-foreground mb-1">
-                    Kategori / Tier
+                    Kelompok Usia
                   </p>
-                  <p className="font-headline text-3xl">{skillTier}</p>
+                  <p className="font-headline text-3xl">{athlete.category || '-'}</p>
                 </div>
               </div>
 
               <div className="space-y-2">
                 <div className="flex justify-between text-sm font-bold mb-1">
-                  <span className="text-muted-foreground">SKILL SCORE</span>
+                  <span className="text-muted-foreground uppercase">Daya Juang (Effort)</span>
                   <span className="text-foreground">
                     {skillScore}/100
                   </span>
@@ -214,7 +216,7 @@ export default function AthleteProfilePage() {
 
               <div className="bg-card/50 p-4 rounded-xl border">
                 <p className="text-sm font-bold text-foreground mb-2">
-                  Catatan dari Pelatih:
+                  Catatan Pelatih:
                 </p>
                 <p className="text-sm text-muted-foreground italic">
                   "{coachNotes}"
@@ -226,7 +228,7 @@ export default function AthleteProfilePage() {
                     </AvatarFallback>
                   </Avatar>
                   <span className="text-xs text-muted-foreground">
-                    Dinilai oleh: {coachName}
+                    Evaluator: {coachName}
                   </span>
                 </div>
               </div>
