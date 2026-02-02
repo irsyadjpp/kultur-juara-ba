@@ -135,7 +135,7 @@ export function AppSidebar({ onLogout, user, ...props }: React.ComponentProps<ty
       superAdmin: [],
       utama: data.navUtama,
       akademi: true,
-      perencanaan: [],
+      perencanaan: data.navAkademiPerencanaan.filter(i => i.title === 'Masterplan CSR'),
       atlet: data.navAkademiAtlet,
       evaluasi: [],
       operasional: data.navOperasional,

@@ -2,69 +2,77 @@
 
 import { useState, useTransition } from "react";
 import {
-  User, Save, Calendar, Utensils, Moon, Dumbbell, Zap, Brain, HeartPulse, Shield, AlertTriangle, BookHeart, Footprints, Clock, Check, Bed, Loader2
+  User, Save, Calendar, Utensils, Moon, Dumbbell, Zap, Brain, HeartPulse, Shield, AlertTriangle, BookHeart, Footprints, Clock, Check, Bed, Loader2, ArrowLeft, Sun, Battery, Smile, Activity
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { submitJournalEntry } from "../actions";
 import { useRouter } from "next/navigation";
+import Link from 'next/link';
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator"; // Added Separator import
 
-// --- Reusable Components (Modernized for Gen-Z/Sporty/MD3) ---
+// --- MODERN COMPONENTS ---
 
-const SectionCard = ({ icon: Icon, title, description, children, badge }: { icon: React.ElementType, title: string, description?: string, children: React.ReactNode, badge?: string }) => (
-  <Card className="rounded-3xl shadow-xl border backdrop-blur-sm bg-card/60">
-    <CardHeader className="p-6 md:p-8 pb-4">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-            <Icon className="w-6 h-6" />
-          </div>
-          <div>
-            <CardTitle className="text-xl font-headline"> {title} </CardTitle>
-            {description && <CardDescription className="pt-1">{description}</CardDescription>}
-          </div>
+const ModernSection = ({ title, icon: Icon, children, className, gradient = "from-primary/5 to-transparent" }: any) => (
+  <div className={cn("relative overflow-hidden rounded-[2rem] border border-border/50 bg-secondary/20 backdrop-blur-2xl shadow-sm transition-all hover:shadow-md h-full", className)}>
+    <div className={cn("absolute inset-0 bg-gradient-to-br opacity-30 pointer-events-none", gradient)} />
+    <div className="relative p-5 md:p-6 space-y-5">
+      <div className="flex items-center gap-3 mb-2">
+        <div className="h-10 w-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 text-primary shadow-sm">
+          <Icon className="w-5 h-5" />
         </div>
-        {badge && <Badge variant="outline">{badge}</Badge>}
+        <h2 className="text-lg font-black font-headline tracking-tight uppercase text-foreground">{title}</h2>
       </div>
-    </CardHeader>
-    <CardContent className="p-6 md:p-8 pt-0">
       {children}
-    </CardContent>
-  </Card>
-);
-
-const RatingSlider = ({ label, value, onValueChange, min = 1, max = 5, step = 1 }: { label: string, value: number, onValueChange: (value: number) => void, min?: number, max?: number, step?: number }) => (
-  <div className="space-y-3">
-    <div className="flex justify-between items-center">
-      <Label>{label}</Label>
-      <span className="font-mono font-bold text-lg text-primary w-10 text-center">{value}</span>
     </div>
-    <Slider defaultValue={[value]} min={min} max={max} step={step} onValueChange={(v) => onValueChange(v[0])} />
   </div>
 );
 
-const CheckItem = ({ name, label, icon: Icon }: { name: string, label: string, icon: React.ElementType }) => (
-  <div className="flex items-center justify-between p-4 rounded-2xl bg-secondary transition-colors border border-transparent has-[:checked]:bg-primary/10 has-[:checked]:border-primary/30">
-    <Label htmlFor={name} className="flex items-center gap-3 cursor-pointer">
-      <Icon className="w-5 h-5 text-muted-foreground" />
-      <span className="font-semibold text-foreground">{label}</span>
-    </Label>
-    <Switch id={name} name={name} />
+// Wrapper for energy bar with dynamic max
+const DynamicEnergyBar = ({ value, onChange, label, max = 10, colorClass = "bg-primary" }: any) => (
+  <div className="space-y-2">
+    <div className="flex justify-between items-center px-1">
+      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest truncate max-w-[70%]">{label}</span>
+      <span className="font-black text-lg text-foreground">{value}<span className="text-[10px] text-muted-foreground">/{max}</span></span>
+    </div>
+    <Slider
+      defaultValue={[value]}
+      max={max}
+      min={1}
+      step={1}
+      onValueChange={(v) => onChange(v[0])}
+      className="py-1 cursor-pointer"
+    />
+    <div className="flex gap-1 h-1.5">
+      {[...Array(max)].map((_, i) => (
+        <div key={i} className={cn(
+          "flex-1 rounded-full transition-colors",
+          i < value ? colorClass : "bg-black/10 dark:bg-white/10"
+        )} />
+      ))}
+    </div>
   </div>
-)
+);
 
+const ModernCheckItem = ({ name, label, icon: Icon }: any) => (
+  <div className="relative flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10 transition-all hover:bg-white/10 group">
+    <Label htmlFor={name} className="flex items-center gap-3 cursor-pointer z-10 flex-1">
+      <div className="h-6 w-6 rounded-full bg-background/50 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
+        <Icon className="w-3 h-3" />
+      </div>
+      <span className="font-bold text-foreground text-xs">{label}</span>
+    </Label>
+    <Switch id={name} name={name} className="scale-75 data-[state=checked]:bg-primary origin-right" />
+  </div>
+);
 
 export default function AthleteSelfMonitoringPage() {
   const { toast } = useToast();
@@ -114,7 +122,7 @@ export default function AthleteSelfMonitoringPage() {
         toast({
           title: "Berhasil",
           description: "Laporan harian berhasil disimpan.",
-          className: "bg-green-600 text-white"
+          className: "bg-green-600 text-white border-none"
         });
         router.push('/athletes/dashboard');
       } else {
@@ -128,177 +136,190 @@ export default function AthleteSelfMonitoringPage() {
   };
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto">
-      <div className="space-y-2 text-center pt-8">
-        <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5">SELF-MONITORING</Badge>
-        <h1 className="text-3xl md:text-4xl font-black font-headline uppercase tracking-tighter text-foreground">
-          Daily Athlete Log
-        </h1>
-        <p className="text-muted-foreground max-w-xl text-lg mx-auto">
-          Isi setiap hari untuk memantau progres dan kondisimu. Kejujuranmu adalah kunci prestasimu.
-        </p>
+    <div className="min-h-screen pb-32">
+      {/* HEADER */}
+      <div className="w-full p-6 pt-8 space-y-4">
+        <Link href="/athletes/dashboard" className="inline-flex items-center text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">
+          <ArrowLeft className="w-4 h-4 mr-2" /> Back to Dashboard
+        </Link>
+
+        <div className="relative pt-4 max-w-4xl">
+          {/* Decorative blurs */}
+          <div className="absolute -top-10 -left-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-[60px]" />
+          <h1 className="relative text-4xl md:text-6xl font-black font-headline uppercase tracking-tighter text-foreground leading-[0.9]">
+            Daily <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-600">& Athlete Log.</span>
+          </h1>
+          <p className="relative mt-3 text-lg text-muted-foreground font-medium leading-relaxed max-w-xl">
+            Pantau kondisi fisik dan mentalmu setiap hari.
+          </p>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit} className="w-full px-4 md:px-6 pb-20 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-5">
 
-        <SectionCard icon={Calendar} title="1. Info Umum" description="Informasi dasar untuk pencatatan harian.">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label>Tanggal</Label>
-              <Input name="date" type="date" defaultValue={new Date().toISOString().split('T')[0]} className="h-12 rounded-xl bg-secondary border" required />
-            </div>
-            <div className="space-y-2">
-              <Label>Jenis Hari</Label>
-              <Select name="dayType" required>
-                <SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Jenis Hari..." /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="latihan_PB">Latihan di PB</SelectItem>
-                  <SelectItem value="latihan_rumah">Latihan di Rumah</SelectItem>
-                  <SelectItem value="libur">Libur / Istirahat</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          {/* COL 1: INFO & RECOVERY */}
+          <div className="xl:col-span-4 space-y-5">
+            <ModernSection title="General" icon={Calendar} gradient="from-emerald-500/5 to-teal-500/5">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label className="uppercase text-[10px] font-bold tracking-widest text-muted-foreground">Tanggal</Label>
+                  <Input name="date" type="date" defaultValue={new Date().toISOString().split('T')[0]} className="h-10 rounded-xl bg-white/5 border-white/10 font-bold text-sm" required />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="uppercase text-[10px] font-bold tracking-widest text-muted-foreground">Jenis Hari</Label>
+                  <Select name="dayType" required>
+                    <SelectTrigger className="h-10 rounded-xl bg-white/5 border-white/10 font-bold text-sm"><SelectValue placeholder="Pilih..." /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="latihan_PB">Latihan di PB</SelectItem>
+                      <SelectItem value="latihan_rumah">Latihan di Rumah</SelectItem>
+                      <SelectItem value="libur">Libur / Istirahat</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </ModernSection>
+
+            <ModernSection title="Recovery" icon={Battery} gradient="from-green-500/5 to-emerald-500/5">
+              <div className="space-y-5">
+                {/* Sleep */}
+                <div className="space-y-3">
+                  <Label className="flex items-center gap-2 font-bold text-muted-foreground text-xs uppercase tracking-widest"><Moon className="w-4 h-4" /> Sleep & Rest</Label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1"><Label className="text-[10px] text-muted-foreground uppercase">Tidur</Label><Input name="sleepTime" type="time" className="h-9 rounded-xl bg-white/5 border-white/10 text-sm" /></div>
+                    <div className="space-y-1"><Label className="text-[10px] text-muted-foreground uppercase">Bangun</Label><Input name="wakeTime" type="time" className="h-9 rounded-xl bg-white/5 border-white/10 text-sm" /></div>
+                  </div>
+                  <ModernCheckItem name="tidur_awal" label="Tidur < 22:00" icon={Clock} />
+                  <div className="grid grid-cols-2 gap-4 pt-2">
+                    <DynamicEnergyBar label="Quality" value={scores.sleepQuality} onValueChange={(v: number) => handleScoreChange('sleepQuality', v)} max={5} colorClass="bg-indigo-400" />
+                    <DynamicEnergyBar label="Freshness" value={scores.morningFatigue} onValueChange={(v: number) => handleScoreChange('morningFatigue', v)} max={5} colorClass="bg-orange-400" />
+                  </div>
+                </div>
+
+                {/* Nutrition */}
+                <div className="space-y-3 pt-4 border-t border-white/5">
+                  <Label className="flex items-center gap-2 font-bold text-muted-foreground text-xs uppercase tracking-widest"><Utensils className="w-4 h-4" /> Nutrition</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <ModernCheckItem name="makan_pagi" label="Breakfast" icon={Check} />
+                    <ModernCheckItem name="makan_siang" label="Lunch" icon={Check} />
+                    <ModernCheckItem name="makan_malam" label="Dinner" icon={Check} />
+                    <ModernCheckItem name="cukup_air" label="Minum +2L" icon={Check} />
+                    <ModernCheckItem name="makan_buah" label="Fruits" icon={Check} />
+                  </div>
+                </div>
+              </div>
+            </ModernSection>
           </div>
-        </SectionCard>
 
-        <SectionCard icon={HeartPulse} title="2. Pemulihan & Kesiapan">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-            <div className="space-y-4">
-              <h3 className="font-bold text-muted-foreground flex items-center gap-2"><Utensils className="w-4 h-4" /> Nutrisi</h3>
+          {/* COL 2: TRAINING */}
+          <div className="xl:col-span-4 space-y-5">
+            <ModernSection title="Training" icon={Dumbbell} gradient="from-blue-500/5 to-cyan-500/5">
+              <div className="space-y-5">
+                {/* Main Training */}
+                <div className="space-y-3">
+                  <Label className="flex items-center gap-2 font-bold text-muted-foreground text-xs uppercase tracking-widest"><Zap className="w-4 h-4" /> Main Session</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <ModernCheckItem name="hadir_latihan" label="Hadir" icon={Check} />
+                    <Input name="trainingDuration" type="number" placeholder="Durasi (Min)" className="h-auto py-2 rounded-xl bg-white/5 border-white/10 font-bold text-sm text-center placeholder:text-muted-foreground/50" />
+                  </div>
+                  <DynamicEnergyBar label="Intensity" value={scores.trainingIntensity} onValueChange={(v: number) => handleScoreChange('trainingIntensity', v)} max={5} colorClass="bg-red-400" />
+                  <DynamicEnergyBar label="Focus" value={scores.trainingFocus} onValueChange={(v: number) => handleScoreChange('trainingFocus', v)} max={5} colorClass="bg-blue-400" />
+                </div>
+
+                {/* Self Training */}
+                <div className="space-y-3 pt-4 border-t border-white/5">
+                  <Label className="flex items-center gap-2 font-bold text-muted-foreground text-xs uppercase tracking-widest"><User className="w-4 h-4" /> Self Training</Label>
+                  <div className="flex items-center gap-3">
+                    <ModernCheckItem name="latihan_mandiri" label="Extra" icon={Check} />
+                    <Input name="selfTrainingDuration" type="number" placeholder="Durasi (Min)" className="flex-1 h-auto py-2 rounded-xl bg-white/5 border-white/10 font-bold text-sm text-center placeholder:text-muted-foreground/50" />
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    {selfTrainingTypes.map(item => (
+                      <div key={item}>
+                        <Checkbox id={`self-${item}`} name="selfTrainingTypes" value={item} className="sr-only peer" />
+                        <Label
+                          htmlFor={`self-${item}`}
+                          className="inline-block px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 cursor-pointer capitalize text-[10px] font-bold text-muted-foreground transition-all peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground hover:bg-white/10"
+                        >
+                          {item}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </ModernSection>
+
+            <ModernSection title="Discipline" icon={Shield} gradient="from-purple-500/5 to-pink-500/5">
               <div className="space-y-3">
-                <CheckItem name="makan_pagi" label="Makan Pagi" icon={Check} />
-                <CheckItem name="makan_siang" label="Makan Siang" icon={Check} />
-                <CheckItem name="makan_malam" label="Makan Malam" icon={Check} />
-                <CheckItem name="cukup_air" label="Minum Air Cukup (≥6 Gelas)" icon={Check} />
-                <CheckItem name="makan_buah" label="Makan Buah" icon={Check} />
-              </div>
-            </div>
-            <div className="space-y-4">
-              <h3 className="font-bold text-muted-foreground flex items-center gap-2"><Bed className="w-4 h-4" /> Istirahat</h3>
-              <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2"><Label>Jam Tidur</Label><Input name="sleepTime" type="time" className="h-12 rounded-xl bg-secondary border" /></div>
-                  <div className="space-y-2"><Label>Jam Bangun</Label><Input name="wakeTime" type="time" className="h-12 rounded-xl bg-secondary border" /></div>
+                <div className="grid grid-cols-2 gap-2">
+                  <ModernCheckItem name="tepat_waktu" label="On Time" icon={Clock} />
+                  <ModernCheckItem name="atribut_lengkap" label="Full Gear" icon={Check} />
+                  <ModernCheckItem name="bebas_rokok" label="No Smoke" icon={Check} />
                 </div>
-                <CheckItem name="tidur_awal" label="Tidur Sebelum Pukul 22:00" icon={Clock} />
-                <RatingSlider label="Kualitas Tidur" value={scores.sleepQuality} onValueChange={v => handleScoreChange('sleepQuality', v)} />
-                <RatingSlider label="Rasa Lelah di Pagi Hari" value={scores.morningFatigue} onValueChange={v => handleScoreChange('morningFatigue', v)} />
+                <Separator className="bg-white/5" />
+                <DynamicEnergyBar label="Attitude" value={scores.trainingAttitude} onValueChange={(v: number) => handleScoreChange('trainingAttitude', v)} max={5} colorClass="bg-purple-400" />
+                <DynamicEnergyBar label="Obedience" value={scores.obeyedInstructions} onValueChange={(v: number) => handleScoreChange('obeyedInstructions', v)} max={5} colorClass="bg-purple-400" />
               </div>
-            </div>
+            </ModernSection>
           </div>
-        </SectionCard>
 
-        <SectionCard icon={Dumbbell} title="3. Aktivitas Latihan">
-          <div className="space-y-6">
-            <h3 className="font-bold text-muted-foreground">Latihan Utama (di PB)</h3>
-            <div className="p-4 bg-secondary rounded-2xl space-y-6">
-              <CheckItem name="hadir_latihan" label="Hadir Latihan" icon={Check} />
-              <div className="space-y-2">
-                <Label>Durasi Latihan (menit)</Label>
-                <Input name="trainingDuration" type="number" placeholder="cth: 120" className="h-12 rounded-xl bg-background border" />
-              </div>
-              <RatingSlider label="Intensitas Latihan" value={scores.trainingIntensity} onValueChange={v => handleScoreChange('trainingIntensity', v)} />
-              <RatingSlider label="Fokus Saat Latihan" value={scores.trainingFocus} onValueChange={v => handleScoreChange('trainingFocus', v)} />
-            </div>
-          </div>
-          <div className="space-y-6 mt-6">
-            <h3 className="font-bold text-muted-foreground">Latihan Mandiri (di Rumah)</h3>
-            <div className="p-4 bg-secondary rounded-2xl space-y-6">
-              <CheckItem name="latihan_mandiri" label="Melakukan Latihan Mandiri" icon={Check} />
-              <div>
-                <Label className="mb-3 block">Jenis Latihan Mandiri</Label>
-                <div className="flex flex-wrap gap-3">
-                  {selfTrainingTypes.map(item => (
-                    <div key={item}>
-                      <Checkbox id={`self-${item}`} name="selfTrainingTypes" value={item} className="sr-only peer" />
-                      <Label
-                        htmlFor={`self-${item}`}
-                        className="inline-block px-4 py-2 rounded-full border-2 bg-background cursor-pointer capitalize font-semibold text-sm text-muted-foreground transition-all peer-data-[state=checked]:bg-primary/10 peer-data-[state=checked]:text-primary peer-data-[state=checked]:border-primary/50 hover:border-primary/50"
-                      >
-                        {item}
-                      </Label>
-                    </div>
-                  ))}
+          {/* COL 3: MENTAL & PHYSICAL */}
+          <div className="xl:col-span-4 space-y-5">
+            <ModernSection title="Mental" icon={Brain} gradient="from-pink-500/5 to-rose-500/5">
+              <div className="space-y-4">
+                <DynamicEnergyBar label="Mood" value={scores.mood} onValueChange={(v: number) => handleScoreChange('mood', v)} max={5} colorClass="bg-pink-400" />
+                <DynamicEnergyBar label="Motivation" value={scores.motivation} onValueChange={(v: number) => handleScoreChange('motivation', v)} max={5} colorClass="bg-orange-400" />
+                <DynamicEnergyBar label="Confidence" value={scores.confidence} onValueChange={(v: number) => handleScoreChange('confidence', v)} max={5} colorClass="bg-yellow-400" />
+
+                <div className="space-y-1.5 pt-1">
+                  <Label className="uppercase text-[10px] font-bold tracking-widest text-muted-foreground">Positive Highlight</Label>
+                  <Textarea name="positiveNote" placeholder="Hal positif hari ini..." className="rounded-xl bg-white/5 border-white/10 min-h-[60px] text-sm" />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label>Durasi Latihan Mandiri (menit)</Label>
-                <Input name="selfTrainingDuration" type="number" placeholder="cth: 30" className="h-12 rounded-xl bg-background border" />
-              </div>
-            </div>
-          </div>
-        </SectionCard>
+            </ModernSection>
 
-        <SectionCard icon={Brain} title="4. Mental & Perilaku">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-            <div className="space-y-4">
-              <h3 className="font-bold text-muted-foreground flex items-center gap-2"><Shield className="w-4 h-4" /> Kedisiplinan</h3>
-              <div className="space-y-3">
-                <CheckItem name="tepat_waktu" label="Datang Tepat Waktu" icon={Clock} />
-                <CheckItem name="atribut_lengkap" label="Atribut Latihan Lengkap" icon={Check} />
-                <CheckItem name="bebas_rokok" label="Bebas Rokok" icon={Check} />
-                <RatingSlider label="Sikap Saat Latihan" value={scores.trainingAttitude} onValueChange={v => handleScoreChange('trainingAttitude', v)} />
-                <RatingSlider label="Patuh Instruksi Pelatih" value={scores.obeyedInstructions} onValueChange={v => handleScoreChange('obeyedInstructions', v)} />
-              </div>
-            </div>
-            <div className="space-y-4">
-              <h3 className="font-bold text-muted-foreground flex items-center gap-2"><Brain className="w-4 h-4" /> Mental Positif</h3>
-              <div className="space-y-6">
-                <RatingSlider label="Mood Hari Ini" value={scores.mood} onValueChange={v => handleScoreChange('mood', v)} />
-                <RatingSlider label="Motivasi Latihan" value={scores.motivation} onValueChange={v => handleScoreChange('motivation', v)} />
-                <RatingSlider label="Kepercayaan Diri" value={scores.confidence} onValueChange={v => handleScoreChange('confidence', v)} />
-                <div className="space-y-2">
-                  <Label>Hal positif yang terjadi hari ini?</Label>
-                  <Textarea name="positiveNote" placeholder="Contoh: berhasil melakukan smash silang, dipuji pelatih, dll." className="rounded-xl bg-secondary border" />
+            <ModernSection title="Physio Check" icon={Activity} gradient="from-red-500/5 to-orange-500/5">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex-1">
+                    <ModernCheckItem name="ada_keluhan" label="Injury?" icon={AlertTriangle} />
+                  </div>
+                  <Select name="painLocation">
+                    <SelectTrigger className="h-auto py-2.5 flex-1 rounded-xl bg-white/5 border-white/10 font-bold text-xs"><SelectValue placeholder="Area..." /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="tidak_ada">Aman</SelectItem>
+                      <SelectItem value="kaki">Kaki</SelectItem>
+                      <SelectItem value="lutut">Lutut</SelectItem>
+                      <SelectItem value="bahu">Bahu</SelectItem>
+                      <SelectItem value="punggung">Punggung</SelectItem>
+                      <SelectItem value="lain">Lainnya</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+
+                <DynamicEnergyBar label="Pain Level (0-10)" value={scores.painLevel} onValueChange={(v: number) => handleScoreChange('painLevel', v)} max={10} colorClass="bg-red-500" />
+
+                <div className="space-y-1.5">
+                  <Label className="uppercase text-[10px] font-bold tracking-widest text-muted-foreground">Detail</Label>
+                  <Textarea name="additionalNote" placeholder="Keluhan detail..." className="rounded-xl bg-white/5 border-white/10 min-h-[60px] text-sm" />
                 </div>
               </div>
-            </div>
+            </ModernSection>
+
+            <Button
+              size="lg"
+              className="w-full h-auto rounded-[2rem] text-xl font-black bg-foreground text-background hover:bg-foreground/90 shadow-2xl hover:scale-[1.02] transition-all p-6 md:mt-2"
+              disabled={isPending}
+            >
+              {isPending ? <Loader2 className="w-6 h-6 animate-spin mr-3" /> : <Save className="w-6 h-6 mr-3" />}
+              SAVE JOURNAL
+            </Button>
           </div>
-        </SectionCard>
 
-
-        <SectionCard icon={AlertTriangle} title="5. Kondisi Fisik & Keluhan">
-          <div className="space-y-6">
-            <CheckItem name="ada_keluhan" label="Ada Keluhan Fisik?" icon={AlertTriangle} />
-            <div className="space-y-2">
-              <Label>Lokasi Keluhan</Label>
-              <Select name="painLocation">
-                <SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Lokasi..." /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="tidak_ada">Tidak Ada</SelectItem>
-                  <SelectItem value="kaki">Kaki (Engkel/Telapak)</SelectItem>
-                  <SelectItem value="lutut">Lutut</SelectItem>
-                  <SelectItem value="bahu">Bahu</SelectItem>
-                  <SelectItem value="punggung">Punggung / Pinggang</SelectItem>
-                  <SelectItem value="lain">Lainnya</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <RatingSlider label="Tingkat Nyeri (0 jika tidak ada)" value={scores.painLevel} onValueChange={v => handleScoreChange('painLevel', v)} min={0} max={10} />
-            <div className="space-y-2">
-              <Label>Catatan Tambahan (Opsional)</Label>
-              <Textarea name="additionalNote" placeholder="Jelaskan lebih detail keluhanmu atau catatan lain untuk pelatih/psikolog." className="rounded-xl bg-secondary border" />
-            </div>
-          </div>
-        </SectionCard>
-
-        <div className="flex justify-center pt-6 border-t border-border">
-          <Button
-            size="lg"
-            className="h-16 rounded-full font-bold text-lg px-12 shadow-lg shadow-primary/20 w-full max-w-md"
-            disabled={isPending}
-            type="submit"
-          >
-            {isPending ? (
-              <>
-                <Loader2 className="w-6 h-6 mr-3 animate-spin" /> Menyimpan...
-              </>
-            ) : (
-              <>
-                <Save className="w-6 h-6 mr-3" /> Simpan Laporan Hari Ini
-              </>
-            )}
-          </Button>
         </div>
       </form>
     </div>

@@ -31,10 +31,10 @@ export function WhyJoinSection() {
       <div className="container mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-4xl md:text-5xl font-black font-headline mb-6 uppercase">
-            Why Train at <span className="text-primary">Kultur Juara?</span>
+            Kenapa Pilih <span className="text-primary">Kultur Juara?</span>
           </h2>
           <p className="text-xl text-muted-foreground leading-relaxed font-medium">
-            Kami bukan sekadar tempat latihan. Kami adalah ekosistem untuk mencetak juara.
+            Tempat yang pas buat kamu yang serius ingin berkembang, dengan lingkungan yang suportif dan menyenangkan.
           </p>
         </div>
 

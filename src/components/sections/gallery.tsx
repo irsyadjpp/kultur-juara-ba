@@ -6,20 +6,20 @@ import { Badge } from "@/components/ui/badge";
 
 const activities = [
   {
-    title: "Latihan Fisik Intensif",
-    desc: "Membangun stamina dan kekuatan atlet",
-    tag: "Physical Training",
+    title: "Latihan Fisik",
+    desc: "Membangun stamina dan kelincahan.",
+    tag: "Physical",
     image: "/images/koni-1.jpg"
   },
   {
-    title: "Teknik Dasar & Footwork",
-    desc: "Fondasi gerakan yang efisien di lapangan",
-    tag: "Technical Skills",
+    title: "Drill Teknik",
+    desc: "Mempertajam pukulan dan gerakan.",
+    tag: "Technical",
     image: "/images/koni-2.jpg"
   },
   {
-    title: "Sparring & Game Situations",
-    desc: "Simulasi pertandingan untuk melatih mental",
+    title: "Game Session",
+    desc: "Simulasi pertandingan yang seru.",
     tag: "Sparring",
     image: "/images/koni-3.jpg"
   },
@@ -34,10 +34,10 @@ export function GallerySection() {
             <Camera className="w-10 h-10 text-primary" />
           </div>
           <h2 className="text-4xl md:text-6xl font-black font-headline uppercase mb-4">
-            Galeri <span className="text-primary">Kegiatan</span>
+            Suasana <span className="text-primary">Latihan</span>
           </h2>
           <p className="text-xl text-muted-foreground font-medium max-w-2xl">
-            Intip suasana latihan rutin kami. Di sinilah keringat menetes demi impian menjadi juara masa depan.
+            Intip keseruan dan semangat latihan kami sehari-hari di lapangan.
           </p>
         </div>
 

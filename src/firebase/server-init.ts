@@ -1,10 +1,12 @@
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 import { firebaseConfig } from './config';
 
 function getSdks(firebaseApp: FirebaseApp) {
   return {
-    firestore: getFirestore(firebaseApp)
+    firestore: getFirestore(firebaseApp),
+    storage: getStorage(firebaseApp)
   };
 }
 
@@ -25,7 +27,7 @@ export function initializeFirebaseServer() {
     }
     return getSdks(firebaseApp);
   }
-  
+
   // If already initialized, return the SDKs with the existing app instance.
   return getSdks(getApp());
 }

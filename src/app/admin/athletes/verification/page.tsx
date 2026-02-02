@@ -2,11 +2,11 @@
 'use client';
 
 import { useState } from "react";
-import { 
-  ShieldCheck, UserCheck, FileX, Eye, 
-  CheckCircle2, XCircle, Search, Filter, 
-  ZoomIn, ChevronRight, AlertTriangle, FileText, 
-  Download, RefreshCcw
+import {
+    ShieldCheck, UserCheck, FileX, Eye,
+    CheckCircle2, XCircle, Search, Filter,
+    ZoomIn, ChevronRight, AlertTriangle, FileText,
+    Download, RefreshCcw
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,296 +19,293 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { FileUploadZone } from "@/components/ui/file-upload-zone";
 
 // MOCK DATA
 const APPLICANTS = [
-  { 
-    id: "KJA-001", 
-    name: "Kevin Sanjaya", 
-    category: "Dewasa", 
-    status: "PENDING", 
-    date: "10 mins ago",
-    documents: {
-      ktp: "/docs/ktp-mock.jpg",
-      akta: "/docs/akta-mock.jpg",
+    {
+        id: "KJA-001",
+        name: "Kevin Sanjaya",
+        category: "Dewasa",
+        status: "PENDING",
+        date: "10 mins ago",
+        documents: {
+            ktp: "/docs/ktp-mock.jpg",
+            akta: "/docs/akta-mock.jpg",
+        },
+        issues: []
     },
-    issues: []
-  },
-  { 
-    id: "KJA-002", 
-    name: "Siti Fadia", 
-    category: "Remaja", 
-    status: "VERIFIED", 
-    date: "1 hour ago",
-    documents: { ktp: "valid", akta: "valid" },
-    issues: []
-  },
-  { 
-    id: "KJA-003", 
-    name: "Budi Santoso", 
-    category: "Anak", 
-    status: "REJECTED", 
-    date: "Yesterday",
-    documents: { ktp: "invalid", akta: "valid" },
-    issues: ["Akta lahir tidak sesuai dengan KTP"]
-  },
+    {
+        id: "KJA-002",
+        name: "Siti Fadia",
+        category: "Remaja",
+        status: "VERIFIED",
+        date: "1 hour ago",
+        documents: { ktp: "valid", akta: "valid" },
+        issues: []
+    },
+    {
+        id: "KJA-003",
+        name: "Budi Santoso",
+        category: "Anak",
+        status: "REJECTED",
+        date: "Yesterday",
+        documents: { ktp: "invalid", akta: "valid" },
+        issues: ["Akta lahir tidak sesuai dengan KTP"]
+    },
 ];
 
 const REJECTION_REASONS = [
-  "Dokumen KTP Buram / Tidak Terbaca",
-  "Usia Tidak Sesuai Kategori",
-  "Data Akta Lahir & KTP tidak sinkron",
-  "Dokumen tidak lengkap"
+    "Dokumen KTP Buram / Tidak Terbaca",
+    "Usia Tidak Sesuai Kategori",
+    "Data Akta Lahir & KTP tidak sinkron",
+    "Dokumen tidak lengkap"
 ];
 
 export default function VerificationPage() {
-  const [selectedApplicant, setSelectedApplicant] = useState<typeof APPLICANTS[0] | null>(APPLICANTS[0]);
-  const [activeTab, setActiveTab] = useState("PENDING");
-  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
+    const [selectedApplicant, setSelectedApplicant] = useState<typeof APPLICANTS[0] | null>(APPLICANTS[0]);
+    const [activeTab, setActiveTab] = useState("PENDING");
+    const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+    const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  // Stats
-  const stats = {
-    pending: APPLICANTS.filter(a => a.status === 'PENDING').length,
-    verified: APPLICANTS.filter(a => a.status === 'VERIFIED').length,
-    rejected: APPLICANTS.filter(a => a.status === 'REJECTED').length
-  };
+    // Stats
+    const stats = {
+        pending: APPLICANTS.filter(a => a.status === 'PENDING').length,
+        verified: APPLICANTS.filter(a => a.status === 'VERIFIED').length,
+        rejected: APPLICANTS.filter(a => a.status === 'REJECTED').length
+    };
 
-  return (
-    <div className="space-y-6 p-4 md:p-0 font-body pb-24 h-[calc(100vh-112px)] flex flex-col">
-      
-      {/* --- HEADER --- */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 shrink-0">
-        <div>
-            <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="rounded-full px-3 py-1 border-sky-500 text-sky-500 bg-sky-500/10 animate-pulse">
-                    <ShieldCheck className="w-3 h-3 mr-2" /> DATA VALIDATION
-                </Badge>
-            </div>
-            <h1 className="text-3xl md:text-4xl font-black font-headline uppercase tracking-tighter text-foreground">
-                Verifikasi Dokumen <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-600">Atlet</span>
-            </h1>
-            <p className="text-muted-foreground mt-2 max-w-xl text-lg">
-                Validasi dokumen identitas (KTP/Akta) untuk memastikan kesesuaian kategori umur.
-            </p>
-        </div>
+    return (
+        <div className="space-y-6 p-4 md:p-0 font-body pb-24 h-[calc(100vh-112px)] flex flex-col">
 
-        {/* STATS WIDGET */}
-        <div className="flex gap-2 bg-secondary p-2 rounded-[24px] border">
-            <div className="px-6 py-2 bg-background rounded-2xl border text-center">
-                <p className="text-[10px] text-muted-foreground font-bold uppercase">Pending</p>
-                <p className="text-2xl font-black text-yellow-500">{stats.pending}</p>
-            </div>
-            <div className="px-6 py-2 bg-background rounded-2xl border text-center">
-                <p className="text-[10px] text-muted-foreground font-bold uppercase">Verified</p>
-                <p className="text-2xl font-black text-green-500">{stats.verified}</p>
-            </div>
-            <div className="px-6 py-2 bg-background rounded-2xl border text-center">
-                <p className="text-[10px] text-muted-foreground font-bold uppercase">Rejected</p>
-                <p className="text-2xl font-black text-red-500">{stats.rejected}</p>
-            </div>
-        </div>
-      </div>
-
-      {/* --- MAIN WORKSPACE (SPLIT VIEW) --- */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0">
-         
-         {/* LEFT: THE QUEUE (4 Cols) */}
-         <Card className="lg:col-span-4 bg-card/50 border rounded-[32px] flex flex-col overflow-hidden">
-            
-            <div className="p-4 space-y-4">
-                <div className="relative">
-                    <Search className="absolute left-4 top-3.5 w-4 h-4 text-muted-foreground" />
-                    <Input placeholder="Search name or ID..." className="h-12 bg-background rounded-xl pl-10 focus:ring-sky-500" />
+            {/* --- HEADER --- */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 shrink-0">
+                <div>
+                    <div className="flex items-center gap-2 mb-2">
+                        <Badge variant="outline" className="rounded-full px-3 py-1 border-sky-500 text-sky-500 bg-sky-500/10 animate-pulse">
+                            <ShieldCheck className="w-3 h-3 mr-2" /> DATA VALIDATION
+                        </Badge>
+                    </div>
+                    <h1 className="text-3xl md:text-4xl font-black font-headline uppercase tracking-tighter text-foreground">
+                        Verifikasi Dokumen <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-600">Atlet</span>
+                    </h1>
+                    <p className="text-muted-foreground mt-2 max-w-xl text-lg">
+                        Validasi dokumen identitas (KTP/Akta) untuk memastikan kesesuaian kategori umur.
+                    </p>
                 </div>
-                <Tabs defaultValue="PENDING" className="w-full" onValueChange={setActiveTab}>
-                    <TabsList className="bg-secondary p-1 rounded-xl w-full grid grid-cols-3">
-                        <TabsTrigger value="PENDING" className="rounded-lg text-xs font-bold">Pending</TabsTrigger>
-                        <TabsTrigger value="VERIFIED" className="rounded-lg text-xs font-bold">Done</TabsTrigger>
-                        <TabsTrigger value="REJECTED" className="rounded-lg text-xs font-bold">Issues</TabsTrigger>
-                    </TabsList>
-                </Tabs>
+
+                {/* STATS WIDGET */}
+                <div className="flex gap-2 bg-secondary p-2 rounded-[24px] border">
+                    <div className="px-6 py-2 bg-background rounded-2xl border text-center">
+                        <p className="text-[10px] text-muted-foreground font-bold uppercase">Pending</p>
+                        <p className="text-2xl font-black text-yellow-500">{stats.pending}</p>
+                    </div>
+                    <div className="px-6 py-2 bg-background rounded-2xl border text-center">
+                        <p className="text-[10px] text-muted-foreground font-bold uppercase">Verified</p>
+                        <p className="text-2xl font-black text-green-500">{stats.verified}</p>
+                    </div>
+                    <div className="px-6 py-2 bg-background rounded-2xl border text-center">
+                        <p className="text-[10px] text-muted-foreground font-bold uppercase">Rejected</p>
+                        <p className="text-2xl font-black text-red-500">{stats.rejected}</p>
+                    </div>
+                </div>
             </div>
 
-            <ScrollArea className="flex-1 px-4 pb-4">
-                <div className="space-y-3">
-                    {APPLICANTS.filter(a => a.status === activeTab).map((applicant) => (
-                        <div 
-                            key={applicant.id} 
-                            onClick={() => setSelectedApplicant(applicant)}
-                            className={cn(
-                                "group p-4 rounded-[20px] border cursor-pointer transition-all hover:bg-secondary/50",
-                                selectedApplicant?.id === applicant.id 
-                                    ? "bg-primary/10 border-primary/50 shadow-lg" 
-                                    : "bg-background border-border hover:border-border/50"
-                            )}
-                        >
-                            <div className="flex justify-between items-start mb-3">
-                                <Badge variant="outline" className="text-[9px]">
-                                    {applicant.id}
-                                </Badge>
-                                <span className="text-[10px] text-muted-foreground font-medium">{applicant.date}</span>
-                            </div>
-                            
-                            <div className="flex items-center gap-3">
-                                <Avatar className="h-10 w-10 border">
-                                    <AvatarFallback className="bg-secondary text-xs font-bold text-muted-foreground">
-                                        {applicant.name.charAt(0)}
-                                    </AvatarFallback>
-                                </Avatar>
-                                <div>
-                                    <h4 className="font-bold text-foreground text-sm line-clamp-1 group-hover:text-primary transition-colors">
-                                        {applicant.name}
-                                    </h4>
-                                    <p className="text-xs text-muted-foreground truncate">{applicant.category}</p>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </ScrollArea>
-         </Card>
+            {/* --- MAIN WORKSPACE (SPLIT VIEW) --- */}
+            <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0">
 
-         {/* RIGHT: INSPECTOR DECK (8 Cols) */}
-         <div className="lg:col-span-8 h-full">
-            {selectedApplicant ? (
-                <Card className="bg-background border rounded-[32px] h-full flex flex-col overflow-hidden shadow-2xl relative">
-                    
-                    <div className="p-8 border-b bg-secondary/30 flex justify-between items-start">
-                        <div className="flex items-center gap-6">
-                            <Avatar className="h-20 w-20 border-4 border-background shadow-xl">
-                                <AvatarImage src="https://github.com/shadcn.png" />
-                                <AvatarFallback>AT</AvatarFallback>
-                            </Avatar>
-                            <div>
-                                <h2 className="text-2xl font-black text-foreground uppercase tracking-tight mb-1">
-                                    {selectedApplicant.name}
-                                </h2>
-                                <Badge variant="outline">{selectedApplicant.category}</Badge>
-                            </div>
+                {/* LEFT: THE QUEUE (4 Cols) */}
+                <Card className="lg:col-span-4 bg-card/50 border rounded-[32px] flex flex-col overflow-hidden">
+
+                    <div className="p-4 space-y-4">
+                        <div className="relative">
+                            <Search className="absolute left-4 top-3.5 w-4 h-4 text-muted-foreground" />
+                            <Input placeholder="Search name or ID..." className="h-12 bg-background rounded-xl pl-10 focus:ring-sky-500" />
                         </div>
-                        
-                        <div className={cn(
-                            "px-4 py-2 rounded-xl border flex items-center gap-2 font-bold text-sm",
-                            selectedApplicant.status === 'PENDING' ? "bg-yellow-500/10 text-yellow-500 border-yellow-500/20" :
-                            selectedApplicant.status === 'VERIFIED' ? "bg-green-500/10 text-green-500 border-green-500/20" :
-                            "bg-red-500/10 text-red-500 border-red-500/20"
-                        )}>
-                            {selectedApplicant.status === 'PENDING' ? <RefreshCcw className="w-4 h-4 animate-spin-slow"/> : 
-                             selectedApplicant.status === 'VERIFIED' ? <CheckCircle2 className="w-4 h-4"/> : <XCircle className="w-4 h-4"/>}
-                            {selectedApplicant.status}
-                        </div>
+                        <Tabs defaultValue="PENDING" className="w-full" onValueChange={setActiveTab}>
+                            <TabsList className="bg-secondary p-1 rounded-xl w-full grid grid-cols-3">
+                                <TabsTrigger value="PENDING" className="rounded-lg text-xs font-bold">Pending</TabsTrigger>
+                                <TabsTrigger value="VERIFIED" className="rounded-lg text-xs font-bold">Done</TabsTrigger>
+                                <TabsTrigger value="REJECTED" className="rounded-lg text-xs font-bold">Issues</TabsTrigger>
+                            </TabsList>
+                        </Tabs>
                     </div>
 
-                    <ScrollArea className="flex-1 bg-background p-8">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            
-                            <div className="space-y-3">
-                                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                                    <FileText className="w-4 h-4 text-sky-500"/> KTP / Identitas
-                                </h3>
-                                <div 
-                                    className="aspect-video bg-secondary rounded-2xl border relative group cursor-zoom-in overflow-hidden"
-                                    onClick={() => setPreviewImage(selectedApplicant.documents.ktp)}
+                    <ScrollArea className="flex-1 px-4 pb-4">
+                        <div className="space-y-3">
+                            {APPLICANTS.filter(a => a.status === activeTab).map((applicant) => (
+                                <div
+                                    key={applicant.id}
+                                    onClick={() => setSelectedApplicant(applicant)}
+                                    className={cn(
+                                        "group p-4 rounded-[20px] border cursor-pointer transition-all hover:bg-secondary/50",
+                                        selectedApplicant?.id === applicant.id
+                                            ? "bg-primary/10 border-primary/50 shadow-lg"
+                                            : "bg-background border-border hover:border-border/50"
+                                    )}
                                 >
-                                    <div className="absolute inset-0 bg-secondary flex items-center justify-center text-muted-foreground">
-                                        [ Preview KTP Image ]
+                                    <div className="flex justify-between items-start mb-3">
+                                        <Badge variant="outline" className="text-[9px]">
+                                            {applicant.id}
+                                        </Badge>
+                                        <span className="text-[10px] text-muted-foreground font-medium">{applicant.date}</span>
                                     </div>
-                                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                        <ZoomIn className="w-8 h-8 text-white"/>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div className="space-y-3">
-                                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                                    <FileText className="w-4 h-4 text-sky-500"/> Akta Kelahiran
-                                </h3>
-                                <div 
-                                    className="aspect-video bg-secondary rounded-2xl border relative group cursor-zoom-in overflow-hidden"
-                                    onClick={() => setPreviewImage(selectedApplicant.documents.akta)}
-                                >
-                                    <div className="absolute inset-0 bg-secondary flex items-center justify-center text-muted-foreground">
-                                        [ Preview Akta Image ]
-                                    </div>
-                                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                        <ZoomIn className="w-8 h-8 text-white"/>
+                                    <div className="flex items-center gap-3">
+                                        <Avatar className="h-10 w-10 border">
+                                            <AvatarFallback className="bg-secondary text-xs font-bold text-muted-foreground">
+                                                {applicant.name.charAt(0)}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div>
+                                            <h4 className="font-bold text-foreground text-sm line-clamp-1 group-hover:text-primary transition-colors">
+                                                {applicant.name}
+                                            </h4>
+                                            <p className="text-xs text-muted-foreground truncate">{applicant.category}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            ))}
                         </div>
                     </ScrollArea>
+                </Card>
 
-                    {selectedApplicant.status === 'PENDING' && (
-                        <div className="p-6 border-t bg-secondary/80 grid grid-cols-2 gap-4">
-                            <Button 
-                                variant="destructive" 
-                                className="h-14 rounded-2xl font-bold"
-                                onClick={() => setIsRejectModalOpen(true)}
-                            >
-                                <XCircle className="w-5 h-5 mr-2"/> REJECT / REVISION
-                            </Button>
-                            <Button className="h-14 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-lg shadow-primary/20 text-lg">
-                                <UserCheck className="w-5 h-5 mr-2"/> VERIFY ATLET
-                            </Button>
+                {/* RIGHT: INSPECTOR DECK (8 Cols) */}
+                <div className="lg:col-span-8 h-full">
+                    {selectedApplicant ? (
+                        <Card className="bg-background border rounded-[32px] h-full flex flex-col overflow-hidden shadow-2xl relative">
+
+                            <div className="p-8 border-b bg-secondary/30 flex justify-between items-start">
+                                <div className="flex items-center gap-6">
+                                    <Avatar className="h-20 w-20 border-4 border-background shadow-xl">
+                                        <AvatarImage src="https://github.com/shadcn.png" />
+                                        <AvatarFallback>AT</AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                        <h2 className="text-2xl font-black text-foreground uppercase tracking-tight mb-1">
+                                            {selectedApplicant.name}
+                                        </h2>
+                                        <Badge variant="outline">{selectedApplicant.category}</Badge>
+                                    </div>
+                                </div>
+
+                                <div className={cn(
+                                    "px-4 py-2 rounded-xl border flex items-center gap-2 font-bold text-sm",
+                                    selectedApplicant.status === 'PENDING' ? "bg-yellow-500/10 text-yellow-500 border-yellow-500/20" :
+                                        selectedApplicant.status === 'VERIFIED' ? "bg-green-500/10 text-green-500 border-green-500/20" :
+                                            "bg-red-500/10 text-red-500 border-red-500/20"
+                                )}>
+                                    {selectedApplicant.status === 'PENDING' ? <RefreshCcw className="w-4 h-4 animate-spin-slow" /> :
+                                        selectedApplicant.status === 'VERIFIED' ? <CheckCircle2 className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
+                                    {selectedApplicant.status}
+                                </div>
+                            </div>
+
+                            <ScrollArea className="flex-1 bg-background p-8">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                                    <div className="space-y-3">
+                                        <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                                            <FileText className="w-4 h-4 text-sky-500" /> KTP / Identitas
+                                        </h3>
+                                        <FileUploadZone
+                                            storagePath={`documents/${selectedApplicant.id}/ktp`}
+                                            onUploadComplete={(url) => {
+                                                setSelectedApplicant(prev => prev ? ({ ...prev, documents: { ...prev.documents, ktp: url } }) : null);
+                                            }}
+                                            previousUrl={selectedApplicant.documents.ktp !== 'invalid' ? selectedApplicant.documents.ktp : undefined}
+                                            label="Upload KTP"
+                                            className="h-full"
+                                        />
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                                            <FileText className="w-4 h-4 text-sky-500" /> Akta Kelahiran
+                                        </h3>
+                                        <FileUploadZone
+                                            storagePath={`documents/${selectedApplicant.id}/akta`}
+                                            onUploadComplete={(url) => {
+                                                setSelectedApplicant(prev => prev ? ({ ...prev, documents: { ...prev.documents, akta: url } }) : null);
+                                            }}
+                                            previousUrl={selectedApplicant.documents.akta !== 'invalid' ? selectedApplicant.documents.akta : undefined}
+                                            label="Upload Akta"
+                                            className="h-full"
+                                        />
+                                    </div>
+                                </div>
+                            </ScrollArea>
+
+                            {selectedApplicant.status === 'PENDING' && (
+                                <div className="p-6 border-t bg-secondary/80 grid grid-cols-2 gap-4">
+                                    <Button
+                                        variant="destructive"
+                                        className="h-14 rounded-2xl font-bold"
+                                        onClick={() => setIsRejectModalOpen(true)}
+                                    >
+                                        <XCircle className="w-5 h-5 mr-2" /> REJECT / REVISION
+                                    </Button>
+                                    <Button className="h-14 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-lg shadow-primary/20 text-lg">
+                                        <UserCheck className="w-5 h-5 mr-2" /> VERIFY ATLET
+                                    </Button>
+                                </div>
+                            )}
+
+                        </Card>
+                    ) : (
+                        <div className="h-full flex flex-col items-center justify-center text-muted-foreground bg-secondary rounded-[32px] border border-dashed">
+                            <ShieldCheck className="w-20 h-20 mb-4 opacity-20 animate-pulse" />
+                            <p className="font-bold uppercase tracking-widest text-lg">Pilih Atlet untuk Diinspeksi</p>
                         </div>
                     )}
-
-                </Card>
-            ) : (
-                <div className="h-full flex flex-col items-center justify-center text-muted-foreground bg-secondary rounded-[32px] border border-dashed">
-                    <ShieldCheck className="w-20 h-20 mb-4 opacity-20 animate-pulse"/>
-                    <p className="font-bold uppercase tracking-widest text-lg">Pilih Atlet untuk Diinspeksi</p>
-                </div>
-            )}
-         </div>
-
-      </div>
-      <Dialog open={!!previewImage} onOpenChange={() => setPreviewImage(null)}>
-        <DialogContent className="bg-black/90 border-none shadow-none max-w-4xl h-[80vh] p-0 flex items-center justify-center">
-            <div className="relative w-full h-full p-4 flex items-center justify-center">
-                <img src={previewImage || ""} alt="Document Preview" className="max-w-full max-h-full object-contain rounded-lg shadow-2xl" />
-                <Button 
-                    className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white rounded-full"
-                    onClick={() => setPreviewImage(null)}
-                >
-                    Close
-                </Button>
-            </div>
-        </DialogContent>
-      </Dialog>
-      <Dialog open={isRejectModalOpen} onOpenChange={setIsRejectModalOpen}>
-        <DialogContent className="bg-card border text-foreground rounded-[40px] max-w-md p-0 overflow-hidden shadow-2xl">
-            <div className="p-8 border-b bg-red-500/10">
-                <DialogHeader>
-                    <DialogTitle className="text-2xl font-black font-headline uppercase flex items-center gap-2 text-red-500">
-                        <AlertTriangle className="w-6 h-6"/> Reject Entry
-                    </DialogTitle>
-                </DialogHeader>
-            </div>
-            
-            <div className="p-8 space-y-6">
-                <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Alasan Penolakan</label>
-                    <Select>
-                        <SelectTrigger className="bg-background h-14 rounded-2xl"><SelectValue placeholder="Pilih Alasan..." /></SelectTrigger>
-                        <SelectContent>
-                            {REJECTION_REASONS.map((r, i) => <SelectItem key={i} value={r}>{r}</SelectItem>)}
-                        </SelectContent>
-                    </Select>
                 </div>
 
-                <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Catatan Tambahan (Email ke Atlet)</label>
-                    <Textarea placeholder="Jelaskan detail perbaikan yang diperlukan..." className="bg-background rounded-2xl min-h-[100px] resize-none p-4" />
-                </div>
-
-                <Button className="w-full h-16 rounded-full font-black text-lg bg-red-600 hover:bg-red-700 text-white mt-2 shadow-xl shadow-red-900/20">
-                    CONFIRM REJECTION
-                </Button>
             </div>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
+            <Dialog open={!!previewImage} onOpenChange={() => setPreviewImage(null)}>
+                <DialogContent className="bg-black/90 border-none shadow-none max-w-4xl h-[80vh] p-0 flex items-center justify-center">
+                    <div className="relative w-full h-full p-4 flex items-center justify-center">
+                        <img src={previewImage || ""} alt="Document Preview" className="max-w-full max-h-full object-contain rounded-lg shadow-2xl" />
+                        <Button
+                            className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white rounded-full"
+                            onClick={() => setPreviewImage(null)}
+                        >
+                            Close
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
+            <Dialog open={isRejectModalOpen} onOpenChange={setIsRejectModalOpen}>
+                <DialogContent className="bg-card border text-foreground rounded-[40px] max-w-md p-0 overflow-hidden shadow-2xl">
+                    <div className="p-8 border-b bg-red-500/10">
+                        <DialogHeader>
+                            <DialogTitle className="text-2xl font-black font-headline uppercase flex items-center gap-2 text-red-500">
+                                <AlertTriangle className="w-6 h-6" /> Reject Entry
+                            </DialogTitle>
+                        </DialogHeader>
+                    </div>
+
+                    <div className="p-8 space-y-6">
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Alasan Penolakan</label>
+                            <Select>
+                                <SelectTrigger className="bg-background h-14 rounded-2xl"><SelectValue placeholder="Pilih Alasan..." /></SelectTrigger>
+                                <SelectContent>
+                                    {REJECTION_REASONS.map((r, i) => <SelectItem key={i} value={r}>{r}</SelectItem>)}
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Catatan Tambahan (Email ke Atlet)</label>
+                            <Textarea placeholder="Jelaskan detail perbaikan yang diperlukan..." className="bg-background rounded-2xl min-h-[100px] resize-none p-4" />
+                        </div>
+
+                        <Button className="w-full h-16 rounded-full font-black text-lg bg-red-600 hover:bg-red-700 text-white mt-2 shadow-xl shadow-red-900/20">
+                            CONFIRM REJECTION
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
+        </div>
+    );
 }
