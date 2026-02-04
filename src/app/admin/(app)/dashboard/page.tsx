@@ -13,6 +13,7 @@ import {
   Shield,
   Utensils,
   ChevronRight,
+  CheckCircle2,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -86,7 +87,7 @@ const mockData = [
     },
     alerts: [],
   },
-    {
+  {
     id: '5',
     name: 'Eka Putri',
     age: 12,
@@ -126,14 +127,14 @@ const getStatus = (score: number) => {
 };
 
 export default function CoachDashboardPage() {
-    
+
   const summaryStats = {
-      totalAthletes: mockData.length,
-      avgScore: Math.round(mockData.reduce((acc, a) => acc + a.totalScore, 0) / mockData.length),
-      highRiskCount: mockData.filter(a => a.totalScore < 60).length,
-      noDataCount: 2, // Hardcoded for now
+    totalAthletes: mockData.length,
+    avgScore: Math.round(mockData.reduce((acc, a) => acc + a.totalScore, 0) / mockData.length),
+    highRiskCount: mockData.filter(a => a.totalScore < 60).length,
+    noDataCount: 2, // Hardcoded for now
   }
-  
+
   const criticalAlerts = mockData.filter(a => a.alerts.length > 0 && a.totalScore < 60);
 
   return (
@@ -187,98 +188,98 @@ export default function CoachDashboardPage() {
           </CardContent>
         </Card>
       </div>
-      
+
       {/* 3. MAIN CONTENT (TABLE & ALERTS) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* MAIN ATHLETE TABLE */}
-          <div className="lg:col-span-2">
-              <Card className="rounded-[2.5rem] h-full">
-                  <CardHeader>
-                      <CardTitle>Ringkasan Atlet</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                      <Table>
-                          <TableHeader>
-                              <TableRow>
-                                  <TableHead>Nama Atlet</TableHead>
-                                  <TableHead className="text-center">Skor</TableHead>
-                                  <TableHead className="text-center hidden md:table-cell"><Utensils size={16}/></TableHead>
-                                  <TableHead className="text-center hidden md:table-cell"><Moon size={16}/></TableHead>
-                                  <TableHead className="text-center hidden md:table-cell"><Footprints size={16}/></TableHead>
-                                  <TableHead className="text-center hidden md:table-cell"><Shield size={16}/></TableHead>
-                                  <TableHead className="text-center">Status</TableHead>
-                                  <TableHead className="text-right"></TableHead>
-                              </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                              {mockData.map((atlet) => {
-                                  const status = getStatus(atlet.totalScore);
-                                  return (
-                                    <TableRow key={atlet.id}>
-                                        <TableCell>
-                                            <div className="flex items-center gap-3">
-                                                <Avatar className="h-9 w-9 border">
-                                                    <AvatarImage src={atlet.avatar} />
-                                                    <AvatarFallback>{atlet.name.charAt(0)}</AvatarFallback>
-                                                </Avatar>
-                                                <div>
-                                                    <p className="font-bold">{atlet.name}</p>
-                                                    <p className="text-xs text-muted-foreground">{atlet.age} Tahun</p>
-                                                </div>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell className="text-center font-mono font-bold text-lg">{atlet.totalScore}</TableCell>
-                                        <TableCell className="text-center hidden md:table-cell text-muted-foreground font-mono">{atlet.scores.nutrition}</TableCell>
-                                        <TableCell className="text-center hidden md:table-cell text-muted-foreground font-mono">{atlet.scores.sleep}</TableCell>
-                                        <TableCell className="text-center hidden md:table-cell text-muted-foreground font-mono">{atlet.scores.independent}</TableCell>
-                                        <TableCell className="text-center hidden md:table-cell text-muted-foreground font-mono">{atlet.scores.discipline}</TableCell>
-                                        <TableCell className="text-center">
-                                            <Badge variant="outline" className={cn('font-bold', status.color)}>{status.label}</Badge>
-                                        </TableCell>
-                                         <TableCell className="text-right">
-                                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
-                                                <ChevronRight className="h-4 w-4" />
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                  )
-                              })}
-                          </TableBody>
-                      </Table>
-                  </CardContent>
-              </Card>
-          </div>
 
-          {/* ALERTS PANEL */}
-          <div className="lg:col-span-1">
-              <Card className="rounded-[2.5rem] bg-secondary">
-                  <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                          <AlertTriangle className="text-red-500"/> Alert Kritis
-                      </CardTitle>
-                       <p className="text-sm text-muted-foreground">Atlet yang butuh perhatian segera.</p>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                      {criticalAlerts.length > 0 ? criticalAlerts.map(atlet => (
-                          <div key={atlet.id} className="bg-background p-4 rounded-2xl border border-red-500/20">
-                              <div className="flex items-center gap-3 mb-2">
-                                <Avatar className="h-8 w-8 border-2 border-red-500/50"><AvatarImage src={atlet.avatar} /><AvatarFallback>{atlet.name.charAt(0)}</AvatarFallback></Avatar>
-                                <p className="font-bold">{atlet.name}</p>
-                              </div>
-                              <ul className="list-disc pl-5 space-y-1 text-xs text-red-500/80">
-                                  {atlet.alerts.map((alert, i) => <li key={i}>{alert}</li>)}
-                              </ul>
+        {/* MAIN ATHLETE TABLE */}
+        <div className="lg:col-span-2">
+          <Card className="rounded-[2.5rem] h-full">
+            <CardHeader>
+              <CardTitle>Ringkasan Atlet</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nama Atlet</TableHead>
+                    <TableHead className="text-center">Skor</TableHead>
+                    <TableHead className="text-center hidden md:table-cell"><Utensils size={16} /></TableHead>
+                    <TableHead className="text-center hidden md:table-cell"><Moon size={16} /></TableHead>
+                    <TableHead className="text-center hidden md:table-cell"><Footprints size={16} /></TableHead>
+                    <TableHead className="text-center hidden md:table-cell"><Shield size={16} /></TableHead>
+                    <TableHead className="text-center">Status</TableHead>
+                    <TableHead className="text-right"></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {mockData.map((atlet) => {
+                    const status = getStatus(atlet.totalScore);
+                    return (
+                      <TableRow key={atlet.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <Avatar className="h-9 w-9 border">
+                              <AvatarImage src={atlet.avatar} />
+                              <AvatarFallback>{atlet.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-bold">{atlet.name}</p>
+                              <p className="text-xs text-muted-foreground">{atlet.age} Tahun</p>
+                            </div>
                           </div>
-                      )) : (
-                          <div className="text-center py-8 text-sm text-muted-foreground">
-                              <CheckCircle2 className="mx-auto h-8 w-8 text-green-500 mb-2"/>
-                              <p>Tidak ada alert kritis hari ini.</p>
-                          </div>
-                      )}
-                  </CardContent>
-              </Card>
-          </div>
+                        </TableCell>
+                        <TableCell className="text-center font-mono font-bold text-lg">{atlet.totalScore}</TableCell>
+                        <TableCell className="text-center hidden md:table-cell text-muted-foreground font-mono">{atlet.scores.nutrition}</TableCell>
+                        <TableCell className="text-center hidden md:table-cell text-muted-foreground font-mono">{atlet.scores.sleep}</TableCell>
+                        <TableCell className="text-center hidden md:table-cell text-muted-foreground font-mono">{atlet.scores.independent}</TableCell>
+                        <TableCell className="text-center hidden md:table-cell text-muted-foreground font-mono">{atlet.scores.discipline}</TableCell>
+                        <TableCell className="text-center">
+                          <Badge variant="outline" className={cn('font-bold', status.color)}>{status.label}</Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+                            <ChevronRight className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* ALERTS PANEL */}
+        <div className="lg:col-span-1">
+          <Card className="rounded-[2.5rem] bg-secondary">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <AlertTriangle className="text-red-500" /> Alert Kritis
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">Atlet yang butuh perhatian segera.</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {criticalAlerts.length > 0 ? criticalAlerts.map(atlet => (
+                <div key={atlet.id} className="bg-background p-4 rounded-2xl border border-red-500/20">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Avatar className="h-8 w-8 border-2 border-red-500/50"><AvatarImage src={atlet.avatar} /><AvatarFallback>{atlet.name.charAt(0)}</AvatarFallback></Avatar>
+                    <p className="font-bold">{atlet.name}</p>
+                  </div>
+                  <ul className="list-disc pl-5 space-y-1 text-xs text-red-500/80">
+                    {atlet.alerts.map((alert, i) => <li key={i}>{alert}</li>)}
+                  </ul>
+                </div>
+              )) : (
+                <div className="text-center py-8 text-sm text-muted-foreground">
+                  <CheckCircle2 className="mx-auto h-8 w-8 text-green-500 mb-2" />
+                  <p>Tidak ada alert kritis hari ini.</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
     </div>

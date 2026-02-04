@@ -62,6 +62,9 @@ const MOCK_DB_USERS = [
   }
 ];
 
+import { initializeFirebaseServer } from '@/firebase/server-init';
+import { collection, query, where, getDocs, limit } from 'firebase/firestore';
+
 export async function unifiedGoogleLogin(userData: { email: string; name: string; avatar: string; uid: string }) {
   // 1. Use real data from Google Auth passed from client
   const googleUser = {
@@ -71,18 +74,50 @@ export async function unifiedGoogleLogin(userData: { email: string; name: string
     uid: userData.uid
   };
 
-  // 2. Assign GUEST role by default for new registrations
-  // The Super Admin will update this role later via the admin dashboard
-  const userRole = "GUEST";
+  // 2. Determine Role
+  let userRole = "GUEST";
+  let isOnboarded = false;
+  let pin = Math.floor(100000 + Math.random() * 900000).toString();
+  let athleteId = undefined; // Specific for athletes
 
-  // 3. Auto-generate 6-digit PIN for new users
-  const generatedPin = Math.floor(100000 + Math.random() * 900000).toString();
+  // 2a. Check MOCK_DB_USERS first (for Admins, Head Coach, etc.)
+  const mockUser = MOCK_DB_USERS.find(u => u.email === googleUser.email);
+  if (mockUser) {
+    userRole = mockUser.role;
+    pin = mockUser.pin; // Use fixed PIN for mock users
+    isOnboarded = true; // Assume mock users are onboarded
+  } else {
+    // 2b. Check Firestore "athletes" collection
+    // This is the CRITICAL FIX requested by the user
+    try {
+      const { firestore } = initializeFirebaseServer();
+      const athletesRef = collection(firestore, 'athletes');
+      const q = query(athletesRef, where('email', '==', googleUser.email), limit(1));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const athleteDoc = querySnapshot.docs[0];
+        userRole = "ATHLETE";
+        athleteId = athleteDoc.id;
+        // Keep the random PIN or maybe fetch from doc if you decide to store PINs there later.
+        // For now, random PIN is fine as they use Google Auth.
+        isOnboarded = true; // Athletes registered by admin are considered onboarded/valid
+
+        // Optional: Update athlete document with Google UID or Avatar if needed, 
+        // but for now we just read to verify access.
+      }
+    } catch (error) {
+      console.error("Error checking athlete database during login:", error);
+      // Fallback to GUEST if DB fails, or handle error
+    }
+  }
 
   const userPayload = {
     ...googleUser,
     role: userRole,
-    pin: generatedPin,
-    isOnboarded: false, // Guests are not onboarded until role is assigned
+    pin: pin,
+    isOnboarded: isOnboarded,
+    athleteId: athleteId // Add this to session
   };
 
   // 3. Create Session with the determined role
@@ -93,12 +128,18 @@ export async function unifiedGoogleLogin(userData: { email: string; name: string
 
   (await cookies()).set('kultur_juara_session', sessionData, { httpOnly: true, path: '/' });
 
-  // 4. Redirect to the main admin dashboard.
-  // The layout will handle redirecting GUEST users to the waiting room.
-  const redirectUrl = userRole === 'GUEST' ? '/guests/waiting-room' : '/admin/dashboard';
+  // 4. Determine Redirect URL
+  let redirectUrl = '/guests/waiting-room';
+
+  if (userRole === 'ATHLETE') {
+    redirectUrl = '/athletes/dashboard';
+  } else if (['SUPER_ADMIN', 'ADMIN', 'HEAD_COACH', 'COACH', 'PSYCHOLOGIST'].includes(userRole)) {
+    redirectUrl = '/admin/dashboard';
+  }
 
   return { success: true, redirectUrl, user: userPayload };
 }
+
 
 
 export async function loginByCode(prevState: any, formData: FormData) {
