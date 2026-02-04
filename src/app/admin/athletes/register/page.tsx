@@ -238,7 +238,7 @@ export default function RegisterAthletePage() {
                 <FormItem className="md:col-span-2"><FormLabel>Alamat</FormLabel><FormControl><Textarea {...field} className="rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
               )} />
               <FormField control={form.control} name="schoolOrWork" render={({ field }) => (
-                <FormItem><FormLabel>Sekolah / Pekerjaan</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                <FormItem><FormLabel>Nama Sekolah</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary border" placeholder="Nama Sekolah" /></FormControl><FormMessage /></FormItem>
               )} />
               <FormField control={form.control} name="guardianName" render={({ field }) => (
                 <FormItem><FormLabel>Orang Tua / Wali (Opsional)</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
@@ -409,115 +409,7 @@ export default function RegisterAthletePage() {
               </CardContent>
             </Card>
 
-            {/* CARD H: KOMPOSISI TUBUH LENGKAP */}
-            <Card className="rounded-3xl shadow-xl border-green-500/10 bg-green-50/30">
-              <CardHeader className="p-8 pb-4">
-                <CardTitle className="text-xl font-headline flex items-center gap-3">
-                  <Weight className="w-5 h-5 text-green-600" /> H. Komposisi Tubuh & Kesehatan Lengkap
-                </CardTitle>
-                <CardDescription>Data pengukuran InBody/Tanita dan Tanda Vital (Opsional).</CardDescription>
-              </CardHeader>
-              <CardContent className="p-8 pt-0 space-y-8">
 
-                {/* H1. Lingkar Tubuh */}
-                <div>
-                  <h4 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 border-b pb-2">1. Lingkar Tubuh (Circumferences)</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <FormField control={form.control} name="armCircumference" render={({ field }) => (
-                      <FormItem><FormLabel>Lingkar Lengan (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 28" /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="thighCircumference" render={({ field }) => (
-                      <FormItem><FormLabel>Lingkar Paha (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 50" /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="calfCircumference" render={({ field }) => (
-                      <FormItem><FormLabel>Lingkar Betis (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 35" /></FormControl><FormMessage /></FormItem>
-                    )} />
-                  </div>
-                </div>
-
-                {/* H2. Tanda Vital */}
-                <div>
-                  <h4 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 border-b pb-2">2. Tanda Vital (Vitals)</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <FormField control={form.control} name="bloodPressureSystolic" render={({ field }) => (
-                      <FormItem><FormLabel>Tekanan Darah Sistolik</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 120" /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="bloodPressureDiastolic" render={({ field }) => (
-                      <FormItem><FormLabel>Tekanan Darah Diastolik</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 80" /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="pulse" render={({ field }) => (
-                      <FormItem><FormLabel>Denyut Nadi (bpm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 72" /></FormControl><FormMessage /></FormItem>
-                    )} />
-                  </div>
-                </div>
-
-                {/* H3. Analisis Komposisi Tubuh */}
-                <div>
-                  <h4 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 border-b pb-2">3. Analisis Komposisi Tubuh (Body Composition)</h4>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <FormField control={form.control} name="bmi" render={({ field }) => (
-                      <FormItem><FormLabel>BMI</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 21.5" /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="bodyFatPercent" render={({ field }) => (
-                      <FormItem><FormLabel>Body Fat (%)</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 15.0" /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="skeletalMusclePercent" render={({ field }) => (
-                      <FormItem><FormLabel>Skeletal Muscle (%)</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 45.0" /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="muscleMassPercent" render={({ field }) => (
-                      <FormItem><FormLabel>Muscle Mass (%)</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 40.0" /></FormControl><FormMessage /></FormItem>
-                    )} />
-
-                    <FormField control={form.control} name="bodyWaterPercent" render={({ field }) => (
-                      <FormItem><FormLabel>Body Water (%)</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 60.0" /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="boneMassPercent" render={({ field }) => (
-                      <FormItem><FormLabel>Bone Mass (%)</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 4.0" /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="proteinPercent" render={({ field }) => (
-                      <FormItem><FormLabel>Protein (%)</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 18.0" /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="visceralFatIndex" render={({ field }) => (
-                      <FormItem><FormLabel>Visceral Fat Index</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 5" /></FormControl><FormMessage /></FormItem>
-                    )} />
-
-                    <FormField control={form.control} name="subcutaneousFat" render={({ field }) => (
-                      <FormItem><FormLabel>Subcutaneous Fat (kg)</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 8.5" /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="inorganicSalt" render={({ field }) => (
-                      <FormItem><FormLabel>Inorganic Salt (kg)</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 3.2" /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="leanBodyMass" render={({ field }) => (
-                      <FormItem><FormLabel>Lean Body Mass (kg)</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 55.0" /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="somatotype" render={({ field }) => (
-                      <FormItem><FormLabel>Somatotype</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl><SelectTrigger className="h-12 rounded-xl bg-white border"><SelectValue placeholder="Pilih Tipe" /></SelectTrigger></FormControl>
-                        <SelectContent>
-                          <SelectItem value="Ectomorph">Ectomorph</SelectItem>
-                          <SelectItem value="Mesomorph">Mesomorph</SelectItem>
-                          <SelectItem value="Endomorph">Endomorph</SelectItem>
-                          <SelectItem value="Ecto-Mesomorph">Ecto-Mesomorph</SelectItem>
-                          <SelectItem value="Meso-Endomorph">Meso-Endomorph</SelectItem>
-                          <SelectItem value="Balanced">Balanced</SelectItem>
-                          <SelectItem value="Too Lean">Too Lean</SelectItem>
-                          <SelectItem value="Standard">Standard</SelectItem>
-                          <SelectItem value="Plus Size">Plus Size</SelectItem>
-                        </SelectContent>
-                      </Select><FormMessage /></FormItem>
-                    )} />
-
-                    <FormField control={form.control} name="bmr" render={({ field }) => (
-                      <FormItem><FormLabel>BMR (kcal)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 1500" /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="amr" render={({ field }) => (
-                      <FormItem><FormLabel>AMR (kcal)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 2400" /></FormControl><FormMessage /></FormItem>
-                    )} />
-                  </div>
-                </div>
-
-              </CardContent>
-            </Card>
 
           </div>
 

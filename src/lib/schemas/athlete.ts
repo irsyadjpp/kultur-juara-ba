@@ -11,7 +11,7 @@ export const athleteRegistrationSchema = z.object({
   phone: z.string().min(10, "Nomor HP tidak valid.").regex(/^\d+$/, "Hanya angka."),
   email: z.string().email("Format email tidak valid."),
   address: z.string().min(10, "Alamat wajib diisi."),
-  schoolOrWork: z.string().min(3, "Sekolah/Pekerjaan wajib diisi."),
+  schoolOrWork: z.string().min(3, "Nama sekolah wajib diisi."),
   guardianName: z.string().optional(),
   emergencyContact: z.string().min(10, "Kontak darurat tidak valid.").regex(/^\d+$/, "Hanya angka."),
 
@@ -43,30 +43,6 @@ export const athleteRegistrationSchema = z.object({
   // G. Data Internal (Admin Only)
   adminNotes: z.string().optional(),
 
-  // H. Komposisi Tubuh & Kesehatan Lengkap (Body Composition - Dynamic)
-  // Lingkar Tubuh
-  armCircumference: z.coerce.number().optional(), // Lingkar Lengan Atas
-  thighCircumference: z.coerce.number().optional(), // Lingkar Paha
-  calfCircumference: z.coerce.number().optional(), // Lingkar Betis
-  // Tanda Vital
-  bloodPressureSystolic: z.coerce.number().optional(), // Sistolik
-  bloodPressureDiastolic: z.coerce.number().optional(), // Diastolik
-  pulse: z.coerce.number().optional(), // Denyut Nadi
-  // Body Composition (InBody/Tanita)
-  bmi: z.coerce.number().optional(),
-  bodyFatPercent: z.coerce.number().optional(),
-  bodyWaterPercent: z.coerce.number().optional(),
-  skeletalMusclePercent: z.coerce.number().optional(),
-  boneMassPercent: z.coerce.number().optional(),
-  inorganicSalt: z.coerce.number().optional(),
-  proteinPercent: z.coerce.number().optional(),
-  muscleMassPercent: z.coerce.number().optional(),
-  visceralFatIndex: z.coerce.number().optional(),
-  subcutaneousFat: z.coerce.number().optional(),
-  leanBodyMass: z.coerce.number().optional(),
-  somatotype: z.string().optional(), // e.g., "Ectomorph", "Mesomorph", "Endomorph" or descriptive
-  bmr: z.coerce.number().optional(), // Basal Metabolic Rate
-  amr: z.coerce.number().optional(), // Active Metabolic Rate
 });
 
 export type AthleteRegistrationFormValues = z.infer<typeof athleteRegistrationSchema>;

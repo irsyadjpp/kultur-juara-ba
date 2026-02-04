@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useState, useRef } from "react";
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,6 +31,25 @@ export default function UnifiedLoginPage() {
     const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
     const [state, formAction] = useActionState(loginByCode, { success: false, message: '' });
+
+    // PIN Logic
+    const [pin, setPin] = useState("");
+    const formRef = useRef<HTMLFormElement>(null);
+
+    const handlePinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        // Allow only numeric input
+        if (value === '' || /^\d+$/.test(value)) {
+            // Limit to 6 chars
+            if (value.length <= 6) {
+                setPin(value);
+                if (value.length === 6) {
+                    // Auto submit when 6 digits are filled
+                    formRef.current?.requestSubmit();
+                }
+            }
+        }
+    };
 
     useEffect(() => {
         // The success case is now handled by the server-side redirect.
@@ -130,7 +149,7 @@ export default function UnifiedLoginPage() {
                         </TabsContent>
 
                         <TabsContent value="pin">
-                            <form action={formAction} className="space-y-6">
+                            <form ref={formRef} action={formAction} className="space-y-6">
                                 <div className="space-y-2 text-center">
                                     <Label htmlFor="pin-input" className="text-xs font-bold uppercase text-muted-foreground tracking-wider flex items-center justify-center gap-2">
                                         <KeyRound className="w-4 h-4" /> Masukkan Kode Akses Staf
@@ -139,10 +158,15 @@ export default function UnifiedLoginPage() {
                                         name="code"
                                         id="pin-input"
                                         type="password"
+                                        inputMode="numeric"
+                                        pattern="[0-9]*"
                                         maxLength={6}
+                                        value={pin}
+                                        onChange={handlePinChange}
                                         placeholder="••••••"
                                         className="text-center text-5xl tracking-[0.3em] bg-background border-2 border-border/50 text-foreground h-24 rounded-3xl focus:border-primary font-mono placeholder:text-muted-foreground/30"
                                         required
+                                        autoFocus
                                     />
                                 </div>
                                 <SubmitButton />
