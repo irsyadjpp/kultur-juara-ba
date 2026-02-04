@@ -186,6 +186,16 @@ export default function RegisterAthletePage() {
       <Form {...form}>
         <form action={formAction} className="space-y-8">
 
+          {/* === SECTION 1: STATIC DATA === */}
+          <div className="flex items-center gap-4 pt-2">
+            <div className="h-px bg-border flex-1" />
+            <span className="text-xs font-black text-muted-foreground uppercase tracking-widest bg-secondary/50 px-4 py-1 rounded-full border">
+              Data Statis (Profil Tetap)
+            </span>
+            <div className="h-px bg-border flex-1" />
+          </div>
+
+          {/* CARD A: DATA PRIBADI */}
           <Card className="rounded-3xl shadow-xl">
             <CardHeader className="p-8 pb-4">
               <CardTitle className="text-xl font-headline flex items-center gap-3">
@@ -239,56 +249,7 @@ export default function RegisterAthletePage() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl shadow-xl">
-            <CardHeader className="p-8 pb-4">
-              <CardTitle className="text-xl font-headline flex items-center gap-3">
-                <Ruler className="w-5 h-5 text-primary" /> B. Antropometri
-              </CardTitle>
-              <CardDescription>Pengukuran dasar komposisi tubuh.</CardDescription>
-            </CardHeader>
-            <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField control={form.control} name="height" render={({ field }) => (
-                <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4" />Tinggi Badan (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary border" placeholder="cth: 170" /></FormControl><FormMessage /></FormItem>
-              )} />
-              <FormField control={form.control} name="weight" render={({ field }) => (
-                <FormItem><FormLabel className="flex items-center gap-2"><Weight className="w-4 h-4" />Berat Badan (kg)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary border" placeholder="cth: 65" /></FormControl><FormMessage /></FormItem>
-              )} />
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-3xl shadow-xl">
-            <CardHeader className="p-8 pb-4">
-              <CardTitle className="text-xl font-headline flex items-center gap-3">
-                <Shirt className="w-5 h-5 text-primary" /> C. Pengukuran & Ukuran Jersey
-              </CardTitle>
-              <CardDescription>Masukkan pengukuran untuk mendapatkan rekomendasi ukuran jersey.</CardDescription>
-            </CardHeader>
-            <CardContent className="p-8 pt-0 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <FormField control={form.control} name="jerseyLength" render={({ field }) => (
-                  <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4" />Panjang Badan (Paha - Leher) (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary border" placeholder="cth: 70" /></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="chestWidth" render={({ field }) => (
-                  <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4" />Lingkar Dada (LD) (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary border" placeholder="cth: 90" /></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="waistCircumference" render={({ field }) => (
-                  <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4" />Lingkar Perut (LP) (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary border" placeholder="cth: 75" /></FormControl><FormMessage /></FormItem>
-                )} />
-              </div>
-              <div className="text-center bg-secondary/50 rounded-2xl p-6 border">
-                <p className="text-sm text-muted-foreground font-bold uppercase">Rekomendasi Ukuran</p>
-                <div className="text-8xl font-black font-mono text-primary my-2 animate-in fade-in zoom-in duration-500">{recommendedSize}</div>
-                <p className="text-xs text-muted-foreground">Toleransi 1-2cm. Ukuran dapat disesuaikan manual oleh logistik.</p>
-                {/* Hidden input to ensure shirtSize is submitted */}
-                <div className="hidden">
-                  <FormField control={form.control} name="shirtSize" render={({ field }) => (
-                    <FormItem><FormControl><Input {...field} /></FormControl></FormItem>
-                  )} />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
+          {/* CARD D: NAMA PUNGGUNG (MOVED HERE) */}
           <Card className="rounded-3xl shadow-xl">
             <CardHeader className="p-8 pb-4">
               <CardTitle className="text-xl font-headline flex items-center gap-3">
@@ -309,80 +270,256 @@ export default function RegisterAthletePage() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl shadow-xl">
-            <CardHeader className="p-8 pb-4">
-              <CardTitle className="text-xl font-headline flex items-center gap-3">
-                <Target className="w-5 h-5 text-primary" /> E. Status Kepelatihan
-              </CardTitle>
-              <CardDescription>Informasi terkait jenjang dan tujuan atlet di akademi.</CardDescription>
-            </CardHeader>
-            <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField control={form.control} name="category" render={({ field }) => (
-                <FormItem><FormLabel>Kategori Usia</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl><SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Kategori" /></SelectTrigger></FormControl>
-                  <SelectContent>
-                    <SelectItem value="Pra-usia dini (U-9)">Pra-usia dini (U-9)</SelectItem>
-                    <SelectItem value="Usia dini (U-11)">Usia dini (U-11)</SelectItem>
-                    <SelectItem value="Anak-anak (U-13)">Anak-anak (U-13)</SelectItem>
-                    <SelectItem value="Pemula & Remaja (U-15, U-17)">Pemula & Remaja (U-15, U-17)</SelectItem>
-                  </SelectContent>
-                </Select><FormMessage /></FormItem>
-              )} />
-              <FormField control={form.control} name="level" render={({ field }) => (
-                <FormItem><FormLabel>Level Atlet</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl><SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Level" /></SelectTrigger></FormControl>
-                  <SelectContent><SelectItem value="Beginner">Beginner</SelectItem><SelectItem value="Intermediate">Intermediate</SelectItem><SelectItem value="Advanced">Advanced</SelectItem><SelectItem value="Elite">Elite</SelectItem></SelectContent>
-                </Select><FormMessage /></FormItem>
-              )} />
-              <FormField control={form.control} name="pbsiNumber" render={({ field }) => (
-                <FormItem><FormLabel>Nomor PBSI (Jika Ada)</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
-              )} />
-              <FormField control={form.control} name="startYear" render={({ field }) => (
-                <FormItem><FormLabel>Tahun Mulai Badminton</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
-              )} />
-              <FormField control={form.control} name="careerTarget" render={({ field }) => (
-                <FormItem className="md:col-span-2"><FormLabel>Target Karier</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl><SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Target" /></SelectTrigger></FormControl>
-                  <SelectContent><SelectItem value="Rekreasi">Rekreasi</SelectItem><SelectItem value="Prestasi">Prestasi</SelectItem><SelectItem value="Profesional">Profesional</SelectItem></SelectContent>
-                </Select><FormMessage /></FormItem>
-              )} />
-            </CardContent>
-          </Card>
+          {/* === SECTION 2: DYNAMIC DATA === */}
+          <div className="flex items-center gap-4 py-4 mt-8">
+            <div className="h-px bg-green-500/20 flex-1" />
+            <span className="text-xs font-black text-green-600 uppercase tracking-widest bg-green-50 px-4 py-1 rounded-full border border-green-200">
+              Data Dinamis (Berkala)
+            </span>
+            <div className="h-px bg-green-500/20 flex-1" />
+          </div>
 
+          <div className="grid grid-cols-1 gap-8 opacity-90 hover:opacity-100 transition-opacity">
+            {/* CARD B: ANTROPOMETRI */}
+            <Card className="rounded-3xl shadow-xl border-green-500/10">
+              <CardHeader className="p-8 pb-4">
+                <CardTitle className="text-xl font-headline flex items-center gap-3">
+                  <Ruler className="w-5 h-5 text-green-600" /> B. Antropometri
+                </CardTitle>
+                <CardDescription>Pengukuran dasar komposisi tubuh.</CardDescription>
+              </CardHeader>
+              <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField control={form.control} name="height" render={({ field }) => (
+                  <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4" />Tinggi Badan (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary border" placeholder="cth: 170" /></FormControl><FormMessage /></FormItem>
+                )} />
+                <FormField control={form.control} name="weight" render={({ field }) => (
+                  <FormItem><FormLabel className="flex items-center gap-2"><Weight className="w-4 h-4" />Berat Badan (kg)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary border" placeholder="cth: 65" /></FormControl><FormMessage /></FormItem>
+                )} />
+              </CardContent>
+            </Card>
 
-          <Card className="rounded-3xl shadow-xl border-blue-200 bg-blue-50/50">
-            <CardHeader className="p-8 pb-4">
-              <CardTitle className="text-xl font-headline flex items-center gap-3 text-blue-700">
-                <ShieldCheck className="w-5 h-5" /> F. Evaluasi & Perkembangan
-              </CardTitle>
-              <CardDescription className="text-blue-600 font-bold">⚠️ Data ini AKAN MUNCUL di profil atlet.</CardDescription>
-            </CardHeader>
-            <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField control={form.control} name="skillScore" render={({ field }) => (
-                <FormItem><FormLabel>Daya Juang (0-100)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-white border" placeholder="85" /></FormControl><FormMessage /></FormItem>
-              )} />
-              <FormField control={form.control} name="coachName" render={({ field }) => (
-                <FormItem><FormLabel>Nama Pelatih Evaluator</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-white border" placeholder="Coach Budi" /></FormControl><FormMessage /></FormItem>
-              )} />
-              <FormField control={form.control} name="coachNotes" render={({ field }) => (
-                <FormItem className="md:col-span-2"><FormLabel>Catatan Pelatih</FormLabel><FormControl><Textarea {...field} className="rounded-xl bg-white border h-24" placeholder="Atlet memiliki semangat yang tinggi..." /></FormControl><FormMessage /></FormItem>
-              )} />
-            </CardContent>
-          </Card>
+            {/* CARD C: PENGUKURAN JERSEY */}
+            <Card className="rounded-3xl shadow-xl border-green-500/10">
+              <CardHeader className="p-8 pb-4">
+                <CardTitle className="text-xl font-headline flex items-center gap-3">
+                  <Shirt className="w-5 h-5 text-green-600" /> C. Pengukuran & Ukuran Jersey
+                </CardTitle>
+                <CardDescription>Masukkan pengukuran untuk mendapatkan rekomendasi ukuran jersey.</CardDescription>
+              </CardHeader>
+              <CardContent className="p-8 pt-0 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <FormField control={form.control} name="jerseyLength" render={({ field }) => (
+                    <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4" />Panjang Badan (Paha - Leher) (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary border" placeholder="cth: 70" /></FormControl><FormMessage /></FormItem>
+                  )} />
+                  <FormField control={form.control} name="chestWidth" render={({ field }) => (
+                    <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4" />Lingkar Dada (LD) (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary border" placeholder="cth: 90" /></FormControl><FormMessage /></FormItem>
+                  )} />
+                  <FormField control={form.control} name="waistCircumference" render={({ field }) => (
+                    <FormItem><FormLabel className="flex items-center gap-2"><Ruler className="w-4 h-4" />Lingkar Perut (LP) (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl font-mono text-lg bg-secondary border" placeholder="cth: 75" /></FormControl><FormMessage /></FormItem>
+                  )} />
+                </div>
+                <div className="text-center bg-secondary/50 rounded-2xl p-6 border">
+                  <p className="text-sm text-muted-foreground font-bold uppercase">Rekomendasi Ukuran</p>
+                  <div className="text-8xl font-black font-mono text-primary my-2 animate-in fade-in zoom-in duration-500">{recommendedSize}</div>
+                  <p className="text-xs text-muted-foreground">Toleransi 1-2cm. Ukuran dapat disesuaikan manual oleh logistik.</p>
+                  {/* Hidden input to ensure shirtSize is submitted */}
+                  <div className="hidden">
+                    <FormField control={form.control} name="shirtSize" render={({ field }) => (
+                      <FormItem><FormControl><Input {...field} /></FormControl></FormItem>
+                    )} />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-          <Card className="rounded-3xl shadow-xl border-red-200 bg-red-50/50">
-            <CardHeader className="p-8 pb-4">
-              <CardTitle className="text-xl font-headline flex items-center gap-3 text-red-700">
-                <Lock className="w-5 h-5" /> G. Data Internal (Admin Only)
-              </CardTitle>
-              <CardDescription className="text-red-600 font-bold">🔒 Data ini TIDAK AKAN MUNCUL di profil atlet.</CardDescription>
-            </CardHeader>
-            <CardContent className="p-8 pt-0 space-y-6">
-              <FormField control={form.control} name="adminNotes" render={({ field }) => (
-                <FormItem><FormLabel>Catatan Admin</FormLabel><FormControl><Textarea {...field} className="rounded-xl bg-white border h-24" placeholder="Status pembayaran, catatan khusus, dll..." /></FormControl><FormMessage /></FormItem>
-              )} />
-            </CardContent>
-          </Card>
+            {/* CARD E: STATUS KEPELATIHAN */}
+            <Card className="rounded-3xl shadow-xl border-green-500/10">
+              <CardHeader className="p-8 pb-4">
+                <CardTitle className="text-xl font-headline flex items-center gap-3">
+                  <Target className="w-5 h-5 text-green-600" /> E. Status Kepelatihan
+                </CardTitle>
+                <CardDescription>Informasi terkait jenjang dan tujuan atlet di akademi.</CardDescription>
+              </CardHeader>
+              <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField control={form.control} name="category" render={({ field }) => (
+                  <FormItem><FormLabel>Kategori Usia</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl><SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Kategori" /></SelectTrigger></FormControl>
+                    <SelectContent>
+                      <SelectItem value="Pra-usia dini (U-9)">Pra-usia dini (U-9)</SelectItem>
+                      <SelectItem value="Usia dini (U-11)">Usia dini (U-11)</SelectItem>
+                      <SelectItem value="Anak-anak (U-13)">Anak-anak (U-13)</SelectItem>
+                      <SelectItem value="Pemula & Remaja (U-15, U-17)">Pemula & Remaja (U-15, U-17)</SelectItem>
+                    </SelectContent>
+                  </Select><FormMessage /></FormItem>
+                )} />
+                <FormField control={form.control} name="level" render={({ field }) => (
+                  <FormItem><FormLabel>Level Atlet</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl><SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Level" /></SelectTrigger></FormControl>
+                    <SelectContent><SelectItem value="Beginner">Beginner</SelectItem><SelectItem value="Intermediate">Intermediate</SelectItem><SelectItem value="Advanced">Advanced</SelectItem><SelectItem value="Elite">Elite</SelectItem></SelectContent>
+                  </Select><FormMessage /></FormItem>
+                )} />
+                <FormField control={form.control} name="pbsiNumber" render={({ field }) => (
+                  <FormItem><FormLabel>Nomor PBSI (Jika Ada)</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                )} />
+                <FormField control={form.control} name="startYear" render={({ field }) => (
+                  <FormItem><FormLabel>Tahun Mulai Badminton</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                )} />
+                <FormField control={form.control} name="careerTarget" render={({ field }) => (
+                  <FormItem className="md:col-span-2"><FormLabel>Target Karier</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl><SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Target" /></SelectTrigger></FormControl>
+                    <SelectContent><SelectItem value="Rekreasi">Rekreasi</SelectItem><SelectItem value="Prestasi">Prestasi</SelectItem><SelectItem value="Profesional">Profesional</SelectItem></SelectContent>
+                  </Select><FormMessage /></FormItem>
+                )} />
+              </CardContent>
+            </Card>
+
+            {/* CARD F: EVALUASI */}
+            <Card className="rounded-3xl shadow-xl border-blue-200 bg-blue-50/50">
+              <CardHeader className="p-8 pb-4">
+                <CardTitle className="text-xl font-headline flex items-center gap-3 text-blue-700">
+                  <ShieldCheck className="w-5 h-5" /> F. Evaluasi & Perkembangan
+                </CardTitle>
+                <CardDescription className="text-blue-600 font-bold">⚠️ Data ini AKAN MUNCUL di profil atlet.</CardDescription>
+              </CardHeader>
+              <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField control={form.control} name="skillScore" render={({ field }) => (
+                  <FormItem><FormLabel>Daya Juang (0-100)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-white border" placeholder="85" /></FormControl><FormMessage /></FormItem>
+                )} />
+                <FormField control={form.control} name="coachName" render={({ field }) => (
+                  <FormItem><FormLabel>Nama Pelatih Evaluator</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-white border" placeholder="Coach Budi" /></FormControl><FormMessage /></FormItem>
+                )} />
+                <FormField control={form.control} name="coachNotes" render={({ field }) => (
+                  <FormItem className="md:col-span-2"><FormLabel>Catatan Pelatih</FormLabel><FormControl><Textarea {...field} className="rounded-xl bg-white border h-24" placeholder="Atlet memiliki semangat yang tinggi..." /></FormControl><FormMessage /></FormItem>
+                )} />
+              </CardContent>
+            </Card>
+
+            {/* CARD G: DATA INTERNAL */}
+            <Card className="rounded-3xl shadow-xl border-red-200 bg-red-50/50">
+              <CardHeader className="p-8 pb-4">
+                <CardTitle className="text-xl font-headline flex items-center gap-3 text-red-700">
+                  <Lock className="w-5 h-5" /> G. Data Internal (Admin Only)
+                </CardTitle>
+                <CardDescription className="text-red-600 font-bold">🔒 Data ini TIDAK AKAN MUNCUL di profil atlet.</CardDescription>
+              </CardHeader>
+              <CardContent className="p-8 pt-0 space-y-6">
+                <FormField control={form.control} name="adminNotes" render={({ field }) => (
+                  <FormItem><FormLabel>Catatan Admin</FormLabel><FormControl><Textarea {...field} className="rounded-xl bg-white border h-24" placeholder="Status pembayaran, catatan khusus, dll..." /></FormControl><FormMessage /></FormItem>
+                )} />
+              </CardContent>
+            </Card>
+
+            {/* CARD H: KOMPOSISI TUBUH LENGKAP */}
+            <Card className="rounded-3xl shadow-xl border-green-500/10 bg-green-50/30">
+              <CardHeader className="p-8 pb-4">
+                <CardTitle className="text-xl font-headline flex items-center gap-3">
+                  <Weight className="w-5 h-5 text-green-600" /> H. Komposisi Tubuh & Kesehatan Lengkap
+                </CardTitle>
+                <CardDescription>Data pengukuran InBody/Tanita dan Tanda Vital (Opsional).</CardDescription>
+              </CardHeader>
+              <CardContent className="p-8 pt-0 space-y-8">
+
+                {/* H1. Lingkar Tubuh */}
+                <div>
+                  <h4 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 border-b pb-2">1. Lingkar Tubuh (Circumferences)</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <FormField control={form.control} name="armCircumference" render={({ field }) => (
+                      <FormItem><FormLabel>Lingkar Lengan (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 28" /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="thighCircumference" render={({ field }) => (
+                      <FormItem><FormLabel>Lingkar Paha (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 50" /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="calfCircumference" render={({ field }) => (
+                      <FormItem><FormLabel>Lingkar Betis (cm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 35" /></FormControl><FormMessage /></FormItem>
+                    )} />
+                  </div>
+                </div>
+
+                {/* H2. Tanda Vital */}
+                <div>
+                  <h4 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 border-b pb-2">2. Tanda Vital (Vitals)</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <FormField control={form.control} name="bloodPressureSystolic" render={({ field }) => (
+                      <FormItem><FormLabel>Tekanan Darah Sistolik</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 120" /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="bloodPressureDiastolic" render={({ field }) => (
+                      <FormItem><FormLabel>Tekanan Darah Diastolik</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 80" /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="pulse" render={({ field }) => (
+                      <FormItem><FormLabel>Denyut Nadi (bpm)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 72" /></FormControl><FormMessage /></FormItem>
+                    )} />
+                  </div>
+                </div>
+
+                {/* H3. Analisis Komposisi Tubuh */}
+                <div>
+                  <h4 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 border-b pb-2">3. Analisis Komposisi Tubuh (Body Composition)</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <FormField control={form.control} name="bmi" render={({ field }) => (
+                      <FormItem><FormLabel>BMI</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 21.5" /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="bodyFatPercent" render={({ field }) => (
+                      <FormItem><FormLabel>Body Fat (%)</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 15.0" /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="skeletalMusclePercent" render={({ field }) => (
+                      <FormItem><FormLabel>Skeletal Muscle (%)</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 45.0" /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="muscleMassPercent" render={({ field }) => (
+                      <FormItem><FormLabel>Muscle Mass (%)</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 40.0" /></FormControl><FormMessage /></FormItem>
+                    )} />
+
+                    <FormField control={form.control} name="bodyWaterPercent" render={({ field }) => (
+                      <FormItem><FormLabel>Body Water (%)</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 60.0" /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="boneMassPercent" render={({ field }) => (
+                      <FormItem><FormLabel>Bone Mass (%)</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 4.0" /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="proteinPercent" render={({ field }) => (
+                      <FormItem><FormLabel>Protein (%)</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 18.0" /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="visceralFatIndex" render={({ field }) => (
+                      <FormItem><FormLabel>Visceral Fat Index</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 5" /></FormControl><FormMessage /></FormItem>
+                    )} />
+
+                    <FormField control={form.control} name="subcutaneousFat" render={({ field }) => (
+                      <FormItem><FormLabel>Subcutaneous Fat (kg)</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 8.5" /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="inorganicSalt" render={({ field }) => (
+                      <FormItem><FormLabel>Inorganic Salt (kg)</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 3.2" /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="leanBodyMass" render={({ field }) => (
+                      <FormItem><FormLabel>Lean Body Mass (kg)</FormLabel><FormControl><Input type="number" step="0.1" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 55.0" /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="somatotype" render={({ field }) => (
+                      <FormItem><FormLabel>Somatotype</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl><SelectTrigger className="h-12 rounded-xl bg-white border"><SelectValue placeholder="Pilih Tipe" /></SelectTrigger></FormControl>
+                        <SelectContent>
+                          <SelectItem value="Ectomorph">Ectomorph</SelectItem>
+                          <SelectItem value="Mesomorph">Mesomorph</SelectItem>
+                          <SelectItem value="Endomorph">Endomorph</SelectItem>
+                          <SelectItem value="Ecto-Mesomorph">Ecto-Mesomorph</SelectItem>
+                          <SelectItem value="Meso-Endomorph">Meso-Endomorph</SelectItem>
+                          <SelectItem value="Balanced">Balanced</SelectItem>
+                          <SelectItem value="Too Lean">Too Lean</SelectItem>
+                          <SelectItem value="Standard">Standard</SelectItem>
+                          <SelectItem value="Plus Size">Plus Size</SelectItem>
+                        </SelectContent>
+                      </Select><FormMessage /></FormItem>
+                    )} />
+
+                    <FormField control={form.control} name="bmr" render={({ field }) => (
+                      <FormItem><FormLabel>BMR (kcal)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 1500" /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="amr" render={({ field }) => (
+                      <FormItem><FormLabel>AMR (kcal)</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-white border" placeholder="e.g. 2400" /></FormControl><FormMessage /></FormItem>
+                    )} />
+                  </div>
+                </div>
+
+              </CardContent>
+            </Card>
+
+          </div>
 
           <div className="pt-4">
             <SubmitButton />
