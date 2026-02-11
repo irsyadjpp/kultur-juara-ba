@@ -44,7 +44,7 @@ const data = {
     avatar: "/avatars/irsyad.jpg",
   },
   navSuperAdmin: [
-    { title: "Superadmin Deck", url: "/admin/super", icon: Crown },
+    { title: "Superadmin Deck", url: "/superadmin/dashboard", icon: Crown },
   ],
   navUtama: [
     { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },

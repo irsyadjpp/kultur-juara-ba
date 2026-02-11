@@ -133,7 +133,9 @@ export async function unifiedGoogleLogin(userData: { email: string; name: string
 
   if (userRole === 'ATHLETE') {
     redirectUrl = '/athletes/dashboard';
-  } else if (['SUPER_ADMIN', 'ADMIN', 'HEAD_COACH', 'COACH', 'PSYCHOLOGIST'].includes(userRole)) {
+  } else if (userRole === 'SUPER_ADMIN') {
+    redirectUrl = '/superadmin/dashboard';
+  } else if (['ADMIN', 'HEAD_COACH', 'COACH', 'PSYCHOLOGIST'].includes(userRole)) {
     redirectUrl = '/admin/dashboard';
   }
 
@@ -161,7 +163,12 @@ export async function loginByCode(prevState: any, formData: FormData) {
 
   (await cookies()).set('kultur_juara_session', sessionData, { httpOnly: true, path: '/' });
 
-  const redirectUrl = dbUser.role === 'ATHLETE' ? '/athletes/dashboard' : '/admin/dashboard';
+  let redirectUrl = '/admin/dashboard';
+  if (dbUser.role === 'ATHLETE') {
+    redirectUrl = '/athletes/dashboard';
+  } else if (dbUser.role === 'SUPER_ADMIN') {
+    redirectUrl = '/superadmin/dashboard';
+  }
 
   redirect(redirectUrl);
 }

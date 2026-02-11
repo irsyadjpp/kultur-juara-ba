@@ -16,13 +16,13 @@ export const athleteRegistrationSchema = z.object({
   emergencyContact: z.string().min(10, "Kontak darurat tidak valid.").regex(/^\d+$/, "Hanya angka."),
 
   // B. Antropometri
-  height: z.string().min(1, "Tinggi badan wajib diisi."),
-  weight: z.string().min(1, "Berat badan wajib diisi."),
+  height: z.coerce.number({ invalid_type_error: "Tinggi badan harus angka." }).min(1, "Tinggi badan wajib diisi."),
+  weight: z.coerce.number({ invalid_type_error: "Berat badan harus angka." }).min(1, "Berat badan wajib diisi."),
 
   // C. Pengukuran Jersey
-  chestWidth: z.string().min(1, "Lingkar Dada (LD) wajib diisi."),
-  waistCircumference: z.string().min(1, "Lingkar Perut (LP) wajib diisi."),
-  jerseyLength: z.string().min(1, "Panjang Badan (Jersey) wajib diisi."),
+  chestWidth: z.coerce.number({ invalid_type_error: "Lingkar Dada harus angka." }).min(1, "Lingkar Dada wajib diisi."),
+  waistCircumference: z.coerce.number({ invalid_type_error: "Lingkar Perut harus angka." }).min(1, "Lingkar Perut wajib diisi."),
+  jerseyLength: z.coerce.number({ invalid_type_error: "Panjang Badan harus angka." }).min(1, "Panjang Badan wajib diisi."),
   shirtSize: z.string().optional(),
 
   // D. Nama Punggung
@@ -33,7 +33,7 @@ export const athleteRegistrationSchema = z.object({
   category: z.enum(["Pra-usia dini (U-9)", "Usia dini (U-11)", "Anak-anak (U-13)", "Pemula & Remaja (U-15, U-17)"], { required_error: "Pilih kategori usia." }),
   level: z.enum(["Beginner", "Intermediate", "Advanced", "Elite"], { required_error: "Pilih level atlet." }),
   pbsiNumber: z.string().optional(),
-  startYear: z.string().length(4, "Tahun harus 4 digit.").regex(/^\d+$/, "Tahun hanya boleh angka."),
+  startYear: z.coerce.number({ invalid_type_error: "Tahun harus angka." }).min(1900, "Tahun tidak valid.").max(new Date().getFullYear(), "Tahun tidak boleh lebih dari sekarang."),
   careerTarget: z.enum(["Rekreasi", "Prestasi", "Profesional"], { required_error: "Pilih target karier." }),
   // F. Data Evaluasi (Visible to Athlete)
   skillScore: z.coerce.number().min(0).max(100).optional(),
