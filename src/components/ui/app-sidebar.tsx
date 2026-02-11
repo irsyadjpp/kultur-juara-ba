@@ -162,7 +162,7 @@ export function AppSidebar({ onLogout, user, ...props }: React.ComponentProps<ty
           </div>
 
           <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-            <span className="truncate font-black font-headline text-lg tracking-tight text-foreground">Kultur Juara PWN</span>
+            <span className="truncate font-black font-headline text-lg tracking-tight text-foreground">Kultur Juara</span>
             <span className="truncate text-[10px] uppercase font-bold text-muted-foreground tracking-widest">{currentUser.role?.replace('_', ' ')} Panel</span>
           </div>
         </div>

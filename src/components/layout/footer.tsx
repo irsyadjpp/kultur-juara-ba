@@ -10,7 +10,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
           {/* Kolom 1: Deskripsi */}
           <div>
-            <h3 className="font-headline text-lg font-bold mb-4 text-primary">Kultur Juara PWN Indonesia</h3>
+            <h3 className="font-headline text-lg font-bold mb-4 text-primary">Kultur Juara Indonesia</h3>
             <p className="text-muted-foreground mb-4">
               Membentuk generasi juara bulutangkis berikutnya melalui pelatihan intensif, sport science, dan pembinaan karakter.
             </p>
@@ -43,7 +43,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-12 pt-8 border-t text-center">
-          <p className="mt-8 text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Kultur Juara PWN Indonesia Badminton Academy. All Rights Reserved.</p>
+          <p className="mt-8 text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Kultur Juara Indonesia Badminton Academy. All Rights Reserved.</p>
         </div>
       </div>
     </footer>

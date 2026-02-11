@@ -6,8 +6,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 export const metadata: Metadata = {
-  title: 'Kultur Juara PWN Indonesia Badminton Academy',
-  description: 'Mencetak atlet bulutangkis masa depan dengan kurikulum profesional dan fasilitas modern di Kultur Juara PWN Indonesia Badminton Academy.',
+  title: 'Kultur Juara Indonesia Badminton Academy',
+  description: 'Mencetak atlet bulutangkis masa depan dengan kurikulum profesional dan fasilitas modern di Kultur Juara Indonesia Badminton Academy.',
   icons: {
     icon: [
       { url: '/favicon/favicon.ico' },

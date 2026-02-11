@@ -13,7 +13,7 @@ import { ClientOnly } from '../client-only';
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
-  
+
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
@@ -34,58 +34,58 @@ export function Header() {
         "bg-background/80 backdrop-blur-xl border shadow-lg",
         isScrolled ? "w-full max-w-5xl rounded-full border-border/50" : "w-full max-w-7xl rounded-3xl border-transparent"
       )}>
-        
+
         {/* LOGO */}
         <Link href="/" className="flex items-center gap-3 px-4 group">
-            <div className="relative w-8 h-8 md:w-10 md:h-10 transition-transform group-hover:scale-110">
-                <Image src="/images/logo.png" alt="Logo" fill className="object-contain" />
-            </div>
-            <span className={cn("font-headline font-black tracking-tighter uppercase hidden md:block transition-all", isScrolled ? "text-base" : "text-lg")}>
-              KULTUR JUARA PWN
-            </span>
+          <div className="relative w-8 h-8 md:w-10 md:h-10 transition-transform group-hover:scale-110">
+            <Image src="/images/logo.png" alt="Logo" fill className="object-contain" />
+          </div>
+          <span className={cn("font-headline font-black tracking-tighter uppercase hidden md:block transition-all", isScrolled ? "text-base" : "text-lg")}>
+            KULTUR JUARA INDONESIA
+          </span>
         </Link>
 
         {/* DESKTOP NAV - Pills */}
         <nav className="hidden md:flex items-center gap-1 bg-secondary/50 rounded-full p-1 mx-4">
-            {navItems.map((item) => (
-               <Button key={item.name} variant="ghost" className="rounded-full hover:bg-background hover:shadow-sm text-muted-foreground hover:text-foreground font-bold transition-all text-xs" asChild>
-                  <Link href={item.href}>{item.name}</Link>
-               </Button>
-            ))}
+          {navItems.map((item) => (
+            <Button key={item.name} variant="ghost" className="rounded-full hover:bg-background hover:shadow-sm text-muted-foreground hover:text-foreground font-bold transition-all text-xs" asChild>
+              <Link href={item.href}>{item.name}</Link>
+            </Button>
+          ))}
         </nav>
 
         {/* ACTIONS */}
         <div className="flex items-center gap-2 pr-1">
-             <ClientOnly>
-               <div className="hidden sm:block">
-                  <ThemeToggle />
-               </div>
-             </ClientOnly>
-             
-             <Button asChild className="rounded-full font-bold bg-primary text-primary-foreground hover:brightness-110 shadow-lg shadow-primary/20 px-6 hidden sm:flex">
-                <Link href="/login">
-                    <User className="w-4 h-4 mr-2"/> Portal
-                </Link>
-             </Button>
-            
-            {/* MOBILE TRIGGER */}
-            <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline" size="icon" className="rounded-full md:hidden w-10 h-10 border bg-secondary">
-                    <Menu className="h-5 w-5"/>
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="top" className="rounded-b-[2.5rem] pt-16">
-                   <div className="flex flex-col gap-4 items-center">
-                      {navItems.map(item => (
-                         <Link key={item.href} href={item.href} className="text-2xl font-black font-headline uppercase text-muted-foreground data-[active=true]:text-foreground">{item.name}</Link>
-                      ))}
-                      <div className="flex flex-col w-full gap-3 mt-8">
-                         <Button asChild size="lg" className="w-full rounded-full text-lg font-bold bg-primary"><Link href="/login">Login Portal</Link></Button>
-                      </div>
-                   </div>
-                </SheetContent>
-            </Sheet>
+          <ClientOnly>
+            <div className="hidden sm:block">
+              <ThemeToggle />
+            </div>
+          </ClientOnly>
+
+          <Button asChild className="rounded-full font-bold bg-primary text-primary-foreground hover:brightness-110 shadow-lg shadow-primary/20 px-6 hidden sm:flex">
+            <Link href="/login">
+              <User className="w-4 h-4 mr-2" /> Portal
+            </Link>
+          </Button>
+
+          {/* MOBILE TRIGGER */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="rounded-full md:hidden w-10 h-10 border bg-secondary">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="top" className="rounded-b-[2.5rem] pt-16">
+              <div className="flex flex-col gap-4 items-center">
+                {navItems.map(item => (
+                  <Link key={item.href} href={item.href} className="text-2xl font-black font-headline uppercase text-muted-foreground data-[active=true]:text-foreground">{item.name}</Link>
+                ))}
+                <div className="flex flex-col w-full gap-3 mt-8">
+                  <Button asChild size="lg" className="w-full rounded-full text-lg font-bold bg-primary"><Link href="/login">Login Portal</Link></Button>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>
