@@ -30,6 +30,12 @@ export default function SuperAdminRootLayout({ children }: { children: ReactNode
         return;
       }
 
+      // RBAC Check: Only SUPER_ADMIN allowed
+      if (currentSession.role !== 'SUPER_ADMIN') {
+        router.push('/admin/dashboard');
+        return;
+      }
+
       setSession(currentSession);
       setLoading(false);
     };

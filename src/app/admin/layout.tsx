@@ -30,7 +30,16 @@ export default function AdminRootLayout({ children }: { children: ReactNode }) {
         return;
       }
 
+      // RBAC Check: Prevent Athletes and Guests from accessing Admin Area
+      if (currentSession.role === 'ATHLETE') {
+        router.push('/athletes/dashboard');
+        return;
+      }
 
+      if (currentSession.role === 'GUEST') {
+        router.push('/guests/waiting-room');
+        return;
+      }
 
       setSession(currentSession);
       setLoading(false);

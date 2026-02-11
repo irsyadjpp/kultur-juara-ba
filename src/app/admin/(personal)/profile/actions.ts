@@ -5,6 +5,11 @@ import { revalidatePath } from 'next/cache';
 
 // Mock function untuk update profile
 export async function updateProfile(prevState: any, formData: FormData) {
+  const session = (await cookies()).get('kultur_juara_session');
+  if (!session) {
+    return { success: false, message: "Unauthorized" };
+  }
+
   // Simulasi delay network
   await new Promise(resolve => setTimeout(resolve, 1500));
 

@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation"
 import {
   LayoutDashboard, User, Dumbbell,
   UserPlus, CheckSquare, Users,
-  Box, Package, Layers, Upload, UserCog,
+  Box, Package, Layers, UserCog,
   LogOut,
   Swords,
   Brain,
@@ -70,7 +70,6 @@ const data = {
   ],
   navSistem: [
     { title: "Manajemen User", url: "/admin/settings/users", icon: UserCog },
-    { title: "Reimbursement", url: "/admin/reimbursement/submit", icon: Upload },
   ]
 }
 
