@@ -3,8 +3,8 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { athleteRegistrationSchema, type AthleteRegistrationFormValues } from '@/lib/schemas/athlete';
-import { useActionState, useEffect, useState } from 'react';
-import { useFormStatus } from 'react-dom';
+import { useEffect, useState } from 'react';
+import { useFormStatus, useFormState } from 'react-dom';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -88,7 +88,7 @@ const calculateBaseline = (score: number): { label: string, color: string } => {
 
 export default function RegisterAthletePage() {
   const { toast } = useToast();
-  const [state, formAction] = useActionState(registerAthlete, initialState);
+  const [state, formAction] = useFormState(registerAthlete, initialState);
   const [recommendedSize, setRecommendedSize] = useState<string>('-');
 
   const form = useForm<AthleteRegistrationFormValues>({
@@ -120,8 +120,11 @@ export default function RegisterAthletePage() {
       schoolGrade: "",
       schoolPhone: "",
 
-      height: undefined,
-      weight: undefined,
+      ant_height_cm: undefined,
+      ant_weight_kg: undefined,
+      ant_sitting_height: undefined,
+      ant_arm_span_cm: undefined,
+      ant_leg_length: undefined,
 
       chestWidth: undefined,
       waistCircumference: undefined,
@@ -180,9 +183,7 @@ export default function RegisterAthletePage() {
       championshipTarget: [],
 
       // Baseline (Admin)
-      ant_height_cm: undefined,
-      ant_sitting_height: undefined,
-      ant_arm_span_cm: undefined,
+      // Antropometri defined above
       ant_bmi_score: undefined,
       ant_skeletal_muscle_pct: undefined,
       ant_body_fat_pct: undefined,
@@ -218,7 +219,7 @@ export default function RegisterAthletePage() {
   });
 
   const { watch, setValue } = form;
-  const height = watch('height');
+  const height = watch('ant_height_cm');
   const jerseyLength = watch('jerseyLength');
   const chestWidth = watch('chestWidth');
   const waistCircumference = watch('waistCircumference');
@@ -496,8 +497,11 @@ export default function RegisterAthletePage() {
                 <Card className="rounded-3xl shadow-xl border-green-500/10 h-full">
                   <CardHeader><CardTitle className="text-xl font-headline flex items-center gap-3"><Ruler className="w-5 h-5 text-green-600" /> Antropometri</CardTitle></CardHeader>
                   <CardContent className="grid grid-cols-2 gap-4">
-                    <FormField control={form.control} name="height" render={({ field }) => (<FormItem><FormLabel>Tinggi (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
-                    <FormField control={form.control} name="weight" render={({ field }) => (<FormItem><FormLabel>Berat (kg)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                    <FormField control={form.control} name="ant_height_cm" render={({ field }) => (<FormItem><FormLabel>Tinggi (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                    <FormField control={form.control} name="ant_weight_kg" render={({ field }) => (<FormItem><FormLabel>Berat (kg)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                    <FormField control={form.control} name="ant_sitting_height" render={({ field }) => (<FormItem><FormLabel>Tinggi Duduk (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                    <FormField control={form.control} name="ant_arm_span_cm" render={({ field }) => (<FormItem><FormLabel>Rentang Lengan (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                    <FormField control={form.control} name="ant_leg_length" render={({ field }) => (<FormItem><FormLabel>Panjang Tungkai (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
                     <FormField control={form.control} name="shoeSize" render={({ field }) => (<FormItem><FormLabel>Ukuran Sepatu</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
                     <FormField control={form.control} name="dominantHand" render={({ field }) => (
                       <FormItem><FormLabel>Tangan Dominan</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="-" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Kanan">Kanan</SelectItem><SelectItem value="Kiri">Kiri</SelectItem></SelectContent></Select><FormMessage /></FormItem>

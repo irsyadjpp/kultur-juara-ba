@@ -156,11 +156,11 @@ export async function registerAthlete(prevState: any, formData: FormData) {
     const fileHealthCert = formData.get('fileHealthCert') as File;
 
     const [kkUrl, aktaUrl, photoUrl, raporUrl, healthUrl] = await Promise.all([
-      uploadFile(fileKK, `athletes/${generatedNIA}/documents/kk_${fileKK?.name}`),
-      uploadFile(fileAkta, `athletes/${generatedNIA}/documents/akta_${fileAkta?.name}`),
-      uploadFile(filePhoto, `athletes/${generatedNIA}/photos/profile_${filePhoto?.name}`),
-      uploadFile(fileRapor, `athletes/${generatedNIA}/documents/rapor_${fileRapor?.name}`),
-      uploadFile(fileHealthCert, `athletes/${generatedNIA}/documents/health_${fileHealthCert?.name}`),
+      uploadFile(fileKK, `athletes/${generatedNIA}/documents/kk_${fileKK?.name ?? ''}`),
+      uploadFile(fileAkta, `athletes/${generatedNIA}/documents/akta_${fileAkta?.name ?? ''}`),
+      uploadFile(filePhoto, `athletes/${generatedNIA}/photos/profile_${filePhoto?.name ?? ''}`),
+      uploadFile(fileRapor, `athletes/${generatedNIA}/documents/rapor_${fileRapor?.name ?? ''}`),
+      uploadFile(fileHealthCert, `athletes/${generatedNIA}/documents/health_${fileHealthCert?.name ?? ''}`),
     ]);
 
     // 10. Prepare Final Object
