@@ -1,58 +1,121 @@
-
 # SISTEM MANAJEMEN AKADEMI - KULTUR JUARA PWN
 
 ## 1. DESKRIPSI PROYEK
 
-Ini adalah **Sistem Informasi Manajemen (SIM)** berbasis web yang dirancang khusus untuk **Kultur Juara PWN Indonesia Badminton Academy**. Tujuannya adalah untuk mendigitalkan dan mengintegrasikan seluruh alur kerja operasional akademi, mulai dari pendaftaran atlet hingga monitoring performa, berdasarkan prinsip manajemen olahraga modern dan berbasis data.
+**Kultur Juara PWN Indonesia Badminton Academy Management System (SIM)** adalah platform digital terintegrasi yang dirancang untuk mendigitalkan seluruh operasional akademi bulu tangkis modern. Sistem ini menggabungkan manajemen atlet berbasis *Sport Science*, administrasi operasional, dan perencanaan latihan periodisasi dalam satu ekosistem terpusat.
 
-Aplikasi ini berfungsi sebagai pusat kendali bagi administrator, pelatih, dan staf untuk mengelola data secara efisien, transparan, dan terukur.
+Dibangun dengan teknologi web modern, aplikasi ini memastikan data atlet, evaluasi pelatih, dan laporan manajemen tersimpan aman, terstruktur, dan mudah diakses oleh pihak yang berwenang.
 
 ---
 
 ## 2. FITUR UTAMA
 
-Sistem ini terbagi menjadi beberapa modul utama yang saling terhubung:
+Sistem ini diorganisir ke dalam modul-modul spesifik (Route Groups) untuk memisahkan concern bisnis:
 
-### 🔹 A. Manajemen Atlet
-- **Registrasi Atlet**: Formulir pendaftaran manual untuk mendata atlet baru secara detail, termasuk data pribadi dan antropometri.
-- **Roster & Database**: Pusat data untuk melihat dan mengelola seluruh profil atlet yang terdaftar di akademi.
-- **Verifikasi Dokumen**: Antarmuka khusus untuk memvalidasi dokumen legalitas atlet (KTP, Akta) demi memastikan kesesuaian kategori umur.
+### 🔹 A. Academy Core (`/admin/(academy)`)
+Fokus pada pengembangan atlet dan kepelatihan:
+- **Master Metrics Registration**: Sistem pendaftaran atlet yang mencakup **13 Pilar Performa** (Antropometri, Kinematika, Nutrisi, Psikologi, Fisik, Teknik, dll).
+- **Athlete Database**: Profil lengkap atlet termasuk riwayat cedera, prestasi, dan perkembangan fisik.
+- **Training Management**: Perencanaan program latihan makrosiklus.
+- **Evaluations**: Rapor berkala dan penilaian performa.
 
-### 🔹 B. Perencanaan & Program Latihan
-- **Program Builder**: Fitur unggulan bagi Pelatih Kepala untuk merancang program latihan tahunan (makrosiklus) yang terstruktur berdasarkan prinsip periodisasi (GP, SP, PC, dll).
-- **Masterplan & Anggaran**: Modul bagi manajemen untuk mengajukan, mereview, dan menyetujui program kerja dari berbagai divisi, lengkap dengan monitoring anggaran.
+### 🔹 B. Operations (`/admin/(operations)`)
+Menangani aspek non-teknis akademi:
+- **Inventory**: Manajemen peralatan dan aset.
+- **Reports**: Laporan kehadiran dan administrasi umum.
 
-### 🔹 C. Log & Evaluasi Kinerja
-- **Daily Training Log**: Formulir bagi pelatih untuk mencatat detail sesi latihan harian setiap atlet (jenis, durasi, intensitas).
-- **Athlete Mental Expression Log (AMEL)**: Jurnal harian bagi atlet untuk mengekspresikan kondisi mental dan emosional mereka secara aman dan rahasia.
-- **Formulir Evaluasi Periodik**: Kumpulan formulir terstandarisasi untuk menilai atlet secara kuantitatif & kualitatif, mencakup:
-  - Evaluasi Fisik
-  - Evaluasi Teknik
-  - Evaluasi Taktik & Game Sense
-
-### 🔹 D. Portal Publik & Informasi
-- **Landing Page**: Halaman utama yang berfungsi sebagai brosur digital akademi.
-- **Halaman Informasi**: Menyajikan detail mengenai program, jadwal latihan, lokasi, dan filosofi akademi.
-- **Pendaftaran Volunteer**: Formulir online untuk merekrut anggota kepanitiaan atau sukarelawan.
-
-### 🔹 E. Manajemen Sistem
-- **Manajemen Pengguna**: Fitur bagi Admin untuk mengelola akun dan hak akses (role) untuk seluruh staf, dari Pelatih Kepala, Coach, hingga Psikolog.
+### 🔹 C. System Administration (`/admin/(system)`)
+Kontrol penuh terhadap akses dan konfigurasi:
+- **User Management**: Mengelola akun staf, pelatih, dan atlet.
+- **Role-Based Access Control (RBAC)**: Sistem keamanan bertingkat (Super Admin, Admin, Head Coach, Coach, Medical, Athlete, Guest).
+- **Settings**: Konfigurasi global aplikasi.
 
 ---
 
-## 3. TEKNOLOGI
+## 3. MASTER METRICS INTEGRATION (NEW)
 
-- **Framework**: Next.js (React) dengan App Router
-- **Database**: Google Firebase (Firestore)
-- **Autentikasi**: Google Firebase (Authentication)
-- **Styling**: Tailwind CSS
-- **UI Components**: ShadCN UI
-- **PDF Generation**: jsPDF & html2canvas
+Sistem ini kini mendukung pencatatan data komprehensif berdasarkan **13 Pilar Performa Atlet Elite**:
+1.  **Antropometri**: Tinggi, Berat, Rentang Lengan, Tinggi Duduk.
+2.  **Kinematika**: Kecepatan Grip, Kinetic Linkage.
+3.  **Biomotor**: Kecepatan, Kelincahan (Agility), Power.
+4.  **Fisiologi**: VO2Max, Heart Rate.
+5.  **Biomekanika**: Analisis gerakan.
+6.  **Nutrisi**: Status Hidrasi (Warna Urin), Asupan Kalori.
+7.  **Recovery**: Kualitas Tidur, HRV, DOMS (Muscle Soreness).
+8.  **Psikologi**: Ketahanan Mental (Grit), Fokus.
+9.  **Teknik**: Pukulan dasar hingga lanjut.
+10. **Taktik**: Game sense dan strategi.
+11. **Sosial Ekonomi**: Dukungan keluarga dan latar belakang.
+12. **Medis**: Riwayat cedera dan kesehatan.
+13. **Administrasi**: Legalitas dan kontrak.
 
 ---
 
-## 4. FILOSOFI SISTEM
+## 4. TEKNOLOGI
 
-- **Data-Driven Coaching**: Semua fitur evaluasi dan log dirancang untuk mengumpulkan data terstruktur, memungkinkan pelatih membuat keputusan berdasarkan performa historis, bukan hanya insting.
-- **Transparansi & Akuntabilitas**: Dengan log digital, seluruh aktivitas (latihan, keuangan, program) dapat dilacak dan dievaluasi, mendukung tata kelola yang baik (Good Corporate Governance).
-- **Efisiensi Operasional**: Mengurangi pekerjaan administratif manual dan menyatukan berbagai alur kerja ke dalam satu platform terpusat.
+- **Frontend**: Next.js 14 (App Router), React, TypeScript.
+- **Styling**: Tailwind CSS, ShadCN UI (Radix Primitives).
+- **State Management**: React Hooks, Server Actions.
+- **Backend / Database**: Google Firebase (Firestore, Authentication, Storage).
+- **Security**: Middleware-based Route Protection, Server-side Role Validation.
+
+---
+
+## 5. STRUKTUR PROYEK
+
+```
+src/app/
+├── (auth)/                 # Login & Authentication routes
+├── admin/                  # Protected Admin Area
+│   ├── (academy)/          # Athletes, Training, Evaluations
+│   ├── (operations)/       # Reports, Inventory
+│   ├── (system)/           # Users, Settings
+│   └── (personal)/         # Profile, Notifications
+├── athletes/               # Athlete Portal (Dashboard, Logs)
+├── superadmin/             # Super Admin Exclusive Area
+└── api/                    # Backend API Routes
+```
+
+---
+
+## 6. KEAMANAN (SECURITY)
+
+Sistem menerapkan prinsip *Least Privilege*:
+- **Middleware**: Memblokir akses rute berdasarkan klaim token pengguna.
+- **Server Actions**: Validasi role ganda di setiap fungsi backend untuk mencegah *Unauthorized Access*.
+- **Data Protection**: Pengguna hanya bisa melihat/mengedit data sesuai yurisdiksi role mereka (misal: Pelatih Fisik hanya bisa edit data fisik).
+
+---
+
+## 7. CARA MENJALANKAN
+
+1.  **Clone Repository**
+    ```bash
+    git clone https://github.com/kultur-juara-ba/sim.git
+    cd kultur-juara-ba
+    ```
+
+2.  **Install Dependencies**
+    ```bash
+    npm install
+    ```
+
+3.  **Setup Environment Variables**
+    Buat file `.env.local` dan isi konfigurasi Firebase:
+    ```env
+    NEXT_PUBLIC_FIREBASE_API_KEY=...
+    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
+    NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
+    # ... dst
+    ```
+
+4.  **Run Development Server**
+    ```bash
+    npm run dev
+    ```
+
+5.  **Build untuk Produksi**
+    ```bash
+    npm run build
+    npm start
+    ```
