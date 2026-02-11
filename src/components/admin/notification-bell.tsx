@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { getNotifications, markAsRead, type NotificationItem } from '@/app/admin/notifications/actions';
+import { getNotifications, markAsRead, type NotificationItem } from '@/app/admin/(personal)/notifications/actions';
 
 export function NotificationBell() {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
@@ -40,7 +40,7 @@ export function NotificationBell() {
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-80 p-0 bg-card border shadow-xl">
-        
+
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
           <h4 className="font-bold text-sm">Notifikasi</h4>
@@ -54,17 +54,17 @@ export function NotificationBell() {
           ) : (
             <div className="divide-y">
               {notifications.map((item) => (
-                <div 
-                  key={item.id} 
+                <div
+                  key={item.id}
                   className={`p-4 hover:bg-secondary/50 transition-colors cursor-pointer ${!item.read ? 'bg-secondary/30' : ''}`}
                   onClick={() => handleRead(item.id)}
                 >
                   <div className="flex justify-between items-start mb-1">
                     <div className="flex items-center gap-2">
-                        {item.type === 'CRITICAL' && <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"/>}
-                        {item.type === 'INFO' && <span className="w-2 h-2 rounded-full bg-blue-500"/>}
-                        {item.type === 'SUCCESS' && <span className="w-2 h-2 rounded-full bg-green-500"/>}
-                        <span className={`text-sm font-bold ${!item.read ? 'text-foreground' : 'text-muted-foreground'}`}>{item.title}</span>
+                      {item.type === 'CRITICAL' && <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />}
+                      {item.type === 'INFO' && <span className="w-2 h-2 rounded-full bg-blue-500" />}
+                      {item.type === 'SUCCESS' && <span className="w-2 h-2 rounded-full bg-green-500" />}
+                      <span className={`text-sm font-bold ${!item.read ? 'text-foreground' : 'text-muted-foreground'}`}>{item.title}</span>
                     </div>
                     <span className="text-[10px] text-muted-foreground">{item.time}</span>
                   </div>
@@ -77,9 +77,9 @@ export function NotificationBell() {
 
         {/* Footer */}
         <div className="p-2 border-t bg-background/50">
-            <Button variant="ghost" size="sm" className="w-full text-xs text-muted-foreground h-8">
-                Tandai semua sudah dibaca
-            </Button>
+          <Button variant="ghost" size="sm" className="w-full text-xs text-muted-foreground h-8">
+            Tandai semua sudah dibaca
+          </Button>
         </div>
 
       </PopoverContent>
