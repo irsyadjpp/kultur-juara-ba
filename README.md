@@ -1,8 +1,8 @@
-# SISTEM MANAJEMEN AKADEMI - KULTUR JUARA PWN
+# SISTEM MANAJEMEN AKADEMI - KULTUR JUARA
 
 ## 1. DESKRIPSI PROYEK
 
-**Kultur Juara PWN Indonesia Badminton Academy Management System (SIM)** adalah platform digital terintegrasi yang dirancang untuk mendigitalkan seluruh operasional akademi bulu tangkis modern. Sistem ini menggabungkan manajemen atlet berbasis *Sport Science*, administrasi operasional, dan perencanaan latihan periodisasi dalam satu ekosistem terpusat.
+**Kultur Juara Indonesia Badminton Academy Management System (SIM)** adalah platform digital terintegrasi yang dirancang untuk mendigitalkan seluruh operasional akademi bulu tangkis modern. Sistem ini menggabungkan manajemen atlet berbasis *Sport Science*, administrasi operasional, dan perencanaan latihan periodisasi dalam satu ekosistem terpusat.
 
 Dibangun dengan teknologi web modern, aplikasi ini memastikan data atlet, evaluasi pelatih, dan laporan manajemen tersimpan aman, terstruktur, dan mudah diakses oleh pihak yang berwenang.
 
