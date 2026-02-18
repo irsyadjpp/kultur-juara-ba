@@ -15,7 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { athleteRegistrationSchema, type AthleteRegistrationFormValues } from '@/lib/schemas/athlete';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Briefcase, GraduationCap, HeartPulse, IdCard, Loader2, MapPin, Ruler, ScrollText, Shirt, Trophy, User, UserPlus, Users } from 'lucide-react';
+import { Activity, Briefcase, GraduationCap, HeartPulse, IdCard, Loader2, MapPin, Ruler, ScrollText, Shirt, Trophy, User, UserPlus, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
@@ -497,11 +497,17 @@ export default function RegisterAthletePage() {
                                     <CardHeader><CardTitle className="text-xl font-headline flex items-center gap-3"><Ruler className="w-5 h-5 text-green-600" /> Antropometri</CardTitle></CardHeader>
                                     <CardContent className="grid grid-cols-2 gap-4">
                                         <FormField control={form.control} name="ant_height_cm" render={({ field }) => (<FormItem><FormLabel>Tinggi (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
-                                        <FormField control={form.control} name="ant_weight_kg" render={({ field }) => (<FormItem><FormLabel>Berat (kg)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
                                         <FormField control={form.control} name="ant_sitting_height" render={({ field }) => (<FormItem><FormLabel>Tinggi Duduk (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                                        <FormField control={form.control} name="ant_weight_kg" render={({ field }) => (<FormItem><FormLabel>Berat (kg)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
                                         <FormField control={form.control} name="ant_arm_span_cm" render={({ field }) => (<FormItem><FormLabel>Rentang Lengan (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
-                                        <FormField control={form.control} name="ant_leg_length" render={({ field }) => (<FormItem><FormLabel>Panjang Tungkai (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
-                                        <FormField control={form.control} name="ant_protein_pct" render={({ field }) => (<FormItem><FormLabel>Kadar Protein (%)</FormLabel><FormControl><Input type="number" step="0.1" {...field} /></FormControl><FormMessage /></FormItem>)} />
+
+                                        {/* Update Bagian Komposisi Tubuh sesuai Form */}
+                                        <div className="col-span-2 grid grid-cols-3 gap-4 border-t pt-4 mt-2">
+                                            <FormField control={form.control} name="ant_body_fat_pct" render={({ field }) => (<FormItem><FormLabel>Lemak Tubuh (%)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                            <FormField control={form.control} name="ant_skeletal_muscle_pct" render={({ field }) => (<FormItem><FormLabel>Otot Rangka (%)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                            <FormField control={form.control} name="ant_protein_pct" render={({ field }) => (<FormItem><FormLabel>Kadar Protein (%)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                        </div>
+
                                         <FormField control={form.control} name="shoeSize" render={({ field }) => (<FormItem><FormLabel>Ukuran Sepatu</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
                                         <FormField control={form.control} name="dominantHand" render={({ field }) => (
                                             <FormItem><FormLabel>Tangan Dominan</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="-" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Kanan">Kanan</SelectItem><SelectItem value="Kiri">Kiri</SelectItem></SelectContent></Select><FormMessage /></FormItem>
@@ -525,6 +531,8 @@ export default function RegisterAthletePage() {
                                     </CardContent>
                                 </Card>
                             </div>
+
+
 
                             <Card className="rounded-3xl shadow-xl border-red-500/10">
                                 <CardHeader><CardTitle className="text-xl font-headline text-red-600">Riwayat Kesehatan & Risiko</CardTitle></CardHeader>
@@ -569,14 +577,67 @@ export default function RegisterAthletePage() {
 
                         {/* === TAB 4: TEKNIS & PRESTASI === */}
                         <TabsContent value="teknis" className="space-y-8 mt-6">
+
+                            {/* 1. Riwayat Bulu Tangkis (Sesuai Form Halaman 2) */}
                             <Card className="rounded-3xl shadow-xl">
                                 <CardHeader><CardTitle className="text-xl font-headline">Riwayat Bulu Tangkis</CardTitle></CardHeader>
                                 <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <FormField control={form.control} name="startYear" render={({ field }) => (<FormItem><FormLabel>Mulai Latihan (Tahun)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                    <FormField control={form.control} name="startYear" render={({ field }) => (<FormItem><FormLabel>Mulai Usia / Tahun</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
                                     <FormField control={form.control} name="previousClub" render={({ field }) => (<FormItem><FormLabel>Klub Sebelumnya</FormLabel><FormControl><Input {...field} /></FormControl></FormItem>)} />
                                     <FormField control={form.control} name="pbsiNumber" render={({ field }) => (<FormItem><FormLabel>ID PBSI (SI)</FormLabel><FormControl><Input {...field} /></FormControl></FormItem>)} />
                                     <FormField control={form.control} name="specialization" render={({ field }) => (
                                         <FormItem><FormLabel>Spesialisasi</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="-" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Tunggal">Tunggal</SelectItem><SelectItem value="Ganda">Ganda</SelectItem><SelectItem value="Ganda Campuran">Campuran</SelectItem><SelectItem value="Belum ditentukan">Belum ditentukan</SelectItem></SelectContent></Select></FormItem>
+                                    )} />
+                                </CardContent>
+                            </Card>
+
+                            {/* 2. Kinematika & Teknik Dasar (Software) - Sesuai Form Halaman 4 */}
+                            <Card className="rounded-3xl shadow-xl border-blue-500/10">
+                                <CardHeader>
+                                    <CardTitle className="text-xl font-headline flex items-center gap-2">
+                                        <Activity className="w-5 h-5 text-blue-600" /> Kinematika & Teknik Dasar (Baseline)
+                                    </CardTitle>
+                                    <CardDescription>Isi skor 1-10 berdasarkan pengamatan pelatih saat sesi trial.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <FormField control={form.control} name="kin_grip_switch_speed" render={({ field }) => (<FormItem><FormLabel>Kecepatan Ganti Grip</FormLabel><FormControl><Input type="number" min={1} max={10} {...field} placeholder="1-10" /></FormControl></FormItem>)} />
+                                    <FormField control={form.control} name="kin_kinetic_linkage" render={({ field }) => (<FormItem><FormLabel>Efisiensi Footwork</FormLabel><FormControl><Input type="number" min={1} max={10} {...field} placeholder="1-10" /></FormControl></FormItem>)} />
+                                    <FormField control={form.control} name="kin_elbow_alignment" render={({ field }) => (<FormItem><FormLabel>Posisi Siku (Overhead)</FormLabel><FormControl><Input type="number" min={1} max={10} {...field} placeholder="1-10" /></FormControl></FormItem>)} />
+                                    <FormField control={form.control} name="kin_contact_height" render={({ field }) => (<FormItem><FormLabel>Kontak Poin Tertinggi</FormLabel><FormControl><Input type="number" min={1} max={10} {...field} placeholder="1-10" /></FormControl></FormItem>)} />
+                                    <FormField control={form.control} name="kin_wrist_extension" render={({ field }) => (<FormItem><FormLabel>Sudut Pergelangan</FormLabel><FormControl><Input type="number" min={1} max={10} {...field} placeholder="1-10" /></FormControl></FormItem>)} />
+                                </CardContent>
+                            </Card>
+
+                            {/* 3. Biomotor & Fisik (Engine) - Sesuai Form Halaman 4 */}
+                            <Card className="rounded-3xl shadow-xl border-red-500/10">
+                                <CardHeader>
+                                    <CardTitle className="text-xl font-headline flex items-center gap-2">
+                                        <HeartPulse className="w-5 h-5 text-red-600" /> Biomotor & Fisik (Baseline)
+                                    </CardTitle>
+                                    <CardDescription>Hasil tes fisik awal.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    <FormField control={form.control} name="phy_resting_heart_rate" render={({ field }) => (<FormItem><FormLabel>Nadi Istirahat (bpm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                    <FormField control={form.control} name="bio_t_test_sec" render={({ field }) => (<FormItem><FormLabel>Agility T-Test (detik)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                    <FormField control={form.control} name="bio_split_step_lat" render={({ field }) => (<FormItem><FormLabel>Reaksi Split Step (ms)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                    <FormField control={form.control} name="bio_vertical_jump" render={({ field }) => (<FormItem><FormLabel>Vertical Jump (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                    <FormField control={form.control} name="bio_beep_test_lvl" render={({ field }) => (<FormItem><FormLabel>Beep Test (Level)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                    <FormField control={form.control} name="soc_travel_time" render={({ field }) => (<FormItem><FormLabel>Waktu Tempuh ke GOR (mnt)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                </CardContent>
+                            </Card>
+
+                            {/* 4. Target Khusus Bulan Pertama - Sesuai Form Bagian Bawah */}
+                            <Card className="rounded-3xl shadow-xl bg-orange-50 border-orange-200">
+                                <CardHeader>
+                                    <CardTitle className="text-xl font-headline text-orange-800">Target Khusus Bulan Pertama</CardTitle>
+                                    <CardDescription>Komitmen jangka pendek yang disepakati bersama.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <FormField control={form.control} name="target_technical_month_1" render={({ field }) => (
+                                        <FormItem><FormLabel>Target Teknis</FormLabel><FormControl><Textarea {...field} placeholder="Contoh: Perbaikan grip backhand..." /></FormControl></FormItem>
+                                    )} />
+                                    <FormField control={form.control} name="target_physical_month_1" render={({ field }) => (
+                                        <FormItem><FormLabel>Target Fisik</FormLabel><FormControl><Textarea {...field} placeholder="Contoh: Turun berat badan 1kg / Nambah durasi skipping..." /></FormControl></FormItem>
                                     )} />
                                 </CardContent>
                             </Card>

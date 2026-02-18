@@ -140,6 +140,8 @@ export const athleteRegistrationSchema = z.object({
     level: z.enum(["Fundamental", "Pengembangan", "Prestasi"], { required_error: "Pilih level atlet." }),
     trainingTarget: z.enum(["Atlet Prestasi", "Atlet Kompetisi", "Pembinaan Jangka Panjang"]).optional(),
     championshipTarget: z.array(z.string()).optional(),
+    target_technical_month_1: z.string().optional(),
+    target_physical_month_1: z.string().optional(),
 
     // K. Additional Baseline
     phy_resting_heart_rate: z.coerce.number().optional(),
