@@ -4,6 +4,7 @@ export const athleteRegistrationSchema = z.object({
     // A. Data Pribadi
     fullName: z.string().min(3, "Nama lengkap minimal 3 karakter."),
     nickname: z.string().min(2, "Nama panggilan minimal 2 karakter."),
+    niaKji: z.string().optional(), // NIK/NIA Manual (Optional)
     pob: z.string().min(3, "Tempat lahir wajib diisi."),
     dob: z.string().min(1, "Tanggal lahir wajib diisi."),
     gender: z.enum(["Laki-laki", "Perempuan"], { required_error: "Pilih jenis kelamin." }),

@@ -15,7 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { athleteRegistrationSchema, type AthleteRegistrationFormValues } from '@/lib/schemas/athlete';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Activity, Briefcase, GraduationCap, HeartPulse, IdCard, Loader2, MapPin, Ruler, ScrollText, Shirt, Trophy, User, UserPlus, Users } from 'lucide-react';
+import { Activity, Briefcase, GraduationCap, HeartPulse, IdCard, Loader2, MapPin, Ruler, Save, ScrollText, Shirt, Trophy, User, UserPlus, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
@@ -29,9 +29,30 @@ const initialState = {
 function SubmitButton() {
     const { pending } = useFormStatus();
     return (
-        <Button type="submit" size="lg" className="w-full h-16 text-xl rounded-full font-bold shadow-lg shadow-primary/20" disabled={pending}>
-            {pending ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> MENDAFTARKAN...</> : <><UserPlus className="w-5 h-5 mr-2" /> DAFTARKAN ATLET</>}
-        </Button>
+        <div className="flex gap-4 w-full">
+            <Button
+                type="submit"
+                name="actionType"
+                value="draft"
+                variant="outline"
+                size="lg"
+                className="flex-1 h-16 text-xl rounded-full font-bold border-2 border-slate-300 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                disabled={pending}
+            >
+                {pending ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <Save className="w-5 h-5 mr-2" />}
+                SIMPAN DRAFT
+            </Button>
+            <Button
+                type="submit"
+                name="actionType"
+                value="register"
+                size="lg"
+                className="flex-[2] h-16 text-xl rounded-full font-bold shadow-lg shadow-primary/20"
+                disabled={pending}
+            >
+                {pending ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> MENDAFTARKAN...</> : <><UserPlus className="w-5 h-5 mr-2" /> DAFTARKAN ATLET</>}
+            </Button>
+        </div>
     );
 }
 
@@ -739,6 +760,53 @@ export default function RegisterAthletePage() {
                             <Card className="rounded-3xl shadow-xl bg-slate-50 border-dashed border-2">
                                 <CardHeader><CardTitle className="text-xl font-headline text-slate-500">Administrasi Internal (Diisi Admin)</CardTitle></CardHeader>
                                 <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <FormField
+                                        control={form.control}
+                                        name="fullName"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Nama Lengkap</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="Sesuai Akta Kelahiran/KTP" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="nickname"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Nama Panggilan</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="Nama Sapaan" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <div className="col-span-2">
+                                        <FormField
+                                            control={form.control}
+                                            name="niaKji"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel className="flex items-center gap-2">
+                                                        NIA / Nomor Induk Atlet (Opsional)
+                                                        <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Isi untuk Manual</span>
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="Kosongkan untuk Auto-Generate (KJI.YYYY.MM.G.XXX)" {...field} />
+                                                    </FormControl>
+                                                    <p className="text-[0.8rem] text-slate-500 mt-1">
+                                                        Jika dikosongkan, sistem akan membuat nomor otomatis.
+                                                    </p>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
                                     <FormField control={form.control} name="initialStatus" render={({ field }) => (
                                         <FormItem><FormLabel>Status Awal</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="-" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Probation">Probation (1 Bulan)</SelectItem><SelectItem value="Kontrak 6 Bulan">Kontrak 6 Bulan</SelectItem><SelectItem value="Kontrak 1 Tahun">Kontrak 1 Tahun</SelectItem></SelectContent></Select></FormItem>
                                     )} />
