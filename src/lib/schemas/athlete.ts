@@ -164,7 +164,6 @@ export const athleteRegistrationSchema = z.object({
 
     // Internal Admin
     registrationDate: z.string().optional(),
-    niaKji: z.string().optional(),
     initialStatus: z.enum(["Probation", "Kontrak 6 Bulan", "Kontrak 1 Tahun"]).optional(),
 });
 

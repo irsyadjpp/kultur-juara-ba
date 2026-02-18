@@ -57,9 +57,18 @@ export async function registerAthlete(prevState: any, formData: FormData) {
             'seriousInjury', 'surgeryHistory', 'routineMedication', 'stayUpLate',
             'agreeLifestyle', 'agreeMediaRights', 'agreeLiability', 'agreeEmergency', 'agreeCodeOfEthics', 'authenticityDeclaration'
         ];
-        const boolData: Record<string, boolean> = {};
+        const boolData: Record<string, boolean | undefined> = {};
+        const actionType = formData.get('actionType');
+
         boolFields.forEach(field => {
-            boolData[field] = formData.get(field) === 'on';
+            const isChecked = formData.get(field) === 'on';
+            // For drafts, if unchecked, set to undefined so partial() skips validation
+            // For register, keep as false so validation (refine) catches it
+            if (actionType === 'draft' && !isChecked) {
+                boolData[field] = undefined;
+            } else {
+                boolData[field] = isChecked;
+            }
         });
 
         // 6. Merge & Validate
@@ -74,11 +83,12 @@ export async function registerAthlete(prevState: any, formData: FormData) {
             // Files are in cleanedData already as File objects
         };
 
-        const actionType = formData.get('actionType');
         let validatedFields;
 
         if (actionType === 'draft') {
-            validatedFields = athleteRegistrationSchema.partial().safeParse(rawData);
+            // Clean undefineds from rawData for partial parse just in case
+            const draftData = Object.fromEntries(Object.entries(rawData).filter(([_, v]) => v !== undefined));
+            validatedFields = athleteRegistrationSchema.partial().safeParse(draftData);
         } else {
             validatedFields = athleteRegistrationSchema.safeParse(rawData);
         }

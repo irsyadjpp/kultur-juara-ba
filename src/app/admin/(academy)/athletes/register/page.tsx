@@ -678,54 +678,53 @@ export default function RegisterAthletePage() {
                                     {[
                                         {
                                             name: "agreeLifestyle",
-                                            label: "Komitmen Gaya Hidup (Nutrisi & Istirahat)",
+                                            label: "Komitmen Gaya Hidup Atlet (Athlete Lifestyle Agreement)",
                                             points: [
-                                                "Atlet wajib menjaga pola tidur minimal 8 jam sehari untuk pemulihan optimal.",
-                                                "Dilarang keras merokok, menggunakan vape, atau mengonsumsi alkohol.",
-                                                "Wajib menjaga pola makan sehat dan mengurangi konsumsi gorengan/gula berlebih.",
-                                                "Wajib membawa cemilan sehat (pisang/roti gandum) untuk dikonsumsi sebelum latihan."
+                                                "Standar Nutrisi: Berupaya maksimal mengawasi asupan nutrisi atlet dengan membatasi konsumsi makanan instan, gorengan berlebih, dan minuman tinggi gula yang dapat menghambat performa fisik.",
+                                                "Regulasi Istirahat: Memastikan atlet mendapatkan waktu istirahat minimal 8 jam per hari dan membatasi durasi layar (screen time) sebelum waktu tidur guna menjaga kualitas pemulihan saraf.",
+                                                "Cemilan Pra Pelatihan (Pre-Training Snack): Orang Tua/Wali wajib memastikan atlet mengonsumsi atau membawa bekal nutrisi ringan (seperti pisang, roti gandum, atau energy bar) sebelum sesi latihan dimulai untuk menjaga stabilitas energi."
                                             ]
                                         },
                                         {
                                             name: "agreeMediaRights",
-                                            label: "Hak Publikasi & Dokumentasi Media",
+                                            label: "Hak Penggunaan Media & Dokumentasi (Media Rights)",
                                             points: [
-                                                "Saya mengizinkan akademi mendokumentasikan kegiatan latihan/pertandingan (Foto/Video).",
-                                                "Materi dokumentasi dapat digunakan sepenuhnya untuk keperluan promosi di sosial media/website resmi akademi."
+                                                "Izin Dokumentasi: Mengambil dokumentasi berupa foto, rekaman suara, maupun video atlet selama kegiatan latihan, turnamen, atau acara resmi klub.",
+                                                "Hak Publikasi: Mengolah dan menggunakan konten tersebut untuk kepentingan dokumentasi, publikasi, dan promosi di media sosial, situs web, maupun media cetak tanpa kewajiban royalti.",
+                                                "Analisis Performa: Menggunakan rekaman video untuk keperluan analisis teknis, evaluasi biomekanika, dan pengembangan prestasi atlet melalui sistem data internal."
                                             ]
                                         },
                                         {
                                             name: "agreeLiability",
-                                            label: "Pelepasan Tanggung Jawab (Risiko Cedera)",
+                                            label: "Batasan Tanggung Jawab (Liability Disclaimer) & Keadaan Kahar (Force Majeure)",
                                             points: [
-                                                "Saya menyadari bahwa bulu tangkis adalah olahraga fisik yang memiliki risiko cedera.",
-                                                "Akademi bertanggung jawab memberikan pertolongan pertama (P3K) di lapangan.",
-                                                "Biaya pengobatan lanjutan (RS/Terapi) adalah tanggung jawab penuh wali atlet atau asuransi pribadi."
+                                                "Risiko Olahraga: Orang Tua/Wali memahami sepenuhnya bahwa cabang olahraga bulu tangkis dengan intensitas tinggi memiliki risiko cedera fisik. PB KJI berkomitmen menjalankan prosedur keamanan (SOP), namun tidak dapat dituntut atas kerugian fisik akibat kecelakaan murni di luar kendali.",
+                                                "Keadaan Kahar: PB KJI dibebaskan dari kewajiban pembinaan apabila terjadi keadaan di luar kendali seperti bencana alam, wabah, atau kebijakan pemerintah yang menghalangi penggunaan fasilitas olahraga."
                                             ]
                                         },
                                         {
                                             name: "agreeEmergency",
                                             label: "Persetujuan Tindakan Medis Darurat",
                                             points: [
-                                                "Dalam kondisi gawat darurat dan wali tidak dapat dihubungi segera, saya memberikan wewenang penuh kepada akademi.",
-                                                "Akademi diizinkan membawa atlet ke Rumah Sakit terdekat untuk penanganan medis segera."
+                                                "Dalam situasi darurat medis di mana Orang Tua/Wali tidak dapat dihubungi segera, saya memberikan wewenang penuh kepada manajemen PB KJI untuk mengambil tindakan medis awal atau merujuk atlet ke fasilitas kesehatan terdekat demi keselamatan jiwa atlet."
                                             ]
                                         },
                                         {
                                             name: "agreeCodeOfEthics",
                                             label: "Kode Etik Atlet & Orang Tua",
                                             points: [
-                                                "Atlet wajib menghormati pelatih, sesama atlet, dan wasit (Fair Play).",
-                                                "Orang tua dilarang mengintervensi program latihan pelatih di lapangan.",
-                                                "Tidak ada toleransi untuk tindakan bullying, kekerasan, atau pencurian."
+                                                "Kode Etik Atlet: Menjunjung nilai JUJUR, DISIPLIN, TANGGUH, KERJA KERAS, dan RENDAH HATI. Menghormati pelatih dan sesama. Hadir tepat waktu.",
+                                                "Kode Etik Orang Tua: Mendukung penuh program, DILARANG melakukan intervensi teknis/memberi instruksi saat latihan, dan tidak membandingkan atlet secara terbuka.",
+                                                "Sanksi Pelanggaran: Teguran lisan/tertulis → Pembinaan khusus/Pembatasan kehadiran → Skorsing → Pemberhentian/Evaluasi keikutsertaan."
                                             ]
                                         },
                                         {
                                             name: "authenticityDeclaration",
-                                            label: "Pernyataan Keaslian Dokumen",
+                                            label: "Pernyataan Keaslian Dokumen & Kesanggupan",
                                             points: [
-                                                "Saya menyatakan seluruh data dan dokumen (KK/Akta/Umur) yang diserahkan adalah ASLI & BENAR.",
-                                                "Apabila di kemudian hari ditemukan pemalsuan data, saya siap menerima sanksi (Diskualifikasi/Dikeluarkan dari akademi)."
+                                                "Saya menjamin bahwa seluruh data dan dokumen lampiran (Akta Kelahiran/KK) yang diserahkan adalah ASLI dan sah secara hukum.",
+                                                "Saya bersedia menerima sanksi pemberhentian sepihak jika di kemudian hari ditemukan unsur pemalsuan data.",
+                                                "Saya menyatakan data di atas benar dan bersedia mematuhi seluruh aturan PB Kultur Juara Indonesia, termasuk penempatan jadwal latihan dan sesi tambahan yang ditentukan oleh tim pelatih."
                                             ]
                                         },
                                     ].map((item: any) => (
@@ -820,9 +819,10 @@ export default function RegisterAthletePage() {
                                 </CardContent>
                             </Card>
 
-                            <div className="pt-8"><SubmitButton /></div>
                         </TabsContent>
                     </Tabs>
+
+                    <div className="pt-8 border-t"><SubmitButton /></div>
                 </form>
             </Form>
         </div>
