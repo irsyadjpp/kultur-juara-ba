@@ -523,7 +523,8 @@ export default function RegisterAthletePage() {
                                         <FormField control={form.control} name="ant_arm_span_cm" render={({ field }) => (<FormItem><FormLabel>Rentang Lengan (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
 
                                         {/* Update Bagian Komposisi Tubuh sesuai Form */}
-                                        <div className="col-span-2 grid grid-cols-3 gap-4 border-t pt-4 mt-2">
+                                        <div className="col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4 border-t pt-4 mt-2">
+                                            <FormField control={form.control} name="ant_bmi_score" render={({ field }) => (<FormItem><FormLabel>BMI Score</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
                                             <FormField control={form.control} name="ant_body_fat_pct" render={({ field }) => (<FormItem><FormLabel>Lemak Tubuh (%)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
                                             <FormField control={form.control} name="ant_skeletal_muscle_pct" render={({ field }) => (<FormItem><FormLabel>Otot Rangka (%)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
                                             <FormField control={form.control} name="ant_protein_pct" render={({ field }) => (<FormItem><FormLabel>Kadar Protein (%)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
@@ -647,25 +648,47 @@ export default function RegisterAthletePage() {
                                 </CardContent>
                             </Card>
 
-                            {/* 4. Target Khusus Bulan Pertama - Sesuai Form Bagian Bawah */}
-                            <Card className="rounded-3xl shadow-xl bg-orange-50 border-orange-200">
-                                <CardHeader>
-                                    <CardTitle className="text-xl font-headline text-orange-800">Target Khusus Bulan Pertama</CardTitle>
-                                    <CardDescription>Komitmen jangka pendek yang disepakati bersama.</CardDescription>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                    <FormField control={form.control} name="target_technical_month_1" render={({ field }) => (
-                                        <FormItem><FormLabel>Target Teknis</FormLabel><FormControl><Textarea {...field} placeholder="Contoh: Perbaikan grip backhand..." /></FormControl></FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="target_physical_month_1" render={({ field }) => (
-                                        <FormItem><FormLabel>Target Fisik</FormLabel><FormControl><Textarea {...field} placeholder="Contoh: Turun berat badan 1kg / Nambah durasi skipping..." /></FormControl></FormItem>
-                                    )} />
-                                </CardContent>
-                            </Card>
+
                         </TabsContent>
 
                         {/* === TAB 5: ADMIN & KONTRAK === */}
                         <TabsContent value="admin" className="space-y-8 mt-6">
+
+                            {/* ANALISIS DAN PENEMPATAN PROGRAM (KEPUTUSAN PB) */}
+                            <Card className="rounded-3xl shadow-xl border-orange-500/10">
+                                <CardHeader>
+                                    <CardTitle className="text-xl font-headline text-orange-700">Analisis & Penempatan Program (Keputusan PB)</CardTitle>
+                                    <CardDescription>Berdasarkan hasil evaluasi baseline.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <FormField control={form.control} name="level" render={({ field }) => (
+                                            <FormItem><FormLabel>A. Level Pembinaan</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Pilih Level" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Fundamental">Fundamental (Fokus: Grip & Footwork)</SelectItem><SelectItem value="Pengembangan">Pengembangan (Fokus: Konsistensi)</SelectItem><SelectItem value="Prestasi">Prestasi (Fokus: Match & Strategi)</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+                                        )} />
+
+                                        <div className="space-y-4">
+                                            <FormField control={form.control} name="trainingSchedule" render={({ field }) => (
+                                                <FormItem><FormLabel>B. Jadwal Latihan Rutin</FormLabel><FormControl><Input {...field} placeholder="Hari & Jam (e.g., Senin-Kamis 16.00)" /></FormControl><FormMessage /></FormItem>
+                                            )} />
+                                            <FormField control={form.control} name="additionalTrainingSession" render={({ field }) => (
+                                                <FormItem><FormLabel>Sesi Tambahan (Fisik/Renang)</FormLabel><FormControl><Input {...field} placeholder="e.g., Sabtu Pagi / -" /></FormControl><FormMessage /></FormItem>
+                                            )} />
+                                        </div>
+                                    </div>
+
+                                    <div className="border-t pt-4">
+                                        <h4 className="font-semibold mb-3 text-slate-700">Target Khusus Bulan Pertama</h4>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <FormField control={form.control} name="target_technical_month_1" render={({ field }) => (
+                                                <FormItem><FormLabel>Target Teknis</FormLabel><FormControl><Textarea {...field} placeholder="Contoh: Perbaikan grip backhand..." /></FormControl></FormItem>
+                                            )} />
+                                            <FormField control={form.control} name="target_physical_month_1" render={({ field }) => (
+                                                <FormItem><FormLabel>Target Fisik</FormLabel><FormControl><Textarea {...field} placeholder="Contoh: Turun berat badan 1kg..." /></FormControl></FormItem>
+                                            )} />
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
                             <Card className="rounded-3xl shadow-xl border-l-4 border-primary bg-slate-50/50">
                                 <CardHeader>
                                     <CardTitle className="text-xl font-headline flex items-center gap-2">
@@ -816,6 +839,83 @@ export default function RegisterAthletePage() {
                                         <FormItem><FormLabel>Kelompok Usia</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="-" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Pra-usia dini (U-9)">U-9</SelectItem><SelectItem value="Usia dini (U-11)">U-11</SelectItem><SelectItem value="Anak-anak (U-13)">U-13</SelectItem><SelectItem value="Pemula & Remaja (U-15, U-17)">U-15 / U-17</SelectItem><SelectItem value="Taruna & Dewasa (U-19+)">U-19+</SelectItem></SelectContent></Select></FormItem>
                                     )} />
                                     <FormField control={form.control} name="registrationDate" render={({ field }) => (<FormItem><FormLabel>Tanggal Daftar</FormLabel><FormControl><Input type="date" {...field} /></FormControl></FormItem>)} />
+                                    <FormField control={form.control} name="trainingStartDate" render={({ field }) => (<FormItem><FormLabel>Mulai Latihan (TMT)</FormLabel><FormControl><Input type="date" {...field} /></FormControl></FormItem>)} />
+
+                                    <div className="col-span-1 md:col-span-2 space-y-4">
+                                        <FormField control={form.control} name="checklistFiles" render={() => (
+                                            <FormItem>
+                                                <div className="mb-4">
+                                                    <FormLabel className="text-base">Checklist Kelengkapan Berkas (Diisi Pengurus)</FormLabel>
+                                                    <p className="text-sm text-muted-foreground">Pastikan berkas fisik/digital sudah diterima.</p>
+                                                </div>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                    {[
+                                                        "Formulir Pendaftaran (Tanda tangan lengkap)",
+                                                        "Fotokopi Akta Kelahiran (Cek usia asli)",
+                                                        "Fotokopi Kartu Keluarga (KK)",
+                                                        "Fotokopi KTP Orang Tua/Wali",
+                                                        "Pas Foto 3x4 (2 Lembar)",
+                                                        "Surat Keterangan Sehat Dokter",
+                                                        "Fotokopi BPJS / Asuransi Kesehatan",
+                                                        "Rapor Sekolah Terakhir (Opsional)"
+                                                    ].map((item) => (
+                                                        <FormField
+                                                            key={item}
+                                                            control={form.control}
+                                                            name="checklistFiles"
+                                                            render={({ field }) => {
+                                                                return (
+                                                                    <FormItem
+                                                                        key={item}
+                                                                        className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-3 bg-white"
+                                                                    >
+                                                                        <FormControl>
+                                                                            <Checkbox
+                                                                                checked={field.value?.includes(item)}
+                                                                                onCheckedChange={(checked) => {
+                                                                                    return checked
+                                                                                        ? field.onChange([...(field.value || []), item])
+                                                                                        : field.onChange(
+                                                                                            field.value?.filter(
+                                                                                                (value) => value !== item
+                                                                                            )
+                                                                                        )
+                                                                                }}
+                                                                            />
+                                                                        </FormControl>
+                                                                        <FormLabel className="font-normal cursor-pointer">
+                                                                            {item}
+                                                                        </FormLabel>
+                                                                    </FormItem>
+                                                                )
+                                                            }}
+                                                        />
+                                                    ))}
+                                                </div>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )} />
+                                    </div>
+
+                                    <div className="col-span-1 md:col-span-2">
+                                        <FormField
+                                            control={form.control}
+                                            name="coachNotes"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Catatan Khusus Pelatih</FormLabel>
+                                                    <FormControl>
+                                                        <Textarea
+                                                            placeholder="Catatan evaluasi trial, rekomendasi, hal yang perlu diperhatikan..."
+                                                            className="min-h-[100px]"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
                                 </CardContent>
                             </Card>
 

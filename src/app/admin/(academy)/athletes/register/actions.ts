@@ -1,20 +1,9 @@
 'use server';
 
 import { getSession } from "@/app/actions";
-import { initializeFirebaseServer } from '@/firebase/server-init';
+import { adminDb, adminStorage } from '@/lib/firebase-admin';
 import { athleteRegistrationSchema } from "@/lib/schemas/athlete";
-import {
-    addDoc,
-    collection,
-    getDocs,
-    limit,
-    orderBy,
-    query,
-    where
-} from 'firebase/firestore';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { revalidatePath } from "next/cache";
-
 
 const initialState = {
     success: false,
@@ -51,6 +40,7 @@ export async function registerAthlete(prevState: any, formData: FormData) {
         const championshipTarget = formData.getAll('championshipTarget') as string[];
         const chronicSymptoms = formData.getAll('chronicSymptoms') as string[];
         const achievements = formData.getAll('achievements') as string[];
+        const checklistFiles = formData.getAll('checklistFiles') as string[];
 
         // 5. Handle Booleans (Switches)
         const boolFields = [
@@ -62,8 +52,6 @@ export async function registerAthlete(prevState: any, formData: FormData) {
 
         boolFields.forEach(field => {
             const isChecked = formData.get(field) === 'on';
-            // For drafts, if unchecked, set to undefined so partial() skips validation
-            // For register, keep as false so validation (refine) catches it
             if (actionType === 'draft' && !isChecked) {
                 boolData[field] = undefined;
             } else {
@@ -73,51 +61,37 @@ export async function registerAthlete(prevState: any, formData: FormData) {
 
         // 6. Merge & Validate
         const rawData = {
-            ...cleanedData, // Start with the initial data including cleaned fields and files
+            ...cleanedData,
             ...boolData,
             medicalHistory,
             governmentAssistance,
             championshipTarget,
             chronicSymptoms,
             achievements,
-            // Files are in cleanedData already as File objects
+            checklistFiles,
         };
 
-        let validatedFields;
+        const draftData = Object.fromEntries(Object.entries(rawData).filter(([_, v]) => v !== undefined));
 
-        if (actionType === 'draft') {
-            // Clean undefineds from rawData for partial parse just in case
-            const draftData = Object.fromEntries(Object.entries(rawData).filter(([_, v]) => v !== undefined));
-            validatedFields = athleteRegistrationSchema.partial().safeParse(draftData);
-        } else {
-            validatedFields = athleteRegistrationSchema.safeParse(rawData);
-        }
+        const validatedFields = actionType === 'draft'
+            ? athleteRegistrationSchema.partial().safeParse(draftData)
+            : athleteRegistrationSchema.safeParse(rawData);
 
         if (!validatedFields.success) {
             console.error("Validation failed", validatedFields.error.flatten().fieldErrors);
-            // Construct a more readable error message for the UI
             const fieldErrors = validatedFields.error.flatten().fieldErrors;
             const errorMsg = Object.entries(fieldErrors).map(([key, val]) => `${key}: ${val}`).join(', ');
             return { success: false, message: `Data tidak valid: ${errorMsg}` };
         }
 
-        const { firestore, storage } = initializeFirebaseServer();
-        const athletesCollection = collection(firestore, 'athletes');
-
+        const athletesRef = adminDb.collection('athletes');
         let generatedNIA = "";
 
         if (actionType !== 'draft') {
-            // 7. Check for Duplicates (Email OR Phone OR NIK) - ONLY FOR FINAL SUBMISSION
-            const emailQuery = query(athletesCollection, where('email', '==', validatedFields.data.email));
-            const phoneQuery = query(athletesCollection, where('phone', '==', validatedFields.data.phone));
-            // NIK Check
-            const nikQuery = query(athletesCollection, where('nik', '==', validatedFields.data.nik));
-
-            const [emailSnapshot, phoneSnapshot, nikSnapshot] = await Promise.all([
-                getDocs(emailQuery),
-                getDocs(phoneQuery),
-                getDocs(nikQuery)
-            ]);
+            // 7. Check for Duplicates using Admin SDK
+            const emailSnapshot = await athletesRef.where('email', '==', validatedFields.data.email).get();
+            const phoneSnapshot = await athletesRef.where('phone', '==', validatedFields.data.phone).get();
+            const nikSnapshot = await athletesRef.where('nik', '==', validatedFields.data.nik).get();
 
             if (!emailSnapshot.empty) {
                 return { success: false, message: `Email ${validatedFields.data.email} sudah terdaftar.` };
@@ -129,56 +103,55 @@ export async function registerAthlete(prevState: any, formData: FormData) {
                 return { success: false, message: `NIK ${validatedFields.data.nik} sudah terdaftar.` };
             }
 
-            // 8. Handle NIA (Manual vs Auto)
+            // 8. Handle NIA
             if (validatedFields.data.niaKji && validatedFields.data.niaKji.trim() !== "") {
-                // MANUAL NIA Check
                 generatedNIA = validatedFields.data.niaKji.trim();
-                const niaQuery = query(athletesCollection, where('niaKji', '==', generatedNIA));
-                const niaSnapshot = await getDocs(niaQuery);
-
+                const niaSnapshot = await athletesRef.where('niaKji', '==', generatedNIA).get();
                 if (!niaSnapshot.empty) {
                     return { success: false, message: `NIA ${generatedNIA} sudah digunakan oleh atlet lain.` };
                 }
             } else {
-                // AUTO-GENERATE NIA-KJI
-                // Format: KJI.[Tahun].[Bulan].[Gender].[Sequence]
                 const now = new Date();
                 const year = now.getFullYear();
                 const month = String(now.getMonth() + 1).padStart(2, '0');
                 const genderCode = validatedFields.data.gender === 'Laki-laki' ? 'L' : 'P';
 
-                // Fetch last athlete registered to parse sequence
-                const qLast = query(athletesCollection, orderBy('registeredAt', 'desc'), limit(1));
-                const lastSnapshot = await getDocs(qLast);
+                const lastSnapshot = await athletesRef.orderBy('registeredAt', 'desc').limit(1).get();
                 let newSeq = '001';
 
                 if (!lastSnapshot.empty) {
                     const lastData = lastSnapshot.docs[0].data();
                     const lastNia = lastData.niaKji || "";
-                    // Check if same year/month
                     const parts = lastNia.split('.');
                     if (parts.length === 5 && parts[1] == year.toString() && parts[2] == month) {
                         const lastSeq = parseInt(parts[4]);
                         newSeq = String(lastSeq + 1).padStart(3, '0');
                     }
                 }
-
                 generatedNIA = `KJI.${year}.${month}.${genderCode}.${newSeq}`;
             }
         } else {
-            // DRAFT NIA
             generatedNIA = `DRAFT.${Date.now()}`;
         }
 
-        // 9. Upload Files if present
+        // 9. Upload Files using Admin SDK
         const uploadFile = async (file: File | null, path: string) => {
             if (!file || file.size === 0) return null;
             try {
                 const arrayBuffer = await file.arrayBuffer();
-                const buffer = new Uint8Array(arrayBuffer);
-                const storageRef = ref(storage, path);
-                await uploadBytes(storageRef, buffer);
-                return await getDownloadURL(storageRef);
+                const buffer = Buffer.from(arrayBuffer);
+                const fileRef = adminStorage.file(path);
+
+                await fileRef.save(buffer, {
+                    contentType: file.type,
+                });
+
+                // Get long-lived signed URL (effectively public for the app)
+                const [url] = await fileRef.getSignedUrl({
+                    action: 'read',
+                    expires: '03-01-2500'
+                });
+                return url;
             } catch (e) {
                 console.error(`Error uploading file to ${path}:`, e);
                 return null;
@@ -203,19 +176,18 @@ export async function registerAthlete(prevState: any, formData: FormData) {
         const athleteData = {
             ...validatedFields.data,
             niaKji: generatedNIA,
-            isActive: actionType !== 'draft', // Draft is inactive
+            isActive: actionType !== 'draft',
             status: actionType === 'draft' ? 'Draft' : (validatedFields.data.initialStatus || 'Probation'),
             isDraft: actionType === 'draft',
-            status_aktif: actionType === 'draft' ? 'DRAFT' : 'AKTIF', // Legacy compatibility
+            status_aktif: actionType === 'draft' ? 'DRAFT' : 'AKTIF',
 
-            // Update with real URLs
             kkUrl,
             aktaUrl,
             photoUrl,
             raporUrl,
             healthUrl,
 
-            // Remove file objects from direct storage in Firestore (unnecessary)
+            // Remove file objects
             fileKK: null,
             fileAkta: null,
             filePhoto: null,
@@ -227,7 +199,7 @@ export async function registerAthlete(prevState: any, formData: FormData) {
             updatedAt: new Date().toISOString(),
         };
 
-        await addDoc(athletesCollection, athleteData);
+        await athletesRef.add(athleteData);
 
         revalidatePath('/admin/athletes/roster');
 

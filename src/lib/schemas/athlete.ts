@@ -165,6 +165,11 @@ export const athleteRegistrationSchema = z.object({
     // Internal Admin
     registrationDate: z.string().optional(),
     initialStatus: z.enum(["Probation", "Kontrak 6 Bulan", "Kontrak 1 Tahun"]).optional(),
+    coachNotes: z.string().optional(),
+    trainingStartDate: z.string().optional(),
+    checklistFiles: z.array(z.string()).optional(),
+    trainingSchedule: z.string().optional(),
+    additionalTrainingSession: z.string().optional(),
 });
 
 export type AthleteRegistrationFormValues = z.infer<typeof athleteRegistrationSchema>;
