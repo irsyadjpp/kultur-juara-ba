@@ -1,0 +1,1103 @@
+'use client';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import { INDONESIA_REGIONS } from '@/lib/data/regions';
+import { athleteRegistrationSchema, type AthleteRegistrationFormValues } from '@/lib/schemas/athlete';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Activity, Briefcase, GraduationCap, HeartPulse, IdCard, Loader2, MapPin, Ruler, Save, ScrollText, Shirt, Trophy, User, UserPlus, Users } from 'lucide-react';
+import { useActionState, useEffect, useMemo, useState } from 'react';
+import { useFormStatus } from 'react-dom';
+import { useForm } from 'react-hook-form';
+
+// Helper function to calculate shirt size
+const calculateShirtSize = (pb: number, ld: number, lp: number): string => {
+    // pb: Panjang Badan (Jersey Length), ld: Lingkar Dada, lp: Lingkar Perut
+    const sizeChart = [
+        { size: 'S', ld: 40, pb: 60, lp: 70 },
+        { size: 'M', ld: 42, pb: 62, lp: 75 },
+        { size: 'L', ld: 44, pb: 64, lp: 80 },
+        { size: 'XL', ld: 46, pb: 66, lp: 85 },
+        { size: 'XXL', ld: 48, pb: 68, lp: 90 },
+    ];
+    for (const item of sizeChart) {
+        if (ld <= item.ld && pb <= item.pb && lp <= item.lp) {
+            return item.size;
+        }
+    }
+    return "Custom"; // Fallback
+};
+
+const generateBackName = (fullName: string, option: 'initials' | 'lastName'): string => {
+    if (!fullName) return '';
+    const names = fullName.trim().toUpperCase().split(' ').filter(n => n);
+    if (names.length === 0) return '';
+
+    if (option === 'lastName') {
+        if (names.length > 1) {
+            return names[names.length - 1].substring(0, 12);
+        }
+        return names[0].substring(0, 12);
+    }
+
+    if (option === 'initials') {
+        if (names.length === 1) return names[0].substring(0, 12);
+        const firstName = names[0];
+        const initials = names.slice(1).map(n => n.charAt(0)).join(' ');
+        const result = `${firstName} ${initials}`;
+        return result.substring(0, 12);
+    }
+
+    return '';
+};
+
+interface AthleteFormProps {
+    action: (prevState: any, formData: FormData) => Promise<{ success: boolean; message: string; }>;
+    initialState: { success: boolean; message: string; };
+    defaultValues?: Partial<AthleteRegistrationFormValues>;
+    mode: "create" | "edit";
+}
+
+function SubmitButton({ mode }: { mode: "create" | "edit" }) {
+    const { pending } = useFormStatus();
+    return (
+        <div className="flex gap-4 w-full">
+            <Button
+                type="submit"
+                name="actionType"
+                value="draft"
+                variant="outline"
+                size="lg"
+                className="flex-1 h-16 text-xl rounded-full font-bold border-2 border-slate-300 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                disabled={pending}
+            >
+                {pending ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <Save className="w-5 h-5 mr-2" />}
+                SIMPAN DRAFT
+            </Button>
+            <Button
+                type="submit"
+                name="actionType"
+                value={mode === "create" ? "register" : "update"}
+                size="lg"
+                className="flex-[2] h-16 text-xl rounded-full font-bold shadow-lg shadow-primary/20"
+                disabled={pending}
+            >
+                {pending ?
+                    <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> {mode === "create" ? "MENDAFTARKAN..." : "MENYIMPAN PERUBAHAN..."}</> :
+                    <><UserPlus className="w-5 h-5 mr-2" /> {mode === "create" ? "DAFTARKAN ATLET" : "SIMPAN PERUBAHAN"}</>
+                }
+            </Button>
+        </div>
+    );
+}
+
+// Helper to replace null with undefined (Firestore returns null for empty fields sometimes)
+// Also normalizes Enums to Title Case or keys as needed to match Switch/Radio values
+const cleanDefaultValues = (values: any): any => {
+    if (!values) return values;
+    const cleaned: any = {};
+
+    Object.keys(values).forEach(key => {
+        const value = values[key];
+
+        // Handle Nulls
+        if (value === null) {
+            cleaned[key] = undefined;
+            return;
+        }
+
+        // Recursive clean
+        if (typeof value === 'object' && !Array.isArray(value)) {
+            cleaned[key] = cleanDefaultValues(value);
+            return;
+        }
+
+        // Normalize Specific Enums (Case-insensitive matching)
+        if (key === 'gender') {
+            const val = String(value).toLowerCase();
+            if (val === 'laki-laki' || val === 'laki_laki' || val === 'l' || val === 'male') cleaned[key] = "Laki-laki";
+            else if (val === 'perempuan' || val === 'p' || val === 'female') cleaned[key] = "Perempuan";
+            else cleaned[key] = value;
+            return;
+        }
+
+        if (key === 'bloodType') {
+            const val = String(value).toUpperCase();
+            if (['A', 'B', 'AB', 'O'].includes(val)) cleaned[key] = val;
+            else cleaned[key] = undefined;
+            return;
+        }
+
+        if (key === 'dominantHand') {
+            const val = String(value).toLowerCase();
+            if (val === 'kanan' || val === 'right') cleaned[key] = "Kanan";
+            else if (val === 'kiri' || val === 'left') cleaned[key] = "Kiri";
+            else cleaned[key] = undefined;
+            return;
+        }
+
+        // Default: copy value
+        cleaned[key] = value;
+    });
+    return cleaned;
+};
+
+export function AthleteForm({ action, initialState, defaultValues, mode }: AthleteFormProps) {
+    const { toast } = useToast();
+    const [state, formAction] = useActionState(action, initialState);
+    const [recommendedSize, setRecommendedSize] = useState<string>('-');
+
+    // Define base defaults
+    const baseDefaults: AthleteRegistrationFormValues = {
+        fullName: "",
+        nickname: "",
+        pob: "",
+        dob: "",
+        gender: undefined as any, // Zod enum workaround
+        nik: "",
+        citizenship: "Indonesia",
+        bloodType: undefined,
+        rhesus: undefined,
+        dominantHand: undefined as any,
+        phone: "",
+        email: "",
+        socialMedia: "",
+        shoeSize: undefined,
+
+        address: "",
+        district: "",
+        city: "",
+        province: "",
+        postalCode: "",
+
+        schoolName: "",
+        schoolAddress: "",
+        schoolGrade: "",
+        schoolPhone: "",
+
+        ant_height_cm: undefined as any,
+        ant_weight_kg: undefined as any,
+        ant_sitting_height: undefined,
+        ant_arm_span_cm: undefined,
+        ant_leg_length: undefined,
+
+        chestWidth: undefined,
+        waistCircumference: undefined,
+        jerseyLength: undefined,
+        shirtSize: "",
+
+        jerseyNameOption: undefined as any,
+        jerseyName: "",
+
+        fatherName: "",
+        fatherJob: "",
+        fatherPhone: "",
+        motherName: "",
+        motherJob: "",
+        motherPhone: "",
+
+        emergencyName: "",
+        emergencyRelation: "",
+        emergencyPhone: "",
+
+        parentIncomeBracket: undefined,
+        familyStatus: undefined,
+        numberOfDependents: undefined,
+        siblingsCount: undefined,
+        governmentAssistance: [],
+        houseStatus: undefined,
+        transportationToField: undefined,
+        smartphoneAccess: undefined,
+        infoSource: undefined,
+
+        seriousInjury: false,
+        injuryDetails: "",
+        medicalHistory: [],
+        allergies: "",
+        surgeryHistory: false,
+        routineMedication: false,
+        riskDiseaseHistory: "",
+        vaccinationStatus: "",
+        chronicSymptoms: [],
+
+        dietaryHabits: undefined,
+        averageSleepHours: undefined,
+        stayUpLate: false,
+        schoolWorkload: undefined,
+        transportationToGym: undefined,
+
+        startYear: undefined as any,
+        pbsiNumber: "",
+        previousClub: "",
+        specialization: undefined,
+        achievements: [],
+
+        category: "Pra-usia dini (U-9)" as any,
+        level: "Fundamental" as any,
+        trainingTarget: undefined,
+        championshipTarget: [],
+
+        ant_bmi_score: undefined,
+        ant_skeletal_muscle_pct: undefined,
+        ant_body_fat_pct: undefined,
+        kin_grip_switch_speed: undefined,
+        kin_kinetic_linkage: undefined,
+        phy_resting_heart_rate: undefined,
+        bio_t_test_sec: undefined,
+        bio_vertical_jump: undefined,
+        bio_beep_test_lvl: undefined,
+
+        contractDuration: undefined,
+        contractStartDate: "",
+        contractEndDate: "",
+
+        agreeLifestyle: false,
+        agreeMediaRights: false,
+        agreeLiability: false,
+        agreeEmergency: false,
+        agreeCodeOfEthics: false,
+        authenticityDeclaration: false,
+
+        fileKK: undefined,
+        fileAkta: undefined,
+        filePhoto: undefined,
+        fileRapor: undefined,
+        fileHealthCert: undefined,
+
+        registrationDate: new Date().toISOString().split('T')[0],
+        niaKji: "",
+        initialStatus: "Probation" as any,
+
+        ant_protein_pct: undefined,
+        target_technical_month_1: "",
+        target_physical_month_1: "",
+        trainingSchedule: "",
+        additionalTrainingSession: "",
+        coachNotes: "",
+        trainingStartDate: "",
+        checklistFiles: [],
+
+        kin_wrist_extension: undefined,
+        kin_elbow_alignment: undefined,
+        kin_contact_height: undefined,
+        bio_split_step_lat: undefined,
+        men_grit_score: undefined,
+        men_academic_pressure: undefined,
+        men_poms_index: undefined,
+        phy_hemoglobin_lvl: undefined,
+        phy_creatine_kinase: undefined,
+        phy_testosteron_cort: undefined,
+        cog_saccadic_speed: undefined,
+        cog_peripheral_deg: undefined,
+        cog_choice_reaction: undefined,
+        load_grf_asymmetry: undefined,
+        load_shoulder_torque: undefined,
+        rec_hrv_rmssd: undefined,
+        rec_doms_perceived: undefined,
+        nut_urine_color: undefined,
+        soc_travel_time: undefined,
+    };
+
+    // Memoize merged defaults to avoid unnecessary re-renders
+    const mergedDefaults = useMemo(() => {
+        const validated = cleanDefaultValues(defaultValues);
+        return {
+            ...baseDefaults,
+            ...validated,
+        };
+    }, [defaultValues]);
+
+    const form = useForm<AthleteRegistrationFormValues>({
+        resolver: zodResolver(athleteRegistrationSchema),
+        defaultValues: mergedDefaults,
+    });
+
+    // Force reset when defaultValues change (crucial for Edit mode population)
+    useEffect(() => {
+        if (defaultValues) {
+            form.reset(mergedDefaults);
+        }
+    }, [mergedDefaults, form, defaultValues]);
+
+    const { watch, setValue } = form;
+    const height = watch('ant_height_cm');
+    const jerseyLength = watch('jerseyLength');
+    const chestWidth = watch('chestWidth');
+    const waistCircumference = watch('waistCircumference');
+    const fullName = watch('fullName');
+    const jerseyNameOption = watch('jerseyNameOption');
+
+    useEffect(() => {
+        const pb = Number(jerseyLength || 0);
+        const ld = Number(chestWidth || 0);
+        const lp = Number(waistCircumference || 0);
+
+        if (pb > 0 && ld > 0 && lp > 0) {
+            const size = calculateShirtSize(pb, ld, lp);
+            setRecommendedSize(size);
+            setValue('shirtSize', size);
+        } else {
+            setRecommendedSize('-');
+            setValue('shirtSize', '');
+        }
+    }, [jerseyLength, chestWidth, waistCircumference, setValue]);
+
+    useEffect(() => {
+        if (fullName && jerseyNameOption && (!defaultValues?.jerseyName || fullName !== defaultValues.fullName)) {
+            // Only auto-generate if name changed or no existing name provided (for edit mode)
+            // Actually, forcing checking logic: if user explicitly sets option, re-generate.
+            // If data load, we don't want to overwrite if user manually edited it before saving? 
+            // Logic: keep simple. If name/option changes, regen.
+            const suggestedName = generateBackName(fullName, jerseyNameOption);
+            setValue('jerseyName', suggestedName);
+        }
+    }, [fullName, jerseyNameOption, setValue, defaultValues]);
+
+    useEffect(() => {
+        if (state.message) {
+            if (state.success) {
+                toast({
+                    title: "Berhasil!",
+                    description: state.message,
+                    className: "bg-green-600 text-white",
+                });
+                if (mode === 'create') {
+                    form.reset();
+                }
+            } else {
+                toast({
+                    title: "Gagal",
+                    description: state.message,
+                    variant: "destructive",
+                });
+            }
+        }
+    }, [state, toast, form, mode]);
+
+    return (
+        <Form {...form}>
+            <form action={formAction} className="space-y-8">
+                <Tabs defaultValue="identitas" className="w-full">
+                    <TabsList className="flex w-full overflow-x-auto h-auto p-1.5 bg-white/80 backdrop-blur-md rounded-2xl sticky top-4 z-40 shadow-lg border border-slate-200 snap-x gap-2 no-scrollbar">
+                        <TabsTrigger value="identitas" className="flex-none snap-start min-w-[110px] md:flex-1 h-14 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all duration-300 font-bold text-xs md:text-sm flex flex-col items-center justify-center gap-1">
+                            <IdCard className="w-4 h-4 md:w-5 md:h-5" />
+                            <span>Identitas</span>
+                        </TabsTrigger>
+                        <TabsTrigger value="keluarga" className="flex-none snap-start min-w-[110px] md:flex-1 h-14 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all duration-300 font-bold text-xs md:text-sm flex flex-col items-center justify-center gap-1">
+                            <Users className="w-4 h-4 md:w-5 md:h-5" />
+                            <span>Keluarga</span>
+                        </TabsTrigger>
+                        <TabsTrigger value="medis" className="flex-none snap-start min-w-[110px] md:flex-1 h-14 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all duration-300 font-bold text-xs md:text-sm flex flex-col items-center justify-center gap-1">
+                            <HeartPulse className="w-4 h-4 md:w-5 md:h-5" />
+                            <span>Medis</span>
+                        </TabsTrigger>
+                        <TabsTrigger value="teknis" className="flex-none snap-start min-w-[110px] md:flex-1 h-14 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all duration-300 font-bold text-xs md:text-sm flex flex-col items-center justify-center gap-1">
+                            <Trophy className="w-4 h-4 md:w-5 md:h-5" />
+                            <span>Teknis</span>
+                        </TabsTrigger>
+                        <TabsTrigger value="admin" className="flex-none snap-start min-w-[110px] md:flex-1 h-14 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all duration-300 font-bold text-xs md:text-sm flex flex-col items-center justify-center gap-1">
+                            <ScrollText className="w-4 h-4 md:w-5 md:h-5" />
+                            <span>Kontrak</span>
+                        </TabsTrigger>
+                    </TabsList>
+
+                    {/* === TAB 1: IDENTITAS & ALAMAT === */}
+                    <TabsContent value="identitas" className="space-y-8 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <Card className="rounded-3xl shadow-xl">
+                            <CardHeader className="p-8 pb-4">
+                                <CardTitle className="text-xl font-headline flex items-center gap-3"><User className="w-5 h-5 text-primary" /> A. Identitas Pribadi</CardTitle>
+                                <CardDescription>Data sesuai KTP/KIA/Akte Kelahiran.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <FormField control={form.control} name="fullName" render={({ field }) => (
+                                    <FormItem className="md:col-span-2"><FormLabel>Nama Lengkap</FormLabel><FormControl><Input {...field} value={field.value ?? ''} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="nickname" render={({ field }) => (
+                                    <FormItem><FormLabel>Nama Panggilan</FormLabel><FormControl><Input {...field} value={field.value ?? ''} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="nik" render={({ field }) => (
+                                    <FormItem><FormLabel>NIK (Nomor Induk Kependudukan)</FormLabel><FormControl><Input {...field} value={field.value ?? ''} maxLength={16} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="pob" render={({ field }) => (
+                                    <FormItem><FormLabel>Tempat Lahir</FormLabel><FormControl><Input {...field} value={field.value ?? ''} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="dob" render={({ field }) => (
+                                    <FormItem><FormLabel>Tanggal Lahir</FormLabel><FormControl><Input type="date" {...field} value={field.value ?? ''} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="gender" render={({ field }) => (
+                                    <FormItem><FormLabel>Jenis Kelamin</FormLabel><FormControl><RadioGroup onValueChange={field.onChange} value={field.value} name={field.name} className="flex gap-4 pt-2">
+                                        <FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Laki-laki" /></FormControl><Label>Laki-laki</Label></FormItem>
+                                        <FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="Perempuan" /></FormControl><Label>Perempuan</Label></FormItem>
+                                    </RadioGroup></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="citizenship" render={({ field }) => (
+                                    <FormItem><FormLabel>Kewarganegaraan</FormLabel><FormControl><Input {...field} value={field.value ?? ''} className="h-12 rounded-xl bg-secondary border" placeholder="Indonesia" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <div className="grid grid-cols-2 gap-4">
+                                    <FormField control={form.control} name="bloodType" render={({ field }) => (
+                                        <FormItem><FormLabel>Gol. Darah</FormLabel><Select onValueChange={field.onChange} value={field.value} name={field.name}><FormControl><SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="-" /></SelectTrigger></FormControl><SelectContent><SelectItem value="A">A</SelectItem><SelectItem value="B">B</SelectItem><SelectItem value="AB">AB</SelectItem><SelectItem value="O">O</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+                                    )} />
+                                    <FormField control={form.control} name="rhesus" render={({ field }) => (
+                                        <FormItem><FormLabel>Rhesus</FormLabel><Select onValueChange={field.onChange} value={field.value} name={field.name}><FormControl><SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="+/-" /></SelectTrigger></FormControl><SelectContent><SelectItem value="+">Positif (+)</SelectItem><SelectItem value="-">Negatif (-)</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+                                    )} />
+                                </div>
+                                <FormField control={form.control} name="socialMedia" render={({ field }) => (
+                                    <FormItem><FormLabel>Username IG/TikTok (Opsional)</FormLabel><FormControl><Input {...field} value={field.value ?? ''} className="h-12 rounded-xl bg-secondary border" prefix="@" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                            </CardContent>
+                        </Card>
+
+                        <Card className="rounded-3xl shadow-xl">
+                            <CardHeader className="p-8 pb-4">
+                                <CardTitle className="text-xl font-headline flex items-center gap-3"><MapPin className="w-5 h-5 text-primary" /> Alamat & Kontak</CardTitle>
+                            </CardHeader>
+                            <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <FormField control={form.control} name="address" render={({ field }) => (
+                                    <FormItem className="md:col-span-2"><FormLabel>Alamat Jalan Lengkap</FormLabel><FormControl><Textarea {...field} value={field.value ?? ''} className="rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="province" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Provinsi</FormLabel>
+                                        <Select onValueChange={(val) => {
+                                            field.onChange(val);
+                                            form.setValue('city', '');
+                                            form.setValue('district', '');
+                                            form.setValue('postalCode', '');
+                                        }} value={field.value} name={field.name}>
+                                            <FormControl>
+                                                <SelectTrigger className="h-12 rounded-xl bg-secondary border">
+                                                    <SelectValue placeholder="Pilih Provinsi" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {INDONESIA_REGIONS.provinces.map((prov) => (
+                                                    <SelectItem key={prov} value={prov}>{prov}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                <FormField control={form.control} name="city" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Kota/Kabupaten</FormLabel>
+                                        <Select onValueChange={(val) => {
+                                            field.onChange(val);
+                                            form.setValue('district', '');
+                                            form.setValue('postalCode', '');
+                                        }} value={field.value} name={field.name} disabled={!form.watch('province')}>
+                                            <FormControl>
+                                                <SelectTrigger className="h-12 rounded-xl bg-secondary border">
+                                                    <SelectValue placeholder="Pilih Kota/Kab" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {form.watch('province') && INDONESIA_REGIONS.cities[form.watch('province') as keyof typeof INDONESIA_REGIONS.cities]?.map((city) => (
+                                                    <SelectItem key={city} value={city}>{city}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                <FormField control={form.control} name="district" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Kecamatan</FormLabel>
+                                        <Select onValueChange={(val) => {
+                                            field.onChange(val);
+                                            form.setValue('postalCode', '');
+                                            // Auto-select single postal code if available
+                                            const codes = INDONESIA_REGIONS.postalCodes[val as keyof typeof INDONESIA_REGIONS.postalCodes];
+                                            if (codes && codes.length === 1) {
+                                                form.setValue('postalCode', codes[0]);
+                                            }
+                                        }} value={field.value} name={field.name} disabled={!form.watch('city')}>
+                                            <FormControl>
+                                                <SelectTrigger className="h-12 rounded-xl bg-secondary border">
+                                                    <SelectValue placeholder="Pilih Kecamatan" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {form.watch('city') && INDONESIA_REGIONS.districts[form.watch('city') as keyof typeof INDONESIA_REGIONS.districts]?.map((dist) => (
+                                                    <SelectItem key={dist} value={dist}>{dist}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                <FormField control={form.control} name="postalCode" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Kode Pos</FormLabel>
+                                        <Select onValueChange={field.onChange} value={field.value} name={field.name} disabled={!form.watch('district')}>
+                                            <FormControl>
+                                                <SelectTrigger className="h-12 rounded-xl bg-secondary border">
+                                                    <SelectValue placeholder="Pilih Kode Pos" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {form.watch('district') && INDONESIA_REGIONS.postalCodes[form.watch('district') as keyof typeof INDONESIA_REGIONS.postalCodes]?.map((code) => (
+                                                    <SelectItem key={code} value={code}>{code}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                <FormField control={form.control} name="phone" render={({ field }) => (
+                                    <FormItem><FormLabel>No. HP Atlet</FormLabel><FormControl><Input {...field} value={field.value ?? ''} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="email" render={({ field }) => (
+                                    <FormItem><FormLabel>Email Atlet</FormLabel><FormControl><Input {...field} value={field.value ?? ''} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                            </CardContent>
+                        </Card>
+
+                        <Card className="rounded-3xl shadow-xl">
+                            <CardHeader className="p-8 pb-4">
+                                <CardTitle className="text-xl font-headline flex items-center gap-3"><GraduationCap className="w-5 h-5 text-primary" /> Pendidikan</CardTitle>
+                            </CardHeader>
+                            <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <FormField control={form.control} name="schoolName" render={({ field }) => (
+                                    <FormItem><FormLabel>Nama Sekolah</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="schoolGrade" render={({ field }) => (
+                                    <FormItem><FormLabel>Kelas</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="schoolAddress" render={({ field }) => (
+                                    <FormItem className="md:col-span-2"><FormLabel>Alamat Sekolah</FormLabel><FormControl><Textarea {...field} className="rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+
+                    {/* === TAB 2: ORANG TUA & SOSIAL === */}
+                    <TabsContent value="keluarga" className="space-y-8 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <Card className="rounded-3xl shadow-xl border-t-4 border-t-orange-500">
+                            <CardHeader className="p-8 pb-4">
+                                <CardTitle className="text-xl font-headline">Data Orang Tua / Wali</CardTitle>
+                            </CardHeader>
+                            <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-3 gap-6">
+                                {/* Ayah */}
+                                <div className="space-y-4 md:col-span-3"><h4 className="font-bold text-muted-foreground border-b pb-2">Data Ayah</h4></div>
+                                <FormField control={form.control} name="fatherName" render={({ field }) => (
+                                    <FormItem><FormLabel>Nama Ayah</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="fatherJob" render={({ field }) => (
+                                    <FormItem><FormLabel>Pekerjaan</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="fatherPhone" render={({ field }) => (
+                                    <FormItem><FormLabel>No. HP</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+
+                                {/* Ibu */}
+                                <div className="space-y-4 md:col-span-3 pt-4"><h4 className="font-bold text-muted-foreground border-b pb-2">Data Ibu</h4></div>
+                                <FormField control={form.control} name="motherName" render={({ field }) => (
+                                    <FormItem><FormLabel>Nama Ibu</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="motherJob" render={({ field }) => (
+                                    <FormItem><FormLabel>Pekerjaan</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="motherPhone" render={({ field }) => (
+                                    <FormItem><FormLabel>No. HP</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+
+                                {/* Emergency */}
+                                <div className="space-y-4 md:col-span-3 pt-4"><h4 className="font-bold text-red-500 border-b border-red-200 pb-2">Kontak Darurat (Wajib)</h4></div>
+                                <FormField control={form.control} name="emergencyName" render={({ field }) => (
+                                    <FormItem><FormLabel>Nama Kontak</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="emergencyRelation" render={({ field }) => (
+                                    <FormItem><FormLabel>Hubungan</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary border" placeholder="e.g. Paman, Kakak" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="emergencyPhone" render={({ field }) => (
+                                    <FormItem><FormLabel>No. HP Darurat</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                            </CardContent>
+                        </Card>
+
+                        <Card className="rounded-3xl shadow-xl">
+                            <CardHeader className="p-8 pb-4">
+                                <CardTitle className="text-xl font-headline flex items-center gap-3"><Briefcase className="w-5 h-5 text-primary" /> Data Sosial Ekonomi (Rahasia)</CardTitle>
+                                <CardDescription>Digunakan untuk penentuan subsidi/beasiswa.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="p-8 pt-0 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <FormField control={form.control} name="parentIncomeBracket" render={({ field }) => (
+                                    <FormItem><FormLabel>Estimasi Penghasilan Ortu</FormLabel><Select onValueChange={field.onChange} value={field.value} name={field.name}><FormControl><SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Range" /></SelectTrigger></FormControl><SelectContent><SelectItem value="< 3jt">&lt; 3 Juta</SelectItem><SelectItem value="3jt - 5jt">3 - 5 Juta</SelectItem><SelectItem value="5jt - 10jt">5 - 10 Juta</SelectItem><SelectItem value="> 10jt">{'>'} 10 Juta</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="familyStatus" render={({ field }) => (
+                                    <FormItem><FormLabel>Status Keluarga</FormLabel><Select onValueChange={field.onChange} value={field.value} name={field.name}><FormControl><SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="Pilih Status" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Lengkap">Lengkap</SelectItem><SelectItem value="Yatim">Yatim</SelectItem><SelectItem value="Piatu">Piatu</SelectItem><SelectItem value="Yatim Piatu">Yatim Piatu</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="numberOfDependents" render={({ field }) => (
+                                    <FormItem><FormLabel>Jml Tanggungan</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="siblingsCount" render={({ field }) => (
+                                    <FormItem><FormLabel>Jml Saudara Kandung</FormLabel><FormControl><Input type="number" {...field} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="houseStatus" render={({ field }) => (
+                                    <FormItem><FormLabel>Status Rumah</FormLabel><Select onValueChange={field.onChange} value={field.value} name={field.name}><FormControl><SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="-" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Milik Sendiri">Milik Sendiri</SelectItem><SelectItem value="Sewa/Kontrak">Sewa/Kontrak</SelectItem><SelectItem value="Menumpang">Menumpang</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="transportationToField" render={({ field }) => (
+                                    <FormItem><FormLabel>Transportasi ke GOR</FormLabel><Select onValueChange={field.onChange} value={field.value} name={field.name}><FormControl><SelectTrigger className="h-12 rounded-xl bg-secondary border"><SelectValue placeholder="-" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Jalan Kaki">Jalan Kaki</SelectItem><SelectItem value="Sepeda">Sepeda</SelectItem><SelectItem value="Motor">Motor</SelectItem><SelectItem value="Angkutan Umum">Angkutan Umum</SelectItem><SelectItem value="Mobil">Mobil</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="governmentAssistance" render={() => (
+                                    <FormItem className="md:col-span-2"><div className="mb-4"><FormLabel>Bantuan Pemerintah</FormLabel></div>
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                            {["KIP (Pintar)", "PKH (Harapan)", "KIS (Sehat)", "KKS (Sembako)"].map((item) => (
+                                                <FormField key={item} control={form.control} name="governmentAssistance" render={({ field }) => (
+                                                    <FormItem key={item} className="flex flex-row items-start space-x-3 space-y-0 text-sm">
+                                                        <FormControl><Checkbox checked={field.value?.includes(item)} onCheckedChange={(checked) => checked ? field.onChange([...(field.value || []), item]) : field.onChange(field.value?.filter((val) => val !== item))} name={field.name} value={item} /></FormControl>
+                                                        <Label className="font-normal text-muted-foreground">{item}</Label>
+                                                    </FormItem>
+                                                )} />
+                                            ))}
+                                        </div><FormMessage /></FormItem>
+                                )} />
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+
+                    {/* === TAB 3: MEDIS & FISIK === */}
+                    <TabsContent value="medis" className="space-y-8 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <Card className="rounded-3xl shadow-xl border-green-500/10 h-full">
+                                <CardHeader><CardTitle className="text-xl font-headline flex items-center gap-3"><Ruler className="w-5 h-5 text-green-600" /> Antropometri</CardTitle></CardHeader>
+                                <CardContent className="grid grid-cols-2 gap-4">
+                                    <FormField control={form.control} name="ant_height_cm" render={({ field }) => (<FormItem><FormLabel>Tinggi (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                                    <FormField control={form.control} name="ant_sitting_height" render={({ field }) => (<FormItem><FormLabel>Tinggi Duduk (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                                    <FormField control={form.control} name="ant_weight_kg" render={({ field }) => (<FormItem><FormLabel>Berat (kg)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                                    <FormField control={form.control} name="ant_arm_span_cm" render={({ field }) => (<FormItem><FormLabel>Rentang Lengan (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+
+                                    {/* Update Bagian Komposisi Tubuh sesuai Form */}
+                                    <div className="col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4 border-t pt-4 mt-2">
+                                        <FormField control={form.control} name="ant_bmi_score" render={({ field }) => (<FormItem><FormLabel>BMI Score</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                        <FormField control={form.control} name="ant_body_fat_pct" render={({ field }) => (<FormItem><FormLabel>Lemak Tubuh (%)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                        <FormField control={form.control} name="ant_skeletal_muscle_pct" render={({ field }) => (<FormItem><FormLabel>Otot Rangka (%)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                        <FormField control={form.control} name="ant_protein_pct" render={({ field }) => (<FormItem><FormLabel>Kadar Protein (%)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                    </div>
+
+                                    <FormField control={form.control} name="shoeSize" render={({ field }) => (<FormItem><FormLabel>Ukuran Sepatu</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                                    <FormField control={form.control} name="dominantHand" render={({ field }) => (
+                                        <FormItem><FormLabel>Tangan Dominan</FormLabel><Select onValueChange={field.onChange} value={field.value} name={field.name}><FormControl><SelectTrigger><SelectValue placeholder="-" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Kanan">Kanan</SelectItem><SelectItem value="Kiri">Kiri</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+                                    )} />
+                                </CardContent>
+                            </Card>
+                            <Card className="rounded-3xl shadow-xl border-green-500/10 h-full">
+                                <CardHeader><CardTitle className="text-xl font-headline flex items-center gap-3"><Shirt className="w-5 h-5 text-green-600" /> Jersey Fitting</CardTitle></CardHeader>
+                                <CardContent className="grid grid-cols-3 gap-2">
+                                    <FormField control={form.control} name="jerseyLength" render={({ field }) => (<FormItem><FormLabel>PB (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                    <FormField control={form.control} name="chestWidth" render={({ field }) => (<FormItem><FormLabel>LD (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                    <FormField control={form.control} name="waistCircumference" render={({ field }) => (<FormItem><FormLabel>LP (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                    <div className="col-span-3 pt-4 text-center"><Badge variant="outline" className="text-lg px-4 py-2">Rekomendasi Size: <span className="font-black ml-2">{recommendedSize}</span></Badge></div>
+                                    {/* Nama Punggung */}
+                                    <div className="col-span-3 pt-4 border-t mt-4 space-y-2">
+                                        <FormField control={form.control} name="jerseyNameOption" render={({ field }) => (
+                                            <FormItem><FormLabel>Format Nama</FormLabel><FormControl><RadioGroup onValueChange={field.onChange} value={field.value} name={field.name} className="flex gap-4"><FormItem className="flex items-center space-x-2"><RadioGroupItem value="initials" /><Label>Nama Depan</Label></FormItem><FormItem className="flex items-center space-x-2"><RadioGroupItem value="lastName" /><Label>Nama Belakang</Label></FormItem></RadioGroup></FormControl></FormItem>
+                                        )} />
+                                        <FormField control={form.control} name="jerseyName" render={({ field }) => (<FormItem><FormControl><Input {...field} readOnly className="bg-secondary font-mono text-center uppercase font-black tracking-widest" /></FormControl></FormItem>)} />
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+
+
+
+                        <Card className="rounded-3xl shadow-xl border-red-500/10">
+                            <CardHeader><CardTitle className="text-xl font-headline text-red-600">Riwayat Kesehatan & Risiko</CardTitle></CardHeader>
+                            <CardContent className="space-y-6">
+                                <FormField control={form.control} name="seriousInjury" render={({ field }) => (
+                                    <FormItem className="flex flex-row items-center justify-between rounded-xl border p-4 bg-white"><div className="space-y-0.5"><FormLabel>Pernah Cedera Serius?</FormLabel></div><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} name={field.name} /></FormControl></FormItem>
+                                )} />
+                                {form.watch('seriousInjury') && (
+                                    <FormField control={form.control} name="injuryDetails" render={({ field }) => (<FormItem><FormLabel>Jelaskan Detail Cedera & Tahun</FormLabel><FormControl><Textarea {...field} /></FormControl></FormItem>)} />
+                                )}
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <FormField control={form.control} name="riskDiseaseHistory" render={({ field }) => (<FormItem><FormLabel>Riwayat Penyakit Berat/Menular</FormLabel><FormControl><Textarea {...field} placeholder="Tulis '-' jika tidak ada" /></FormControl></FormItem>)} />
+                                    <FormField control={form.control} name="allergies" render={({ field }) => (<FormItem><FormLabel>Alergi (Obat/Makanan/Debu)</FormLabel><FormControl><Textarea {...field} placeholder="Tulis '-' jika tidak ada" /></FormControl></FormItem>)} />
+                                </div>
+
+                                <FormField control={form.control} name="medicalHistory" render={() => (
+                                    <FormItem><div className="mb-2"><FormLabel>Riwayat Penyakit Umum</FormLabel></div><div className="grid grid-cols-2 md:grid-cols-4 gap-2">{["Asma", "Jantung", "Diabetes", "Epilepsi"].map((item) => (
+                                        <FormField key={item} control={form.control} name="medicalHistory" render={({ field }) => (<FormItem key={item} className="flex flex-row items-center space-x-2 space-y-0"><FormControl><Checkbox checked={field.value?.includes(item)} onCheckedChange={(checked) => checked ? field.onChange([...(field.value || []), item]) : field.onChange(field.value?.filter((val) => val !== item))} name={field.name} value={item} /></FormControl><Label className="font-normal">{item}</Label></FormItem>)} />
+                                    ))}</div></FormItem>
+                                )} />
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <FormField control={form.control} name="surgeryHistory" render={({ field }) => (<FormItem className="flex flex-row items-center justify-between rounded-xl border p-3"><FormLabel>Pernah Operasi?</FormLabel><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} name={field.name} /></FormControl></FormItem>)} />
+                                    <FormField control={form.control} name="routineMedication" render={({ field }) => (<FormItem className="flex flex-row items-center justify-between rounded-xl border p-3"><FormLabel>Pengobatan Rutin?</FormLabel><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} name={field.name} /></FormControl></FormItem>)} />
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="rounded-3xl shadow-xl border-blue-500/10">
+                            <CardHeader><CardTitle className="text-xl font-headline text-blue-600">Lifestyle & Sport Science Baseline</CardTitle></CardHeader>
+                            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <FormField control={form.control} name="dietaryHabits" render={({ field }) => (
+                                    <FormItem><FormLabel>Konsumsi Gorengan/Manis/Instan</FormLabel><Select onValueChange={field.onChange} value={field.value} name={field.name}><FormControl><SelectTrigger><SelectValue placeholder="Frekuensi" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Jarang">Jarang (1-2x/minggu)</SelectItem><SelectItem value="Sering">Sering (3-5x/minggu)</SelectItem><SelectItem value="Sangat Sering">Sangat Sering (&gt;5x)</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+                                )} />
+                                <FormField control={form.control} name="averageSleepHours" render={({ field }) => (<FormItem><FormLabel>Rata-rata Tidur (Jam)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                <FormField control={form.control} name="stayUpLate" render={({ field }) => (<FormItem className="flex flex-row items-center justify-between rounded-xl border p-3 bg-white"><FormLabel>Sering Begadang (&gt; 22.00)?</FormLabel><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} name={field.name} /></FormControl></FormItem>)} />
+                                <FormField control={form.control} name="schoolWorkload" render={({ field }) => (<FormItem><FormLabel>Beban Sekolah (Skala 1-10)</FormLabel><FormControl><Input type="number" min={1} max={10} {...field} /></FormControl></FormItem>)} />
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+
+                    {/* === TAB 4: TEKNIS & PRESTASI === */}
+                    <TabsContent value="teknis" className="space-y-8 mt-6">
+
+                        {/* 1. Riwayat Bulu Tangkis (Sesuai Form Halaman 2) */}
+                        <Card className="rounded-3xl shadow-xl">
+                            <CardHeader><CardTitle className="text-xl font-headline">Riwayat Bulu Tangkis</CardTitle></CardHeader>
+                            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <FormField control={form.control} name="startYear" render={({ field }) => (<FormItem><FormLabel>Mulai Usia / Tahun</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                <FormField control={form.control} name="previousClub" render={({ field }) => (<FormItem><FormLabel>Klub Sebelumnya</FormLabel><FormControl><Input {...field} /></FormControl></FormItem>)} />
+                                <FormField control={form.control} name="pbsiNumber" render={({ field }) => (<FormItem><FormLabel>ID PBSI (SI)</FormLabel><FormControl><Input {...field} /></FormControl></FormItem>)} />
+                                <FormField control={form.control} name="specialization" render={({ field }) => (
+                                    <FormItem><FormLabel>Spesialisasi</FormLabel><Select onValueChange={field.onChange} value={field.value} name={field.name}><FormControl><SelectTrigger><SelectValue placeholder="-" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Tunggal">Tunggal</SelectItem><SelectItem value="Ganda">Ganda</SelectItem><SelectItem value="Ganda Campuran">Campuran</SelectItem><SelectItem value="Belum ditentukan">Belum ditentukan</SelectItem></SelectContent></Select></FormItem>
+                                )} />
+                            </CardContent>
+                        </Card>
+
+                        {/* 2. Kinematika & Teknik Dasar (Software) - Sesuai Form Halaman 4 */}
+                        <Card className="rounded-3xl shadow-xl border-blue-500/10">
+                            <CardHeader>
+                                <CardTitle className="text-xl font-headline flex items-center gap-2">
+                                    <Activity className="w-5 h-5 text-blue-600" /> Kinematika & Teknik Dasar (Baseline)
+                                </CardTitle>
+                                <CardDescription>Isi skor 1-10 berdasarkan pengamatan pelatih saat sesi trial.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <FormField control={form.control} name="kin_grip_switch_speed" render={({ field }) => (<FormItem><FormLabel>Kecepatan Ganti Grip</FormLabel><FormControl><Input type="number" min={1} max={10} {...field} placeholder="1-10" /></FormControl></FormItem>)} />
+                                <FormField control={form.control} name="kin_kinetic_linkage" render={({ field }) => (<FormItem><FormLabel>Efisiensi Footwork</FormLabel><FormControl><Input type="number" min={1} max={10} {...field} placeholder="1-10" /></FormControl></FormItem>)} />
+                                <FormField control={form.control} name="kin_elbow_alignment" render={({ field }) => (<FormItem><FormLabel>Posisi Siku (Overhead)</FormLabel><FormControl><Input type="number" min={1} max={10} {...field} placeholder="1-10" /></FormControl></FormItem>)} />
+                                <FormField control={form.control} name="kin_contact_height" render={({ field }) => (<FormItem><FormLabel>Kontak Poin Tertinggi</FormLabel><FormControl><Input type="number" min={1} max={10} {...field} placeholder="1-10" /></FormControl></FormItem>)} />
+                                <FormField control={form.control} name="kin_wrist_extension" render={({ field }) => (<FormItem><FormLabel>Sudut Pergelangan</FormLabel><FormControl><Input type="number" min={1} max={10} {...field} placeholder="1-10" /></FormControl></FormItem>)} />
+                            </CardContent>
+                        </Card>
+
+                        {/* 3. Biomotor & Fisik (Engine) - Sesuai Form Halaman 4 */}
+                        <Card className="rounded-3xl shadow-xl border-red-500/10">
+                            <CardHeader>
+                                <CardTitle className="text-xl font-headline flex items-center gap-2">
+                                    <HeartPulse className="w-5 h-5 text-red-600" /> Biomotor & Fisik (Baseline)
+                                </CardTitle>
+                                <CardDescription>Hasil tes fisik awal.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                <FormField control={form.control} name="phy_resting_heart_rate" render={({ field }) => (<FormItem><FormLabel>Nadi Istirahat (bpm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                <FormField control={form.control} name="bio_t_test_sec" render={({ field }) => (<FormItem><FormLabel>Agility T-Test (detik)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                <FormField control={form.control} name="bio_split_step_lat" render={({ field }) => (<FormItem><FormLabel>Reaksi Split Step (ms)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                <FormField control={form.control} name="bio_vertical_jump" render={({ field }) => (<FormItem><FormLabel>Vertical Jump (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                <FormField control={form.control} name="bio_beep_test_lvl" render={({ field }) => (<FormItem><FormLabel>Beep Test (Level)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                                <FormField control={form.control} name="soc_travel_time" render={({ field }) => (<FormItem><FormLabel>Waktu Tempuh ke GOR (mnt)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>)} />
+                            </CardContent>
+                        </Card>
+
+
+                    </TabsContent>
+
+                    {/* === TAB 5: ADMIN & KONTRAK === */}
+                    <TabsContent value="admin" className="space-y-8 mt-6">
+
+                        {/* IDENTITAS ADMINISTRATIF */}
+                        <Card className="rounded-3xl shadow-xl border-blue-500/10">
+                            <CardHeader>
+                                <CardTitle className="text-xl font-headline text-blue-700">Identitas Administratif</CardTitle>
+                                <CardDescription>Nomor Induk dan identitas resmi atlet di klub.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <FormField control={form.control} name="niaKji" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>NIA KJI (Nomor Induk Atlet)</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} placeholder="Kosongkan untuk Auto-Generate" className="font-mono" />
+                                        </FormControl>
+                                        <FormDescription>Format: YY.MM.XXX (Tahun.Bulan.Urut). Biarkan kosong jika ingin dibuat otomatis sistem.</FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                            </CardContent>
+                        </Card>
+
+                        {/* ANALISIS DAN PENEMPATAN PROGRAM (KEPUTUSAN PB) */}
+                        <Card className="rounded-3xl shadow-xl border-orange-500/10">
+                            <CardHeader>
+                                <CardTitle className="text-xl font-headline text-orange-700">Analisis & Penempatan Program (Keputusan PB)</CardTitle>
+                                <CardDescription>Berdasarkan hasil evaluasi baseline.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <FormField control={form.control} name="level" render={({ field }) => (
+                                        <FormItem><FormLabel>A. Level Pembinaan</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Pilih Level" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Fundamental">Fundamental (Fokus: Grip & Footwork)</SelectItem><SelectItem value="Pengembangan">Pengembangan (Fokus: Konsistensi)</SelectItem><SelectItem value="Prestasi">Prestasi (Fokus: Match & Strategi)</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+                                    )} />
+
+                                    <div className="space-y-4">
+                                        <FormField control={form.control} name="trainingSchedule" render={({ field }) => (
+                                            <FormItem><FormLabel>B. Jadwal Latihan Rutin</FormLabel><FormControl><Input {...field} placeholder="Hari & Jam (e.g., Senin-Kamis 16.00)" /></FormControl><FormMessage /></FormItem>
+                                        )} />
+                                        <FormField control={form.control} name="additionalTrainingSession" render={({ field }) => (
+                                            <FormItem><FormLabel>Sesi Tambahan (Fisik/Renang)</FormLabel><FormControl><Input {...field} placeholder="e.g., Sabtu Pagi / -" /></FormControl><FormMessage /></FormItem>
+                                        )} />
+                                    </div>
+                                </div>
+
+                                <div className="border-t pt-4">
+                                    <h4 className="font-semibold mb-3 text-slate-700">Target Khusus Bulan Pertama</h4>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <FormField control={form.control} name="target_technical_month_1" render={({ field }) => (
+                                            <FormItem><FormLabel>Target Teknis</FormLabel><FormControl><Textarea {...field} placeholder="Contoh: Perbaikan grip backhand..." /></FormControl></FormItem>
+                                        )} />
+                                        <FormField control={form.control} name="target_physical_month_1" render={({ field }) => (
+                                            <FormItem><FormLabel>Target Fisik</FormLabel><FormControl><Textarea {...field} placeholder="Contoh: Turun berat badan 1kg..." /></FormControl></FormItem>
+                                        )} />
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                        <Card className="rounded-3xl shadow-xl border-l-4 border-primary bg-slate-50/50">
+                            <CardHeader>
+                                <CardTitle className="text-xl font-headline flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-scroll-text text-primary"><path d="M15 12h-5" /><path d="M15 8h-5" /><path d="M19 17V5a2 2 0 0 0-2-2H4" /><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3" /></svg>
+                                    Legal & Persetujuan (Wajib)
+                                </CardTitle>
+                                <CardDescription>Mohon baca setiap poin dengan teliti sebelum menyetujui.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                {[
+                                    {
+                                        name: "agreeLifestyle",
+                                        label: "Komitmen Gaya Hidup Atlet (Athlete Lifestyle Agreement)",
+                                        points: [
+                                            "Standar Nutrisi: Berupaya maksimal mengawasi asupan nutrisi atlet dengan membatasi konsumsi makanan instan, gorengan berlebih, dan minuman tinggi gula yang dapat menghambat performa fisik.",
+                                            "Regulasi Istirahat: Memastikan atlet mendapatkan waktu istirahat minimal 8 jam per hari dan membatasi durasi layar (screen time) sebelum waktu tidur guna menjaga kualitas pemulihan saraf.",
+                                            "Cemilan Pra Pelatihan (Pre-Training Snack): Orang Tua/Wali wajib memastikan atlet mengonsumsi atau membawa bekal nutrisi ringan (seperti pisang, roti gandum, atau energy bar) sebelum sesi latihan dimulai untuk menjaga stabilitas energi."
+                                        ]
+                                    },
+                                    {
+                                        name: "agreeMediaRights",
+                                        label: "Hak Penggunaan Media & Dokumentasi (Media Rights)",
+                                        points: [
+                                            "Izin Dokumentasi: Mengambil dokumentasi berupa foto, rekaman suara, maupun video atlet selama kegiatan latihan, turnamen, atau acara resmi klub.",
+                                            "Hak Publikasi: Mengolah dan menggunakan konten tersebut untuk kepentingan dokumentasi, publikasi, dan promosi di media sosial, situs web, maupun media cetak tanpa kewajiban royalti.",
+                                            "Analisis Performa: Menggunakan rekaman video untuk keperluan analisis teknis, evaluasi biomekanika, dan pengembangan prestasi atlet melalui sistem data internal."
+                                        ]
+                                    },
+                                    {
+                                        name: "agreeLiability",
+                                        label: "Batasan Tanggung Jawab (Liability Disclaimer) & Keadaan Kahar (Force Majeure)",
+                                        points: [
+                                            "Risiko Olahraga: Orang Tua/Wali memahami sepenuhnya bahwa cabang olahraga bulu tangkis dengan intensitas tinggi memiliki risiko cedera fisik. PB KJI berkomitmen menjalankan prosedur keamanan (SOP), namun tidak dapat dituntut atas kerugian fisik akibat kecelakaan murni di luar kendali.",
+                                            "Keadaan Kahar: PB KJI dibebaskan dari kewajiban pembinaan apabila terjadi keadaan di luar kendali seperti bencana alam, wabah, atau kebijakan pemerintah yang menghalangi penggunaan fasilitas olahraga."
+                                        ]
+                                    },
+                                    {
+                                        name: "agreeEmergency",
+                                        label: "Persetujuan Tindakan Medis Darurat",
+                                        points: [
+                                            "Dalam situasi darurat medis di mana Orang Tua/Wali tidak dapat dihubungi segera, saya memberikan wewenang penuh kepada manajemen PB KJI untuk mengambil tindakan medis awal atau merujuk atlet ke fasilitas kesehatan terdekat demi keselamatan jiwa atlet."
+                                        ]
+                                    },
+                                    {
+                                        name: "agreeCodeOfEthics",
+                                        label: "Kode Etik Atlet & Orang Tua",
+                                        points: [
+                                            "Kode Etik Atlet: Menjunjung nilai JUJUR, DISIPLIN, TANGGUH, KERJA KERAS, dan RENDAH HATI. Menghormati pelatih dan sesama. Hadir tepat waktu.",
+                                            "Kode Etik Orang Tua: Mendukung penuh program, DILARANG melakukan intervensi teknis/memberi instruksi saat latihan, dan tidak membandingkan atlet secara terbuka.",
+                                            "Sanksi Pelanggaran: Teguran lisan/tertulis → Pembinaan khusus/Pembatasan kehadiran → Skorsing → Pemberhentian/Evaluasi keikutsertaan."
+                                        ]
+                                    },
+                                    {
+                                        name: "authenticityDeclaration",
+                                        label: "Pernyataan Keaslian Dokumen & Kesanggupan",
+                                        points: [
+                                            "Saya menjamin bahwa seluruh data dan dokumen lampiran (Akta Kelahiran/KK) yang diserahkan adalah ASLI dan sah secara hukum.",
+                                            "Saya bersedia menerima sanksi pemberhentian sepihak jika di kemudian hari ditemukan unsur pemalsuan data.",
+                                            "Saya menyatakan data di atas benar dan bersedia mematuhi seluruh aturan PB Kultur Juara Indonesia, termasuk penempatan jadwal latihan dan sesi tambahan yang ditentukan oleh tim pelatih."
+                                        ]
+                                    },
+                                ].map((item: any) => (
+                                    <FormField key={item.name} control={form.control} name={item.name} render={({ field }) => (
+                                        <FormItem className="flex flex-col gap-3 p-5 rounded-2xl border border-slate-200 bg-white hover:border-primary/50 transition-all shadow-sm">
+                                            <div className="flex flex-row items-start justify-between gap-4">
+                                                <div className="space-y-2">
+                                                    <FormLabel className="text-base font-bold text-slate-800 cursor-pointer" onClick={() => field.onChange(!field.value)}>
+                                                        {item.label}
+                                                    </FormLabel>
+                                                    <ul className="list-disc list-outside pl-5 space-y-1 text-sm text-slate-600 leading-relaxed">
+                                                        {item.points.map((point: string, idx: number) => (
+                                                            <li key={idx}>{point}</li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                                <FormControl>
+                                                    <Checkbox
+                                                        checked={field.value}
+                                                        onCheckedChange={field.onChange}
+                                                        name={field.name}
+                                                        className="w-6 h-6 mt-1 border-2 border-slate-300 data-[state=checked]:border-primary data-[state=checked]:bg-primary"
+                                                    />
+                                                </FormControl>
+                                            </div>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )} />
+                                ))}
+                            </CardContent>
+                        </Card>
+
+                        <Card className="rounded-3xl shadow-xl bg-slate-50 border-dashed border-2">
+                            <CardHeader><CardTitle className="text-xl font-headline text-slate-500">Administrasi Internal (Diisi Admin)</CardTitle></CardHeader>
+                            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <FormField
+                                    control={form.control}
+                                    name="fullName"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Nama Lengkap</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Sesuai Akta Kelahiran/KTP" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="nickname"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Nama Panggilan</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Nama Panggilan/Sapaan" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="registrationDate"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Tanggal Registrasi</FormLabel>
+                                            <FormControl>
+                                                <Input type="date" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="initialStatus"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Status Awal</FormLabel>
+                                            <Select onValueChange={field.onChange} value={field.value} name={field.name}>
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Pilih Status" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="Probation">Probation</SelectItem>
+                                                    <SelectItem value="Kontrak 6 Bulan">Kontrak 6 Bulan</SelectItem>
+                                                    <SelectItem value="Kontrak 1 Tahun">Kontrak 1 Tahun</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="trainingStartDate"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Training Start Date (TMT)</FormLabel>
+                                            <FormControl>
+                                                <Input type="date" {...field} value={field.value ?? ''} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="coachNotes"
+                                    render={({ field }) => (
+                                        <FormItem className="md:col-span-2">
+                                            <FormLabel>Coach Notes</FormLabel>
+                                            <FormControl>
+                                                <Textarea placeholder="Catatan khusus pelatih..." {...field} value={field.value ?? ''} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="checklistFiles"
+                                    render={() => (
+                                        <FormItem className="md:col-span-2">
+                                            <div className="mb-4">
+                                                <FormLabel>Document Checklist</FormLabel>
+                                            </div>
+                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                                {["Akte Kelahiran", "Kartu Keluarga", "Foto Terbaru", "Rapor Terakhir"].map((item) => (
+                                                    <FormField
+                                                        key={item}
+                                                        control={form.control}
+                                                        name="checklistFiles"
+                                                        render={({ field }) => (
+                                                            <FormItem
+                                                                key={item}
+                                                                className="flex flex-row items-start space-x-3 space-y-0 text-sm"
+                                                            >
+                                                                <FormControl>
+                                                                    <Checkbox
+                                                                        checked={field.value?.includes(item)}
+                                                                        onCheckedChange={(checked) =>
+                                                                            checked
+                                                                                ? field.onChange([...(field.value || []), item])
+                                                                                : field.onChange(
+                                                                                    field.value?.filter(
+                                                                                        (val) => val !== item
+                                                                                    )
+                                                                                )
+                                                                        }
+                                                                        name={field.name}
+                                                                        value={item}
+                                                                    />
+                                                                </FormControl>
+                                                                <Label className="font-normal text-muted-foreground">{item}</Label>
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                ))}
+                                            </div>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                </Tabs>
+                <SubmitButton mode={mode} />
+            </form>
+        </Form>
+    );
+}

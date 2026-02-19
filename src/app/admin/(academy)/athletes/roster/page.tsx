@@ -1,35 +1,46 @@
 'use client';
 
-import { useState, useMemo, useEffect } from "react";
-import Link from "next/link";
-import { 
-  Users, Shield, Trophy, Search, 
-  Plus, MapPin, Mail, Phone, Edit3, 
-  Crown, Star, UserPlus, Briefcase, 
-  MoreHorizontal,
-  ShieldCheck,
-  Loader2,
-  Database,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { cn } from "@/lib/utils";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
-import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import {
+    Clock,
+    Database,
+    FileText,
+    Loader2,
+    MoreHorizontal,
+    Pencil,
+    Search,
+    ShieldCheck,
+    Trash2, UserPlus,
+    Users,
+    UserX
+} from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
+import { deleteAthlete } from "./actions";
 
 // Define the type for an athlete based on Firestore data
 interface Athlete {
-  id: string;
-  fullName: string;
-  category: string;
-  level: string;
-  status_aktif: 'AKTIF' | 'NON-AKTIF';
-  avatar?: string;
+    id: string;
+    fullName: string;
+    category: string;
+    level: string;
+    status_aktif: 'AKTIF' | 'NON-AKTIF' | 'DRAFT';
+    status?: string; // 'Probation', 'Draft', 'Contract', etc.
+    initialStatus?: string;
+    avatar?: string;
+    isDraft?: boolean;
 }
 
 const athletesToSeed = [
@@ -45,234 +56,345 @@ const athletesToSeed = [
 
 
 export default function AthleteRosterPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const firestore = useFirestore();
-  const { toast } = useToast();
-  const [isSeeding, setIsSeeding] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    const firestore = useFirestore();
+    const { toast } = useToast();
+    const [isSeeding, setIsSeeding] = useState(false);
+    const router = useRouter();
+    const [activeTab, setActiveTab] = useState("all");
 
-  const athletesQuery = useMemoFirebase(() => {
-    if (!firestore) return null;
-    return collection(firestore, 'athletes');
-  }, [firestore]);
+    const athletesQuery = useMemoFirebase(() => {
+        if (!firestore) return null;
+        return collection(firestore, 'athletes');
+    }, [firestore]);
 
-  const { data: athletesData, isLoading } = useCollection<Athlete>(athletesQuery);
+    const { data: athletesData, isLoading } = useCollection<Athlete>(athletesQuery);
 
-  const filteredAthletes = useMemo(() => {
-    if (!athletesData) return [];
-    return athletesData.filter(athlete => 
-      athlete.fullName.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [athletesData, searchQuery]);
-  
-  const totalAthletes = athletesData?.length || 0;
-  const activeAthletes = athletesData?.filter(a => a.status_aktif === 'AKTIF').length || 0;
-  // This is a simplification. "Junior" would need to be determined by age category.
-  const juniorAthletes = athletesData?.filter(a => a.category.includes('U-')).length || 0;
+    const filteredAthletes = useMemo(() => {
+        if (!athletesData) return [];
+        let filtered = athletesData.filter(athlete =>
+            (athlete.fullName || "").toLowerCase().includes(searchQuery.toLowerCase())
+        );
 
-  const handleSeedAthletes = async () => {
-    if (!firestore) {
-      toast({ title: "Error", description: "Firestore is not available.", variant: "destructive" });
-      return;
-    }
-    setIsSeeding(true);
-    try {
-      const athletesCollection = collection(firestore, 'athletes');
-      let addedCount = 0;
-
-      for (const athlete of athletesToSeed) {
-        const q = query(athletesCollection, where("fullName", "==", athlete.fullName));
-        const querySnapshot = await getDocs(q);
-
-        if (querySnapshot.empty) {
-          const lastName = athlete.fullName.split(' ').slice(-1)[0] || athlete.fullName;
-          
-          const newAthleteData = {
-            fullName: athlete.fullName,
-            height: athlete.tb,
-            chestWidth: athlete.ld,
-            waistCircumference: athlete.lp,
-            gender: athlete.gender,
-            shirtSize: athlete.size,
-            nickname: athlete.fullName.split(' ')[0],
-            pob: "Bandung",
-            dob: "2010-01-01",
-            dominantHand: "Kanan",
-            phone: "081200000000",
-            email: `${lastName.toLowerCase().replace(/[^a-z0-9]/g, '')}@kulturjuara.org`,
-            address: "Bandung",
-            schoolOrWork: "Sekolah Atlet",
-            emergencyContact: "081211112222",
-            weight: "50",
-            jerseyNameOption: "lastName",
-            jerseyName: lastName.toUpperCase().substring(0, 12),
-            category: "Anak-anak (U-13)",
-            level: "Beginner",
-            startYear: "2023",
-            careerTarget: "Prestasi",
-            status_aktif: "AKTIF",
-          };
-
-          await addDoc(athletesCollection, newAthleteData);
-          addedCount++;
+        switch (activeTab) {
+            case "draft":
+                return filtered.filter(a => a.status_aktif === 'DRAFT' || a.isDraft);
+            case "process":
+                // Process: Aktif tapi status masih Probation/Trial, atau initialStatus = Probation
+                return filtered.filter(a => a.status_aktif === 'AKTIF' && (a.status === 'Probation' || a.initialStatus === 'Probation'));
+            case "active":
+                // Active: Aktif dan status BUKAN Probation/Draft
+                return filtered.filter(a => a.status_aktif === 'AKTIF' && a.status !== 'Probation' && a.status !== 'Draft');
+            case "inactive":
+                return filtered.filter(a => a.status_aktif === 'NON-AKTIF');
+            default:
+                return filtered;
         }
-      }
-      
-      if (addedCount > 0) {
-        toast({ title: "Success", description: `${addedCount} atlet berhasil ditambahkan ke database.`, className: "bg-green-600 text-white" });
-      } else {
-        toast({ title: "Info", description: "Semua data atlet sudah ada di database." });
-      }
-    } catch (error) {
-      console.error("Error seeding athletes:", error);
-      const errorMessage = error instanceof Error ? error.message : "Terjadi kesalahan pada server.";
-      toast({ title: "Error", description: errorMessage, variant: "destructive" });
-    } finally {
-      setIsSeeding(false);
-    }
-  };
+    }, [athletesData, searchQuery, activeTab]);
+
+    // Stats Calculations
+    const totalAthletes = athletesData?.length || 0;
+    const activeCount = athletesData?.filter(a => a.status_aktif === 'AKTIF' && a.status !== 'Probation').length || 0;
+    const processCount = athletesData?.filter(a => a.status_aktif === 'AKTIF' && (a.status === 'Probation' || a.initialStatus === 'Probation')).length || 0;
+    const draftCount = athletesData?.filter(a => a.status_aktif === 'DRAFT' || a.isDraft).length || 0;
+    const inactiveCount = athletesData?.filter(a => a.status_aktif === 'NON-AKTIF').length || 0;
 
 
-  return (
-    <div className="space-y-8 p-4 md:p-0 font-body pb-24">
-      
-      {/* --- HEADER --- */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-        <div>
-            <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="rounded-full px-3 py-1 border-sky-500 text-sky-500 bg-sky-500/10">
-                    <Users className="w-3 h-3 mr-2" /> DATABASE ATLET
-                </Badge>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-black font-headline uppercase tracking-tighter text-foreground">
-                Roster <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-600">Atlet</span>
-            </h1>
-            <p className="text-muted-foreground mt-2 max-w-xl text-lg">
-                Lihat dan kelola semua atlet yang terdaftar di Kultur Juara Academy.
-            </p>
-        </div>
-        <div className="flex items-center gap-4">
-            <Button
-                onClick={handleSeedAthletes}
-                variant="outline"
-                className="h-14 rounded-full px-8 font-bold text-lg"
-                disabled={isSeeding || isLoading}
-            >
-                {isSeeding ? <Loader2 className="mr-2 w-5 h-5 animate-spin"/> : <Database className="mr-2 w-5 h-5"/>}
-                {isSeeding ? "Seeding..." : "Seed Athletes"}
-            </Button>
-            <Button 
-                asChild
-                className="h-14 rounded-full px-8 bg-sky-600 hover:bg-sky-700 text-white font-bold text-lg shadow-lg transition-transform active:scale-95"
-            >
-                <Link href="/admin/athletes/register">
-                  <UserPlus className="mr-2 w-5 h-5"/> DAFTARKAN ATLET BARU
-                </Link>
-            </Button>
-        </div>
-      </div>
+    const handleSeedAthletes = async () => {
+        if (!firestore) {
+            toast({ title: "Error", description: "Firestore is not available.", variant: "destructive" });
+            return;
+        }
+        setIsSeeding(true);
+        try {
+            const athletesCollection = collection(firestore, 'athletes');
+            let addedCount = 0;
 
-      {/* --- STATS CARDS --- */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-         <Card className="rounded-[28px] p-1 overflow-hidden group">
-            <CardContent className="p-5 flex items-center gap-4 relative z-10">
-                <div className="h-12 w-12 rounded-2xl bg-secondary flex items-center justify-center text-muted-foreground">
-                    <Users className="w-6 h-6"/>
-                </div>
+            for (const athlete of athletesToSeed) {
+                const q = query(athletesCollection, where("fullName", "==", athlete.fullName));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    const lastName = athlete.fullName.split(' ').slice(-1)[0] || athlete.fullName;
+
+                    const newAthleteData = {
+                        fullName: athlete.fullName,
+                        height: athlete.tb,
+                        chestWidth: athlete.ld,
+                        waistCircumference: athlete.lp,
+                        gender: athlete.gender,
+                        shirtSize: athlete.size,
+                        nickname: athlete.fullName.split(' ')[0],
+                        pob: "Bandung",
+                        dob: "2010-01-01",
+                        dominantHand: "Kanan",
+                        phone: "081200000000",
+                        email: `${lastName.toLowerCase().replace(/[^a-z0-9]/g, '')}@kulturjuara.org`,
+                        address: "Bandung",
+                        schoolOrWork: "Sekolah Atlet",
+                        emergencyContact: "081211112222",
+                        weight: "50",
+                        jerseyNameOption: "lastName",
+                        jerseyName: lastName.toUpperCase().substring(0, 12),
+                        category: "Anak-anak (U-13)",
+                        level: "Beginner",
+                        startYear: "2023",
+                        careerTarget: "Prestasi",
+                        status_aktif: "AKTIF",
+                        status: "Probation", // Default to Process
+                    };
+
+                    await addDoc(athletesCollection, newAthleteData);
+                    addedCount++;
+                }
+            }
+
+            if (addedCount > 0) {
+                toast({ title: "Success", description: `${addedCount} atlet berhasil ditambahkan ke database.`, className: "bg-green-600 text-white" });
+            } else {
+                toast({ title: "Info", description: "Semua data atlet sudah ada di database." });
+            }
+        } catch (error) {
+            console.error("Error seeding athletes:", error);
+            const errorMessage = error instanceof Error ? error.message : "Terjadi kesalahan pada server.";
+            toast({ title: "Error", description: errorMessage, variant: "destructive" });
+        } finally {
+            setIsSeeding(false);
+        }
+    };
+
+    const handleDelete = async (id: string, name: string) => {
+        const confirm = window.confirm(`Apakah Anda yakin ingin menghapus data atlet "${name}"? Tindakan ini tidak dapat dibatalkan.`);
+        if (!confirm) return;
+
+        try {
+            const result = await deleteAthlete(id);
+            if (result.success) {
+                toast({
+                    title: "Berhasil",
+                    description: result.message,
+                    className: "bg-green-600 text-white",
+                });
+            } else {
+                toast({
+                    title: "Gagal",
+                    description: result.message,
+                    variant: "destructive",
+                });
+            }
+        } catch (error) {
+            toast({
+                title: "Error",
+                description: "Terjadi kesalahan saat menghapus data.",
+                variant: "destructive",
+            });
+        }
+    };
+
+
+    return (
+        <div className="space-y-8 p-4 md:p-0 font-body pb-24">
+
+            {/* --- HEADER --- */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div>
-                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Total Atlet</p>
-                    <p className="text-3xl font-black text-foreground">{totalAthletes}</p>
+                    <div className="flex items-center gap-2 mb-2">
+                        <Badge variant="outline" className="rounded-full px-3 py-1 border-sky-500 text-sky-500 bg-sky-500/10">
+                            <Users className="w-3 h-3 mr-2" /> DATABASE ATLET
+                        </Badge>
+                    </div>
+                    <h1 className="text-4xl md:text-5xl font-black font-headline uppercase tracking-tighter text-foreground">
+                        Roster <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-600">Atlet</span>
+                    </h1>
+                    <p className="text-muted-foreground mt-2 max-w-xl text-lg">
+                        Lihat dan kelola semua atlet yang terdaftar di Kultur Juara Academy.
+                    </p>
                 </div>
-            </CardContent>
-         </Card>
-         <Card className="rounded-[28px] p-1 overflow-hidden group">
-            <CardContent className="p-5 flex items-center gap-4 relative z-10">
-                <div className="h-12 w-12 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-500">
-                    <ShieldCheck className="w-6 h-6"/>
+                <div className="flex items-center gap-4">
+                    <Button
+                        onClick={handleSeedAthletes}
+                        variant="outline"
+                        className="h-14 rounded-full px-8 font-bold text-lg"
+                        disabled={isSeeding || isLoading}
+                    >
+                        {isSeeding ? <Loader2 className="mr-2 w-5 h-5 animate-spin" /> : <Database className="mr-2 w-5 h-5" />}
+                        {isSeeding ? "Seeding..." : "Seed Athletes"}
+                    </Button>
+                    <Button
+                        asChild
+                        className="h-14 rounded-full px-8 bg-sky-600 hover:bg-sky-700 text-white font-bold text-lg shadow-lg transition-transform active:scale-95"
+                    >
+                        <Link href="/admin/athletes/register">
+                            <UserPlus className="mr-2 w-5 h-5" /> DAFTARKAN ATLET BARU
+                        </Link>
+                    </Button>
                 </div>
-                <div>
-                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Atlet Aktif</p>
-                    <p className="text-3xl font-black text-foreground">{activeAthletes}</p>
-                </div>
-            </CardContent>
-         </Card>
-         <Card className="rounded-[28px] p-1 overflow-hidden group">
-            <CardContent className="p-5 flex items-center gap-4 relative z-10">
-                <div className="h-12 w-12 rounded-2xl bg-yellow-500/10 flex items-center justify-center text-yellow-500">
-                    <Star className="w-6 h-6 fill-yellow-500"/>
-                </div>
-                <div>
-                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Kelompok Junior</p>
-                    <p className="text-3xl font-black text-foreground">{juniorAthletes}</p>
-                </div>
-            </CardContent>
-         </Card>
-      </div>
+            </div>
 
-      {/* --- ATHLETE LIST --- */}
-      <div className="bg-card border rounded-[40px] p-2 flex flex-col">
-        <div className="flex items-center justify-end px-4 py-4 gap-4">
-            <div className="relative w-full md:w-72">
-                <Search className="absolute left-4 top-3.5 w-4 h-4 text-muted-foreground" />
-                <Input 
-                    placeholder="Cari nama atlet..." 
-                    className="h-12 bg-background border-border rounded-full pl-10 focus:ring-sky-500"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                />
+            {/* --- STATS CARDS --- */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <Card className="rounded-[28px] p-1 overflow-hidden group border-l-4 border-l-blue-500">
+                    <CardContent className="p-4 flex flex-col gap-2">
+                        <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Active</span>
+                        <div className="flex items-center justify-between">
+                            <p className="text-2xl font-black text-foreground">{activeCount}</p>
+                            <ShieldCheck className="w-5 h-5 text-blue-500" />
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="rounded-[28px] p-1 overflow-hidden group border-l-4 border-l-yellow-500">
+                    <CardContent className="p-4 flex flex-col gap-2">
+                        <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">In Process</span>
+                        <div className="flex items-center justify-between">
+                            <p className="text-2xl font-black text-foreground">{processCount}</p>
+                            <Clock className="w-5 h-5 text-yellow-500" />
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="rounded-[28px] p-1 overflow-hidden group border-l-4 border-l-gray-400">
+                    <CardContent className="p-4 flex flex-col gap-2">
+                        <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Drafts</span>
+                        <div className="flex items-center justify-between">
+                            <p className="text-2xl font-black text-foreground">{draftCount}</p>
+                            <FileText className="w-5 h-5 text-gray-400" />
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="rounded-[28px] p-1 overflow-hidden group border-l-4 border-l-red-500">
+                    <CardContent className="p-4 flex flex-col gap-2">
+                        <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Inactive</span>
+                        <div className="flex items-center justify-between">
+                            <p className="text-2xl font-black text-foreground">{inactiveCount}</p>
+                            <UserX className="w-5 h-5 text-red-500" />
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* --- ATHLETE LIST --- */}
+            <div className="bg-card border rounded-[40px] p-2 flex flex-col">
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                    <div className="flex flex-col md:flex-row justify-between items-center px-4 py-4 gap-4 border-b">
+                        <TabsList className="bg-secondary/50 rounded-full h-12 p-1">
+                            <TabsTrigger value="all" className="rounded-full px-6 h-10 data-[state=active]:bg-background data-[state=active]:shadow-sm">All</TabsTrigger>
+                            <TabsTrigger value="active" className="rounded-full px-6 h-10 data-[state=active]:bg-blue-500 data-[state=active]:text-white">Active</TabsTrigger>
+                            <TabsTrigger value="process" className="rounded-full px-6 h-10 data-[state=active]:bg-yellow-500 data-[state=active]:text-white">Process</TabsTrigger>
+                            <TabsTrigger value="draft" className="rounded-full px-6 h-10 data-[state=active]:bg-gray-500 data-[state=active]:text-white">Draft</TabsTrigger>
+                            <TabsTrigger value="inactive" className="rounded-full px-6 h-10 data-[state=active]:bg-red-500 data-[state=active]:text-white">Inactive</TabsTrigger>
+                        </TabsList>
+
+                        <div className="relative w-full md:w-72">
+                            <Search className="absolute left-4 top-3.5 w-4 h-4 text-muted-foreground" />
+                            <Input
+                                placeholder="Cari nama atlet..."
+                                className="h-12 bg-background border-border rounded-full pl-10 focus:ring-sky-500"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="overflow-x-auto min-h-[300px]">
+                        {isLoading ? (
+                            <div className="flex items-center justify-center h-full py-12">
+                                <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+                            </div>
+                        ) : (
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="pl-6">Nama Atlet</TableHead>
+                                        <TableHead>ID</TableHead>
+                                        <TableHead>Level / Kategori</TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead className="text-right pr-6">Aksi</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {filteredAthletes.length === 0 ? (
+                                        <TableRow>
+                                            <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
+                                                Tidak ada data atlet ditemukan.
+                                            </TableCell>
+                                        </TableRow>
+                                    ) : (
+                                        filteredAthletes.map((athlete) => (
+                                            <TableRow key={athlete.id} className="hover:bg-secondary/50">
+                                                <TableCell className="pl-6">
+                                                    <div className="flex items-center gap-4">
+                                                        <Avatar className="h-10 w-10 border-2">
+                                                            <AvatarImage src={athlete.avatar} />
+                                                            <AvatarFallback className="bg-secondary text-sm font-bold">{athlete.fullName.split(" ").map(n => n[0]).join("")}</AvatarFallback>
+                                                        </Avatar>
+                                                        <div>
+                                                            <div className="font-bold text-foreground">{athlete.fullName}</div>
+                                                            <div className="text-xs text-muted-foreground">{athlete.email}</div>
+                                                        </div>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="font-mono text-xs text-muted-foreground">
+                                                    {athlete.niaKji || athlete.id}
+                                                    {athlete.isDraft && <Badge variant="outline" className="ml-2 border-dashed">Draft ID</Badge>}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <div className="flex flex-col gap-1">
+                                                        <Badge variant="outline" className="w-fit border-sky-500/30 text-sky-500 bg-sky-500/10">
+                                                            {athlete.level}
+                                                        </Badge>
+                                                        <span className="text-[10px] text-muted-foreground">{athlete.category}</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Badge variant={
+                                                        athlete.status_aktif === 'DRAFT' || athlete.isDraft ? 'outline' :
+                                                            athlete.status_aktif === 'NON-AKTIF' ? 'secondary' :
+                                                                (athlete.status === 'Probation' || athlete.initialStatus === 'Probation') ? 'secondary' : // Process is Yellowish usually
+                                                                    'default'
+                                                    } className={cn(
+                                                        'border-none',
+                                                        athlete.status_aktif === 'DRAFT' || athlete.isDraft ? 'bg-gray-200 text-gray-700' :
+                                                            athlete.status_aktif === 'NON-AKTIF' ? 'bg-red-100 text-red-700' :
+                                                                (athlete.status === 'Probation' || athlete.initialStatus === 'Probation') ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' :
+                                                                    'bg-green-100 text-green-700 hover:bg-green-200'
+                                                    )}>
+                                                        {athlete.status_aktif === 'DRAFT' || athlete.isDraft ? 'DRAFT' :
+                                                            athlete.status_aktif === 'NON-AKTIF' ? 'NON-AKTIF' :
+                                                                (athlete.status === 'Probation' || athlete.initialStatus === 'Probation') ? 'PROCESS' :
+                                                                    'ACTIVE'
+                                                        }
+                                                    </Badge>
+                                                </TableCell>
+                                                <TableCell className="text-right pr-6">
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground">
+                                                                <MoreHorizontal className="w-4 h-4" />
+                                                            </Button>
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent align="end">
+                                                            <DropdownMenuLabel>Aksi</DropdownMenuLabel>
+                                                            <DropdownMenuItem onClick={() => router.push(`/admin/athletes/edit/${athlete.id}`)}>
+                                                                <Pencil className="mr-2 h-4 w-4" /> Edit Data
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuSeparator />
+                                                            <DropdownMenuItem
+                                                                className="text-red-600 focus:text-red-600 focus:bg-red-50"
+                                                                onClick={() => handleDelete(athlete.id, athlete.fullName)}
+                                                            >
+                                                                <Trash2 className="mr-2 h-4 w-4" /> Hapus Data
+                                                            </DropdownMenuItem>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    )}
+                                </TableBody>
+                            </Table>
+                        )}
+                    </div>
+                </Tabs>
             </div>
         </div>
-
-        <div className="overflow-x-auto min-h-[300px]">
-          {isLoading ? (
-            <div className="flex items-center justify-center h-full">
-              <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-            </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="pl-6">Nama Atlet</TableHead>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Level</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right pr-6">Aksi</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredAthletes.map((athlete) => (
-                  <TableRow key={athlete.id} className="hover:bg-secondary/50">
-                    <TableCell className="pl-6">
-                      <div className="flex items-center gap-4">
-                        <Avatar className="h-10 w-10 border-2">
-                          <AvatarImage src={athlete.avatar} />
-                          <AvatarFallback className="bg-secondary text-sm font-bold">{athlete.fullName.split(" ").map(n => n[0]).join("")}</AvatarFallback>
-                        </Avatar>
-                        <span className="font-bold text-foreground">{athlete.fullName}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground">{athlete.id}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="border-sky-500/30 text-sky-500 bg-sky-500/10">
-                        {athlete.level}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                       <Badge variant={athlete.status_aktif === 'AKTIF' ? 'default' : 'secondary'} className={cn(athlete.status_aktif === 'AKTIF' ? 'bg-green-500/10 text-green-600' : 'bg-secondary text-muted-foreground', 'border-none')}>
-                        {athlete.status_aktif}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right pr-6">
-                      <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground">
-                        <MoreHorizontal className="w-4 h-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+    );
 }

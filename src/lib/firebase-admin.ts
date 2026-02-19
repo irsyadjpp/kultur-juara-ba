@@ -1,4 +1,4 @@
-import { App, cert, getApp, getApps, initializeApp } from 'firebase-admin/app';
+import { App, applicationDefault, cert, getApp, getApps, initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 
@@ -10,7 +10,7 @@ let app: App;
 
 if (!getApps().length) {
     app = initializeApp({
-        credential: serviceAccount ? cert(serviceAccount) : undefined,
+        credential: serviceAccount ? cert(serviceAccount) : applicationDefault(),
         projectId: 'kultur-juara-ba-59925955-1dbff',
         storageBucket: 'kultur-juara-ba-59925955-1dbff.firebasestorage.app'
     });
