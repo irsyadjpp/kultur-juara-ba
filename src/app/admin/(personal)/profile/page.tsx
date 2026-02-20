@@ -1,349 +1,482 @@
-
-
 'use client';
 
-import { useActionState, useRef, useState } from "react";
-import { useFormStatus } from "react-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { updateProfile } from "./actions"; // Import server action
-import { Camera, Upload, Save, Loader2, ShieldCheck, PenTool, User, Download, CreditCard, Printer, ZoomIn } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+import { getSession } from '@/app/actions';
 import { IdCardTemplate } from '@/components/academy/id-card';
-import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import {
+    ArrowLeft,
+    Camera,
+    CreditCard,
+    Instagram,
+    Loader2,
+    Mail,
+    MapPin,
+    PenTool,
+    Phone,
+    Printer,
+    Save,
+    ShieldCheck,
+    Upload,
+    User,
+    Zap,
+} from 'lucide-react';
+import Link from 'next/link';
+import { useActionState, useEffect, useRef, useState } from 'react';
+import { useFormStatus } from 'react-dom';
+import { updateProfile } from './actions';
 
-
-// MOCK DATA USER (Nanti diambil dari Session/DB)
-const MOCK_USER = {
-  name: "Kevin Sanjaya",
-  email: "kevin.ops@badmintour.com",
-  role: "HEAD OF DIVISION",
-  division: "MATCH CONTROL",
-  id_number: "BTOUR-26-001",
-  avatar: "https://github.com/shadcn.png",
-  signature: null, // Belum ada ttd
-  // Data existing
-  nickname: "Kevin",
-  phone: "081234567890",
-  instagram: "@kevin_sanjaya",
-  address: "Jl. Dago Atas No. 12, Bandung",
-  shirtSize: "L"
+// ─── Role Labels ─────────────────────────────────────────────────────────────
+const ROLE_LABELS: Record<string, { label: string; color: string }> = {
+    SUPER_ADMIN: { label: 'Super Admin', color: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30' },
+    ADMIN: { label: 'Admin', color: 'bg-blue-500/10 text-blue-500 border-blue-500/30' },
+    HEAD_COACH: { label: 'Pelatih Kepala', color: 'bg-primary/10 text-primary border-primary/30' },
+    COACH: { label: 'Pelatih', color: 'bg-primary/10 text-primary border-primary/30' },
+    ASSISTANT_COACH: { label: 'Asisten Pelatih', color: 'bg-green-500/10 text-green-500 border-green-500/30' },
+    PSYCHOLOGIST: { label: 'Psikolog Olahraga', color: 'bg-purple-500/10 text-purple-500 border-purple-500/30' },
+    ATHLETE: { label: 'Atlet', color: 'bg-red-500/10 text-red-500 border-red-500/30' },
 };
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button
-      type="submit"
-      disabled={pending}
-      className="w-full h-12 text-lg font-headline font-bold uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-[1.01] transition-all"
+// ─── Modern Section Component ─────────────────────────────────────────────────
+const ModernSection = ({
+    title,
+    icon: Icon,
+    children,
+    className,
+    gradient = 'from-primary/5 to-transparent',
+}: {
+    title: string;
+    icon: React.ElementType;
+    children: React.ReactNode;
+    className?: string;
+    gradient?: string;
+}) => (
+    <div
+        className={cn(
+            'relative overflow-hidden rounded-[2.5rem] border border-border/50 bg-secondary/20 backdrop-blur-2xl shadow-sm transition-all hover:shadow-md',
+            className
+        )}
     >
-      {pending ? <><Loader2 className="mr-2 animate-spin" /> SAVING...</> : <><Save className="mr-2 w-5 h-5" /> SIMPAN PERUBAHAN</>}
-    </Button>
-  );
+        <div className={cn('absolute inset-0 bg-gradient-to-br opacity-30 pointer-events-none', gradient)} />
+        <div className="relative p-6 md:p-8 space-y-5">
+            <div className="flex items-center gap-4">
+                <div className="h-12 w-12 rounded-2xl bg-background/50 flex items-center justify-center border border-border/50 text-primary shadow-sm">
+                    <Icon className="w-6 h-6" />
+                </div>
+                <h2 className="text-xl font-black font-headline tracking-tight uppercase text-foreground">
+                    {title}
+                </h2>
+            </div>
+            {children}
+        </div>
+    </div>
+);
+
+// ─── Submit Button ────────────────────────────────────────────────────────────
+function SubmitButton() {
+    const { pending } = useFormStatus();
+    return (
+        <Button
+            type="submit"
+            disabled={pending}
+            size="lg"
+            className="w-full h-14 rounded-2xl text-base font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-[1.01] transition-all"
+        >
+            {pending ? (
+                <><Loader2 className="mr-2 animate-spin" /> MENYIMPAN...</>
+            ) : (
+                <><Save className="mr-2 w-5 h-5" /> SIMPAN PERUBAHAN</>
+            )}
+        </Button>
+    );
 }
 
-export default function ProfilePage() {
-  const { toast } = useToast();
-  const [state, formAction] = useActionState(updateProfile, { success: false, message: '' });
+// ─── Main Page ────────────────────────────────────────────────────────────────
+export default function AdminProfilePage() {
+    const { toast } = useToast();
+    const [session, setSession] = useState<any | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [state, formAction] = useActionState(updateProfile, { success: false, message: '' });
 
-  // State untuk Preview Image
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(MOCK_USER.avatar);
-  const [signaturePreview, setSignaturePreview] = useState<string | null>(null);
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+    const [signaturePreview, setSignaturePreview] = useState<string | null>(null);
+    const [isGenerating, setIsGenerating] = useState(false);
 
-  const avatarInputRef = useRef<HTMLInputElement>(null);
-  const signatureInputRef = useRef<HTMLInputElement>(null);
+    const avatarInputRef = useRef<HTMLInputElement>(null);
+    const signatureInputRef = useRef<HTMLInputElement>(null);
+    const idCardRef = useRef<HTMLDivElement>(null);
 
-  const idCardRef = useRef<HTMLDivElement>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
+    // Load session
+    useEffect(() => {
+        getSession().then((s) => {
+            if (s) {
+                setSession(s);
+                setAvatarPreview(s.avatar || null);
+            }
+            setLoading(false);
+        });
+    }, []);
 
-  // FUNGSI DOWNLOAD PDF
-  const handleDownloadIdCard = async () => {
-    if (!idCardRef.current) return;
-    setIsGenerating(true);
+    // Toast on form save
+    useEffect(() => {
+        if (state.message) {
+            toast({
+                title: state.success ? 'Berhasil!' : 'Gagal',
+                description: state.message,
+                variant: state.success ? 'default' : 'destructive',
+                className: state.success ? 'bg-green-600 text-white border-none' : undefined,
+            });
+        }
+    }, [state]);
 
-    try {
-      // 1. Capture Element HTML jadi Gambar
-      const canvas = await html2canvas(idCardRef.current, {
-        scale: 3, // Biar tajam (High Res)
-        backgroundColor: null,
-        useCORS: true // Supaya gambar avatar dari URL luar bisa ke-load
-      });
+    // Handle file preview
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'avatar' | 'signature') => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const url = URL.createObjectURL(file);
+            if (type === 'avatar') setAvatarPreview(url);
+            else setSignaturePreview(url);
+        }
+    };
 
-      const imgData = canvas.toDataURL("image/png");
+    // Download ID Card as PDF
+    const handleDownloadIdCard = async () => {
+        if (!idCardRef.current) return;
+        setIsGenerating(true);
+        try {
+            const canvas = await html2canvas(idCardRef.current, {
+                scale: 3,
+                backgroundColor: null,
+                useCORS: true,
+            });
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('l', 'mm', 'a4');
+            const imgWidth = 200;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+            pdf.save(`ID-CARD-${session?.name?.replace(/\s/g, '-') || 'USER'}.pdf`);
+            toast({ title: 'Berhasil!', description: 'ID Card berhasil diunduh.', className: 'bg-green-600 text-white' });
+        } catch (err) {
+            toast({ title: 'Gagal', description: 'Terjadi kesalahan saat generate PDF.', variant: 'destructive' });
+        } finally {
+            setIsGenerating(false);
+        }
+    };
 
-      // 2. Buat PDF (A4 Landscape biar muat 2 sisi)
-      const pdf = new jsPDF('l', 'mm', 'a4');
-      const imgWidth = 200; // Lebar di PDF (mm) - sesuaikan rasio
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-      pdf.save(`ID-CARD-${MOCK_USER.id_number}.pdf`);
-      toast({ title: "Berhasil!", description: "ID Card berhasil diunduh.", className: "bg-green-600 text-white" });
-    } catch (err) {
-      console.error(err);
-      toast({ title: "Gagal", description: "Terjadi kesalahan saat generate PDF.", variant: "destructive" });
-    } finally {
-      setIsGenerating(false);
+    if (loading) {
+        return (
+            <div className="flex h-[60vh] items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        );
     }
-  };
 
+    // ─── Computed values from session ─────────────────────
+    const userName = session?.name || 'Pengguna';
+    const userEmail = session?.email || '-';
+    const userRole = session?.role || 'ADMIN';
+    const userAvatar = session?.avatar || null;
+    const roleInfo = ROLE_LABELS[userRole] || { label: userRole, color: 'bg-muted text-muted-foreground border-border' };
+    const initials = userName
+        .split(' ')
+        .slice(0, 2)
+        .map((n: string) => n[0])
+        .join('')
+        .toUpperCase();
 
-  // Handle File Change (Preview)
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'avatar' | 'signature') => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      if (type === 'avatar') setAvatarPreview(url);
-      else setSignaturePreview(url);
-    }
-  };
+    // Build user object for IdCard
+    const idCardUser = {
+        name: userName,
+        email: userEmail,
+        role: roleInfo.label,
+        division: 'PB. KULTUR JUARA',
+        id_number: `KJ-${userRole.slice(0, 2)}-${new Date().getFullYear()}`,
+        avatar: userAvatar,
+        photoUrl: avatarPreview || userAvatar || undefined,
+        signature: null,
+    };
 
-  return (
-    <div className="flex flex-col min-h-screen bg-background font-body">
+    return (
+        <div className="min-h-screen pb-20 space-y-8">
 
-      <main className="relative z-10 py-10 px-4 md:px-8">
-        <div className="max-w-6xl mx-auto space-y-8">
+            {/* ── HEADER ─────────────────────────────────────────── */}
+            <div className="space-y-6">
+                <Link
+                    href="/admin/dashboard"
+                    className="inline-flex items-center text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest"
+                >
+                    <ArrowLeft className="w-4 h-4 mr-2" /> Back to Dashboard
+                </Link>
 
-          {/* HEADER: GREETING & STATUS */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-border pb-6">
-            <div>
-              <div className="flex items-center gap-2 text-primary font-bold tracking-widest uppercase text-sm mb-1">
-                <ShieldCheck className="w-4 h-4" /> OFFICIAL COMMITTEE PROFILE
-              </div>
-              <h1 className="text-4xl md:text-5xl font-black font-headline text-foreground uppercase tracking-tighter">
-                {MOCK_USER.name}
-              </h1>
-              <p className="text-muted-foreground font-mono mt-1">ID: {MOCK_USER.id_number} • <span className="text-green-500">● ACTIVE</span></p>
-            </div>
-
-            {/* ROLE BADGE (Read Only) */}
-            <div className="text-right">
-              <Badge variant="outline" className="border-primary text-primary px-3 py-1 mb-2">
-                {MOCK_USER.role}
-              </Badge>
-              <h2 className="text-2xl font-bold font-headline text-foreground">{MOCK_USER.division}</h2>
-            </div>
-          </div>
-          <div className="flex justify-end gap-3 -mt-6">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="h-12 border-primary/50 text-primary bg-primary/5 hover:bg-primary/10 font-bold px-6">
-                  <CreditCard className="mr-2 w-5 h-5" /> LIHAT ID CARD SAYA
-                </Button>
-              </DialogTrigger>
-
-              <DialogContent className="max-w-4xl w-full bg-secondary border-border p-0 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-
-                <div className="p-6 border-b shrink-0">
-                  <DialogHeader>
-                    <DialogTitle className="text-xl font-headline font-bold text-foreground uppercase tracking-widest flex items-center gap-2">
-                      <CreditCard className="w-5 h-5 text-primary" /> Official ID Card
-                    </DialogTitle>
-                    <DialogDescription className="mt-1">
-                      Pratinjau tampilan cetak (Depan & Belakang).
-                    </DialogDescription>
-                  </DialogHeader>
-                </div>
-
-                <div className="flex-1 overflow-auto bg-background/50 relative p-8 md:p-12">
-                  <div className="min-h-[500px] flex items-center justify-center">
-                    <div className="relative transform md:scale-100 scale-[0.6] origin-top md:origin-center transition-all duration-500">
-                      <div className="absolute -inset-10 bg-primary/20 blur-3xl rounded-full opacity-40 pointer-events-none"></div>
-                      <div className="relative shadow-[0_30px_60px_-15px_rgba(0,0,0,0.2)] rounded-xl overflow-hidden bg-white ring-1 ring-black/10">
-                        <IdCardTemplate
-                          user={{
-                            ...MOCK_USER,
-                            photoUrl: avatarPreview || undefined
-                          }}
-                          className="w-[650px]"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-6 border-t bg-card flex flex-col md:flex-row justify-between items-center gap-4 shrink-0">
-                  <div className="text-xs text-muted-foreground text-center md:text-left">
-                    <span className="text-primary font-bold">TIPS:</span> Gunakan kertas PVC atau Art Paper 260gr untuk hasil terbaik.
-                  </div>
-                  <Button onClick={handleDownloadIdCard} disabled={isGenerating} size="lg" className="w-full md:w-auto bg-primary hover:bg-red-700 text-white font-bold shadow-lg shadow-red-900/20">
-                    {isGenerating ? <Loader2 className="animate-spin mr-2" /> : <Printer className="mr-2 w-4 h-4" />}
-                    {isGenerating ? "GENERATING..." : "DOWNLOAD PDF"}
-                  </Button>
-                </div>
-
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          {/* --- Hidden Template for PDF Generation --- */}
-          <div className="fixed top-0 left-0 pointer-events-none opacity-0 z-[-1]">
-            <div className="scale-[2] origin-top-left">
-              <IdCardTemplate
-                ref={idCardRef}
-                user={{
-                  ...MOCK_USER,
-                  photoUrl: avatarPreview || undefined
-                }}
-              />
-            </div>
-          </div>
-
-          <form action={formAction}>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-              <div className="space-y-6">
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Profile Picture</CardTitle>
-                  </CardHeader>
-                  <CardContent className="flex flex-col items-center pb-8">
-                    <div className="relative group cursor-pointer" onClick={() => avatarInputRef.current?.click()}>
-                      <Avatar className="w-48 h-48 border-4 border-secondary shadow-xl transition-all group-hover:border-primary">
-                        <AvatarImage src={avatarPreview || ""} className="object-cover" />
-                        <AvatarFallback className="text-4xl font-black bg-secondary text-muted-foreground">KS</AvatarFallback>
-                      </Avatar>
-                      <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Camera className="w-10 h-10 text-white" />
-                      </div>
-                    </div>
-
-                    <p className="text-xs text-center text-muted-foreground mt-4 max-w-[200px]">
-                      Klik foto untuk mengganti. Gunakan foto formal/semi-formal. (Max 2MB)
-                    </p>
-                    <input
-                      type="file"
-                      name="avatar"
-                      ref={avatarInputRef}
-                      className="hidden"
-                      accept="image/*"
-                      onChange={(e) => handleFileChange(e, 'avatar')}
-                    />
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground">
-                      <PenTool className="w-4 h-4" /> Digital Signature
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div
-                      className="border-2 border-dashed border-border rounded-xl h-32 flex items-center justify-center bg-secondary/30 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all relative overflow-hidden"
-                      onClick={() => signatureInputRef.current?.click()}
-                    >
-                      {signaturePreview ? (
-                        <img src={signaturePreview} alt="Signature" className="h-full w-auto object-contain p-2" />
-                      ) : (
-                        <div className="text-center">
-                          <Upload className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
-                          <span className="text-xs text-muted-foreground font-bold">UPLOAD SCAN TTD</span>
+                <div className="relative flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b border-border pb-6">
+                    <div className="relative">
+                        <div className="absolute -top-6 -left-6 w-48 h-48 bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
+                        <div className="relative flex items-center gap-2 text-primary font-bold tracking-widest uppercase text-xs mb-2">
+                            <ShieldCheck className="w-4 h-4" /> Official Staff Profile
                         </div>
-                      )}
-                    </div>
-                    <p className="text-[10px] text-muted-foreground mt-2">
-                      *Upload scan tanda tangan (PNG Transparan) untuk keperluan e-sertifikat & surat tugas.
-                    </p>
-                    <input
-                      type="file"
-                      name="signature"
-                      ref={signatureInputRef}
-                      className="hidden"
-                      accept="image/png, image/jpeg"
-                      onChange={(e) => handleFileChange(e, 'signature')}
-                    />
-                  </CardContent>
-                </Card>
-
-              </div>
-
-              <div className="lg:col-span-2 space-y-6">
-
-                <Card>
-                  <CardHeader className="border-b pb-4">
-                    <CardTitle className="flex items-center gap-2 font-headline text-lg">
-                      <User className="w-5 h-5 text-primary" /> Informasi Personal
-                    </CardTitle>
-                    <CardDescription>Data ini digunakan untuk database panitia & logistik.</CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-6 space-y-5">
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                      <div className="space-y-2">
-                        <Label>Nama Lengkap (Read Only)</Label>
-                        <Input disabled value={MOCK_USER.name} />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="nickname">Nama Panggilan</Label>
-                        <Input id="nickname" name="nickname" defaultValue={MOCK_USER.nickname} placeholder="Sapaan akrab..." />
-                      </div>
+                        <h1 className="relative text-5xl md:text-6xl font-black font-headline uppercase tracking-tighter text-foreground leading-[0.9]">
+                            {userName}
+                        </h1>
+                        <p className="relative text-muted-foreground font-mono mt-2 text-sm">
+                            {userEmail} •{' '}
+                            <span className="text-green-500 font-bold">● ACTIVE</span>
+                        </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                      <div className="space-y-2">
-                        <Label htmlFor="phone">No. WhatsApp</Label>
-                        <Input id="phone" name="phone" type="tel" defaultValue={MOCK_USER.phone} />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="instagram">Instagram</Label>
-                        <Input id="instagram" name="instagram" defaultValue={MOCK_USER.instagram} />
-                      </div>
+                    <div className="flex flex-col items-start md:items-end gap-2">
+                        <Badge className={cn('border text-xs font-bold px-3 py-1', roleInfo.color)}>
+                            {roleInfo.label}
+                        </Badge>
+                        <p className="text-2xl font-black font-headline text-foreground">
+                            PB. KULTUR JUARA
+                        </p>
                     </div>
+                </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="address">Alamat Domisili Bandung</Label>
-                      <Textarea id="address" name="address" defaultValue={MOCK_USER.address} rows={2} className="resize-none" />
-                    </div>
-
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader className="border-b pb-4">
-                    <CardTitle className="font-headline text-lg">Logistik & Atribut</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-6 space-y-5">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                      <div className="space-y-2">
-                        <Label>Ukuran Jersey (Official)</Label>
-                        <Select name="shirtSize" defaultValue={MOCK_USER.shirtSize}>
-                          <SelectTrigger className="h-11">
-                            <SelectValue placeholder="Pilih Ukuran" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {["S", "M", "L", "XL", "XXL", "3XL"].map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
-                          </SelectContent>
-                        </Select>
-                        <p className="text-[10px] text-muted-foreground">*Pastikan ukuran sudah benar, tidak bisa tukar setelah produksi.</p>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label>Email Akun Google (Login)</Label>
-                        <Input disabled value={MOCK_USER.email} className="font-mono text-sm" />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <SubmitButton />
-
-              </div>
+                {/* ID Card Button */}
+                <div className="flex justify-end">
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button
+                                variant="outline"
+                                className="h-12 border-primary/40 text-primary bg-primary/5 hover:bg-primary/10 font-bold px-6 rounded-2xl"
+                            >
+                                <CreditCard className="mr-2 w-5 h-5" /> LIHAT ID CARD SAYA
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-4xl w-full bg-secondary border-border p-0 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+                            <div className="p-6 border-b shrink-0">
+                                <DialogHeader>
+                                    <DialogTitle className="text-xl font-headline font-bold uppercase tracking-widest flex items-center gap-2">
+                                        <CreditCard className="w-5 h-5 text-primary" /> Official ID Card
+                                    </DialogTitle>
+                                    <DialogDescription>Pratinjau tampilan cetak (Depan & Belakang).</DialogDescription>
+                                </DialogHeader>
+                            </div>
+                            <div className="flex-1 overflow-auto bg-background/50 p-8 md:p-12">
+                                <div className="min-h-[500px] flex items-center justify-center">
+                                    <div className="relative transform md:scale-100 scale-[0.6] origin-top md:origin-center">
+                                        <div className="absolute -inset-10 bg-primary/20 blur-3xl rounded-full opacity-40 pointer-events-none" />
+                                        <div className="relative shadow-[0_30px_60px_-15px_rgba(0,0,0,0.2)] rounded-xl overflow-hidden bg-white ring-1 ring-black/10">
+                                            <IdCardTemplate user={idCardUser} className="w-[650px]" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="p-6 border-t bg-card flex flex-col md:flex-row justify-between items-center gap-4 shrink-0">
+                                <p className="text-xs text-muted-foreground">
+                                    <span className="text-primary font-bold">TIPS:</span> Gunakan kertas PVC atau Art Paper 260gr.
+                                </p>
+                                <Button
+                                    onClick={handleDownloadIdCard}
+                                    disabled={isGenerating}
+                                    size="lg"
+                                    className="w-full md:w-auto font-bold shadow-lg"
+                                >
+                                    {isGenerating ? <Loader2 className="animate-spin mr-2" /> : <Printer className="mr-2 w-4 h-4" />}
+                                    {isGenerating ? 'GENERATING...' : 'DOWNLOAD PDF'}
+                                </Button>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                </div>
             </div>
-          </form>
 
+            {/* ── Hidden ID Card template for PDF ── */}
+            <div className="fixed top-0 left-0 pointer-events-none opacity-0 z-[-1]">
+                <div className="scale-[2] origin-top-left">
+                    <IdCardTemplate ref={idCardRef} user={idCardUser} />
+                </div>
+            </div>
+
+            {/* ── FORM ─────────────────────────────────────────────── */}
+            <form action={formAction}>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                    {/* ── Kolom Kiri ── */}
+                    <div className="space-y-6">
+
+                        {/* Avatar */}
+                        <ModernSection title="Foto Profil" icon={Camera} gradient="from-primary/5 to-transparent">
+                            <div className="flex flex-col items-center pb-2">
+                                <div
+                                    className="relative group cursor-pointer"
+                                    onClick={() => avatarInputRef.current?.click()}
+                                >
+                                    <Avatar className="w-40 h-40 border-4 border-secondary shadow-xl transition-all group-hover:border-primary ring-2 ring-primary/10">
+                                        <AvatarImage src={avatarPreview || ''} className="object-cover" />
+                                        <AvatarFallback className="text-4xl font-black bg-secondary text-muted-foreground">
+                                            {initials}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <Camera className="w-10 h-10 text-white" />
+                                    </div>
+                                </div>
+                                <p className="text-xs text-center text-muted-foreground mt-4 max-w-[180px]">
+                                    Klik foto untuk mengganti. Foto formal/semi-formal. (Max 2MB)
+                                </p>
+                                <input
+                                    type="file"
+                                    name="avatar"
+                                    ref={avatarInputRef}
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={(e) => handleFileChange(e, 'avatar')}
+                                />
+                            </div>
+                        </ModernSection>
+
+                        {/* Digital Signature */}
+                        <ModernSection title="Tanda Tangan Digital" icon={PenTool} gradient="from-violet-500/5 to-purple-500/5">
+                            <div
+                                className="border-2 border-dashed border-border rounded-2xl h-32 flex items-center justify-center bg-background/30 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all relative overflow-hidden"
+                                onClick={() => signatureInputRef.current?.click()}
+                            >
+                                {signaturePreview ? (
+                                    <img src={signaturePreview} alt="Signature" className="h-full w-auto object-contain p-2" />
+                                ) : (
+                                    <div className="text-center">
+                                        <Upload className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
+                                        <span className="text-xs text-muted-foreground font-bold uppercase tracking-widest">
+                                            Upload Scan TTD
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
+                            <p className="text-[10px] text-muted-foreground">
+                                *Upload scan tanda tangan (PNG Transparan) untuk keperluan e-sertifikat & surat tugas.
+                            </p>
+                            <input
+                                type="file"
+                                name="signature"
+                                ref={signatureInputRef}
+                                className="hidden"
+                                accept="image/png, image/jpeg"
+                                onChange={(e) => handleFileChange(e, 'signature')}
+                            />
+                        </ModernSection>
+
+                    </div>
+
+                    {/* ── Kolom Kanan ── */}
+                    <div className="lg:col-span-2 space-y-6">
+
+                        {/* Informasi Personal */}
+                        <ModernSection title="Informasi Personal" icon={User} gradient="from-blue-500/5 to-cyan-500/5">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div className="space-y-2">
+                                    <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                                        Nama Lengkap (Read Only)
+                                    </Label>
+                                    <Input disabled value={userName} className="bg-secondary/50 border-none font-bold" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="nickname" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                                        Nama Panggilan
+                                    </Label>
+                                    <Input id="nickname" name="nickname" placeholder="Sapaan akrab..." className="bg-background/40 border-border/50" />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div className="space-y-2">
+                                    <Label htmlFor="phone" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                                        <Phone className="w-3 h-3 inline mr-1" />No. WhatsApp
+                                    </Label>
+                                    <Input id="phone" name="phone" type="tel" placeholder="08xxxxxxxxxx" className="bg-background/40 border-border/50" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="instagram" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                                        <Instagram className="w-3 h-3 inline mr-1" />Instagram
+                                    </Label>
+                                    <Input id="instagram" name="instagram" placeholder="@username" className="bg-background/40 border-border/50" />
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="address" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                                    <MapPin className="w-3 h-3 inline mr-1" />Alamat Domisili
+                                </Label>
+                                <Textarea
+                                    id="address"
+                                    name="address"
+                                    rows={2}
+                                    placeholder="Jl. ..."
+                                    className="resize-none bg-background/40 border-border/50"
+                                />
+                            </div>
+                        </ModernSection>
+
+                        {/* Logistik & Role */}
+                        <ModernSection title="Logistik & Atribut" icon={Zap} gradient="from-yellow-500/5 to-orange-500/5">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div className="space-y-2">
+                                    <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                                        Ukuran Jersey (Official)
+                                    </Label>
+                                    <Select name="shirtSize" defaultValue="M">
+                                        <SelectTrigger className="h-11 bg-background/40 border-border/50">
+                                            <SelectValue placeholder="Pilih Ukuran" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {['S', 'M', 'L', 'XL', 'XXL', '3XL'].map((s) => (
+                                                <SelectItem key={s} value={s}>{s}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <p className="text-[10px] text-muted-foreground">
+                                        *Pastikan ukuran sudah benar, tidak bisa tukar setelah produksi.
+                                    </p>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                                        <Mail className="w-3 h-3 inline mr-1" />Email Akun (Read Only)
+                                    </Label>
+                                    <Input disabled value={userEmail} className="bg-secondary/50 border-none font-mono text-sm" />
+                                </div>
+                            </div>
+
+                            <Separator className="opacity-50" />
+
+                            {/* Role Info (read only display) */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Role Sistem</span>
+                                    <Badge className={cn('w-fit border text-xs font-bold px-3 py-1', roleInfo.color)}>
+                                        {roleInfo.label}
+                                    </Badge>
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Organisasi</span>
+                                    <span className="text-sm font-bold text-foreground">PB. Kultur Juara</span>
+                                </div>
+                            </div>
+                        </ModernSection>
+
+                        <SubmitButton />
+                    </div>
+                </div>
+            </form>
         </div>
-      </main>
-    </div>
-  );
+    );
 }
