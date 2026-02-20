@@ -393,11 +393,11 @@ export function AthleteForm({ action, initialState, defaultValues, mode }: Athle
             const currentYear = new Date().getFullYear();
             const age = currentYear - birthYear;
 
-            let category = "Taruna & Dewasa (U-19+)";
-            if (age < 9) category = "Pra-usia dini (U-9)";
-            else if (age < 11) category = "Usia dini (U-11)";
-            else if (age < 13) category = "Anak-anak (U-13)";
-            else if (age < 17) category = "Pemula & Remaja (U-15, U-17)";
+            let category = "U19";
+            if (age < 9) category = "U9";
+            else if (age < 11) category = "U11";
+            else if (age < 15) category = "U15";
+            else if (age < 17) category = "U17";
             // else U-19+
 
             // Only update if changed to avoid loop (though setValue checks equality primarily, logic helps)
@@ -872,7 +872,7 @@ export function AthleteForm({ action, initialState, defaultValues, mode }: Athle
                                         </FormItem>
                                     )} />
                                     <FormField control={form.control} name="level" render={({ field }) => (
-                                        <FormItem><FormLabel>A. Level Pembinaan (Opsional)</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Pilih Level (Boleh Kosong)" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Fundamental">Fundamental (Fokus: Grip & Footwork)</SelectItem><SelectItem value="Pengembangan">Pengembangan (Fokus: Konsistensi)</SelectItem><SelectItem value="Prestasi">Prestasi (Fokus: Match & Strategi)</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+                                        <FormItem><FormLabel>A. Level Pembinaan (Opsional)</FormLabel><Select onValueChange={field.onChange} value={field.value} name={field.name}><FormControl><SelectTrigger><SelectValue placeholder="Pilih Level (Boleh Kosong)" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Fundamental">Fundamental (Fokus: Grip & Footwork)</SelectItem><SelectItem value="Pengembangan">Pengembangan (Fokus: Konsistensi)</SelectItem><SelectItem value="Prestasi">Prestasi (Fokus: Match & Strategi)</SelectItem></SelectContent></Select><FormMessage /></FormItem>
                                     )} />
 
                                     <div className="space-y-4">

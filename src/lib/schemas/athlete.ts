@@ -137,7 +137,7 @@ export const athleteRegistrationSchema = z.object({
     authenticityDeclaration: z.boolean().refine(val => val === true, "Wajib menyatakan keaslian dokumen."),
 
     // J. Status & Target (Admin/PB Setup)
-    category: z.enum(["Pra-usia dini (U-9)", "Usia dini (U-11)", "Anak-anak (U-13)", "Pemula & Remaja (U-15, U-17)", "Taruna & Dewasa (U-19+)"], { required_error: "Pilih kategori usia." }),
+    category: z.enum(["U9", "U11", "U15", "U17", "U19"], { required_error: "Pilih kategori usia." }),
     level: z.enum(["Fundamental", "Pengembangan", "Prestasi"]).optional(),
     trainingTarget: z.enum(["Atlet Prestasi", "Atlet Kompetisi", "Pembinaan Jangka Panjang"]).optional(),
     championshipTarget: z.array(z.string()).optional(),
