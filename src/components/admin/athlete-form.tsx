@@ -385,6 +385,28 @@ export function AthleteForm({ action, initialState, defaultValues, mode }: Athle
         }
     }, [state, toast, form, mode]);
 
+    // Auto-calculate Category based on Age (Year of Birth)
+    const dob = form.watch('dob');
+    useEffect(() => {
+        if (dob) {
+            const birthYear = new Date(dob).getFullYear();
+            const currentYear = new Date().getFullYear();
+            const age = currentYear - birthYear;
+
+            let category = "Taruna & Dewasa (U-19+)";
+            if (age < 9) category = "Pra-usia dini (U-9)";
+            else if (age < 11) category = "Usia dini (U-11)";
+            else if (age < 13) category = "Anak-anak (U-13)";
+            else if (age < 17) category = "Pemula & Remaja (U-15, U-17)";
+            // else U-19+
+
+            // Only update if changed to avoid loop (though setValue checks equality primarily, logic helps)
+            if (form.getValues('category') !== category) {
+                form.setValue('category', category as any);
+            }
+        }
+    }, [dob, form]);
+
     return (
         <Form {...form}>
             <form action={formAction} className="space-y-8">
@@ -413,7 +435,7 @@ export function AthleteForm({ action, initialState, defaultValues, mode }: Athle
                     </TabsList>
 
                     {/* === TAB 1: IDENTITAS & ALAMAT === */}
-                    <TabsContent value="identitas" className="space-y-8 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <TabsContent forceMount={true} value="identitas" className="space-y-8 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500 data-[state=inactive]:hidden">
                         <Card className="rounded-3xl shadow-xl">
                             <CardHeader className="p-8 pb-4">
                                 <CardTitle className="text-xl font-headline flex items-center gap-3"><User className="w-5 h-5 text-primary" /> A. Identitas Pribadi</CardTitle>
@@ -583,7 +605,7 @@ export function AthleteForm({ action, initialState, defaultValues, mode }: Athle
                     </TabsContent>
 
                     {/* === TAB 2: ORANG TUA & SOSIAL === */}
-                    <TabsContent value="keluarga" className="space-y-8 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <TabsContent forceMount={true} value="keluarga" className="space-y-8 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500 data-[state=inactive]:hidden">
                         <Card className="rounded-3xl shadow-xl border-t-4 border-t-orange-500">
                             <CardHeader className="p-8 pb-4">
                                 <CardTitle className="text-xl font-headline">Data Orang Tua / Wali</CardTitle>
@@ -669,7 +691,7 @@ export function AthleteForm({ action, initialState, defaultValues, mode }: Athle
                     </TabsContent>
 
                     {/* === TAB 3: MEDIS & FISIK === */}
-                    <TabsContent value="medis" className="space-y-8 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <TabsContent forceMount={true} value="medis" className="space-y-8 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500 data-[state=inactive]:hidden">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <Card className="rounded-3xl shadow-xl border-green-500/10 h-full">
                                 <CardHeader><CardTitle className="text-xl font-headline flex items-center gap-3"><Ruler className="w-5 h-5 text-green-600" /> Antropometri</CardTitle></CardHeader>
@@ -755,7 +777,7 @@ export function AthleteForm({ action, initialState, defaultValues, mode }: Athle
                     </TabsContent>
 
                     {/* === TAB 4: TEKNIS & PRESTASI === */}
-                    <TabsContent value="teknis" className="space-y-8 mt-6">
+                    <TabsContent forceMount={true} value="teknis" className="space-y-8 mt-6 data-[state=inactive]:hidden">
 
                         {/* 1. Riwayat Bulu Tangkis (Sesuai Form Halaman 2) */}
                         <Card className="rounded-3xl shadow-xl">
@@ -809,7 +831,7 @@ export function AthleteForm({ action, initialState, defaultValues, mode }: Athle
                     </TabsContent>
 
                     {/* === TAB 5: ADMIN & KONTRAK === */}
-                    <TabsContent value="admin" className="space-y-8 mt-6">
+                    <TabsContent forceMount={true} value="admin" className="space-y-8 mt-6 data-[state=inactive]:hidden">
 
                         {/* IDENTITAS ADMINISTRATIF */}
                         <Card className="rounded-3xl shadow-xl border-blue-500/10">
@@ -839,8 +861,18 @@ export function AthleteForm({ action, initialState, defaultValues, mode }: Athle
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <FormField control={form.control} name="category" render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Kategori Usia (Auto)</FormLabel>
+                                            <FormControl>
+                                                <Input readOnly value={field.value ?? ''} className="bg-secondary/50 text-muted-foreground cursor-not-allowed" />
+                                            </FormControl>
+                                            <input type="hidden" name="category" value={field.value ?? ''} />
+                                            <FormMessage />
+                                        </FormItem>
+                                    )} />
                                     <FormField control={form.control} name="level" render={({ field }) => (
-                                        <FormItem><FormLabel>A. Level Pembinaan</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Pilih Level" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Fundamental">Fundamental (Fokus: Grip & Footwork)</SelectItem><SelectItem value="Pengembangan">Pengembangan (Fokus: Konsistensi)</SelectItem><SelectItem value="Prestasi">Prestasi (Fokus: Match & Strategi)</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+                                        <FormItem><FormLabel>A. Level Pembinaan (Opsional)</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Pilih Level (Boleh Kosong)" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Fundamental">Fundamental (Fokus: Grip & Footwork)</SelectItem><SelectItem value="Pengembangan">Pengembangan (Fokus: Konsistensi)</SelectItem><SelectItem value="Prestasi">Prestasi (Fokus: Match & Strategi)</SelectItem></SelectContent></Select><FormMessage /></FormItem>
                                     )} />
 
                                     <div className="space-y-4">

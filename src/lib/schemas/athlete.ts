@@ -138,7 +138,7 @@ export const athleteRegistrationSchema = z.object({
 
     // J. Status & Target (Admin/PB Setup)
     category: z.enum(["Pra-usia dini (U-9)", "Usia dini (U-11)", "Anak-anak (U-13)", "Pemula & Remaja (U-15, U-17)", "Taruna & Dewasa (U-19+)"], { required_error: "Pilih kategori usia." }),
-    level: z.enum(["Fundamental", "Pengembangan", "Prestasi"], { required_error: "Pilih level atlet." }),
+    level: z.enum(["Fundamental", "Pengembangan", "Prestasi"]).optional(),
     trainingTarget: z.enum(["Atlet Prestasi", "Atlet Kompetisi", "Pembinaan Jangka Panjang"]).optional(),
     championshipTarget: z.array(z.string()).optional(),
     target_technical_month_1: z.string().optional(),

@@ -11,10 +11,9 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { collection } from 'firebase/firestore';
 import {
     Clock,
-    Database,
     FileText,
     Loader2,
     MoreHorizontal,
@@ -34,6 +33,8 @@ import { deleteAthlete } from "./actions";
 interface Athlete {
     id: string;
     fullName: string;
+    email?: string;
+    niaKji?: string;
     category: string;
     level: string;
     status_aktif: 'AKTIF' | 'NON-AKTIF' | 'DRAFT';
@@ -43,23 +44,12 @@ interface Athlete {
     isDraft?: boolean;
 }
 
-const athletesToSeed = [
-    { fullName: "Ghaina Khansa Putri", size: "XL", ld: "34", tb: "63", lp: "27", gender: "Perempuan" },
-    { fullName: "Fajarina Ayyatul Husna", size: "L", ld: "37", tb: "70", lp: "27", gender: "Perempuan" },
-    { fullName: "Cecilya Anggraeni Nugraha", size: "XL", ld: "48", tb: "61", lp: "23", gender: "Perempuan" },
-    { fullName: "Mega Astari Febriana", size: "L", ld: "45", tb: "66", lp: "22", gender: "Perempuan" },
-    { fullName: "Muhammad Azzam Rayana", size: "L", ld: "39", tb: "58", lp: "26", gender: "Laki-laki" },
-    { fullName: "Muhammad Wildan Kurniawan", size: "L", ld: "34", tb: "53", lp: "27", gender: "Laki-laki" },
-    { fullName: "Reno Apriliandi", size: "L", ld: "36", tb: "54", lp: "30", gender: "Laki-laki" },
-    { fullName: "Fabian Aufa Putra Andyana", size: "L", ld: "35", tb: "62", lp: "27", gender: "Laki-laki" }
-];
 
 
 export default function AthleteRosterPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const firestore = useFirestore();
     const { toast } = useToast();
-    const [isSeeding, setIsSeeding] = useState(false);
     const router = useRouter();
     const [activeTab, setActiveTab] = useState("all");
 
@@ -100,68 +90,6 @@ export default function AthleteRosterPage() {
     const inactiveCount = athletesData?.filter(a => a.status_aktif === 'NON-AKTIF').length || 0;
 
 
-    const handleSeedAthletes = async () => {
-        if (!firestore) {
-            toast({ title: "Error", description: "Firestore is not available.", variant: "destructive" });
-            return;
-        }
-        setIsSeeding(true);
-        try {
-            const athletesCollection = collection(firestore, 'athletes');
-            let addedCount = 0;
-
-            for (const athlete of athletesToSeed) {
-                const q = query(athletesCollection, where("fullName", "==", athlete.fullName));
-                const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
-                    const lastName = athlete.fullName.split(' ').slice(-1)[0] || athlete.fullName;
-
-                    const newAthleteData = {
-                        fullName: athlete.fullName,
-                        height: athlete.tb,
-                        chestWidth: athlete.ld,
-                        waistCircumference: athlete.lp,
-                        gender: athlete.gender,
-                        shirtSize: athlete.size,
-                        nickname: athlete.fullName.split(' ')[0],
-                        pob: "Bandung",
-                        dob: "2010-01-01",
-                        dominantHand: "Kanan",
-                        phone: "081200000000",
-                        email: `${lastName.toLowerCase().replace(/[^a-z0-9]/g, '')}@kulturjuara.org`,
-                        address: "Bandung",
-                        schoolOrWork: "Sekolah Atlet",
-                        emergencyContact: "081211112222",
-                        weight: "50",
-                        jerseyNameOption: "lastName",
-                        jerseyName: lastName.toUpperCase().substring(0, 12),
-                        category: "Anak-anak (U-13)",
-                        level: "Beginner",
-                        startYear: "2023",
-                        careerTarget: "Prestasi",
-                        status_aktif: "AKTIF",
-                        status: "Probation", // Default to Process
-                    };
-
-                    await addDoc(athletesCollection, newAthleteData);
-                    addedCount++;
-                }
-            }
-
-            if (addedCount > 0) {
-                toast({ title: "Success", description: `${addedCount} atlet berhasil ditambahkan ke database.`, className: "bg-green-600 text-white" });
-            } else {
-                toast({ title: "Info", description: "Semua data atlet sudah ada di database." });
-            }
-        } catch (error) {
-            console.error("Error seeding athletes:", error);
-            const errorMessage = error instanceof Error ? error.message : "Terjadi kesalahan pada server.";
-            toast({ title: "Error", description: errorMessage, variant: "destructive" });
-        } finally {
-            setIsSeeding(false);
-        }
-    };
 
     const handleDelete = async (id: string, name: string) => {
         const confirm = window.confirm(`Apakah Anda yakin ingin menghapus data atlet "${name}"? Tindakan ini tidak dapat dibatalkan.`);
@@ -212,15 +140,6 @@ export default function AthleteRosterPage() {
                 </div>
                 <div className="flex items-center gap-4">
                     <Button
-                        onClick={handleSeedAthletes}
-                        variant="outline"
-                        className="h-14 rounded-full px-8 font-bold text-lg"
-                        disabled={isSeeding || isLoading}
-                    >
-                        {isSeeding ? <Loader2 className="mr-2 w-5 h-5 animate-spin" /> : <Database className="mr-2 w-5 h-5" />}
-                        {isSeeding ? "Seeding..." : "Seed Athletes"}
-                    </Button>
-                    <Button
                         asChild
                         className="h-14 rounded-full px-8 bg-sky-600 hover:bg-sky-700 text-white font-bold text-lg shadow-lg transition-transform active:scale-95"
                     >
@@ -233,12 +152,12 @@ export default function AthleteRosterPage() {
 
             {/* --- STATS CARDS --- */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <Card className="rounded-[28px] p-1 overflow-hidden group border-l-4 border-l-blue-500">
+                <Card className="rounded-[28px] p-1 overflow-hidden group border-l-4 border-l-gray-400">
                     <CardContent className="p-4 flex flex-col gap-2">
-                        <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Active</span>
+                        <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Drafts</span>
                         <div className="flex items-center justify-between">
-                            <p className="text-2xl font-black text-foreground">{activeCount}</p>
-                            <ShieldCheck className="w-5 h-5 text-blue-500" />
+                            <p className="text-2xl font-black text-foreground">{draftCount}</p>
+                            <FileText className="w-5 h-5 text-gray-400" />
                         </div>
                     </CardContent>
                 </Card>
@@ -251,12 +170,12 @@ export default function AthleteRosterPage() {
                         </div>
                     </CardContent>
                 </Card>
-                <Card className="rounded-[28px] p-1 overflow-hidden group border-l-4 border-l-gray-400">
+                <Card className="rounded-[28px] p-1 overflow-hidden group border-l-4 border-l-blue-500">
                     <CardContent className="p-4 flex flex-col gap-2">
-                        <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Drafts</span>
+                        <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Active</span>
                         <div className="flex items-center justify-between">
-                            <p className="text-2xl font-black text-foreground">{draftCount}</p>
-                            <FileText className="w-5 h-5 text-gray-400" />
+                            <p className="text-2xl font-black text-foreground">{activeCount}</p>
+                            <ShieldCheck className="w-5 h-5 text-blue-500" />
                         </div>
                     </CardContent>
                 </Card>
@@ -277,9 +196,9 @@ export default function AthleteRosterPage() {
                     <div className="flex flex-col md:flex-row justify-between items-center px-4 py-4 gap-4 border-b">
                         <TabsList className="bg-secondary/50 rounded-full h-12 p-1">
                             <TabsTrigger value="all" className="rounded-full px-6 h-10 data-[state=active]:bg-background data-[state=active]:shadow-sm">All</TabsTrigger>
-                            <TabsTrigger value="active" className="rounded-full px-6 h-10 data-[state=active]:bg-blue-500 data-[state=active]:text-white">Active</TabsTrigger>
-                            <TabsTrigger value="process" className="rounded-full px-6 h-10 data-[state=active]:bg-yellow-500 data-[state=active]:text-white">Process</TabsTrigger>
                             <TabsTrigger value="draft" className="rounded-full px-6 h-10 data-[state=active]:bg-gray-500 data-[state=active]:text-white">Draft</TabsTrigger>
+                            <TabsTrigger value="process" className="rounded-full px-6 h-10 data-[state=active]:bg-yellow-500 data-[state=active]:text-white">Process</TabsTrigger>
+                            <TabsTrigger value="active" className="rounded-full px-6 h-10 data-[state=active]:bg-blue-500 data-[state=active]:text-white">Active</TabsTrigger>
                             <TabsTrigger value="inactive" className="rounded-full px-6 h-10 data-[state=active]:bg-red-500 data-[state=active]:text-white">Inactive</TabsTrigger>
                         </TabsList>
 
