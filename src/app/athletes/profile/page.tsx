@@ -1,5 +1,7 @@
 'use client';
 
+import { getAllSportScienceEvaluations } from '@/app/admin/(academy)/evaluations/actions';
+import { ProgressChart } from '@/components/athlete/progress-chart';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,10 +15,12 @@ import {
     ArrowLeft,
     BookOpen,
     Edit2,
+    Heart,
     Loader2,
     MessageSquare,
     Phone,
     Ruler,
+    Scale,
     ShieldCheck,
     Swords,
     Trophy,
@@ -64,13 +68,124 @@ const ModernSection = ({
 );
 
 // ─── Info Row (label + value) ───────────────────────────────────────────────
+interface AthleteData {
+    fullName: string;
+    nickname: string;
+    pin?: string;
+    pob?: string;
+    dob?: string;
+    gender?: string;
+    nik?: string;
+    citizenship?: string;
+    bloodType?: string;
+    rhesus?: string;
+    dominantHand?: string;
+    phone?: string;
+    email?: string;
+    socialMedia?: string;
+    shoeSize?: number;
+
+    // Alamat
+    address?: string;
+    district?: string;
+    city?: string;
+    province?: string;
+    postalCode?: string;
+
+    // Sekolah
+    schoolName?: string;
+    schoolGrade?: string;
+    schoolAddress?: string;
+    schoolPhone?: string;
+
+    // Antropometri Extended
+    ant_height_cm?: number;
+    ant_weight_kg?: number;
+    ant_arm_span_cm?: number;
+    ant_sitting_height?: number;
+    ant_leg_length?: number;
+    ant_protein_pct?: number;
+    ant_bmi_score?: number;
+    ant_skeletal_muscle_pct?: number;
+    ant_body_fat_pct?: number;
+
+    // Jersey
+    shirtSize?: string;
+    jerseyName?: string;
+    jerseyNameOption?: 'initials' | 'lastName';
+    chestWidth?: number;
+    waistCircumference?: number;
+    jerseyLength?: number;
+
+    // Keluarga & Ortu
+    fatherName?: string;
+    fatherJob?: string;
+    fatherPhone?: string;
+    motherName?: string;
+    motherJob?: string;
+    motherPhone?: string;
+    emergencyName?: string;
+    emergencyRelation?: string;
+    emergencyPhone?: string;
+
+    // Sosio-Econ
+    familyStatus?: string;
+    numberOfDependents?: number;
+    siblingsCount?: number;
+    parentIncomeBracket?: string;
+    houseStatus?: string;
+    transportationToField?: string;
+    smartphoneAccess?: string;
+    governmentAssistance?: string[];
+
+    // Kesehatan
+    seriousInjury?: boolean;
+    injuryDetails?: string;
+    medicalHistory?: string[];
+    allergies?: string;
+    surgeryHistory?: boolean;
+    routineMedication?: boolean;
+    riskDiseaseHistory?: string;
+    vaccinationStatus?: string;
+    chronicSymptoms?: string[];
+
+    // Habits & Recovery
+    nut_urine_color?: number;
+    rec_hrv_rmssd?: number;
+    rec_doms_perceived?: number;
+    averageSleepHours?: number;
+    dietaryHabits?: string;
+    stayUpLate?: boolean;
+    schoolWorkload?: number;
+
+    // Badminton
+    startYear?: number;
+    pbsiNumber?: string;
+    previousClub?: string;
+    specialization?: string;
+    achievements?: string[];
+    level?: string;
+    category?: string;
+    trainingTarget?: string;
+    trainingSchedule?: string;
+
+    // Status
+    status?: string;
+    niaKji?: string;
+    photoUrl?: string;
+    skillScore?: number;
+    coachNotes?: string;
+    coachName?: string;
+}
+
+// ─── Info Row (label + value) ───────────────────────────────────────────────
 const InfoRow = ({ label, value }: { label: string; value?: string | number | null }) => (
     <div className="flex flex-col gap-0.5">
         <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
             {label}
         </span>
         <span className="text-sm font-semibold text-foreground">
-            {value || <span className="text-muted-foreground italic font-normal">-</span>}
+            {value || (typeof value === 'number' && value === 0) ? value : <span className="text-muted-foreground italic font-normal">-</span>}
         </span>
     </div>
 );
@@ -94,7 +209,7 @@ const StatTile = ({
         <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{label}</p>
         <p className={cn('text-2xl font-black font-headline', color)}>
             {value ?? '-'}
-            {value && unit && <span className="text-sm font-bold text-muted-foreground ml-1">{unit}</span>}
+            {value !== undefined && value !== null && unit && <span className="text-sm font-bold text-muted-foreground ml-1">{unit}</span>}
         </p>
     </div>
 );
@@ -102,6 +217,8 @@ const StatTile = ({
 // ─── Main Page ──────────────────────────────────────────────────────────────
 export default function AthleteProfilePage() {
     const [userEmail, setUserEmail] = useState<string | null>(null);
+    const [evaluations, setEvaluations] = useState<Record<string, any>[]>([]);
+    const [loadingEvals, setLoadingEvals] = useState(true);
     const firestore = useFirestore();
 
     useEffect(() => {
@@ -117,6 +234,15 @@ export default function AthleteProfilePage() {
 
     const { data: athletes, isLoading } = useCollection(athletesQuery);
     const athlete = athletes?.[0];
+
+    useEffect(() => {
+        if (athlete?.id) {
+            getAllSportScienceEvaluations(athlete.id).then(data => {
+                setEvaluations(data);
+                setLoadingEvals(false);
+            });
+        }
+    }, [athlete?.id]);
 
     // ── Loading State ──
     if (!userEmail || isLoading) {
@@ -171,6 +297,8 @@ export default function AthleteProfilePage() {
             .toUpperCase()
         : '??';
 
+    const age = athlete.dob ? Math.floor((Date.now() - new Date(athlete.dob).getTime()) / (365.25 * 24 * 60 * 60 * 1000)) : null;
+
     const statusColor =
         athlete.status_aktif === 'Aktif'
             ? 'bg-green-500/10 text-green-500 border-green-500/30'
@@ -207,7 +335,7 @@ export default function AthleteProfilePage() {
             {/* ── MAIN GRID ───────────────────────────────────────────── */}
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
 
-                {/* ── LEFT COLUMN: Avatar Hero + Kontak ── */}
+                {/* ── LEFT COLUMN: Avatar Hero + Kontak + Ortu + Sosio ── */}
                 <div className="xl:col-span-4 flex flex-col gap-6">
 
                     {/* Avatar Hero Card */}
@@ -215,7 +343,7 @@ export default function AthleteProfilePage() {
                         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-red-600/5 opacity-40 pointer-events-none" />
                         <div className="relative flex flex-col items-center gap-4">
                             <Avatar className="h-28 w-28 border-4 border-background shadow-2xl ring-2 ring-primary/20">
-                                <AvatarImage src={athlete.avatar || '/avatars/default.png'} />
+                                <AvatarImage src={athlete.photoUrl || '/avatars/default.png'} />
                                 <AvatarFallback className="text-3xl font-black bg-primary/10 text-primary">
                                     {initials}
                                 </AvatarFallback>
@@ -233,11 +361,16 @@ export default function AthleteProfilePage() {
 
                             <div className="flex flex-wrap gap-2 justify-center">
                                 <Badge className={cn('border text-xs font-bold px-3 py-1', statusColor)}>
-                                    {athlete.status_aktif || 'NON-AKTIF'}
+                                    {athlete.status || 'NON-AKTIF'}
                                 </Badge>
                                 {athlete.category && (
                                     <Badge variant="outline" className="text-xs font-bold px-3 py-1">
                                         {athlete.category}
+                                    </Badge>
+                                )}
+                                {athlete.level && (
+                                    <Badge variant="secondary" className="text-xs font-bold px-3 py-1">
+                                        {athlete.level}
                                     </Badge>
                                 )}
                             </div>
@@ -252,6 +385,25 @@ export default function AthleteProfilePage() {
                                     </p>
                                 </div>
                             )}
+
+                            <div className="w-full pt-4 border-t border-border/50 grid grid-cols-2 gap-4">
+                                <div className="text-center">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
+                                        Usia
+                                    </p>
+                                    <p className="text-xl font-black font-headline text-foreground">
+                                        {age ? `${age} thn` : '-'}
+                                    </p>
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
+                                        Akses PIN
+                                    </p>
+                                    <p className="text-xl font-black font-headline text-primary tracking-widest">
+                                        {athlete.pin || '------'}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -285,16 +437,34 @@ export default function AthleteProfilePage() {
                     <ModernSection title="Orang Tua" icon={Users} gradient="from-blue-500/5 to-cyan-500/5">
                         <div className="space-y-4">
                             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Ayah</p>
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-3">
                                 <InfoRow label="Nama" value={athlete.fatherName} />
-                                <InfoRow label="No. HP" value={athlete.fatherPhone} />
+                                <div className="grid grid-cols-2 gap-4">
+                                    <InfoRow label="Pekerjaan" value={athlete.fatherJob} />
+                                    <InfoRow label="No. HP" value={athlete.fatherPhone} />
+                                </div>
                             </div>
                             <Separator className="opacity-50" />
                             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Ibu</p>
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-3">
                                 <InfoRow label="Nama" value={athlete.motherName} />
-                                <InfoRow label="No. HP" value={athlete.motherPhone} />
+                                <div className="grid grid-cols-2 gap-4">
+                                    <InfoRow label="Pekerjaan" value={athlete.motherJob} />
+                                    <InfoRow label="No. HP" value={athlete.motherPhone} />
+                                </div>
                             </div>
+                        </div>
+                    </ModernSection>
+
+                    {/* Sosio-Ekonomi */}
+                    <ModernSection title="Sosial Ekonomi" icon={Trophy} gradient="from-orange-500/5 to-amber-500/5">
+                        <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                            <InfoRow label="Status Keluarga" value={athlete.familyStatus} />
+                            <InfoRow label="Pendapatan" value={athlete.parentIncomeBracket} />
+                            <InfoRow label="Tanggungan" value={athlete.numberOfDependents} />
+                            <InfoRow label="Saudara" value={athlete.siblingsCount} />
+                            <InfoRow label="Status Rumah" value={athlete.houseStatus} />
+                            <InfoRow label="Transportasi" value={athlete.transportationToField} />
                         </div>
                     </ModernSection>
 
@@ -316,24 +486,54 @@ export default function AthleteProfilePage() {
                 {/* ── RIGHT COLUMN: Info Lengkap + Evaluasi ── */}
                 <div className="xl:col-span-8 flex flex-col gap-6">
 
-                    {/* Data Pribadi & Badminton */}
+                    {/* Data Pribadi & Alamat */}
                     <ModernSection title="Data Pribadi" icon={User} gradient="from-primary/5 to-transparent">
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-5">
                             <InfoRow label="Nama Lengkap" value={athlete.fullName} />
                             <InfoRow label="Nama Panggilan" value={athlete.nickname} />
+                            <InfoRow label="NIK" value={athlete.nik ? `${athlete.nik.slice(0, 6)}**********` : null} />
                             <InfoRow label="Jenis Kelamin" value={athlete.gender} />
                             <InfoRow label="Tempat Lahir" value={athlete.pob} />
                             <InfoRow label="Tanggal Lahir" value={athlete.dob} />
                             <InfoRow label="Kewarganegaraan" value={athlete.citizenship} />
                             <InfoRow label="Golongan Darah" value={athlete.bloodType ? `${athlete.bloodType}${athlete.rhesus || ''}` : null} />
                             <InfoRow label="Tangan Dominan" value={athlete.dominantHand} />
-                            <InfoRow label="Ukuran Sepatu" value={athlete.shoeSize} />
+                        </div>
+                        <Separator className="opacity-50" />
+                        <div className="space-y-4">
+                            <InfoRow label="Alamat Lengkap" value={athlete.address} />
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <InfoRow label="Kecamatan" value={athlete.district} />
+                                <InfoRow label="Kota" value={athlete.city} />
+                                <InfoRow label="Provinsi" value={athlete.province} />
+                                <InfoRow label="Kode Pos" value={athlete.postalCode} />
+                            </div>
                         </div>
                         <Separator className="opacity-50" />
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-5">
                             <InfoRow label="Asal Sekolah" value={athlete.schoolName} />
                             <InfoRow label="Kelas/Jenjang" value={athlete.schoolGrade} />
-                            <InfoRow label="Kota" value={athlete.city} />
+                            <InfoRow label="No. Telp Sekolah" value={athlete.schoolPhone} />
+                        </div>
+                    </ModernSection>
+
+                    {/* Kesehatan Detail */}
+                    <ModernSection title="Kesehatan" icon={ShieldCheck} gradient="from-red-500/5 to-pink-500/5">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <InfoRow label="Cedera Serius?" value={athlete.seriousInjury ? "Ya" : "Tidak"} />
+                            <InfoRow label="Alergi" value={athlete.allergies} />
+                            <InfoRow label="Operasi?" value={athlete.surgeryHistory ? "Ya" : "Tidak"} />
+                            <InfoRow label="Obat Rutin?" value={athlete.routineMedication ? "Ya" : "Tidak"} />
+                        </div>
+                        <Separator className="opacity-50" />
+                        <div className="space-y-4">
+                            {athlete.injuryDetails && <InfoRow label="Detail Cedera" value={athlete.injuryDetails} />}
+                            <div className="grid grid-cols-2 gap-6">
+                                <InfoRow label="Riwayat Medis" value={athlete.medicalHistory?.join(", ")} />
+                                <InfoRow label="Penyakit Risiko" value={athlete.riskDiseaseHistory} />
+                                <InfoRow label="Vaksinasi" value={athlete.vaccinationStatus} />
+                                <InfoRow label="Gejala Kronis" value={athlete.chronicSymptoms?.join(", ")} />
+                            </div>
                         </div>
                     </ModernSection>
 
@@ -343,15 +543,10 @@ export default function AthleteProfilePage() {
                             <InfoRow label="Mulai Berlatih" value={athlete.startYear ? `${athlete.startYear}` : null} />
                             <InfoRow label="No. PBSI" value={athlete.pbsiNumber} />
                             <InfoRow label="Spesialisasi" value={athlete.specialization} />
-                            <InfoRow label="Level" value={athlete.level} />
+                            <InfoRow label="Klub Asal" value={athlete.previousClub} />
                         </div>
-                        {athlete.previousClub && (
-                            <div className="pt-2">
-                                <InfoRow label="Klub Sebelumnya" value={athlete.previousClub} />
-                            </div>
-                        )}
                         {athlete.achievements && athlete.achievements.length > 0 && (
-                            <div className="space-y-2">
+                            <div className="space-y-2 pt-2">
                                 <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                                     Prestasi
                                 </p>
@@ -367,45 +562,43 @@ export default function AthleteProfilePage() {
                         )}
                     </ModernSection>
 
-                    {/* Antropometri */}
-                    <ModernSection title="Antropometri" icon={Ruler} gradient="from-violet-500/5 to-purple-500/5">
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <StatTile
-                                label="Tinggi Badan"
-                                value={athlete.ant_height_cm}
-                                unit="cm"
-                                icon={Ruler}
-                                color="text-blue-500"
-                            />
-                            <StatTile
-                                label="Berat Badan"
-                                value={athlete.ant_weight_kg}
-                                unit="kg"
-                                icon={Zap}
-                                color="text-green-500"
-                            />
-                            <StatTile
-                                label="Rentang Lengan"
-                                value={athlete.ant_arm_span_cm}
-                                unit="cm"
-                                icon={Ruler}
-                                color="text-primary"
-                            />
-                            <StatTile
-                                label="Ukuran Jersey"
-                                value={athlete.shirtSize || athlete.jerseySize}
-                                icon={User}
-                                color="text-orange-500"
-                            />
-                        </div>
-                        {(athlete.ant_body_fat_pct || athlete.ant_skeletal_muscle_pct || athlete.ant_bmi_score) && (
-                            <div className="grid grid-cols-3 gap-4 pt-2">
-                                <InfoRow label="BMI" value={athlete.ant_bmi_score} />
-                                <InfoRow label="Otot Rangka" value={athlete.ant_skeletal_muscle_pct ? `${athlete.ant_skeletal_muscle_pct}%` : null} />
-                                <InfoRow label="Lemak Tubuh" value={athlete.ant_body_fat_pct ? `${athlete.ant_body_fat_pct}%` : null} />
+                    {/* Antropometri & Jersey */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <ModernSection title="Antropometri" icon={Ruler} gradient="from-violet-500/5 to-purple-500/5">
+                            <div className="grid grid-cols-2 gap-4">
+                                <StatTile label="Tinggi" value={athlete.ant_height_cm} unit="cm" icon={Ruler} color="text-blue-500" />
+                                <StatTile label="Berat" value={athlete.ant_weight_kg} unit="kg" icon={Scale} color="text-green-500" />
+                                <StatTile label="Arm Span" value={athlete.ant_arm_span_cm} unit="cm" icon={Zap} color="text-amber-500" />
+                                <StatTile label="Sitting H." value={athlete.ant_sitting_height} unit="cm" icon={User} color="text-emerald-500" />
+                                <StatTile label="Leg Len." value={athlete.ant_leg_length} unit="cm" icon={Zap} color="text-sky-500" />
+                                <StatTile label="Protein" value={athlete.ant_protein_pct} unit="%" icon={Heart} color="text-rose-500" />
                             </div>
-                        )}
-                    </ModernSection>
+                            <Separator className="opacity-50" />
+                            <div className="grid grid-cols-3 gap-2">
+                                <InfoRow label="BMI" value={athlete.ant_bmi_score} />
+                                <InfoRow label="Otot %" value={athlete.ant_skeletal_muscle_pct} />
+                                <InfoRow label="Lemak %" value={athlete.ant_body_fat_pct} />
+                            </div>
+                        </ModernSection>
+
+                        <ModernSection title="Jersey & Habits" icon={Zap} gradient="from-yellow-500/5 to-orange-500/5">
+                            <div className="space-y-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <InfoRow label="Size Jersey" value={athlete.shirtSize} />
+                                    <InfoRow label="Nama Punggung" value={athlete.jerseyName} />
+                                    <InfoRow label="Opsi Nama" value={athlete.jerseyNameOption} />
+                                    <InfoRow label="Ukuran Sepatu" value={athlete.shoeSize} />
+                                </div>
+                                <Separator className="opacity-50" />
+                                <div className="grid grid-cols-2 gap-4">
+                                    <InfoRow label="Jam Tidur" value={athlete.averageSleepHours} />
+                                    <InfoRow label="Diet" value={athlete.dietaryHabits} />
+                                    <InfoRow label="Begadang?" value={athlete.stayUpLate ? "Ya" : "Tidak"} />
+                                    <InfoRow label="Beban Sekolah" value={athlete.schoolWorkload} />
+                                </div>
+                            </div>
+                        </ModernSection>
+                    </div>
 
                     {/* Evaluasi Perkembangan */}
                     <ModernSection
@@ -414,7 +607,7 @@ export default function AthleteProfilePage() {
                         gradient="from-yellow-500/5 to-amber-500/5"
                     >
                         <div className="grid grid-cols-3 gap-4">
-                            <div className="col-span-3 md:col-span-1 p-5 rounded-2xl bg-primary/10 border border-primary/20 text-center">
+                            <div className="col-span-3 md:col-span-1 p-5 rounded-2xl bg-primary/10 border border-primary/20 text-center flex flex-col items-center justify-center">
                                 <p className="text-[10px] font-bold uppercase tracking-widest text-primary mb-2">Level</p>
                                 <p className="font-headline text-3xl font-black text-primary">
                                     {athlete.level || 'Belum'}
@@ -422,15 +615,15 @@ export default function AthleteProfilePage() {
                             </div>
                             <div className="p-5 rounded-2xl bg-background/40 border border-border/30 text-center">
                                 <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
-                                    Kelompok Usia
+                                    Kategori
                                 </p>
-                                <p className="font-headline text-3xl font-black text-foreground">
+                                <p className="font-headline text-2xl font-black text-foreground">
                                     {athlete.category || '-'}
                                 </p>
                             </div>
                             <div className="p-5 rounded-2xl bg-background/40 border border-border/30 flex flex-col items-center justify-center text-center">
                                 <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
-                                    Daya Juang
+                                    Effort Score
                                 </p>
                                 <p className="font-headline text-3xl font-black text-foreground">
                                     {skillScore}
@@ -440,12 +633,28 @@ export default function AthleteProfilePage() {
                         </div>
 
                         {/* Progress Bar Daya Juang */}
-                        <div className="space-y-2">
+                        <div className="space-y-2 pb-4">
                             <div className="flex justify-between text-xs font-bold uppercase tracking-widest">
-                                <span className="text-muted-foreground">Effort Score</span>
+                                <span className="text-muted-foreground">Progress Daya Juang</span>
                                 <span className="text-foreground">{skillScore}%</span>
                             </div>
                             <Progress value={skillScore} className="h-3 rounded-full" />
+                        </div>
+
+                        <Separator className="opacity-50" />
+
+                        {/* Progress Chart Sport Science */}
+                        <div className="space-y-4 pt-2">
+                            <h3 className="text-xs font-black uppercase tracking-widest text-foreground flex items-center gap-2">
+                                <Zap className="w-3 h-3 text-primary" /> Visualisasi Sport Science
+                            </h3>
+                            {loadingEvals ? (
+                                <div className="flex justify-center py-6">
+                                    <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+                                </div>
+                            ) : (
+                                <ProgressChart evaluations={evaluations} />
+                            )}
                         </div>
 
                         {/* Catatan Pelatih */}
@@ -469,60 +678,18 @@ export default function AthleteProfilePage() {
                                     <span className="text-xs text-muted-foreground">
                                         Evaluator: {athlete.coachName || 'Tim Pelatih'}
                                     </span>
-                                    {athlete.lastAssessmentDate && (
-                                        <span className="ml-auto text-[10px] text-muted-foreground font-mono">
-                                            {new Date(athlete.lastAssessmentDate).toLocaleDateString('id-ID')}
-                                        </span>
-                                    )}
                                 </div>
                             </div>
-                        )}
-
-                        {/* Info Kontrak */}
-                        {(athlete.contractDuration || athlete.contractStartDate) && (
-                            <div className="grid grid-cols-3 gap-4 pt-2">
-                                <InfoRow label="Durasi Kontrak" value={athlete.contractDuration} />
-                                <InfoRow label="Mulai Kontrak" value={athlete.contractStartDate} />
-                                <InfoRow label="Selesai Kontrak" value={athlete.contractEndDate} />
-                            </div>
-                        )}
-
-                        {/* Update terakhir */}
-                        {athlete.lastAssessmentDate && (
-                            <p className="text-[11px] text-muted-foreground text-right font-mono">
-                                Update terakhir:{' '}
-                                {new Date(athlete.lastAssessmentDate).toLocaleDateString('id-ID', {
-                                    weekday: 'long',
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                })}
-                            </p>
                         )}
                     </ModernSection>
 
                     {/* Target Latihan */}
-                    {(athlete.trainingTarget || athlete.championshipTarget?.length > 0) && (
+                    {(athlete.trainingTarget || athlete.trainingSchedule) && (
                         <ModernSection title="Target & Program" icon={BookOpen} gradient="from-emerald-500/5 to-green-500/5">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <InfoRow label="Target Latihan" value={athlete.trainingTarget} />
                                 <InfoRow label="Jadwal Latihan" value={athlete.trainingSchedule} />
                             </div>
-                            {athlete.championshipTarget && athlete.championshipTarget.length > 0 && (
-                                <div className="space-y-2">
-                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                                        Target Kejuaraan
-                                    </p>
-                                    <div className="flex flex-wrap gap-2">
-                                        {athlete.championshipTarget.map((t: string, i: number) => (
-                                            <Badge key={i} variant="outline" className="text-xs border-emerald-500/40 text-emerald-600">
-                                                <Trophy className="w-3 h-3 mr-1" />
-                                                {t}
-                                            </Badge>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
                         </ModernSection>
                     )}
 

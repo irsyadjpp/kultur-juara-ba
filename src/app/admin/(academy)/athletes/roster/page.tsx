@@ -19,6 +19,7 @@ import {
     MoreHorizontal,
     Pencil,
     Search,
+    Send,
     ShieldCheck,
     Trash2, UserPlus,
     Users,
@@ -27,7 +28,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { deleteAthlete } from "./actions";
+import { deleteAthlete, submitDraft } from "./actions";
 
 // Define the type for an athlete based on Firestore data
 interface Athlete {
@@ -116,6 +117,22 @@ export default function AthleteRosterPage() {
                 description: "Terjadi kesalahan saat menghapus data.",
                 variant: "destructive",
             });
+        }
+    };
+
+    const handleSubmitDraft = async (id: string, name: string) => {
+        const confirm = window.confirm(`Submit draft "${name}" ke proses verifikasi? Pastikan data sudah lengkap.`);
+        if (!confirm) return;
+        try {
+            const result = await submitDraft(id);
+            if (result.success) {
+                toast({ title: "Berhasil", description: result.message, className: "bg-green-600 text-white" });
+                router.refresh();
+            } else {
+                toast({ title: "Gagal", description: result.message, variant: "destructive" });
+            }
+        } catch (error) {
+            toast({ title: "Error", description: "Gagal submit draft.", variant: "destructive" });
         }
     };
 
@@ -292,6 +309,14 @@ export default function AthleteRosterPage() {
                                                         </DropdownMenuTrigger>
                                                         <DropdownMenuContent align="end">
                                                             <DropdownMenuLabel>Aksi</DropdownMenuLabel>
+                                                            {(athlete.isDraft || athlete.status_aktif === 'DRAFT') && (
+                                                                <DropdownMenuItem
+                                                                    className="text-blue-600 focus:text-blue-600 focus:bg-blue-50"
+                                                                    onClick={() => handleSubmitDraft(athlete.id, athlete.fullName)}
+                                                                >
+                                                                    <Send className="mr-2 h-4 w-4" /> Submit Draft
+                                                                </DropdownMenuItem>
+                                                            )}
                                                             <DropdownMenuItem onClick={() => router.push(`/admin/athletes/edit/${athlete.id}`)}>
                                                                 <Pencil className="mr-2 h-4 w-4" /> Edit Data
                                                             </DropdownMenuItem>

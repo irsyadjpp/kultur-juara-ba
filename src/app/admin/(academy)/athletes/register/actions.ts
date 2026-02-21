@@ -172,10 +172,14 @@ export async function registerAthlete(prevState: any, formData: FormData) {
             uploadFile(fileHealthCert, `athletes/${generatedNIA}/documents/health_${fileHealthCert?.name ?? ''}`),
         ]);
 
+        // 9.5 Generate a random 6-digit PIN for new registrations
+        const pin = Math.floor(100000 + Math.random() * 900000).toString();
+
         // 10. Prepare Final Object
         const athleteData = {
             ...validatedFields.data,
             niaKji: generatedNIA,
+            pin: pin, // Added PIN
             isActive: actionType !== 'draft',
             status: actionType === 'draft' ? 'Draft' : (validatedFields.data.initialStatus || 'Probation'),
             isDraft: actionType === 'draft',

@@ -277,6 +277,7 @@ export function AthleteForm({ action, initialState, defaultValues, mode }: Athle
 
         registrationDate: new Date().toISOString().split('T')[0],
         niaKji: "",
+        pin: "",
         initialStatus: "Probation" as any,
 
         ant_protein_pct: undefined,
@@ -476,6 +477,20 @@ export function AthleteForm({ action, initialState, defaultValues, mode }: Athle
                                 </div>
                                 <FormField control={form.control} name="socialMedia" render={({ field }) => (
                                     <FormItem><FormLabel>Username IG/TikTok (Opsional)</FormLabel><FormControl><Input {...field} value={field.value ?? ''} className="h-12 rounded-xl bg-secondary border" prefix="@" /></FormControl><FormMessage /></FormItem>
+                                )} />
+                                {mode === 'edit' && (
+                                    <FormField control={form.control} name="pin" render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Akses PIN (Untuk Login PIN)</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} readOnly className="h-12 rounded-xl bg-primary/10 border-primary/20 font-black tracking-widest text-primary text-center" />
+                                            </FormControl>
+                                            <FormDescription>Gunakan jika atlet belum berhasil login Google.</FormDescription>
+                                        </FormItem>
+                                    )} />
+                                )}
+                                <FormField control={form.control} name="pbsiNumber" render={({ field }) => (
+                                    <FormItem><FormLabel>No. PBSI (SI)</FormLabel><FormControl><Input {...field} value={field.value ?? ''} className="h-12 rounded-xl bg-secondary border" /></FormControl><FormMessage /></FormItem>
                                 )} />
                             </CardContent>
                         </Card>

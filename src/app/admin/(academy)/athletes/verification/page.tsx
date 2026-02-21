@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -15,8 +16,10 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import {
     AlertTriangle,
+    CheckCircle2,
     ClipboardCheck, Dumbbell,
     Eye,
+    FileCheck2,
     FileX,
     Loader2,
     Search,
@@ -26,13 +29,22 @@ import {
     XCircle
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import { getAthletesForVerification, verifyAthlete, type VerificationAthlete } from "./actions";
+import {
+    getAthletesForVerification,
+    rejectAthlete,
+    updateDocumentChecklist,
+    verifyAthlete,
+    type DocumentChecklist,
+    type VerificationAthlete
+} from "./actions";
 
 const REJECTION_REASONS = [
     "Dokumen KTP Buram / Tidak Terbaca",
     "Usia Tidak Sesuai Kategori",
     "Data Akta Lahir & KTP tidak sinkron",
-    "Dokumen tidak lengkap"
+    "Dokumen tidak lengkap",
+    "Riwayat medis memerlukan klarifikasi",
+    "Data tidak konsisten / meragukan"
 ];
 
 export default function VerificationPage() {
@@ -43,7 +55,10 @@ export default function VerificationPage() {
     const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [isVerifying, setIsVerifying] = useState(false);
+    const [isRejecting, setIsRejecting] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const [rejectionReason, setRejectionReason] = useState("");
+    const [rejectionNotes, setRejectionNotes] = useState("");
     const { toast } = useToast();
 
     const fetchData = useCallback(async () => {
@@ -68,53 +83,122 @@ export default function VerificationPage() {
         fetchData();
     }, [fetchData]);
 
+    // ── Verify ────────────────────────────────────────────────────────────────
     const handleVerify = async () => {
         if (!selectedApplicant) return;
 
         if (!selectedApplicant.hasPhysicalBaseline || !selectedApplicant.hasTechnicalBaseline) {
-            toast({
-                title: "Gagal Verifikasi",
-                description: "Baseline Test (Fisik & Teknik) wajib dilengkapi terlebih dahulu.",
-                variant: "destructive",
-            });
+            toast({ title: "Gagal Verifikasi", description: "Baseline Test (Fisik & Teknik) wajib dilengkapi.", variant: "destructive" });
+            return;
+        }
+
+        // Check doc checklist
+        const cl = selectedApplicant.docChecklist;
+        if (cl && (!cl.kkVerified || !cl.aktaVerified)) {
+            toast({ title: "Dokumen Belum Diverifikasi", description: "KK dan Akta Lahir wajib diverifikasi sebelum aktivasi.", variant: "destructive" });
             return;
         }
 
         setIsVerifying(true);
         const result = await verifyAthlete(selectedApplicant.id);
         if (result.success) {
-            toast({
-                title: "Berhasil",
-                description: result.message,
-                className: "bg-green-600 text-white",
-            });
-            fetchData();
+            toast({ title: "Berhasil!", description: result.message, className: "bg-green-600 text-white" });
             setSelectedApplicant(null);
+            fetchData();
         } else {
-            toast({
-                title: "Gagal",
-                description: result.message,
-                variant: "destructive",
-            });
+            toast({ title: "Gagal", description: result.message, variant: "destructive" });
         }
         setIsVerifying(false);
     };
 
-    // Filtered data for the list
+    // ── Reject ────────────────────────────────────────────────────────────────
+    const handleReject = async () => {
+        if (!selectedApplicant || !rejectionReason) return;
+        setIsRejecting(true);
+        const result = await rejectAthlete(selectedApplicant.id, rejectionReason, rejectionNotes);
+        if (result.success) {
+            toast({ title: "Ditolak", description: result.message, className: "bg-red-600 text-white" });
+            setIsRejectModalOpen(false);
+            setRejectionReason("");
+            setRejectionNotes("");
+            setSelectedApplicant(null);
+            fetchData();
+        } else {
+            toast({ title: "Gagal", description: result.message, variant: "destructive" });
+        }
+        setIsRejecting(false);
+    };
+
+    // ── Doc Checklist Toggle ──────────────────────────────────────────────────
+    const toggleDoc = async (field: keyof DocumentChecklist) => {
+        if (!selectedApplicant) return;
+        const current = selectedApplicant.docChecklist || { kkVerified: false, aktaVerified: false, raporVerified: false, healthVerified: false };
+        const updated = { ...current, [field]: !current[field] };
+        await updateDocumentChecklist(selectedApplicant.id, updated);
+        setSelectedApplicant({ ...selectedApplicant, docChecklist: updated });
+        // Also update in the list
+        setApplicants(prev => prev.map(a => a.id === selectedApplicant.id ? { ...a, docChecklist: updated } : a));
+    };
+
+    // ── Filtered lists ────────────────────────────────────────────────────────
     const displayedApplicants = applicants.filter(a => {
         const matchesSearch = a.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
             a.niaKji.toLowerCase().includes(searchQuery.toLowerCase());
 
-        if (activeTab === "VERIFIED") return false; // Not implemented for real data yet as verified moves to Roster
-        if (activeTab === "REJECTED") return false; // Mock Issues
-        return matchesSearch;
+        if (activeTab === "PENDING") return matchesSearch && (a.status === 'Probation' || a.status === 'Pending Review');
+        if (activeTab === "REJECTED") return matchesSearch && a.status === 'Rejected';
+        return false;
     });
 
-    // Stats
     const stats = {
-        pending: applicants.length,
-        verified: 0, // In this real page, verified athletes are moved to Roster
-        rejected: 0
+        pending: applicants.filter(a => a.status === 'Probation' || a.status === 'Pending Review').length,
+        rejected: applicants.filter(a => a.status === 'Rejected').length,
+    };
+
+    const DocCheckItem = ({ label, field, url }: { label: string; field: keyof DocumentChecklist; url?: string }) => {
+        const isChecked = selectedApplicant?.docChecklist?.[field] ?? false;
+        return (
+            <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                    <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                        {label}
+                    </h3>
+                    <div className="flex items-center gap-2">
+                        <Checkbox
+                            checked={isChecked}
+                            onCheckedChange={() => toggleDoc(field)}
+                            className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                        />
+                        <span className={cn("text-[9px] font-bold uppercase", isChecked ? "text-green-500" : "text-muted-foreground")}>
+                            {isChecked ? "Verified" : "Pending"}
+                        </span>
+                    </div>
+                </div>
+                <div
+                    className={cn(
+                        "aspect-video border-2 border-dashed rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:bg-secondary/50 transition-colors overflow-hidden group relative",
+                        isChecked ? "border-green-500/30 bg-green-500/5" : "bg-slate-50"
+                    )}
+                    onClick={() => url && setPreviewImage(url)}
+                >
+                    {url ? (
+                        <>
+                            <img src={url} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" alt={label} />
+                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <Eye className="text-white w-8 h-8" />
+                            </div>
+                            {isChecked && (
+                                <div className="absolute top-2 right-2">
+                                    <CheckCircle2 className="w-6 h-6 text-green-500 bg-white rounded-full" />
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <FileX className="w-8 h-8 text-slate-300" />
+                    )}
+                </div>
+            </div>
+        );
     };
 
     return (
@@ -142,6 +226,10 @@ export default function VerificationPage() {
                         <p className="text-[10px] text-muted-foreground font-bold uppercase">In Process</p>
                         <p className="text-2xl font-black text-yellow-500">{stats.pending}</p>
                     </div>
+                    <div className="px-6 py-2 bg-background rounded-2xl border text-center min-w-[100px]">
+                        <p className="text-[10px] text-muted-foreground font-bold uppercase">Issues</p>
+                        <p className="text-2xl font-black text-red-500">{stats.rejected}</p>
+                    </div>
                 </div>
             </div>
 
@@ -150,7 +238,6 @@ export default function VerificationPage() {
 
                 {/* LEFT: THE QUEUE (4 Cols) */}
                 <Card className="lg:col-span-4 bg-card/50 border rounded-[32px] flex flex-col overflow-hidden">
-
                     <div className="p-4 space-y-4">
                         <div className="relative">
                             <Search className="absolute left-4 top-3.5 w-4 h-4 text-muted-foreground" />
@@ -162,10 +249,13 @@ export default function VerificationPage() {
                             />
                         </div>
                         <Tabs defaultValue="PENDING" className="w-full" onValueChange={setActiveTab}>
-                            <TabsList className="bg-secondary p-1 rounded-xl w-full grid grid-cols-3">
-                                <TabsTrigger value="PENDING" className="rounded-lg text-xs font-bold">Process</TabsTrigger>
-                                <TabsTrigger value="VERIFIED" className="rounded-lg text-xs font-bold" disabled>History</TabsTrigger>
-                                <TabsTrigger value="REJECTED" className="rounded-lg text-xs font-bold" disabled>Issues</TabsTrigger>
+                            <TabsList className="bg-secondary p-1 rounded-xl w-full grid grid-cols-2">
+                                <TabsTrigger value="PENDING" className="rounded-lg text-xs font-bold">
+                                    Process ({stats.pending})
+                                </TabsTrigger>
+                                <TabsTrigger value="REJECTED" className="rounded-lg text-xs font-bold">
+                                    Issues ({stats.rejected})
+                                </TabsTrigger>
                             </TabsList>
                         </Tabs>
                     </div>
@@ -178,7 +268,9 @@ export default function VerificationPage() {
                             </div>
                         ) : displayedApplicants.length === 0 ? (
                             <div className="text-center py-10">
-                                <p className="text-sm text-muted-foreground">Tidak ada atlet dalam antrean.</p>
+                                <p className="text-sm text-muted-foreground">
+                                    {activeTab === "REJECTED" ? "Tidak ada pendaftaran bermasalah." : "Tidak ada atlet dalam antrean."}
+                                </p>
                             </div>
                         ) : (
                             <div className="space-y-3">
@@ -194,16 +286,25 @@ export default function VerificationPage() {
                                         )}
                                     >
                                         <div className="flex justify-between items-start mb-3">
-                                            <Badge variant="outline" className="text-[9px]">
-                                                {applicant.niaKji || applicant.id}
-                                            </Badge>
+                                            <div className="flex items-center gap-2">
+                                                <Badge variant="outline" className="text-[9px]">
+                                                    {applicant.niaKji || applicant.id.slice(0, 8)}
+                                                </Badge>
+                                                {applicant.status === 'Rejected' && (
+                                                    <Badge className="text-[8px] bg-red-500/10 text-red-500 border-none">Rejected</Badge>
+                                                )}
+                                                {applicant.status === 'Pending Review' && (
+                                                    <Badge className="text-[8px] bg-blue-500/10 text-blue-500 border-none">Self-Reg</Badge>
+                                                )}
+                                            </div>
                                             <span className="text-[10px] text-muted-foreground font-medium">
-                                                {new Date(applicant.registeredAt).toLocaleDateString()}
+                                                {applicant.registeredAt ? new Date(applicant.registeredAt).toLocaleDateString() : '-'}
                                             </span>
                                         </div>
 
                                         <div className="flex items-center gap-3">
                                             <Avatar className="h-10 w-10 border">
+                                                <AvatarImage src={applicant.photoUrl} />
                                                 <AvatarFallback className="bg-secondary text-xs font-bold text-muted-foreground">
                                                     {applicant.fullName.charAt(0)}
                                                 </AvatarFallback>
@@ -221,6 +322,12 @@ export default function VerificationPage() {
                                                 </div>
                                             </div>
                                         </div>
+
+                                        {applicant.status === 'Rejected' && applicant.rejectionReason && (
+                                            <div className="mt-2 p-2 bg-red-500/5 rounded-xl border border-red-500/10">
+                                                <p className="text-[10px] text-red-400 font-bold">{applicant.rejectionReason}</p>
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>
@@ -245,7 +352,17 @@ export default function VerificationPage() {
                                         </h2>
                                         <div className="flex items-center gap-2">
                                             <Badge variant="outline">{selectedApplicant.category}</Badge>
-                                            <Badge variant="secondary" className="bg-yellow-500/10 text-yellow-600 border-none font-bold">{selectedApplicant.status}</Badge>
+                                            <Badge variant="secondary" className={cn(
+                                                "border-none font-bold",
+                                                selectedApplicant.status === 'Rejected' ? "bg-red-500/10 text-red-500" :
+                                                    selectedApplicant.status === 'Pending Review' ? "bg-blue-500/10 text-blue-500" :
+                                                        "bg-yellow-500/10 text-yellow-600"
+                                            )}>
+                                                {selectedApplicant.status}
+                                            </Badge>
+                                            {selectedApplicant.registeredBy === 'SELF' && (
+                                                <Badge className="bg-blue-500/10 text-blue-500 border-none text-[9px]">Self-Registered</Badge>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -265,67 +382,69 @@ export default function VerificationPage() {
 
                             <ScrollArea className="flex-1 bg-background p-8">
                                 <div className="space-y-8">
+                                    {/* Rejection Info Banner */}
+                                    {selectedApplicant.status === 'Rejected' && (
+                                        <div className="p-4 bg-red-500/5 border border-red-500/20 rounded-2xl">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <XCircle className="w-4 h-4 text-red-500" />
+                                                <span className="font-bold text-red-500 text-sm">Ditolak: {selectedApplicant.rejectionReason}</span>
+                                            </div>
+                                            {selectedApplicant.rejectionNotes && (
+                                                <p className="text-xs text-muted-foreground ml-6">{selectedApplicant.rejectionNotes}</p>
+                                            )}
+                                            <p className="text-[10px] text-muted-foreground ml-6 mt-1">
+                                                {selectedApplicant.rejectedAt && `Pada: ${new Date(selectedApplicant.rejectedAt).toLocaleString()}`}
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {/* Document Checklist */}
                                     <div>
                                         <h3 className="text-sm font-bold text-foreground mb-4 flex items-center gap-2">
                                             <ClipboardCheck className="w-5 h-5 text-sky-500" /> Dokumen Administrasi
+                                            <Badge variant="outline" className="text-[9px] ml-auto">
+                                                <FileCheck2 className="w-3 h-3 mr-1" />
+                                                {Object.values(selectedApplicant.docChecklist || {}).filter(Boolean).length}/4 Terverifikasi
+                                            </Badge>
                                         </h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div className="space-y-3">
-                                                <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                                                    Kartu Keluarga
-                                                </h3>
-                                                <div
-                                                    className="aspect-video bg-slate-50 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:bg-slate-100 transition-colors overflow-hidden group relative"
-                                                    onClick={() => selectedApplicant?.kkUrl && setPreviewImage(selectedApplicant.kkUrl)}
-                                                >
-                                                    {selectedApplicant?.kkUrl ? (
-                                                        <>
-                                                            <img src={selectedApplicant.kkUrl} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" alt="KK" />
-                                                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                                <Eye className="text-white w-8 h-8" />
-                                                            </div>
-                                                        </>
-                                                    ) : (
-                                                        <FileX className="w-8 h-8 text-slate-300" />
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            <div className="space-y-3">
-                                                <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                                                    Akta Kelahiran
-                                                </h3>
-                                                <div
-                                                    className="aspect-video bg-slate-50 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:bg-slate-100 transition-colors overflow-hidden group relative"
-                                                    onClick={() => selectedApplicant?.aktaUrl && setPreviewImage(selectedApplicant.aktaUrl)}
-                                                >
-                                                    {selectedApplicant?.aktaUrl ? (
-                                                        <>
-                                                            <img src={selectedApplicant.aktaUrl} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" alt="Akta" />
-                                                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                                <Eye className="text-white w-8 h-8" />
-                                                            </div>
-                                                        </>
-                                                    ) : (
-                                                        <FileX className="w-8 h-8 text-slate-300" />
-                                                    )}
-                                                </div>
-                                            </div>
+                                            <DocCheckItem label="Kartu Keluarga" field="kkVerified" url={selectedApplicant.kkUrl} />
+                                            <DocCheckItem label="Akta Kelahiran" field="aktaVerified" url={selectedApplicant.aktaUrl} />
                                         </div>
 
                                         <div className="grid grid-cols-2 gap-4 mt-6">
-                                            <div className="p-4 bg-secondary/20 rounded-2xl border border-dashed">
-                                                <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">Rapor Terakhir</p>
+                                            <div className={cn(
+                                                "p-4 rounded-2xl border border-dashed",
+                                                selectedApplicant.docChecklist?.raporVerified ? "bg-green-500/5 border-green-500/30" : "bg-secondary/20"
+                                            )}>
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <p className="text-[10px] uppercase font-bold text-muted-foreground">Rapor Terakhir</p>
+                                                    <Checkbox
+                                                        checked={selectedApplicant.docChecklist?.raporVerified ?? false}
+                                                        onCheckedChange={() => toggleDoc('raporVerified')}
+                                                        className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                                                    />
+                                                </div>
                                                 <div className="flex items-center justify-between">
-                                                    <span className="text-sm font-bold">{selectedApplicant?.raporUrl ? 'Tersedia' : 'Belum Ada'}</span>
-                                                    {selectedApplicant?.raporUrl && <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={() => setPreviewImage(selectedApplicant.raporUrl!)}><Eye className="w-4 h-4" /></Button>}
+                                                    <span className="text-sm font-bold">{selectedApplicant.raporUrl ? 'Tersedia' : 'Belum Ada'}</span>
+                                                    {selectedApplicant.raporUrl && <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={() => setPreviewImage(selectedApplicant.raporUrl!)}><Eye className="w-4 h-4" /></Button>}
                                                 </div>
                                             </div>
-                                            <div className="p-4 bg-secondary/20 rounded-2xl border border-dashed">
-                                                <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">Ket. Sehat</p>
+                                            <div className={cn(
+                                                "p-4 rounded-2xl border border-dashed",
+                                                selectedApplicant.docChecklist?.healthVerified ? "bg-green-500/5 border-green-500/30" : "bg-secondary/20"
+                                            )}>
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <p className="text-[10px] uppercase font-bold text-muted-foreground">Ket. Sehat</p>
+                                                    <Checkbox
+                                                        checked={selectedApplicant.docChecklist?.healthVerified ?? false}
+                                                        onCheckedChange={() => toggleDoc('healthVerified')}
+                                                        className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                                                    />
+                                                </div>
                                                 <div className="flex items-center justify-between">
-                                                    <span className="text-sm font-bold">{selectedApplicant?.healthUrl ? 'Tersedia' : 'Belum Ada'}</span>
-                                                    {selectedApplicant?.healthUrl && <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={() => setPreviewImage(selectedApplicant.healthUrl!)}><Eye className="w-4 h-4" /></Button>}
+                                                    <span className="text-sm font-bold">{selectedApplicant.healthUrl ? 'Tersedia' : 'Belum Ada'}</span>
+                                                    {selectedApplicant.healthUrl && <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={() => setPreviewImage(selectedApplicant.healthUrl!)}><Eye className="w-4 h-4" /></Button>}
                                                 </div>
                                             </div>
                                         </div>
@@ -338,12 +457,19 @@ export default function VerificationPage() {
                                     variant="destructive"
                                     className="h-14 rounded-2xl font-bold"
                                     onClick={() => setIsRejectModalOpen(true)}
+                                    disabled={selectedApplicant.status === 'Rejected'}
                                 >
                                     <XCircle className="w-5 h-5 mr-2" /> REJECT / REVISION
                                 </Button>
                                 <Button
                                     className="h-14 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-lg shadow-primary/20 text-lg disabled:opacity-50 disabled:grayscale"
-                                    disabled={isVerifying || !selectedApplicant?.hasPhysicalBaseline || !selectedApplicant?.hasTechnicalBaseline}
+                                    disabled={
+                                        isVerifying ||
+                                        !selectedApplicant.hasPhysicalBaseline ||
+                                        !selectedApplicant.hasTechnicalBaseline ||
+                                        !selectedApplicant.docChecklist?.kkVerified ||
+                                        !selectedApplicant.docChecklist?.aktaVerified
+                                    }
                                     onClick={handleVerify}
                                 >
                                     {isVerifying ? <Loader2 className="w-5 h-5 animate-spin" /> : <UserCheck className="w-5 h-5 mr-2" />}
@@ -360,19 +486,19 @@ export default function VerificationPage() {
                 </div>
             </div>
 
+            {/* Image Preview Dialog */}
             <Dialog open={!!previewImage} onOpenChange={() => setPreviewImage(null)}>
                 <DialogContent className="bg-black/90 border-none shadow-none max-w-4xl h-[80vh] p-0 flex items-center justify-center">
                     <div className="relative w-full h-full p-4 flex items-center justify-center">
                         <img src={previewImage || ""} alt="Document Preview" className="max-w-full max-h-full object-contain rounded-lg shadow-2xl" />
-                        <Button
-                            className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white rounded-full"
-                            onClick={() => setPreviewImage(null)}
-                        >
+                        <Button className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white rounded-full" onClick={() => setPreviewImage(null)}>
                             Close
                         </Button>
                     </div>
                 </DialogContent>
             </Dialog>
+
+            {/* Rejection Modal — fully wired */}
             <Dialog open={isRejectModalOpen} onOpenChange={setIsRejectModalOpen}>
                 <DialogContent className="bg-card border text-foreground rounded-[40px] max-w-md p-0 overflow-hidden shadow-2xl">
                     <div className="p-8 border-b bg-red-500/10">
@@ -386,7 +512,7 @@ export default function VerificationPage() {
                     <div className="p-8 space-y-6">
                         <div className="space-y-2">
                             <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Alasan Penolakan</label>
-                            <Select>
+                            <Select value={rejectionReason} onValueChange={setRejectionReason}>
                                 <SelectTrigger className="bg-background h-14 rounded-2xl"><SelectValue placeholder="Pilih Alasan..." /></SelectTrigger>
                                 <SelectContent>
                                     {REJECTION_REASONS.map((r, i) => <SelectItem key={i} value={r}>{r}</SelectItem>)}
@@ -395,11 +521,21 @@ export default function VerificationPage() {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Catatan Tambahan (Email ke Atlet)</label>
-                            <Textarea placeholder="Jelaskan detail perbaikan yang diperlukan..." className="bg-background rounded-2xl min-h-[100px] resize-none p-4" />
+                            <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Catatan Tambahan</label>
+                            <Textarea
+                                value={rejectionNotes}
+                                onChange={(e) => setRejectionNotes(e.target.value)}
+                                placeholder="Jelaskan detail perbaikan yang diperlukan..."
+                                className="bg-background rounded-2xl min-h-[100px] resize-none p-4"
+                            />
                         </div>
 
-                        <Button className="w-full h-16 rounded-full font-black text-lg bg-red-600 hover:bg-red-700 text-white mt-2 shadow-xl shadow-red-900/20">
+                        <Button
+                            className="w-full h-16 rounded-full font-black text-lg bg-red-600 hover:bg-red-700 text-white mt-2 shadow-xl shadow-red-900/20"
+                            onClick={handleReject}
+                            disabled={isRejecting || !rejectionReason}
+                        >
+                            {isRejecting ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : null}
                             CONFIRM REJECTION
                         </Button>
                     </div>

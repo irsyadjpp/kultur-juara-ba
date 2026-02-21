@@ -15,6 +15,7 @@ export const athleteRegistrationSchema = z.object({
     dominantHand: z.enum(["Kanan", "Kiri"], { required_error: "Pilih tangan dominan." }),
     phone: z.string().min(10, "Nomor HP tidak valid.").regex(/^\d+$/, "Hanya angka."),
     email: z.string().email("Format email tidak valid."),
+    pin: z.string().optional(), // Added for access code
     socialMedia: z.string().optional(),
     shoeSize: z.coerce.number().min(20).max(50).optional(),
 

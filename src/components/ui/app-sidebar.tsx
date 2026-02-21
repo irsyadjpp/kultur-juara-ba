@@ -10,6 +10,7 @@ import {
     FileText,
     LayoutDashboard,
     LogOut,
+    Microscope,
     Swords,
     Target,
     User,
@@ -65,13 +66,23 @@ const data = {
         { title: "Evaluasi Teknik", url: "/admin/evaluations/technical", icon: Swords },
         { title: "Evaluasi Taktik", url: "/admin/evaluations/tactical", icon: Brain },
         { title: "Evaluasi Mental", url: "/admin/evaluations/mental", icon: Brain },
+        { title: "Sport Science Profiling", url: "/admin/evaluations/sport-science", icon: Microscope },
     ],
     navOperasional: [
         { title: "Log Aktivitas CSR", url: "/admin/reports/monthly", icon: FileText },
     ],
     navSistem: [
         { title: "Manajemen User", url: "/admin/settings/users", icon: UserCog },
-    ]
+    ],
+    navParent: [
+        { title: "Dashboard", url: "/parents/dashboard", icon: LayoutDashboard },
+        { title: "Notifikasi", url: "/notifications", icon: FileText },
+    ],
+    navAthlete: [
+        { title: "Dashboard", url: "/athletes/dashboard", icon: LayoutDashboard },
+        { title: "Profil Saya", url: "/athletes/profile", icon: User },
+        { title: "Notifikasi", url: "/notifications", icon: FileText },
+    ],
 }
 
 export function AppSidebar({ onLogout, user, ...props }: React.ComponentProps<typeof Sidebar> & { onLogout?: () => void, user?: any }) {
@@ -125,6 +136,34 @@ export function AppSidebar({ onLogout, user, ...props }: React.ComponentProps<ty
                 perencanaan: data.navAkademiPerencanaan.filter(i => i.title !== 'Masterplan CSR'),
                 atlet: data.navAkademiAtlet.filter(i => i.title === 'Roster Atlet'),
                 evaluasi: data.navAkademiLogEvaluasi,
+                operasional: [],
+                sistem: []
+            }
+        }
+
+        // PARENT
+        if (role === 'PARENT') {
+            return {
+                superAdmin: [],
+                utama: data.navParent,
+                akademi: true,
+                perencanaan: [],
+                atlet: [],
+                evaluasi: [],
+                operasional: [],
+                sistem: []
+            }
+        }
+
+        // ATHLETE
+        if (role === 'ATHLETE') {
+            return {
+                superAdmin: [],
+                utama: data.navAthlete,
+                akademi: true,
+                perencanaan: [],
+                atlet: [],
+                evaluasi: [],
                 operasional: [],
                 sistem: []
             }
