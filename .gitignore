@@ -44,3 +44,19 @@ next-env.d.ts
 firebase-debug.log
 firestore-debug.log
 *.txt
+
+# Kredensial Firebase
+*firebase-adminsdk*.json
+
+# Konfigurasi Editor/IDE
+.vscode/
+.idea/
+
+# File Sistem OS
+Thumbs.db
+
+# Cache Firebase
+.firebase/
+
+# Cache ESLint
+.eslintcache
