@@ -1,97 +1,75 @@
-# SISTEM MANAJEMEN AKADEMI - KULTUR JUARA
+# KULTUR JUARA INDONESIA — Company Profile
 
 ## 1. DESKRIPSI PROYEK
 
-**Kultur Juara Indonesia Badminton Academy Management System (SIM)** adalah platform digital terintegrasi yang dirancang untuk mendigitalkan seluruh operasional akademi bulu tangkis modern. Sistem ini menggabungkan manajemen atlet berbasis *Sport Science*, administrasi operasional, dan perencanaan latihan periodisasi dalam satu ekosistem terpusat.
+**Kultur Juara Indonesia** adalah platform digital yang merepresentasikan ekosistem terintegrasi antara **Sport-Tech** dan **Edutech**. Website ini berfungsi sebagai profil perusahaan resmi untuk memperkenalkan solusi digital dalam transformasi pendidikan (Kurikulum Merdeka) dan pembinaan talenta olahraga berbasis data.
 
-Dibangun dengan teknologi web modern, aplikasi ini memastikan data atlet, evaluasi pelatih, dan laporan manajemen tersimpan aman, terstruktur, dan mudah diakses oleh pihak yang berwenang.
+Dibangun dengan standar performa tinggi, website ini menggabungkan kecepatan akses, desain premium, dan pengalaman pengguna yang interaktif melalui teknologi web terbaru.
 
 ---
 
 ## 2. FITUR UTAMA
 
-Sistem ini diorganisir ke dalam modul-modul spesifik (Route Groups) untuk memisahkan concern bisnis:
+Website ini dirancang sebagai pusat informasi dan interaksi ekosistem:
 
-### 🔹 A. Academy Core (`/admin/(academy)`)
-Fokus pada pengembangan atlet dan kepelatihan:
-- **Master Metrics Registration**: Sistem pendaftaran atlet yang mencakup **13 Pilar Performa** (Antropometri, Kinematika, Nutrisi, Psikologi, Fisik, Teknik, dll).
-- **Athlete Database**: Profil lengkap atlet termasuk riwayat cedera, prestasi, dan perkembangan fisik.
-- **Training Management**: Perencanaan program latihan makrosiklus.
-- **Evaluations**: Rapor berkala dan penilaian performa.
+### 🔹 A. Content Management System (CMS-less)
+Menggunakan pendekatan berbasis file untuk konten yang dinamis namun tetap cepat (SSG/SSR):
+- **Wawasan (Blog)**: Artikel edukasi dan berita terbaru yang dikelola melalui file Markdown (`src/content/blog`).
+- **Studi Kasus**: Dokumentasi keberhasilan implementasi solusi di sekolah dan komunitas olahraga (`src/content/cases`).
 
-### 🔹 B. Operations (`/admin/(operations)`)
-Menangani aspek non-teknis akademi:
-- **Inventory**: Manajemen peralatan dan aset.
-- **Reports**: Laporan kehadiran dan administrasi umum.
+### 🔹 B. Interactive Contact System
+Sistem komunikasi dua arah yang profesional:
+- **Rich Text Editor (Tiptap)**: Form pesan yang mendukung format teks kaya (Bold, Italic, List) secara WYSIWYG.
+- **Resend Integration**: Pengiriman pesan dari form kontak langsung ke email operasional dengan template HTML yang premium.
 
-### 🔹 C. System Administration (`/admin/(system)`)
-Kontrol penuh terhadap akses dan konfigurasi:
-- **User Management**: Mengelola akun staf, pelatih, dan atlet.
-- **Role-Based Access Control (RBAC)**: Sistem keamanan bertingkat (Super Admin, Admin, Head Coach, Coach, Medical, Athlete, Guest).
-- **Settings**: Konfigurasi global aplikasi.
+### 🔹 C. Ecosystem Hub
+Navigasi terintegrasi ke berbagai unit layanan:
+- **School Portal**: Solusi SIM Sekolah.
+- **Academy Portal**: Manajemen pembinaan atlet.
+- **Event Portal**: Sistem manajemen turnamen.
 
----
-
-## 3. MASTER METRICS INTEGRATION (NEW)
-
-Sistem ini kini mendukung pencatatan data komprehensif berdasarkan **13 Pilar Performa Atlet Elite**:
-1.  **Antropometri**: Tinggi, Berat, Rentang Lengan, Tinggi Duduk.
-2.  **Kinematika**: Kecepatan Grip, Kinetic Linkage.
-3.  **Biomotor**: Kecepatan, Kelincahan (Agility), Power.
-4.  **Fisiologi**: VO2Max, Heart Rate.
-5.  **Biomekanika**: Analisis gerakan.
-6.  **Nutrisi**: Status Hidrasi (Warna Urin), Asupan Kalori.
-7.  **Recovery**: Kualitas Tidur, HRV, DOMS (Muscle Soreness).
-8.  **Psikologi**: Ketahanan Mental (Grit), Fokus.
-9.  **Teknik**: Pukulan dasar hingga lanjut.
-10. **Taktik**: Game sense dan strategi.
-11. **Sosial Ekonomi**: Dukungan keluarga dan latar belakang.
-12. **Medis**: Riwayat cedera dan kesehatan.
-13. **Administrasi**: Legalitas dan kontrak.
+### 🔹 D. Performance & SEO
+- **Framer Motion**: Animasi transisi dan scroll yang halus untuk kesan premium.
+- **SEO Optimized**: Metadata dinamis per halaman, `sitemap.xml`, dan `robots.txt` otomatis.
+- **Analytics**: Integrasi Google Analytics untuk pemantauan perilaku pengguna.
 
 ---
 
-## 4. TEKNOLOGI
+## 3. TEKNOLOGI
 
-- **Frontend**: Next.js 14 (App Router), React, TypeScript.
-- **Styling**: Tailwind CSS, ShadCN UI (Radix Primitives).
-- **State Management**: React Hooks, Server Actions.
-- **Backend / Database**: Google Firebase (Firestore, Authentication, Storage).
-- **Security**: Middleware-based Route Protection, Server-side Role Validation.
+- **Framework**: Next.js 15 (App Router / Turbopack), React 19, TypeScript.
+- **Styling**: Tailwind CSS, Shadcn UI (Lucide Icons).
+- **Animations**: Framer Motion.
+- **Content Engine**: Markdown (Gray-matter, Marked, Tailwind Typography).
+- **Rich Text Engine**: Tiptap Editor.
+- **Email Service**: Resend (Server Actions).
 
 ---
 
-## 5. STRUKTUR PROYEK
+## 4. STRUKTUR PROYEK
 
 ```
-src/app/
-├── (auth)/                 # Login & Authentication routes
-├── admin/                  # Protected Admin Area
-│   ├── (academy)/          # Athletes, Training, Evaluations
-│   ├── (operations)/       # Reports, Inventory
-│   ├── (system)/           # Users, Settings
-│   └── (personal)/         # Profile, Notifications
-├── athletes/               # Athlete Portal (Dashboard, Logs)
-├── superadmin/             # Super Admin Exclusive Area
-└── api/                    # Backend API Routes
+src/
+├── app/                  # Route handlers & main pages
+│   ├── blog/             # Dinamis blog routes
+│   ├── cases/            # Dinamis case studies routes
+│   ├── actions/          # Server Actions (Contact form logic)
+│   └── (others)          # About, Solutions, Careers, dsb.
+├── components/           # Reusable UI components
+│   ├── layout/           # Header, Footer
+│   ├── sections/         # Landing page sections (Hero, FAQ, dsb.)
+│   └── ui/               # Base UI components (Shadcn)
+├── content/              # Markdown data (Blog & Cases)
+└── lib/                  # Utilities (Content parser, dsb.)
 ```
 
 ---
 
-## 6. KEAMANAN (SECURITY)
-
-Sistem menerapkan prinsip *Least Privilege*:
-- **Middleware**: Memblokir akses rute berdasarkan klaim token pengguna.
-- **Server Actions**: Validasi role ganda di setiap fungsi backend untuk mencegah *Unauthorized Access*.
-- **Data Protection**: Pengguna hanya bisa melihat/mengedit data sesuai yurisdiksi role mereka (misal: Pelatih Fisik hanya bisa edit data fisik).
-
----
-
-## 7. CARA MENJALANKAN
+## 5. CARA MENJALANKAN
 
 1.  **Clone Repository**
     ```bash
-    git clone https://github.com/kultur-juara-ba/sim.git
+    git clone https://github.com/irsyadjpp/kultur-juara-ba.git
     cd kultur-juara-ba
     ```
 
@@ -101,17 +79,17 @@ Sistem menerapkan prinsip *Least Privilege*:
     ```
 
 3.  **Setup Environment Variables**
-    Buat file `.env.local` dan isi konfigurasi Firebase:
+    Buat file `.env.local` dan tambahkan key berikut:
     ```env
-    NEXT_PUBLIC_FIREBASE_API_KEY=...
-    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
-    NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
-    # ... dst
+    RESEND_API_KEY=re_...
+    CONTACT_EMAIL_TO=...
+    NEXT_PUBLIC_GA_MEASUREMENT_ID=G-...
+    NEXT_PUBLIC_APP_URL=http://localhost:9002
     ```
 
 4.  **Run Development Server**
     ```bash
-    npm run dev
+    npm run dev -- -p 9002
     ```
 
 5.  **Build untuk Produksi**
@@ -119,3 +97,8 @@ Sistem menerapkan prinsip *Least Privilege*:
     npm run build
     npm start
     ```
+
+---
+
+## 6. KONTRIBUSI KONTEN
+Untuk menambahkan artikel blog atau studi kasus baru, cukup tambahkan file `.md` baru di direktori `src/content/blog/` atau `src/content/cases/` dengan format frontmatter yang sesuai.
