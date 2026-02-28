@@ -1,14 +1,16 @@
 
+import { BackToTop } from '@/components/back-to-top';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from "@/components/ui/toaster";
+import { GoogleAnalytics } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-    title: 'Kultur Juara Indonesia Badminton Academy',
-    description: 'Mencetak atlet bulutangkis masa depan dengan kurikulum profesional dan fasilitas modern di Kultur Juara Indonesia Badminton Academy.',
+    title: 'Kultur Juara Indonesia — Ekosistem Sport-Tech & Edutech',
+    description: 'Ekosistem terintegrasi yang memadukan pembinaan karakter berbasis olahraga dan inovasi teknologi pendidikan untuk mencetak talenta masa depan Indonesia.',
     icons: {
         icon: [
             { url: '/favicon/favicon.ico' },
@@ -20,6 +22,29 @@ export const metadata: Metadata = {
         apple: [
             { url: '/favicon/apple-touch-icon.png' },
         ],
+    },
+    metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://kulturjuara.org'),
+    openGraph: {
+        title: 'Kultur Juara Indonesia',
+        description: 'Ekosistem terintegrasi yang memadukan pembinaan karakter berbasis olahraga dan inovasi teknologi pendidikan untuk mencetak talenta masa depan Indonesia.',
+        url: 'https://kulturjuara.org',
+        siteName: 'Kultur Juara Indonesia',
+        images: [
+            {
+                url: '/images/og-image.jpg',
+                width: 1200,
+                height: 630,
+                alt: 'Kultur Juara Indonesia Ecosystem',
+            },
+        ],
+        locale: 'id_ID',
+        type: 'website',
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Kultur Juara Indonesia',
+        description: 'Ekosistem terintegrasi yang memadukan pembinaan karakter berbasis olahraga dan inovasi teknologi pendidikan untuk mencetak talenta masa depan Indonesia.',
+        images: ['/images/og-image.jpg'],
     },
 };
 
@@ -33,7 +58,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+        <html lang="id" className="scroll-smooth" suppressHydrationWarning>
             <head>
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -47,10 +72,12 @@ export default function RootLayout({
                     disableTransitionOnChange
                 >
                     {children}
+                    <BackToTop />
                     <Toaster />
                 </ThemeProvider>
                 <Analytics />
                 <SpeedInsights />
+                <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-XXXXXXXXXX"} />
             </body>
         </html>
     );

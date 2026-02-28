@@ -1,19 +1,27 @@
+import { ContactForm } from '@/components/contact-form';
+import { Footer } from '@/components/layout/footer';
+import { Header } from '@/components/layout/header';
 import { Card, CardContent } from "@/components/ui/card";
 import { Building, Mail, Phone } from "lucide-react";
+import { Metadata } from "next";
 
-export function LocationSection() {
+export const metadata: Metadata = {
+    title: "Kontak | Kultur Juara Indonesia",
+    description: "Hubungi Kultur Juara Indonesia untuk informasi kemitraan pendidikan dan olahraga.",
+};
+
+export default function ContactPage() {
     return (
-        <section id="kontak" className="py-24 bg-background relative overflow-hidden">
-            <div className="container mx-auto px-4">
-                <div className="flex flex-col lg:flex-row gap-12 items-center">
-
-                    <div className="lg:w-1/2 w-full space-y-8">
+        <div className="flex flex-col min-h-screen bg-background text-foreground">
+            <Header />
+            <main className="flex-grow container mx-auto px-4 py-24 md:py-32 max-w-5xl">
+                <div className="grid md:grid-cols-2 gap-12">
+                    {/* Contact Info */}
+                    <div className="space-y-8">
                         <div>
-                            <h2 className="text-4xl md:text-5xl font-black font-headline uppercase mb-6">
-                                Mari <span className="text-primary">Berkolaborasi</span>
-                            </h2>
-                            <p className="text-xl text-muted-foreground font-medium leading-relaxed">
-                                Apakah Anda mewakili sekolah yang ingin melakukan transformasi digital, atau komunitas olahraga yang mencari sistem manajemen transparan? Tim kami siap berdiskusi.
+                            <h1 className="text-4xl font-bold tracking-tight text-primary mb-4">Hubungi Kami</h1>
+                            <p className="text-lg text-muted-foreground">
+                                Mari berdiskusi tentang bagaimana sistem dan ekosistem kami dapat mentransformasi sekolah atau komunitas Anda.
                             </p>
                         </div>
 
@@ -28,7 +36,6 @@ export function LocationSection() {
                                         <p className="text-muted-foreground">Kultur Juara Indonesia<br />Bandung, Jawa Barat, Indonesia</p>
                                     </div>
                                 </div>
-
                                 <div className="flex items-center gap-4">
                                     <div className="p-3 bg-primary/10 rounded-xl text-primary shrink-0">
                                         <Mail className="w-6 h-6" />
@@ -40,7 +47,6 @@ export function LocationSection() {
                                         </a>
                                     </div>
                                 </div>
-
                                 <div className="flex items-center gap-4">
                                     <div className="p-3 bg-primary/10 rounded-xl text-primary shrink-0">
                                         <Phone className="w-6 h-6" />
@@ -56,21 +62,14 @@ export function LocationSection() {
                         </Card>
                     </div>
 
-                    <div className="lg:w-1/2 w-full h-[400px] lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl relative border-4 border-background">
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126748.56347863152!2d107.57311681283627!3d-6.903444341687889!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e6398252477f%3A0x146a1f93d3e815b2!2sBandung%2C%20Bandung%20City%2C%20West%20Java!5e0!3m2!1sen!2sid!4v1700000000000!5m2!1sen!2sid"
-                            width="100%"
-                            height="100%"
-                            style={{ border: 0 }}
-                            allowFullScreen={false}
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                            className="grayscale hover:grayscale-0 transition-all duration-700"
-                        />
+                    {/* Form */}
+                    <div className="rounded-xl border bg-card text-card-foreground shadow p-6 md:p-8">
+                        <h2 className="text-xl font-bold mb-6">Kirim Pesan</h2>
+                        <ContactForm />
                     </div>
-
                 </div>
-            </div>
-        </section>
+            </main>
+            <Footer />
+        </div>
     );
 }

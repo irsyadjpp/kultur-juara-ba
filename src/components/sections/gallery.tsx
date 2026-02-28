@@ -1,60 +1,65 @@
-'use client';
-
-import { Camera, Zap, Dumbbell } from "lucide-react";
-import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
 
-const activities = [
-  {
-    title: "Latihan Fisik",
-    desc: "Membangun stamina dan kelincahan.",
-    tag: "Physical",
-    image: "/images/koni-1.jpg"
-  },
-  {
-    title: "Drill Teknik",
-    desc: "Mempertajam pukulan dan gerakan.",
-    tag: "Technical",
-    image: "/images/koni-2.jpg"
-  },
-  {
-    title: "Game Session",
-    desc: "Simulasi pertandingan yang seru.",
-    tag: "Sparring",
-    image: "/images/koni-3.jpg"
-  },
+const impacts = [
+    {
+        title: "Digitalisasi Ruang Kelas",
+        desc: "Implementasi SIM Sekolah (Edutech) yang membebaskan guru dari beban administratif.",
+        image: "/images/impact-edutech.jpg",
+        category: "Edutech",
+    },
+    {
+        title: "Transparansi Turnamen",
+        desc: "Penggunaan digital drawing dan live score untuk kompetisi yang adil dan tanpa manipulasi.",
+        image: "/images/impact-event.jpg",
+        category: "Event",
+    },
+    {
+        title: "Pembinaan Karakter Usia Dini",
+        desc: "Membangun mental juara melalui disiplin olahraga dan pendekatan sport science.",
+        image: "/images/impact-academy.jpg",
+        category: "Academy",
+    },
 ];
 
 export function GallerySection() {
-  return (
-    <section className="py-24 bg-background">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col items-center text-center mb-16">
-          <div className="bg-primary/10 p-4 rounded-full mb-6">
-            <Camera className="w-10 h-10 text-primary" />
-          </div>
-          <h2 className="text-4xl md:text-6xl font-black font-headline uppercase mb-4">
-            Suasana <span className="text-primary">Latihan</span>
-          </h2>
-          <p className="text-xl text-muted-foreground font-medium max-w-2xl">
-            Intip keseruan dan semangat latihan kami sehari-hari di lapangan.
-          </p>
-        </div>
+    return (
+        <section className="py-24 bg-secondary/20">
+            <div className="container mx-auto px-4">
+                <div className="text-center max-w-2xl mx-auto mb-16">
+                    <Badge variant="outline" className="mb-4 text-primary border-primary/30">Dampak Nyata</Badge>
+                    <h2 className="text-4xl md:text-5xl font-black font-headline uppercase mb-4">
+                        Melihat Ekosistem <span className="text-primary">Bekerja</span>
+                    </h2>
+                    <p className="text-xl text-muted-foreground font-medium">
+                        Dari efisiensi ruang kelas hingga sportivitas di lapangan pertandingan, ini adalah bukti nyata komitmen kami.
+                    </p>
+                </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {activities.map((item, i) => (
-            <div key={i} className="group relative rounded-[2rem] overflow-hidden aspect-[4/5] shadow-lg">
-              <Image src={item.image} alt={item.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-8 text-white transform transition-transform duration-300 group-hover:-translate-y-2">
-                <Badge className="bg-primary text-black font-bold mb-3 border-none">{item.tag}</Badge>
-                <h3 className="text-2xl font-bold font-headline leading-tight mb-1">{item.title}</h3>
-                <p className="text-white/80 text-sm font-medium">{item.desc}</p>
-              </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {impacts.map((item, idx) => (
+                        <Card key={idx} className="overflow-hidden group border-none rounded-3xl bg-background shadow-lg hover:shadow-xl transition-all duration-300">
+                            <div className="relative h-64 w-full overflow-hidden">
+                                <div className="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
+                                <Image
+                                    src={item.image}
+                                    alt={item.title}
+                                    fill
+                                    className="object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                                />
+                                <Badge className="absolute top-4 left-4 z-20 bg-background/90 text-foreground hover:bg-background">
+                                    {item.category}
+                                </Badge>
+                            </div>
+                            <CardContent className="p-6">
+                                <h3 className="text-xl font-bold font-headline mb-2">{item.title}</h3>
+                                <p className="text-muted-foreground">{item.desc}</p>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+        </section>
+    );
 }

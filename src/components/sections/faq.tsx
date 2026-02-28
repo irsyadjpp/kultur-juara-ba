@@ -6,42 +6,49 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+
+const faqs = [
+    {
+        question: "Bagaimana cara sekolah saya menggunakan SIM Edutech Kultur Juara?",
+        answer: "Sekolah Anda dapat menghubungi tim kemitraan kami melalui email atau nomor telepon yang tertera. Kami akan mengatur jadwal presentasi dan trial sistem untuk memastikan fitur-fitur yang kami tawarkan selaras dengan kebutuhan implementasi Kurikulum Merdeka di sekolah Anda.",
+    },
+    {
+        question: "Apakah sistem manajemen turnamen (Event) bisa digunakan untuk cabor selain bulu tangkis?",
+        answer: "Saat ini, arsitektur dasar sistem kami memang dirancang sangat optimal untuk bulu tangkis (mengadopsi standar internasional). Namun, teknologi digital drawing dan live score kami sedang terus dikembangkan agar adaptif untuk cabang olahraga raket lainnya di masa depan.",
+    },
+    {
+        question: "Apakah data akademik siswa dan profil atlet dijamin keamanannya?",
+        answer: "Tentu. Keamanan data (Data Safeguarding) adalah prioritas absolut kami. Sistem kami dirancang dengan standar enkripsi terkini dan mematuhi regulasi Perlindungan Data Pribadi (PDP). Kami memastikan bahwa data akademik siswa dan profil talenta komunitas hanya diakses oleh pihak yang memiliki otoritas.",
+    },
+    {
+        question: "Bagaimana cara mendaftarkan anak saya ke portal Akademi?",
+        answer: "Anda dapat langsung mengunjungi portal academy.kulturjuara.org untuk melihat jadwal, kuota program pembinaan (seperti U9, U11, hingga kelas Elite), dan melakukan pendaftaran serta evaluasi performa anak secara sepenuhnya digital.",
+    },
+];
 
 export function FaqSection() {
-    const items = [
-        {
-            q: "Bagaimana cara mendaftar di Kultur Juara Academy?",
-            a: "Anda dapat menghubungi kami melalui formulir kontak di website ini atau datang langsung ke lokasi latihan kami di GSG Parakan Indah saat jam operasional untuk pendaftaran dan informasi lebih lanjut."
-        },
-        {
-            q: "Apakah tersedia kelas percobaan (trial class)?",
-            a: "Ya, kami menyediakan satu sesi kelas percobaan gratis bagi calon atlet. Silakan hubungi admin kami via WhatsApp untuk menjadwalkan sesi trial Anda."
-        },
-        {
-            q: "Apa saja kelompok umur yang tersedia di akademi?",
-            a: "Kami menerima atlet mulai dari kategori U-9 (Usia Dini), U-11, U-13, hingga U-17. Selain itu, kami juga membuka Kelas Dewasa untuk umum yang ingin menjaga kebugaran."
-        },
-        {
-            q: "Berapa biaya bulanan dan apa saja yang termasuk?",
-            a: "Biaya bulanan adalah Rp 200.000 per atlet. Biaya ini sudah termasuk 12 sesi latihan terjadwal setiap bulan dan shuttlecock yang digunakan selama latihan."
-        }
-    ]
-
     return (
-        <section className="py-24 bg-background">
+        <section className="py-24 bg-secondary/30 rounded-t-[3rem]">
             <div className="container mx-auto px-4 max-w-3xl">
-                <h2 className="text-4xl font-black font-headline text-center mb-12 uppercase">
-                    FAQ
-                </h2>
+                <div className="text-center mb-12">
+                    <Badge variant="outline" className="mb-4 text-primary border-primary/30">Pusat Bantuan</Badge>
+                    <h2 className="text-3xl md:text-5xl font-black font-headline uppercase mb-4">
+                        Pertanyaan <span className="text-primary">Umum</span>
+                    </h2>
+                    <p className="text-lg text-muted-foreground">
+                        Temukan jawaban mengenai operasional dan integrasi sistem ekosistem Kultur Juara Indonesia.
+                    </p>
+                </div>
 
-                <Accordion type="single" collapsible className="space-y-4">
-                    {items.map((item, index) => (
-                        <AccordionItem key={index} value={`item-${index}`} className="bg-secondary rounded-3xl border-none px-6">
-                            <AccordionTrigger className="text-lg font-bold py-6 hover:no-underline hover:text-primary text-left">
-                                {item.q}
+                <Accordion type="single" collapsible className="w-full space-y-4">
+                    {faqs.map((faq, index) => (
+                        <AccordionItem key={index} value={`item-${index}`} className="bg-background border rounded-2xl px-6 shadow-sm">
+                            <AccordionTrigger className="text-left font-bold text-lg hover:no-underline hover:text-primary transition-colors py-6">
+                                {faq.question}
                             </AccordionTrigger>
-                            <AccordionContent className="text-muted-foreground text-lg pb-6 leading-relaxed">
-                                {item.a}
+                            <AccordionContent className="text-muted-foreground text-base leading-relaxed pb-6 pt-0">
+                                {faq.answer}
                             </AccordionContent>
                         </AccordionItem>
                     ))}
