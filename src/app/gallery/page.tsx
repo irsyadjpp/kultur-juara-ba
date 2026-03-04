@@ -10,7 +10,10 @@ export const metadata: Metadata = {
     description: 'Dokumentasi momen-momen berharga dalam perjalanan kami membangun generasi juara Indonesia.',
 };
 
-export default function GalleryPage() {
+// Paksa halaman ini di-render secara statis saat build — agar fs bisa membaca folder public/
+export const dynamic = 'force-static';
+
+export default async function GalleryPage() {
     // Membaca isi folder "public/images/gallery" secara dinamis saat build/request
     const galleryDir = path.join(process.cwd(), 'public/images/gallery');
 
