@@ -73,7 +73,7 @@ export function HeroSection() {
                     <div className="relative aspect-[4/5] w-full max-w-md mx-auto">
                         <div className="absolute inset-0 bg-card rounded-[2.5rem] shadow-2xl rotate-3 border overflow-hidden">
                             <Image
-                                src="/images/landing-page/kultur-hero.jpg"
+                                src="/images/hero/kultur-hero.jpg"
                                 alt="Kultur Juara Indonesia"
                                 fill
                                 priority

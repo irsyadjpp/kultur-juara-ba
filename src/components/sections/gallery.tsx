@@ -6,19 +6,19 @@ const impacts = [
     {
         title: "Pengelolaan Ekskul Bulu Tangkis",
         desc: "Membangun pondasi dasar bulu tangkis yang terintegrasi di lingkungan sekolah.",
-        image: "/images/landing-page/kultur-organization.jpg",
+        image: "/images/hero/kultur-organization.jpg",
         category: "Ekskul",
     },
     {
         title: "Kultur Juara Badminton Academy",
         desc: "Pembinaan intensif dengan pendekatan sport science untuk mencetak atlet profesional.",
-        image: "/images/landing-page/kultur-academy.jpg",
+        image: "/images/hero/kultur-academy.jpg",
         category: "Academy",
     },
     {
         title: "Manajemen Sekolah Terpadu",
         desc: "Platform end-to-end dari perancangan Capaian Pembelajaran (CP) hingga pencetakan rapor.",
-        image: "/images/landing-page/impact-edutech.jpg",
+        image: "/images/hero/impact-edutech.jpg",
         category: "Edutech",
     },
 ];
