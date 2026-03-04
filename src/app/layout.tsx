@@ -25,33 +25,12 @@ export const metadata: Metadata = {
     // ... keeping existing metadata intact by targeting strictly the changed areas ...
     title: 'Kultur Juara Indonesia — Ekosistem Sport-Tech & Edutech',
     description: 'Ekosistem terintegrasi yang memadukan pembinaan karakter berbasis olahraga dan inovasi teknologi pendidikan untuk mencetak talenta masa depan Indonesia.',
-    icons: {
-        icon: [
-            { url: '/favicon/favicon.ico' },
-            { url: '/favicon/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-            { url: '/favicon/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-            { url: '/favicon/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
-            { url: '/favicon/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' },
-        ],
-        apple: [
-            { url: '/favicon/apple-touch-icon.png' },
-        ],
-    },
     metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://kulturjuara.org'),
-    manifest: '/favicon/site.webmanifest',
     openGraph: {
         title: 'Kultur Juara Indonesia',
         description: 'Ekosistem terintegrasi yang memadukan pembinaan karakter berbasis olahraga dan inovasi teknologi pendidikan untuk mencetak talenta masa depan Indonesia.',
         url: 'https://kulturjuara.org',
         siteName: 'Kultur Juara Indonesia',
-        images: [
-            {
-                url: '/images/og-image.jpg',
-                width: 1200,
-                height: 630,
-                alt: 'Kultur Juara Indonesia Ecosystem',
-            },
-        ],
         locale: 'id_ID',
         type: 'website',
     },
@@ -59,7 +38,6 @@ export const metadata: Metadata = {
         card: 'summary_large_image',
         title: 'Kultur Juara Indonesia',
         description: 'Ekosistem terintegrasi yang memadukan pembinaan karakter berbasis olahraga dan inovasi teknologi pendidikan untuk mencetak talenta masa depan Indonesia.',
-        images: ['/images/og-image.jpg'],
     },
 };
 

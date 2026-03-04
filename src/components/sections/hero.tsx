@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, BookOpen, Trophy } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import heroImage from '../../../public/images/hero/kultur-hero.jpg';
 
 export function HeroSection() {
     return (
@@ -73,7 +74,7 @@ export function HeroSection() {
                     <div className="relative aspect-[4/5] w-full max-w-md mx-auto">
                         <div className="absolute inset-0 bg-card rounded-[2.5rem] shadow-2xl rotate-3 border overflow-hidden">
                             <Image
-                                src="/images/hero/kultur-hero.jpg"
+                                src={heroImage}
                                 alt="Kultur Juara Indonesia"
                                 fill
                                 priority
