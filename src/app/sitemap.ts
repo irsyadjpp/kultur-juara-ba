@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/solutions',
         '/cases',
         '/blog',
+        '/gallery',
         '/contact',
     ];
 

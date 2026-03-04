@@ -16,6 +16,7 @@ const navItems = [
     { name: 'Solusi', href: '/solutions' },
     { name: 'Studi Kasus', href: '/cases' },
     { name: 'Wawasan', href: '/blog' },
+    { name: 'Galeri', href: '/gallery' },
     { name: 'Kontak', href: '/contact' },
 ];
 
