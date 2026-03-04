@@ -71,7 +71,7 @@ export default function AboutPage() {
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                             {[
                                 { name: 'Irsyad Putra', role: 'Founder & Tech Lead', initials: 'IP' },
-                                { name: 'Arya Kusuma', role: 'Head of Sport Science', initials: 'AK' },
+                                { name: 'Muhammad Bilal Digdaya', role: 'Head of Sport Science', initials: 'MB' },
                                 { name: 'Siti Rahayu', role: 'Head of Edutech', initials: 'SR' },
                                 { name: 'Fajar Maulana', role: 'Community & Events', initials: 'FM' },
                             ].map((member, i) => (
