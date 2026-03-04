@@ -8,6 +8,7 @@ import { ChevronDown, ExternalLink, Menu } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import logoImage from '../../../public/images/logo.png';
 import { ClientOnly } from '../client-only';
 
 const navItems = [
@@ -47,7 +48,7 @@ export function Header() {
                 {/* LOGO */}
                 <Link href="/" className="flex items-center gap-3 px-4 group">
                     <div className="relative w-8 h-8 md:w-10 md:h-10 transition-transform group-hover:scale-110">
-                        <Image src="/images/logo.png" alt="Logo" fill sizes="40px" className="object-contain" />
+                        <Image src={logoImage} alt="Logo" fill sizes="40px" className="object-contain" />
                     </div>
                     <span className={cn("font-headline font-black tracking-tighter uppercase hidden md:block transition-all", isScrolled ? "text-base" : "text-lg")}>
                         KULTUR JUARA

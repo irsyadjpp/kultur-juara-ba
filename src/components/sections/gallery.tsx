@@ -1,24 +1,27 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
+import edutechImage from "../../../public/images/hero/impact-edutech.jpg";
+import academyImage from "../../../public/images/hero/kultur-academy.jpg";
+import orgImage from "../../../public/images/hero/kultur-organization.jpg";
 
 const impacts = [
     {
         title: "Pengelolaan Ekskul Bulu Tangkis",
         desc: "Membangun pondasi dasar bulu tangkis yang terintegrasi di lingkungan sekolah.",
-        image: "/images/hero/kultur-organization.jpg",
+        image: orgImage,
         category: "Ekskul",
     },
     {
         title: "Kultur Juara Badminton Academy",
         desc: "Pembinaan intensif dengan pendekatan sport science untuk mencetak atlet profesional.",
-        image: "/images/hero/kultur-academy.jpg",
+        image: academyImage,
         category: "Academy",
     },
     {
         title: "Manajemen Sekolah Terpadu",
         desc: "Platform end-to-end dari perancangan Capaian Pembelajaran (CP) hingga pencetakan rapor.",
-        image: "/images/hero/impact-edutech.jpg",
+        image: edutechImage,
         category: "Edutech",
     },
 ];
