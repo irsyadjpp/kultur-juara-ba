@@ -2,6 +2,7 @@
 import { Instagram, Mail, Phone } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import logoImage from '../../../public/images/logo.png';
 
 const navLinks = [
     { name: 'Beranda', href: '/' },
@@ -29,7 +30,7 @@ export function Footer() {
                     <div className="md:col-span-1">
                         <Link href="/" className="flex items-center gap-2 mb-4">
                             <div className="relative w-8 h-8">
-                                <Image src="/images/logo.png" alt="Logo" fill className="object-contain" />
+                                <Image src={logoImage} alt="Logo" fill className="object-contain" />
                             </div>
                             <span className="font-headline font-black text-base tracking-tighter uppercase">KULTUR JUARA</span>
                         </Link>
