@@ -4,22 +4,22 @@ import Image from "next/image";
 
 const impacts = [
     {
-        title: "Digitalisasi Ruang Kelas",
-        desc: "Implementasi SIM Sekolah (Edutech) yang membebaskan guru dari beban administratif.",
-        image: "/images/impact-edutech.jpg",
-        category: "Edutech",
+        title: "Pengelolaan Ekskul Bulu Tangkis",
+        desc: "Membangun pondasi dasar bulu tangkis yang terintegrasi di lingkungan sekolah.",
+        image: "/images/landing-page/kultur-organization.jpg",
+        category: "Ekskul",
     },
     {
-        title: "Transparansi Turnamen",
-        desc: "Penggunaan digital drawing dan live score untuk kompetisi yang adil dan tanpa manipulasi.",
-        image: "/images/impact-event.jpg",
-        category: "Event",
-    },
-    {
-        title: "Pembinaan Karakter Usia Dini",
-        desc: "Membangun mental juara melalui disiplin olahraga dan pendekatan sport science.",
-        image: "/images/impact-academy.jpg",
+        title: "Kultur Juara Badminton Academy",
+        desc: "Pembinaan intensif dengan pendekatan sport science untuk mencetak atlet profesional.",
+        image: "/images/landing-page/kultur-academy.jpg",
         category: "Academy",
+    },
+    {
+        title: "Manajemen Sekolah Terpadu",
+        desc: "Platform end-to-end dari perancangan Capaian Pembelajaran (CP) hingga pencetakan rapor.",
+        image: "/images/landing-page/impact-edutech.jpg",
+        category: "Edutech",
     },
 ];
 

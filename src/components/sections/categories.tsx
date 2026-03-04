@@ -7,25 +7,25 @@ import { BookOpen, Dumbbell, Trophy } from "lucide-react";
 
 const portals = [
     {
-        title: "Portal Edutech (School)",
-        desc: "Sistem Informasi Manajemen (SIM) terpadu untuk digitalisasi administrasi sekolah SD & SMP yang selaras dengan Kurikulum Merdeka.",
-        icon: BookOpen,
-        color: "text-green-500 border-green-500/30 bg-green-500/10",
-        link: "https://school.kulturjuara.org",
+        title: "Pengelolaan Ekskul Bulu Tangkis",
+        desc: "Membangun pondasi dasar bulu tangkis yang terintegrasi di lingkungan sekolah.",
+        icon: Trophy,
+        color: "text-purple-500 border-purple-500/30 bg-purple-500/10",
+        link: "#",
     },
     {
-        title: "Portal Akademi (Academy)",
-        desc: "Manajemen pembinaan talenta olahraga berbasis sport science, analitik performa, dan pemetaan data spasial.",
+        title: "Kultur Juara Badminton Academy",
+        desc: "Pembinaan intensif dengan pendekatan sport science untuk mencetak atlet profesional.",
         icon: Dumbbell,
         color: "text-blue-500 border-blue-500/30 bg-blue-500/10",
         link: "https://academy.kulturjuara.org",
     },
     {
-        title: "Manajemen Event (Event)",
-        desc: "Sistem penyelenggaraan turnamen profesional dengan digital drawing dan live score yang 100% transparan.",
-        icon: Trophy,
-        color: "text-purple-500 border-purple-500/30 bg-purple-500/10",
-        link: "https://event.kulturjuara.org",
+        title: "Manajemen Sekolah Terpadu",
+        desc: "Platform end-to-end dari perancangan Capaian Pembelajaran (CP) hingga pencetakan rapor.",
+        icon: BookOpen,
+        color: "text-green-500 border-green-500/30 bg-green-500/10",
+        link: "https://school.kulturjuara.org",
     },
 ];
 
