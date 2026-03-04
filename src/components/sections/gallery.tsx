@@ -46,6 +46,7 @@ export function GallerySection() {
                                     src={item.image}
                                     alt={item.title}
                                     fill
+                                    sizes="(max-width: 768px) 100vw, 33vw"
                                     className="object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
                                 />
                                 <Badge className="absolute top-4 left-4 z-20 bg-background/90 text-foreground hover:bg-background">
