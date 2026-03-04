@@ -38,6 +38,7 @@ export const metadata: Metadata = {
         ],
     },
     metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://kulturjuara.org'),
+    manifest: '/favicon/site.webmanifest',
     openGraph: {
         title: 'Kultur Juara Indonesia',
         description: 'Ekosistem terintegrasi yang memadukan pembinaan karakter berbasis olahraga dan inovasi teknologi pendidikan untuk mencetak talenta masa depan Indonesia.',
