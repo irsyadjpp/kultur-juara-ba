@@ -2,13 +2,27 @@
 import { BackToTop } from '@/components/back-to-top';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from "@/components/ui/toaster";
-import { GoogleAnalytics } from '@next/third-parties/google';
-import { Analytics } from '@vercel/analytics/next';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
+
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
+import { Inter, Outfit } from 'next/font/google';
+
+const inter = Inter({
+    subsets: ['latin'],
+    variable: '--font-inter',
+    display: 'swap',
+});
+
+const outfit = Outfit({
+    subsets: ['latin'],
+    variable: '--font-outfit',
+    display: 'swap',
+});
+
 export const metadata: Metadata = {
+    // ... keeping existing metadata intact by targeting strictly the changed areas ...
     title: 'Kultur Juara Indonesia — Ekosistem Sport-Tech & Edutech',
     description: 'Ekosistem terintegrasi yang memadukan pembinaan karakter berbasis olahraga dan inovasi teknologi pendidikan untuk mencetak talenta masa depan Indonesia.',
     icons: {
@@ -60,11 +74,9 @@ export default function RootLayout({
     return (
         <html lang="id" className="scroll-smooth" suppressHydrationWarning>
             <head>
-                <link rel="preconnect" href="https://fonts.googleapis.com" />
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet" />
+                {/* next/font automatically handles preconnecting and loading fonts locally */}
             </head>
-            <body className="font-body antialiased">
+            <body className={`${inter.variable} ${outfit.variable} font-body antialiased`}>
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="light"
@@ -75,9 +87,13 @@ export default function RootLayout({
                     <BackToTop />
                     <Toaster />
                 </ThemeProvider>
-                <Analytics />
-                <SpeedInsights />
-                <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-XXXXXXXXXX"} />
+
+                {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+                    <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+                )}
+                {process.env.NEXT_PUBLIC_GTM_ID && (
+                    <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
+                )}
             </body>
         </html>
     );

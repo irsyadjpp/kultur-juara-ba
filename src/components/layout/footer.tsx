@@ -9,14 +9,13 @@ const navLinks = [
     { name: 'Solusi', href: '/solutions' },
     { name: 'Studi Kasus', href: '/cases' },
     { name: 'Wawasan', href: '/blog' },
-    { name: 'Karir', href: '/careers' },
     { name: 'Kontak', href: '/contact' },
 ];
 
 const ecosystem = [
-    { name: 'Kultur Juara Academy', href: '#', desc: 'Program pembinaan atlet' },
-    { name: 'Kultur Juara School', href: '#', desc: 'Pendidikan berbasis karakter' },
-    { name: 'Kultur Juara Event', href: '#', desc: 'Kompetisi & turnamen' },
+    { name: 'Pengelolaan Ekskul Bulu Tangkis', href: '/solutions#ekskul', desc: 'Membangun pondasi di lingkungan sekolah' },
+    { name: 'Kultur Juara Badminton Academy', href: 'https://academy.kulturjuara.org', desc: 'Mencetak atlet profesional' },
+    { name: 'Manajemen Sekolah Terpadu', href: 'https://school.kulturjuara.org', desc: 'Dari manajemen CP hingga rapor' },
 ];
 
 export function Footer() {

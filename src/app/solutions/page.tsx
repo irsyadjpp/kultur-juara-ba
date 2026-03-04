@@ -19,51 +19,69 @@ export default function SolutionsPage() {
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-8">
-                    {/* Edutech Section */}
-                    <div className="rounded-xl border bg-card text-card-foreground shadow flex flex-col">
+                <div className="grid md:grid-cols-3 gap-8">
+                    {/* Pilar 1: Ekskul */}
+                    <div id="ekskul" className="rounded-xl border bg-card text-card-foreground shadow flex flex-col hover:border-purple-500/50 transition-colors">
                         <div className="p-6 md:p-8 space-y-4 flex-grow">
-                            <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-primary/10 text-primary mb-2">Edutech</div>
-                            <h2 className="text-2xl font-bold">Manajemen Pendidikan Terdigitalisasi</h2>
-                            <p className="text-muted-foreground leading-relaxed">
-                                Solusi komprehensif untuk sekolah tingkat SD dan SMP. Kami mengembangkan Sistem Informasi Manajemen (SIM) Sekolah terpadu yang selaras dengan implementasi Kurikulum Merdeka.
+                            <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-purple-500/10 text-purple-600 mb-2">Pilar 1</div>
+                            <h2 className="text-2xl font-bold">Pengelolaan Ekskul Bulu Tangkis</h2>
+                            <p className="text-muted-foreground leading-relaxed text-sm">
+                                Membangun pondasi dasar bulu tangkis yang terintegrasi di lingkungan sekolah. Mendorong minat bakat siswa secara inklusif dan menyenangkan.
                             </p>
-                            <ul className="space-y-2 mt-4 text-sm">
-                                <li className="flex gap-2"><span>✓</span> Integrasi data akademik (Dapodik &amp; e-Rapor)</li>
-                                <li className="flex gap-2"><span>✓</span> Pemantauan Capaian Pembelajaran (CP) <em>real-time</em></li>
-                                <li className="flex gap-2"><span>✓</span> Arsitektur UI/UX lincah (<em>zero error</em>)</li>
+                            <ul className="space-y-2 mt-4 text-sm text-muted-foreground">
+                                <li className="flex gap-2"><span>✅</span> Pemantauan progres motorik anak</li>
+                                <li className="flex gap-2"><span>✅</span> Pengenalan budaya kompetisi sehat</li>
+                                <li className="flex gap-2"><span>✅</span> Ekstrakurikuler terpadu &amp; terukur</li>
                             </ul>
                         </div>
                         <div className="p-6 pt-0 mt-auto">
-                            <a href="https://school.kulturjuara.org" target="_blank" rel="noreferrer"
-                                className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full transition-colors">
-                                Kunjungi Portal Sekolah (School)
+                            <a href="mailto:admin@kulturjuara.org"
+                                className="inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-background hover:bg-secondary h-10 px-4 py-2 w-full transition-colors">
+                                Hubungi untuk Kerjasama
                             </a>
                         </div>
                     </div>
 
-                    {/* Sport-tech Section */}
-                    <div className="rounded-xl border bg-card text-card-foreground shadow flex flex-col">
+                    {/* Pilar 2: Academy */}
+                    <div className="rounded-xl border bg-card text-card-foreground shadow flex flex-col hover:border-blue-500/50 transition-colors">
                         <div className="p-6 md:p-8 space-y-4 flex-grow">
-                            <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-primary/10 text-primary mb-2">Sport-Tech</div>
-                            <h2 className="text-2xl font-bold">Ekosistem Olahraga &amp; Komunitas</h2>
-                            <p className="text-muted-foreground leading-relaxed">
-                                Program pembinaan karakter dan manajemen turnamen yang menjunjung tinggi <em>fair play</em>. Memanfaatkan analitik data untuk menemukan dan membina bakat baru secara transparan.
+                            <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-blue-500/10 text-blue-600 mb-2">Pilar 2</div>
+                            <h2 className="text-2xl font-bold">Kultur Juara Badminton Academy</h2>
+                            <p className="text-muted-foreground leading-relaxed text-sm">
+                                Pembinaan intensif dengan pendekatan <em>sport science</em> untuk mencetak atlet profesional dengan karakter tangguh tak tertandingi.
                             </p>
-                            <ul className="space-y-2 mt-4 text-sm">
-                                <li className="flex gap-2"><span>✓</span> <em>Digital Drawing System &amp; Live Score</em></li>
-                                <li className="flex gap-2"><span>✓</span> Pemetaan wilayah potensial (GIS)</li>
-                                <li className="flex gap-2"><span>✓</span> Manajemen performa &amp; <em>sport science</em></li>
+                            <ul className="space-y-2 mt-4 text-sm text-muted-foreground">
+                                <li className="flex gap-2"><span>✅</span> Program terstruktur oleh pelatih elit</li>
+                                <li className="flex gap-2"><span>✅</span> <em>Digital Drawing &amp; Live Score</em> kompetisi</li>
+                                <li className="flex gap-2"><span>✅</span> Analisis performa &amp; nutrisi atlet</li>
                             </ul>
                         </div>
-                        <div className="p-6 pt-0 flex gap-3 mt-auto">
+                        <div className="p-6 pt-0 mt-auto">
                             <a href="https://academy.kulturjuara.org" target="_blank" rel="noreferrer"
-                                className="inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full transition-colors">
+                                className="inline-flex items-center justify-center rounded-md text-sm font-medium border border-blue-500/20 bg-blue-50 hover:bg-blue-100 text-blue-700 h-10 px-4 py-2 w-full transition-colors">
                                 Portal Akademi
                             </a>
-                            <a href="https://event.kulturjuara.org" target="_blank" rel="noreferrer"
-                                className="inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full transition-colors">
-                                Sistem Event
+                        </div>
+                    </div>
+
+                    {/* Pilar 3: School */}
+                    <div className="rounded-xl border bg-card text-card-foreground shadow flex flex-col hover:border-green-500/50 transition-colors">
+                        <div className="p-6 md:p-8 space-y-4 flex-grow">
+                            <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-green-500/10 text-green-600 mb-2">Pilar 3</div>
+                            <h2 className="text-2xl font-bold">Manajemen Sekolah Terpadu</h2>
+                            <p className="text-muted-foreground leading-relaxed text-sm">
+                                Platform <em>end-to-end</em> untuk digitalisasi operasional sekolah dari perancangan Capaian Pembelajaran (CP) hingga pencetakan rapor digital.
+                            </p>
+                            <ul className="space-y-2 mt-4 text-sm text-muted-foreground">
+                                <li className="flex gap-2"><span>✅</span> Sinkronisasi kurikulum Merdeka</li>
+                                <li className="flex gap-2"><span>✅</span> Penilaian formatif &amp; sumatif terpusat</li>
+                                <li className="flex gap-2"><span>✅</span> UI/UX lincah tanpa latensi (<em>zero error</em>)</li>
+                            </ul>
+                        </div>
+                        <div className="p-6 pt-0 mt-auto">
+                            <a href="https://school.kulturjuara.org" target="_blank" rel="noreferrer"
+                                className="inline-flex items-center justify-center rounded-md text-sm font-medium border border-green-500/20 bg-green-50 hover:bg-green-100 text-green-700 h-10 px-4 py-2 w-full transition-colors">
+                                Portal Sekolah
                             </a>
                         </div>
                     </div>

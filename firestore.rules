@@ -1,51 +1,10 @@
-
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Helper functions
-    function isSignedIn() {
-      return request.auth != null;
-    }
-
-    // By default, deny all reads and writes
+    // Kunci seluruh akses untuk keamanan maksimal.
+    // Landing page saat ini tidak membutuhkan koneksi database dari sisi klien.
     match /{document=**} {
       allow read, write: if false;
-    }
-
-    // Allow listing users for authenticated users.
-    match /users {
-        allow list: if isSignedIn();
-    }
-
-    // Users collection - only signed-in users can manage other users.
-    // For production, you'd want to restrict this to admins.
-    match /users/{userId} {
-      allow read, write: if isSignedIn();
-    }
-
-    // Athletes collection rules
-    match /athletes {
-      // Allow authenticated users to query/list the collection
-      allow list: if isSignedIn();
-    }
-    
-    match /athletes/{athleteId} {
-      // Only authenticated users can create an athlete profile
-      allow create: if isSignedIn();
-      // Only authenticated users can read, update, or delete profiles
-      allow read, update, delete: if isSignedIn();
-
-      // Subcollections for athlete data
-      match /{subcollection}/{docId} {
-        // Only authenticated users can create/read/update/delete subcollection documents
-        allow read, write: if isSignedIn();
-      }
-    }
-    
-    // Training Programs collection
-    match /training-programs/{programId} {
-      // Coaches and admins can create, read, and manage programs
-      allow read, write: if isSignedIn();
     }
   }
 }
